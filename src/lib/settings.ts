@@ -32,8 +32,19 @@ const defaultSettings: SiteSettings = {
 
 export async function getSettings(): Promise<SiteSettings> {
   try {
-    if (!fs.existsSync(SETTINGS_FILE_PATH)) {
-      await saveSettings(defaultSettings);
+    let exists = false;
+    try {
+      exists = fs.existsSync(SETTINGS_FILE_PATH);
+    } catch (err) {
+      exists = false;
+    }
+
+    if (!exists) {
+      try {
+        await saveSettings(defaultSettings);
+      } catch (err) {
+        // Silently ignore in production serverless where fs is Read-Only
+      }
       return defaultSettings;
     }
 
@@ -65,7 +76,7 @@ export async function saveSettings(settings: SiteSettings): Promise<void> {
       'utf8'
     );
   } catch (error) {
-    console.error('Failed to write settings file:', error);
-    throw new Error('Could not save settings');
+    console.error('Failed to write settings file (expected in serverless):', error);
+    // Do not throw an error, otherwise it crashes the entire website Render Tree
   }
 }
