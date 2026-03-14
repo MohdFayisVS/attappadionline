@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import styles from './article.module.css';
 
+export const dynamic = 'force-dynamic';
+
 export default async function ArticlePage({ params }: { params: { slug: string } }) {
   const article = await prisma.article.findUnique({
     where: { slug: params.slug },

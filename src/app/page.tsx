@@ -6,6 +6,8 @@ import TrendingNews from '@/components/home/TrendingNews';
 import CategoryBlocks from '@/components/home/CategoryBlocks';
 import CommunityUpdates from '@/components/home/CommunityUpdates';
 
+export const dynamic = 'force-dynamic';
+
 export default function Home() {
   return (
     <div className={styles.homeLayout}>

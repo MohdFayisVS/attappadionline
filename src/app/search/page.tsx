@@ -2,6 +2,8 @@ import Link from 'next/link';
 import styles from './search.module.css';
 import { prisma } from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 export default async function SearchPage({
   searchParams,
 }: {
