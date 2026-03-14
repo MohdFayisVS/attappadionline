@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/ai-publish",
+      "schedule": "0 */6 * * *"
+    }
+  ]
+}

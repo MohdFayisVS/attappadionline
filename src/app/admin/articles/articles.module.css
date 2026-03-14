@@ -1,0 +1,147 @@
+.page {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.pageTitle {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+}
+
+.select {
+  padding: 0.75rem 2rem 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: white;
+  min-width: 150px;
+}
+
+.tableContainer {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.table th {
+  background: #f9fafb;
+  font-weight: 600;
+  color: #4b5563;
+  font-size: 0.875rem;
+}
+
+.table td {
+  font-size: 0.875rem;
+  color: var(--color-text);
+}
+
+.articleTitle {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badgePublished { background: #d1fae5; color: #059669; }
+.badgeReview { background: #fef3c7; color: #d97706; }
+.badgeDraft { background: #f3f4f6; color: #4b5563; }
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.iconBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.iconBtn:hover {
+  background: #f3f4f6;
+}
+
+.deleteBtn:hover {
+  background: #fee2e2;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f3f4f6;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.pageControls {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.pageControls button {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pageControls button:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+
+.pageControls button.active {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+
+.pageControls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

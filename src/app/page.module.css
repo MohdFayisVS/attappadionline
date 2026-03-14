@@ -1,0 +1,75 @@
+.homeLayout {
+  width: 100%;
+}
+
+.mainGrid {
+  display: grid;
+  grid-template-columns: 2.5fr 1fr;
+  gap: 2.5rem;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 992px) {
+  .mainGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+/* Newsletter Section */
+.newsletter {
+  background-color: var(--color-primary);
+  color: var(--color-background);
+  padding: 4rem 0;
+  text-align: center;
+  margin-top: 4rem;
+}
+
+.newsletter h2 {
+  color: var(--color-background);
+  margin-bottom: 0.5rem;
+}
+
+.newsletter p {
+  color: #d1d5db; /* Light gray */
+  margin-bottom: 2rem;
+}
+
+.newsletterForm {
+  display: flex;
+  max-width: 500px;
+  margin: 0 auto;
+  gap: 0.5rem;
+}
+
+.newsletterForm input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.newsletterForm input:focus {
+  outline: 2px solid var(--color-accent);
+  border-color: transparent;
+}
+
+@media (max-width: 600px) {
+  .newsletterForm {
+    flex-direction: column;
+  }
+}

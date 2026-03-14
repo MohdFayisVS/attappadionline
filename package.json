@@ -1,0 +1,33 @@
+{
+  "name": "attappadi-online",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@google/genai": "^1.45.0",
+    "@prisma/client": "^6.19.2",
+    "axios": "^1.13.6",
+    "bcryptjs": "^3.0.3",
+    "cheerio": "^1.1.0",
+    "next": "16.1.6",
+    "next-auth": "^4.24.13",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "rss-parser": "^3.13.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "prisma": "^6.19.2",
+    "typescript": "^5"
+  }
+}

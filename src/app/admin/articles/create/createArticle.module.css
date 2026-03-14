@@ -1,0 +1,205 @@
+.page {
+  padding-bottom: 3rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.backBtn {
+  color: #6b7280;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.backBtn:hover {
+  color: var(--color-primary);
+}
+
+.pageTitle {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.btnDraft {
+  background: white;
+  border: 1px solid #d1d5db;
+  color: var(--color-text);
+}
+
+.btnDraft:hover {
+  background: #f3f4f6;
+}
+
+.editorGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.mainColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sidebarColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.panel {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.panel h3 {
+  font-size: 1.125rem;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.fieldGroup {
+  margin-bottom: 1.25rem;
+}
+
+.fieldGroup label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.inputLg {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.25rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-family: inherit;
+  background: white;
+}
+
+.input:focus, .inputLg:focus {
+  outline: 2px solid var(--color-accent);
+  border-color: transparent;
+}
+
+.richTextEditor {
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  overflow: hidden;
+  background: white;
+}
+
+.editorToolbar {
+  background: #f9fafb;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-bottom: 1px solid #d1d5db;
+}
+
+.editorToolbar button {
+  padding: 0.5rem;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.editorToolbar button:hover {
+  background: #e5e7eb;
+}
+
+.divider {
+  color: #d1d5db;
+  margin: 0 0.5rem;
+}
+
+.editorArea {
+  width: 100%;
+  min-height: 400px;
+  padding: 1rem;
+  border: none;
+  resize: vertical;
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+.editorArea:focus {
+  outline: none;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 400 !important;
+  cursor: pointer;
+}
+
+.helpText {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.uploadBox {
+  border: 2px dashed #d1d5db;
+  border-radius: 4px;
+  padding: 2rem;
+  text-align: center;
+  color: #6b7280;
+  cursor: pointer;
+  background: #f9fafb;
+  transition: all 0.2s;
+}
+
+.uploadBox:hover {
+  border-color: var(--color-primary);
+  background: #f3f4f6;
+  color: var(--color-primary);
+}
+
+@media (max-width: 1024px) {
+  .editorGrid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,158 @@
+.hero {
+  background-color: var(--color-primary);
+  color: var(--color-background);
+  padding: 3rem 0;
+  width: 100%;
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 992px) {
+  .heroGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.featured {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: #081d34;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.breakingLabel {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: #dc2626; /* Red for breaking */
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  z-index: 10;
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 400px;
+  position: relative;
+}
+
+.mockImg {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+}
+
+.featuredContent {
+  padding: 2rem;
+}
+
+.category {
+  color: var(--color-accent);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.featuredTitle {
+  font-size: 2.5rem;
+  color: white;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+.featuredExcerpt {
+  color: #d1d5db;
+  font-size: 1.125rem;
+  margin-bottom: 1.5rem;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+/* Secondary Stories */
+.secondaryStories {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.secondaryCard {
+  display: flex;
+  gap: 1rem;
+  background-color: #081d34;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.secondaryCard:hover {
+  transform: translateY(-2px);
+}
+
+.mockImgSmall {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+.secondaryContent {
+  padding: 1rem 1rem 1rem 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.secondaryTitle {
+  color: white;
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.secondaryContent time {
+  color: #9ca3af;
+  font-size: 0.75rem;
+}
+
+.ctaGroup {
+  display: flex;
+  gap: 1rem;
+  margin-top: auto;
+  padding-top: 1rem;
+}
+
+.ctaGroup .btn {
+  flex: 1;
+}
+
+@media (max-width: 600px) {
+  .featuredTitle {
+    font-size: 1.75rem;
+  }
+  .imagePlaceholder {
+    height: 250px;
+  }
+  .ctaGroup {
+    flex-direction: column;
+  }
+}

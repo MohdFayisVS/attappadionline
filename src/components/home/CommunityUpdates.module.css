@@ -1,0 +1,70 @@
+.widget {
+  background: var(--color-primary);
+  color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.widgetTitle {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.item {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 6px;
+  border-left: 4px solid var(--color-accent);
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+.alert {
+  background: #dc2626; /* Red for alert */
+}
+
+.date {
+  font-size: 0.75rem;
+  color: #d1d5db;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.moreBtn {
+  width: 100%;
+  border: 1px solid var(--color-accent);
+  transition: all 0.2s;
+}
+
+.moreBtn:hover {
+  background-color: var(--color-accent);
+  color: var(--color-text);
+}

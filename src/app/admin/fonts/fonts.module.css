@@ -1,0 +1,146 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.header {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.pageTitle {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  color: var(--color-text-secondary);
+}
+
+.panelsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.panel, .fontListPanel {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.panel h2, .fontListPanel h2 {
+  font-size: 1.25rem;
+  color: var(--color-text);
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.75rem;
+}
+
+.fieldGroup {
+  margin-bottom: 1.5rem;
+}
+
+.fieldGroup label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: white;
+  font-family: inherit;
+}
+
+.uploadArea {
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  padding: 3rem 2rem;
+  text-align: center;
+  background: #f9fafb;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.uploadArea:hover {
+  border-color: var(--color-primary);
+  background: #f3f4f6;
+}
+
+.uploadIcon {
+  font-size: 3rem;
+  color: #9ca3af;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.uploadArea p {
+  color: #4b5563;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.subtext {
+  font-size: 0.875rem;
+  color: #9ca3af !important;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.table th {
+  background: #f9fafb;
+  font-weight: 600;
+  color: #4b5563;
+  font-size: 0.875rem;
+}
+
+.table td {
+  font-size: 0.875rem;
+  color: var(--color-text);
+  vertical-align: middle;
+}
+
+.preview {
+  font-size: 1.25rem;
+  color: var(--color-primary) !important;
+}
+
+.iconBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.iconBtn:hover {
+  background: #fee2e2;
+}
+
+@media (max-width: 900px) {
+  .panelsGrid {
+    grid-template-columns: 1fr;
+  }
+}

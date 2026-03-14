@@ -1,0 +1,118 @@
+.section {
+  width: 100%;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.sectionHeader h2 {
+  font-size: 1.75rem;
+  margin: 0;
+  position: relative;
+}
+
+.sectionHeader h2::after {
+  content: '';
+  position: absolute;
+  bottom: -0.65rem;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background-color: var(--color-accent);
+}
+
+.viewAll {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.viewAll:hover {
+  text-decoration: underline;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 200px;
+}
+
+.mockImg {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+}
+
+.content {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.category {
+  color: #db2777; /* Rose color for category tags in light theme */
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  color: var(--color-text);
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.description {
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  flex: 1;
+}
+
+.time {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+@media (max-width: 1200px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

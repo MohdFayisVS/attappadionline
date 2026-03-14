@@ -1,0 +1,53 @@
+.header {
+  background-color: var(--color-primary);
+  color: var(--color-background);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo a {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-background);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.logo span {
+  color: var(--color-accent);
+}
+
+.nav ul {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav a {
+  font-weight: 500;
+  font-size: 1rem;
+  transition: color 0.2s ease;
+}
+
+.nav a:hover {
+  color: var(--color-accent);
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .nav {
+    display: none; /* Add a hamburger menu later */
+  }
+}
