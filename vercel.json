@@ -2,10 +2,5 @@
   "version": 2,
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/index.ts" }
-  ],
-  "functions": {
-    "api/index.ts": {
-      "includeFiles": ["firebase-applet-config.json", "data/db.json"]
-    }
-  }
+  ]
 }

@@ -19,7 +19,7 @@ const PORT = 3000;
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
-let DB_PATH = path.join(process.cwd(), "data", "db.json");
+let DB_PATH = path.join(__dirname, "db.json");
 if (process.env.VERCEL) {
   DB_PATH = path.join("/tmp", "db.json");
 }
@@ -529,7 +529,7 @@ const defaultAutos = [
 // ==================== END DEFAULT SEEDS ====================
 
 // ==================== FIRESTORE INTEGRATION ====================
-const CONFIG_PATH = path.join(process.cwd(), "firebase-applet-config.json");
+const CONFIG_PATH = path.join(__dirname, "firebase-applet-config.json");
 let firestoreDb: any = null;
 
 if (fs.existsSync(CONFIG_PATH)) {
