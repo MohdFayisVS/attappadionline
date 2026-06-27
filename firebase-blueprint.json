@@ -1,0 +1,161 @@
+{
+  "entities": {
+    "NewsItem": {
+      "title": "NewsItem",
+      "description": "A local news article",
+      "type": "object",
+      "properties": {
+        "titleEn": { "type": "string" },
+        "titleMl": { "type": "string" },
+        "contentEn": { "type": "string" },
+        "contentMl": { "type": "string" },
+        "category": { "type": "string" },
+        "regions": { "type": "array" },
+        "image": { "type": "string" },
+        "publishedAt": { "type": "string" },
+        "views": { "type": "number" },
+        "isSlide": { "type": "boolean" },
+        "isCard": { "type": "boolean" }
+      },
+      "required": ["titleEn", "titleMl", "contentEn", "contentMl", "category"]
+    },
+    "Opinion": {
+      "title": "Opinion",
+      "description": "A public user opinion entry",
+      "type": "object",
+      "properties": {
+        "authorName": { "type": "string" },
+        "titleEn": { "type": "string" },
+        "titleMl": { "type": "string" },
+        "contentEn": { "type": "string" },
+        "contentMl": { "type": "string" },
+        "approved": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      }
+    },
+    "Event": {
+      "title": "Event",
+      "description": "A local event schedule",
+      "type": "object",
+      "properties": {
+        "titleEn": { "type": "string" },
+        "titleMl": { "type": "string" },
+        "date": { "type": "string" },
+        "timeEn": { "type": "string" },
+        "timeMl": { "type": "string" },
+        "venueEn": { "type": "string" },
+        "venueMl": { "type": "string" },
+        "descriptionEn": { "type": "string" },
+        "descriptionMl": { "type": "string" }
+      }
+    },
+    "DirectoryEntry": {
+      "title": "DirectoryEntry",
+      "description": "A local shop or service business",
+      "type": "object",
+      "properties": {
+        "nameEn": { "type": "string" },
+        "nameMl": { "type": "string" },
+        "category": { "type": "string" },
+        "contact": { "type": "string" },
+        "whatsapp": { "type": "string" },
+        "locationEn": { "type": "string" },
+        "locationMl": { "type": "string" },
+        "descriptionEn": { "type": "string" },
+        "descriptionMl": { "type": "string" }
+      }
+    },
+    "EmergencyContact": {
+      "title": "EmergencyContact",
+      "description": "Emergency service number",
+      "type": "object",
+      "properties": {
+        "nameEn": { "type": "string" },
+        "nameMl": { "type": "string" },
+        "number": { "type": "string" },
+        "type": { "type": "string" }
+      }
+    },
+    "Notice": {
+      "title": "Notice",
+      "description": "A public warning or official notice",
+      "type": "object",
+      "properties": {
+        "titleEn": { "type": "string" },
+        "titleMl": { "type": "string" },
+        "contentEn": { "type": "string" },
+        "contentMl": { "type": "string" },
+        "type": { "type": "string" },
+        "severity": { "type": "string" },
+        "date": { "type": "string" },
+        "active": { "type": "boolean" }
+      }
+    },
+    "LpgDelivery": {
+      "title": "LpgDelivery",
+      "description": "LPG distribution schedule",
+      "type": "object",
+      "properties": {
+        "agencyNameEn": { "type": "string" },
+        "agencyNameMl": { "type": "string" },
+        "areasEn": { "type": "string" },
+        "areasMl": { "type": "string" },
+        "date": { "type": "string" },
+        "statusEn": { "type": "string" },
+        "statusMl": { "type": "string" },
+        "contact": { "type": "string" },
+        "notesEn": { "type": "string" },
+        "notesMl": { "type": "string" }
+      }
+    },
+    "AutoDriver": {
+      "title": "AutoDriver",
+      "description": "Local auto or taxi driver directory entry",
+      "type": "object",
+      "properties": {
+        "driverNameEn": { "type": "string" },
+        "driverNameMl": { "type": "string" },
+        "autoNumber": { "type": "string" },
+        "contact": { "type": "string" },
+        "locationEn": { "type": "string" },
+        "locationMl": { "type": "string" },
+        "isAvailable": { "type": "boolean" },
+        "registeredDate": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "/news/{newsId}": {
+      "schema": "NewsItem",
+      "description": "Bilingual news collection"
+    },
+    "/opinions/{opinionId}": {
+      "schema": "Opinion",
+      "description": "Public opinions board"
+    },
+    "/events/{eventId}": {
+      "schema": "Event",
+      "description": "Bilingual events directory"
+    },
+    "/directory/{dirId}": {
+      "schema": "DirectoryEntry",
+      "description": "Attappadi local business listings"
+    },
+    "/emergency/{emergencyId}": {
+      "schema": "EmergencyContact",
+      "description": "Emergency hotlines"
+    },
+    "/notices/{noticeId}": {
+      "schema": "Notice",
+      "description": "Public board notices and alerts"
+    },
+    "/lpgDeliveries/{lpgId}": {
+      "schema": "LpgDelivery",
+      "description": "LPG distribution tracker"
+    },
+    "/autos/{autoId}": {
+      "schema": "AutoDriver",
+      "description": "Auto and taxi directory"
+    }
+  }
+}

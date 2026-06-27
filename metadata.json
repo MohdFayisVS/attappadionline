@@ -1,0 +1,6 @@
+{
+  "name": "Attappadi Online",
+  "description": "A high-quality local news portal for the Attappadi region serving bilingual news (Malayalam and English) across Agali, Mukkali, Thavalam, Kottathara, Sholayur, Pudur, Anaikatty, Jellippara, and Chittur.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

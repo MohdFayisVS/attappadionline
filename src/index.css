@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Anek+Malayalam:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", "Anek Malayalam", sans-serif;
+  --font-anek-malayalam: "Anek Malayalam", sans-serif;
+  --font-anek-english: "Inter", "Anek Malayalam", sans-serif;
+  --font-serif-guardian: "Playfair Display", "Anek Malayalam", Georgia, serif;
+  
+  /* Sleek Interface Theme Color Palette */
+  --color-guardian-navy: #005689;
+  --color-guardian-dark-navy: #052962;
+  --color-guardian-cream: #dcdcdc;
+  --color-guardian-cream-light: #F3F3F3;
+  --color-guardian-crimson: #c70000;
+  --color-guardian-orange: #ffe500;
+  --color-guardian-accent-blue: #00b2ff;
+  --color-guardian-dark: #121212;
+  --color-guardian-text-main: #121212;
+  --color-guardian-text-muted: #555555;
+  --color-guardian-gold: #c69400;
+
+  --animate-marquee: marquee 30s linear infinite;
+
+  @keyframes marquee {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    100% {
+      transform: translate3d(-100%, 0, 0);
+    }
+  }
+}
+
+/* Pause marquee on hover */
+.hover\:pause:hover {
+  animation-play-state: paused !important;
+}
+
+/* Custom class-based dark overrides for variables to keep layout consistent */
+.dark {
+  --color-guardian-cream-light: #090d16;
+  --color-guardian-text-main: #f8fafc;
+  --color-guardian-text-muted: #94a3b8;
+  --color-guardian-cream: #1e293b;
+  --color-guardian-dark-navy: #0b1528;
+}
+
+/* Comprehensive dark mode theme class mappings */
+.dark .bg-white {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+.dark .text-\[\#052962\],
+.dark [class*="text-[#052962]"],
+.dark .text-slate-900,
+.dark .text-slate-800,
+.dark .text-gray-900,
+.dark .text-gray-800 {
+  color: #f8fafc !important;
+}
+
+.dark .text-slate-700,
+.dark .text-slate-600,
+.dark .text-gray-700,
+.dark .text-gray-600 {
+  color: #cbd5e1 !important;
+}
+
+.dark .text-gray-400,
+.dark .text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+.dark .border-gray-50,
+.dark .border-gray-100,
+.dark .border-slate-100,
+.dark .border-slate-200 {
+  border-color: #1e293b !important;
+}
+
+.dark .bg-slate-50,
+.dark .bg-gray-50 {
+  background-color: #0b111e !important;
+}
+
+.dark .bg-slate-50\/50,
+.dark .bg-gray-50\/50 {
+  background-color: rgba(11, 17, 30, 0.5) !important;
+}
+
+.dark .hover\:bg-slate-50:hover {
+  background-color: #1e293b !important;
+}
+
+.dark input[type="text"],
+.dark select,
+.dark textarea {
+  background-color: #070b13 !important;
+  color: #f8fafc !important;
+  border-color: #1e293b !important;
+}
+
+/* Custom layout defaults for true news density & readability */
+body {
+  font-family: var(--font-anek-english);
+  background-color: var(--color-guardian-cream-light);
+  color: var(--color-guardian-text-main);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Select fonts dynamically based on lang attributes */
+[lang="ml"] {
+  font-family: var(--font-anek-malayalam);
+}
+
+[lang="en"] {
+  font-family: var(--font-anek-english);
+}
+
+/* Custom scrollbar to keep layout highly polished and clean */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f4f3ec;
+}
+::-webkit-scrollbar-thumb {
+  background: #0a3060;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #005689;
+}

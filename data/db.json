@@ -1,0 +1,1089 @@
+{
+  "news": [
+    {
+      "id": "news_test_1782150571028",
+      "titleEn": "[LIVE TEST BLOG] Attappadi Online Systems Successfully Live",
+      "titleMl": "[ലൈവ് ടെസ്റ്റ് റിപ്പോർട്ട്] അട്ടപ്പാടി ഓൺലൈൻ വാർത്താ പോർട്ടൽ സജ്ജമായി",
+      "contentEn": "This live report confirms the server's news feeds, database, and client applications on Cloud Run are completely synchronised and operating flawlessly.",
+      "contentMl": "വാർത്തകളും വിവരങ്ങളും അപ്‌ലോഡ് ചെയ്യുന്നതിനായുള്ള എല്ലാ സെർവർ പ്രക്രിയകളും വിജയകരമായി പ്രവർത്തിക്കുന്നുണ്ടെന്ന് ലൈവായി ഇതിനാൽ സ്ഥിരീകരിക്കുന്നു.",
+      "category": "breaking",
+      "regions": [
+        "agali",
+        "mukkali"
+      ],
+      "image": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&auto=format&fit=crop&q=60",
+      "publishedAt": "2026-06-22T17:49:31.028Z",
+      "views": 88,
+      "isSlide": true,
+      "isCard": true
+    },
+    {
+      "id": "1",
+      "titleEn": "Heavy rains lash silent valley buffer zones; forest department alerts Mukkali tourists",
+      "titleMl": "സൈലന്റ് വാലി ബഫർ സോണുകളിൽ കനത്ത മഴ; മുക്കാലിയിലെ ടൂറിസ്റ്റുകൾക്ക് വനം വകുപ്പിന്റെ ജാഗ്രതാ നിർദ്ദേശം",
+      "contentEn": "Heavy continuous rainfall has been reported in the Nilgiri hills and Silent Valley catchment areas. The Bhavani and Siruvani rivers are swelling. The Forest Department has suspended trekking activities in Mukkali temporarily to ensure safety. Visitors are advised to stay clear of river banks and coordinate with local forest guards.",
+      "contentMl": "നീലഗിരി കുന്നുകളിലും സൈലന്റ് വാലി പ്രദേശങ്ങളിലും കനത്ത മഴ തുടരുന്നതിനെ തുടർന്ന് ഭവാനി, ശിരുവാണി പുഴകളിൽ ജലനിരപ്പ് ഉയർന്നു. സുരക്ഷ ഉറപ്പാക്കുന്നതിനായി മുക്കാലിയിലെ ട്രെക്കിംഗ് അടക്കമുള്ള പ്രവർത്തനങ്ങൾ വനംവകുപ്പ് താൽക്കാലികമായി നിർത്തിവെച്ചു. പുഴയോരങ്ങളിൽ ഇറങ്ങരുതെന്നും വനസംരക്ഷകരുടെ നിർദ്ദേശങ്ങൾ കർശനമായി പാലിക്കണമെന്നും അഭ്യർത്ഥിക്കുന്നു.",
+      "category": "breaking",
+      "regions": [
+        "mukkali"
+      ],
+      "image": "https://images.unsplash.com/photo-1549221194-4fa7a41413f4?w=800&auto=format&fit=crop&q=60",
+      "publishedAt": "2026-06-19T08:30:00.000Z",
+      "views": 342,
+      "isSlide": true,
+      "isCard": false
+    },
+    {
+      "id": "2",
+      "titleEn": "Specialty Hospital Kottathara lists updated telemedicine schedule with key specialists",
+      "titleMl": "കോട്ടത്തറ ട്രൈബൽ സ്പെഷ്യാലിറ്റി ആശുപത്രിയിൽ പുതിയ ടെലിമെഡിസിൻ സേവനം ലഭ്യമാക്കി",
+      "contentEn": "The Speciality Tribal Hospital in Kottathara has announced advanced tie-ups with leading medical colleges to offer telemedicine services for cardiac and pediatric consultations twice a week. This will benefit remote hamlets across Pudur and Sholayur dramatically, reducing the need to travel to Coimbatore or Palakkad.",
+      "contentMl": "കോട്ടത്തറ ട്രൈബൽ സ്പെഷ്യാലിറ്റി ആശുപത്രിയിൽ മെഡിക്കൽ കോളേജുകളുമായി സഹകരിച്ച് ആഴ്ചയിൽ രണ്ട് ദിവസം ഹൃദ്രോഗം, ശിശുരോഗ വിദഗ്ധരുടെ ടെലിമെഡിസിൻ സേവനം ലഭ്യമാകും. ഇത് കോയമ്പത്തൂരിലേക്കോ പാലക്കാട്ടേക്കോ ഉള്ള യാത്ര ഒഴിവാക്കാൻ പുതൂർ, ഷോളയൂർ ഉൾഗ്രാമങ്ങളിലെ രോഗികൾക്ക് സഹായകരമാകും.",
+      "category": "latest",
+      "regions": [
+        "kottathara",
+        "pudur",
+        "sholayur"
+      ],
+      "image": "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&auto=format&fit=crop&q=60",
+      "publishedAt": "2026-06-19T07:15:00.000Z",
+      "views": 215,
+      "isSlide": true,
+      "isCard": true
+    },
+    {
+      "id": "3",
+      "titleEn": "Agali block panchayat introduces intensive organic Ragi and Millet promotion campaign",
+      "titleMl": "അഗളി ബ്ലോക്ക് പഞ്ചായത്ത് നേതൃത്വത്തിൽ അട്ടപ്പാടി രാഗി-ചാമ കൃഷി പ്രോത്സാഹന പദ്ധതിക്ക് തുടക്കം",
+      "contentEn": "Under the comprehensive Attappadi millet scheme, Agali Block Panchayat has launched seed distribution camps for local organic Ragi. The administration offers technical support and direct procurement guarantees for tribal farmers to restore high-nutrition indigenous agriculture.",
+      "contentMl": "അട്ടപ്പാടി മില്ലറ്റ് സ്കീമിന്റെ ഭാഗമായി അഗളി ബ്ലോക്ക് പഞ്ചായത്തിന്റെ നേത്യത്വത്തിൽ തദ്ദേശീയ രാഗി വിത്ത് വിതരണം ആരംഭിച്ചു. പരമ്പരാഗത പോഷകാഹാര കൃഷി തിരിച്ചുപിടിക്കാൻ കർഷകർക്ക് സാങ്കേതിക സഹായവും അതോടൊപ്പം നേരിട്ടുള്ള സംഭരണ ഉറപ്പും അധികൃതർ വാഗ്ദാനം ചെയ്തു.",
+      "category": "latest",
+      "regions": [
+        "agali"
+      ],
+      "image": "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=800&auto=format&fit=crop&q=60",
+      "publishedAt": "2026-06-18T14:20:00.000Z",
+      "views": 189,
+      "isSlide": false,
+      "isCard": true
+    },
+    {
+      "id": "4",
+      "titleEn": "Thavalam suspension bridge restoration works cross 80% completion milestone",
+      "titleMl": "താവളം തൂക്കുപാലത്തിന്റെ നവീകരണ പ്രവൃത്തികൾ 80 ശതമാനവും പൂർത്തിയായി",
+      "contentEn": "Restoration work on the vital suspension footbridge at Thavalam is in its final phase. Local panchayat engineers estimated that the bridge will open for pedestrian traffic next month, re-establishing safe commute for preschool and school children residing in the adjacent inner tribal hamlets.",
+      "contentMl": "താവളത്തെ ഉൾഗ്രാമങ്ങളുമായി ബന്ധിപ്പിക്കുന്ന പ്രധാന തൂക്കുപാലത്തിന്റെ നവീകരണ പ്രവൃത്തികൾ അവസാന ഘട്ടത്തിലാണ്. അടുത്ത മാസം ആദ്യവാരത്തോടെ കാൽനടയാത്രയ്ക്കായി പാലം തുറന്നുകൊടുക്കുമെന്ന് പഞ്ചായത്ത് അധികൃതർ അറിയിച്ചു. ഇത് വിദ്യാർത്ഥികൾക്കും കുട്ടികൾക്കും ഏറെ സഹായകരമാകും.",
+      "category": "latest",
+      "regions": [
+        "thavalam"
+      ],
+      "image": "https://images.unsplash.com/photo-1508433957232-1207f6c022f4?w=800&auto=format&fit=crop&q=60",
+      "publishedAt": "2026-06-18T09:10:00.000Z",
+      "views": 113,
+      "isSlide": false,
+      "isCard": true
+    },
+    {
+      "id": "5",
+      "titleEn": "Waste dumping monitoring tightened at Anaikatty checkpost by joint squad",
+      "titleMl": "ആനക്കട്ടി ചെക്ക്പോസ്റ്റിൽ സംയുക്ത സ്ക്വാഡ് പ്ലാസ്റ്റിക്, മാലിന്യ പരിശോധന കർശനമാക്കി",
+      "contentEn": "Kerala and Tamil Nadu health authorities have deployed a joint squad at Anaikatty border checkpost to stop unauthorized waste carrying trucks. Officials will execute fine collection and strict vehicle scans to protect the pristine mountainous terrain of Attappadi from environmental hazards.",
+      "contentMl": "കേരള-തമിഴ്നാട് അതിർത്തിയായ ആനക്കട്ടിയിൽ അനധികൃത മാലിന്യ കടത്ത് തടയാൻ ആരോഗ്യ വകുപ്പിന്റെ നേത്യത്വത്തിൽ സംയുക്ത സ്ക്വാഡ് രൂപീകരിച്ചു. പരിസ്ഥിതി സൗഹാർദ്ദ മേഖലയായ അട്ടപ്പാടിയെ സംരക്ഷിക്കാൻ വാഹനങ്ങളിൽ കടുത്ത പരിശോധനയും പിഴയും ചുമത്തുന്നതായിരിക്കും.",
+      "category": "updates",
+      "regions": [
+        "anaikkatty"
+      ],
+      "image": "https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?w=800&auto=format&fit=crop&q=60",
+      "publishedAt": "2026-06-17T11:00:00.000Z",
+      "views": 99,
+      "isSlide": false,
+      "isCard": false
+    },
+    {
+      "id": "6",
+      "titleEn": "Wind energy farm installation projects expand borders in Sholayur Grama Panchayat",
+      "titleMl": "ശോലയൂരിൽ കാറ്റാടിപ്പാട വികസനവുമായി ബന്ധപ്പെട്ട് പുതിയ ചർച്ചകൾ സജീവമാകുന്നു",
+      "contentEn": "Power generation units in Sholayur have proposed an additional grid line of green wind energy generation. The local council convened a meeting to evaluate environmental aspects and tribal land rights before allocating high-capacity turbines.",
+      "contentMl": "ശോലയൂരിൽ നിലവിലുള്ള കാറ്റാടിപ്പാടങ്ങളോട് അനുബന്ധിച്ച് കൂടുതൽ ഉൽപ്പാദന യൂണിറ്റുകൾ സ്ഥാപിക്കാൻ ശുപാർശ. പരിസ്ഥിതി പ്രശ്നങ്ങളും ഗോത്രവർഗ്ഗ അവകാശങ്ങളും ഹനിക്കപ്പെടാതെ പദ്ധതി നടപ്പിലാക്കുന്നതിനെക്കുറിച്ച് പഞ്ചായത്ത് അധികൃതർ ചർച്ചകൾ നടത്തിവരുന്നു.",
+      "category": "updates",
+      "regions": [
+        "sholayur"
+      ],
+      "image": "https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=800&auto=format&fit=crop&q=60",
+      "publishedAt": "2026-06-16T15:45:00.000Z",
+      "views": 86,
+      "isSlide": false,
+      "isCard": false
+    },
+    {
+      "id": "7",
+      "titleEn": "Traditional millet and multi-grain food festival organized at Pudur block centre",
+      "titleMl": "പുതൂരിൽ പരമ്പരാഗത ഭക്ഷ്യമേള സംഘടിപ്പിച്ചു; വൻ ജനപങ്കാളിത്തം",
+      "contentEn": "Pudur village recently conducted a lively traditional food celebration showcasing over 30 authentic and rich millet dishes. Tribal self-help groups managed the food stalls, attracting food enthusiasts and culinary experts from across Palakkad district.",
+      "contentMl": "പുതൂർ വില്ലേജ് സെന്ററിൽ പരമ്പരാഗത ഗോത്ര വിഭവങ്ങളുടെ വലിയ ഭക്ഷ്യമേള അരങ്ങേറി. മുപ്പതിലധികം തനത് കൂവരക്, ചാമ പലഹാരങ്ങൾ മേളയിൽ പങ്കുവെച്ചു. കുടുംബശ്രീ യൂണറ്റുകളും ഗോത്ര കൂട്ടായ്മകളും ഇതിനു നേത്യത്വം നൽകി.",
+      "category": "latest",
+      "regions": [
+        "pudur"
+      ],
+      "image": "https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=800&auto=format&fit=crop&q=60",
+      "publishedAt": "2026-06-15T10:00:00.000Z",
+      "views": 154,
+      "isSlide": false,
+      "isCard": true
+    }
+  ],
+  "events": [
+    {
+      "id": "e1",
+      "titleEn": "Weekly Farmers Indigenous Market",
+      "titleMl": "ആഴ്ചതോറുമുള്ള തനത് കർഷക ചന്ത",
+      "date": "2026-06-21",
+      "time": "09:00 AM - 04:00 PM",
+      "locationEn": "Block Panchayat Ground, Agali",
+      "locationMl": "ബ്ലോക്ക് പഞ്ചായത്ത് ഗ്രൗണ്ട്, അഗളി",
+      "descriptionEn": "Direct sale of fresh organic millets, plantains, wild honey, and indigenous forest products harvested directly by tribal farming cohorts.",
+      "descriptionMl": "ഊരുകളിൽ നിന്നും നേരിട്ട് വിളവെടുത്ത രാഗി, ചാമ, കാട്ടുതേൻ, നാടൻ പച്ചക്കറികൾ എന്നിവ ഇടനിലക്കാരില്ലാതെ ഉപഭോക്താക്കളിലേക്ക് എത്തുന്ന അത്യാധുനിക കർഷക ചന്ത."
+    },
+    {
+      "id": "e2",
+      "titleEn": "Tribal Heritage Arts and Music Evening",
+      "titleMl": "ഗോത്രകലാ സന്ധ്യയും തനത് സംഗീതവും",
+      "date": "2026-06-25",
+      "time": "05:30 PM - 09:00 PM",
+      "locationEn": "Graft Centre Auditorium, Anaikatty",
+      "locationMl": "ഗ്രാഫ്റ്റ് സെന്റർ ഓഡിറ്റോറിയം, ആനക്കട്ടി",
+      "descriptionEn": "A grand celebration of the traditional folk dances, percussion, and musical forms of the Attappadi muduga and irula tribes.",
+      "descriptionMl": "അട്ടപ്പാടിയിലെ തനത് മുഡുക, ഇരുള ഗോത്ര നൃത്തങ്ങളുടെയും വാദ്യ മേളങ്ങളുടെയും സുന്ദര സന്ധ്യ."
+    },
+    {
+      "id": "e3",
+      "titleEn": "Free Medical Camp & Pediatric Checkup",
+      "titleMl": "സൗജന്യ മെഡിക്കൽ ക്യാമ്പും കുട്ടികളുടെ പരിശോധനയും",
+      "date": "2026-06-28",
+      "time": "09:30 AM - 02:00 PM",
+      "locationEn": "Govt High School, Sholayur",
+      "locationMl": "ഗവ. ഹൈസ്‌കൂൾ, ഷോളയൂർ",
+      "descriptionEn": "Conducted by Specialty Hospital Kottathara. Free medicine distribution and nutritional tracking for toddlers and children.",
+      "descriptionMl": "കോട്ടത്തറ ട്രൈബൽ ആശുപത്രിയുടെ നേത്യത്വത്തിൽ ഷോളയൂരിൽ സൗജന്യ വൈദ്യ സഹായ ക്യാമ്പും സൗജന്യ മരുന്ന് വിതരണവും."
+    }
+  ],
+  "directory": [
+    {
+      "id": "d1",
+      "nameEn": "Tribal Specialty Govt Hospital Kottathara",
+      "nameMl": "ട്രൈബൽ സ്പെഷ്യാലിറ്റി ഗവൺമെന്റ് ആശുപത്രി കോട്ടത്തറ",
+      "category": "hospital",
+      "contact": "04924-254500",
+      "locationEn": "Kottathara, Attappadi",
+      "locationMl": "കോട്ടത്തറ, അട്ടപ്പാടി"
+    },
+    {
+      "id": "d2",
+      "nameEn": "Agali Police Station Dispatch",
+      "nameMl": "അഗളി പോലീസ് സ്റ്റേഷൻ ഡെസ്ക്",
+      "category": "police",
+      "contact": "04924-254224",
+      "locationEn": "Agali Main Road",
+      "locationMl": "അഗളി മെയിൻ റോഡ്"
+    },
+    {
+      "id": "d3",
+      "nameEn": "Mukkali Eco-Tourism Information Office",
+      "nameMl": "മുക്കാലി ഇക്കോ ടൂറിസം ഇൻഫർമേഷൻ ഓഫീസ്",
+      "category": "government",
+      "contact": "04924-253225",
+      "locationEn": "Mukkali Range Desk",
+      "locationMl": "മുക്കാലി റെയിഞ്ച് ഡെസ്ക്"
+    },
+    {
+      "id": "d4",
+      "nameEn": "Attappadi Block Jeep Operators Cohort",
+      "nameMl": "അട്ടപ്പാടി ബ്ലോക്ക് ജീപ്പ് ഓപ്പറേറ്റേഴ്സ് കൂട്ടായ്മ",
+      "category": "taxi",
+      "contact": "+91 94463 32189",
+      "locationEn": "Stand Junction, Agali",
+      "locationMl": "സ്റ്റാൻഡ് ജംഗ്ഷൻ, അഗളി"
+    },
+    {
+      "id": "d5",
+      "nameEn": "Palakkad Fire and Rescue Control Room Desk",
+      "nameMl": "ഫയർ ആൻഡ് റെസ്ക്യൂ കൺട്രോൾ റൂം ഡെസ്ക്",
+      "category": "fire",
+      "contact": "101 / 0491-2522101",
+      "locationEn": "Vidyut Nagar, Palakkad",
+      "locationMl": "വിദ്യുത് നഗർ, പാലക്കാട്"
+    },
+    {
+      "id": "d6",
+      "nameEn": "Agali Emergency Plumbing & Water Services (Manoj)",
+      "nameMl": "അഗളി എമർജൻസി പ്ലംബിംഗ് സർവീസ് (മനോജ്)",
+      "category": "plumber",
+      "contact": "+91 98457 12543",
+      "locationEn": "Thavalam Road, Agali",
+      "locationMl": "താവളം റോഡ്, അഗളി"
+    }
+  ],
+  "emergency": [
+    {
+      "id": "em1",
+      "nameEn": "Tribal Specialty Hospital Ambulance Desk",
+      "nameMl": "ട്രൈബൽ ആശുപത്രി കോട്ടത്തറ ആംബുലൻസ് ഹെൽപ്പ് ലൈൻ",
+      "number": "04924-254108",
+      "type": "ambulance"
+    },
+    {
+      "id": "em2",
+      "nameEn": "Agali Police Patrol Unit Line",
+      "nameMl": "അഗളി പോലീസ് പട്രോളിങ് വിഭാഗം",
+      "number": "112 / 94979 80628",
+      "type": "police"
+    },
+    {
+      "id": "em3",
+      "nameEn": "Agali Forest Range Rescue Operations Office",
+      "nameMl": "അഗളി ഫോറസ്റ്റ് റെയിഞ്ച് റെസ്ക്യൂ കാര്യാലയം",
+      "number": "04924-254222",
+      "type": "forest"
+    },
+    {
+      "id": "em4",
+      "nameEn": "Mana Fire & Safety Control Station",
+      "nameMl": "അഗ്നിശമന വിഭാഗം അടിയന്തര ഫോൺ",
+      "number": "04924-254911",
+      "type": "fire"
+    }
+  ],
+  "opinions": [
+    {
+      "id": "o1",
+      "authorName": "Dr. R. Ramanathan, Tribal Health Activist",
+      "titleEn": "Strengthening primary healthcare networks inside interior tribal hamlets is urgent",
+      "titleMl": "ഉൾനാടൻ ഗോത്ര ഊരുകളിലെ പ്രാഥമിക ചികിത്സാ ശൃംഖലകൾ ശക്തിപ്പെടുത്തേണ്ടത് അടിയന്തരമാണ്",
+      "contentEn": "While specialty facilities in Kottathara are very laudable, tribal families in deep interior locations like Pudur or Sholayur still undergo massive stress to transport emergency patients over rocky trails. We must establish primary clinical outposts in major nodal hamlets with a resident nurse to achieve stable healthcare equity.",
+      "contentMl": "കോട്ടത്തറയിലെ മികച്ച ആശുപത്രി സൗകര്യങ്ങൾ അഭിനന്ദനാർഹമാണെങ്കിലും, ഉൾക്കാടുകളിലെ പുതൂർ, ഷോളയൂർ ഊരുകളിലുള്ളവർ അടിയന്തര സാഹചര്യങ്ങളിൽ കിലോമീറ്ററുകൾ താണ്ടേണ്ടി വരുന്നുണ്ട്. പ്രധാന ഊരുകളിൽ ഒരു നേഴ്സിന്റെ നേതൃത്വത്തിൽ പ്രാഥമിക ക്ലിനിക്കുകൾ സ്ഥാപിക്കുന്നത് ഇതിനു വലിയ പരിഹാരമാകും.",
+      "createdAt": "2026-06-18T16:40:00.000Z",
+      "approved": true
+    },
+    {
+      "id": "o2",
+      "authorName": "Mallika Chami, Kudumbashree Representative",
+      "titleEn": "Preserving indigenous seeds: The true route to nutrition self-reliance in Attappadi",
+      "titleMl": "തദ്ദേശീയ വിത്തുകളുടെ സംരക്ഷണം: പോഷകാഹാര സ്വയംപര്യാപ്തതയിലേക്കുള്ള വഴി",
+      "contentEn": "Traditional ragi, chama, and millet crops are the natural defense lines against nutritional deficiencies in Attappadi. We must empower women self-help societies to cultivate fallow tribal lands. Government subsidies should prioritize local seed distribution over processed grains from modern city markets.",
+      "contentMl": "നമ്മുടെ പാരമ്പര്യ കൂവരകും ചാമയുമാണ് കുട്ടികളുടെ പോഷകാഹാര കുറവുകൾ പരിഹരിക്കാൻ ഏറ്റവും നല്ല പ്രതിവിധി. തരിശുഭൂമികൾ ഏറ്റെടുത്ത് കൃഷി ചെയ്യാൻ വനിതാ സ്വയംസഹായ സംഘങ്ങളെ പ്രോത്സാഹിപ്പിക്കണം. നഗരങ്ങളിൽ നിന്നുള്ള പാക്കറ്റ് ഭക്ഷണങ്ങളേക്കാൾ തനത് ധാന്യങ്ങൾക്കാണ് സർക്കാർ കൂടുതൽ പ്രാധാന്യം നൽകേണ്ടത്.",
+      "createdAt": "2026-06-17T09:20:00.000Z",
+      "approved": true
+    }
+  ],
+  "destinations": [
+    {
+      "id": "dest_1",
+      "nameEn": "Silent Valley National Park",
+      "nameMl": "സൈലന്റ് വാലി ദേശീയോദ്യാനം",
+      "locationEn": "Mukkali Ranger Station",
+      "locationMl": "മുക്കാലി ഫോറസ്റ്റ് റേഞ്ച് ഓഫീസ്",
+      "image": "https://images.unsplash.com/photo-1549221194-4fa7a41413f4?w=800&auto=format&fit=crop&q=80",
+      "descriptionEn": "One of the last undisturbed rain forests in India. Protected under the Nilgiri Biosphere Reserve, it is famous for its evergreen canopy, pristine wild rivers, and rare wildlife like the Lion-tailed Macaque.",
+      "descriptionMl": "ഇന്ത്യയിലെ അവശേഷിക്കുന്ന ഏക കന്യകാവനങ്ങളിലൊന്ന്. നീലഗിരി ബയോസ്ഫിയർ റിസർവിന്റെ ഭാഗമായ ഇവിടെ നിത്യഹരിത വനനിരകളും, തെളിഞ്ഞ വന്യ നദികളും, സിംഹവാലൻ കുരങ്ങുകൾ ഉൾപ്പെടെയുള്ള അപൂർവ വന്യജീവി സമ്പത്തുമുണ്ട്.",
+      "highlightsEn": [
+        "Jeep Safari from Mukkali",
+        "Sylvan Trekking Trails",
+        "Beautiful Watchtower views"
+      ],
+      "highlightsMl": [
+        "മുക്കാലിയിൽ നിന്നുള്ള ജീപ്പ് സഫാരി",
+        "പ്രകൃതിദത്ത ട്രെക്കിങ് പാതകൾ",
+        "വാച്ച് ടവർ വ്യൂ പോയിന്റുകൾ"
+      ]
+    },
+    {
+      "id": "dest_2",
+      "nameEn": "Malleswara Peak",
+      "nameMl": "മല്ലേശ്വരൻ മുടി",
+      "locationEn": "Near Agali",
+      "locationMl": "അഗളിക്ക് സമീപം",
+      "image": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&auto=format&fit=crop&q=80",
+      "descriptionEn": "The tallest vertical mountain peak in Attappadi, revered as a deity (Lord Shiva) by the native tribal groups. Swathed in majestic clouds, it is the center of the massive annual Shivratri celebrations.",
+      "descriptionMl": "അട്ടപ്പാടിയിലെ ഏറ്റവും ഉയരം കൂടിയ കൊടുമുടി. മല്ലേശ്വരൻ മുടിയെ ഇവിടുത്തെ ആദിവാസി ജനവിഭാഗങ്ങൾ പരമശിവനായി പൂജിച്ച് ആരാധിക്കുന്നു. മനോഹരമായ മഞ്ഞുമൂടിയ മലനിരകളും പ്രശസ്തമായ ശിവരാത്രി കൊടിയേറ്റും ഇവിടുത്തെ പ്രത്യേകതയാണ്.",
+      "highlightsEn": [
+        "Cultural Pilgrimage",
+        "Spiritual Trekking",
+        "Mist-shrouded viewpoints"
+      ],
+      "highlightsMl": [
+        "ആത്മീയ തീർത്ഥാടനം",
+        "വിശുദ്ധ ട്രെക്കിങ് പാത",
+        "മഞ്ഞുമൂടിയ വ്യൂ പോയിന്റുകൾ"
+      ]
+    },
+    {
+      "id": "dest_3",
+      "nameEn": "Siruvani River & Dam Reservoir",
+      "nameMl": "ശിരുവാണി പുഴയും ഡാമും",
+      "locationEn": "Singampatti Catchments",
+      "locationMl": "സിംഗംപെട്ടി വൃഷ്ടിപ്രദേശം",
+      "image": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&auto=format&fit=crop&q=80",
+      "descriptionEn": "Renowned globally for generating water of unmatched sweetness. The Siruvani reservoir is surrounded by dense forests, deep gorges, and serves as a vital cross-border water network between Kerala and Tamil Nadu.",
+      "descriptionMl": "ലോകത്തിലെ ഏറ്റവും സ്വാദുള്ള കുടിവെള്ള സ്രോതസ്സുകളിലൊന്നായി അറിയപ്പെടുന്നു. ശിരുവാണി റിസർവോയർ നിബിഡ വനങ്ങളാലും മലയിടുക്കുകളാലും ചുറ്റപ്പെട്ടിരിക്കുന്നു. കേരളത്തിന്റെയും തമിഴ്‌നാടിന്റെയും അതിർത്തി പങ്കിടുന്ന ജലപാതയാണിത്.",
+      "highlightsEn": [
+        "Scenic Waterfalls",
+        "Silent Photography Spots",
+        "Pristine nature sounds"
+      ],
+      "highlightsMl": [
+        "മനോഹരമായ വെള്ളച്ചാട്ടങ്ങൾ",
+        "ഫോട്ടോഗ്രാഫി സ്പോട്ടുകൾ",
+        "വന്യമായ ശബ്‍ദാനുഭവം"
+      ]
+    },
+    {
+      "id": "dest_4",
+      "nameEn": "Bhavani River & Suspension Bridge",
+      "nameMl": "ഭവാനി പുഴയും തൂക്കുപാലവും",
+      "locationEn": "Thavalam Nodal",
+      "locationMl": "താവളം ജംഗ്ഷൻ",
+      "image": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&auto=format&fit=crop&q=80",
+      "descriptionEn": "A major perennial river flowing eastward into neighboring Tamil Nadu. The hanging suspension bridge at Thavalam is a popular local engineering marvel offering panoramic snapshots over the flowing currents.",
+      "descriptionMl": "കിഴക്കോട്ട് ഒഴുകുന്ന അപൂർവ്വം നദികളിലൊന്ന്. താവളത്തിലുള്ള മനോഹരമായ തൂക്കുപാലം പ്രദേശവാസികൾക്കും സഞ്ചാരികൾക്കും ആകർഷകമായ കാഴ്ചാനുഭവവും ഭവാനിപ്പുഴയുടെ വിശാലമായ ദൃശ്യവും സമ്മാനിക്കുന്നു.",
+      "highlightsEn": [
+        "Riverbanks Relaxation",
+        "Traditional Suspension Bridge",
+        "Bird Watching spots"
+      ],
+      "highlightsMl": [
+        "പുഴയോര വിശ്രമം",
+        "തൂക്കുപാലത്തിലൂടെയുള്ള നടത്തം",
+        "പക്ഷി നിരീക്ഷണം"
+      ]
+    }
+  ],
+  "cultures": [
+    {
+      "id": "cult_1",
+      "type": "culture",
+      "titleEn": "Tribal Dances & Instrumental Arts",
+      "titleMl": "ഗോത്രവർഗ്ഗ നൃത്തങ്ങളും സംഗീതവും",
+      "subtitleEn": "Irula, Muduga, & Kurumba Traditions",
+      "subtitleMl": "ഇരുള, മുഡുക, കുറുമ്പ പാരമ്പര്യം",
+      "image": "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=800&auto=format&fit=crop&q=80",
+      "descEn": "Attappadi's identity beats to the rhythm of traditional tribal folk music and dances. The 'Kakka Karumban' and 'Elelakkaradi' represent spirited dance rituals depicting wild creatures, harvest cycles, and ancestral spirits performed around glowing community campfires.",
+      "descMl": "പരമ്പരാഗത ഗോത്ര സംഗീതത്തിന്റെയും നൃത്ത രൂപങ്ങളുടെയും താളങ്ങളിലാണ് അട്ടപ്പാടിയുടെ ആത്മാവ് പടരുന്നത്. കാട്ടുമൃഗങ്ങളുടെ ചലനങ്ങളും വിതക്കൊയ്ത്തുകളും വർണ്ണിക്കുന്ന 'കാക്ക കറുമ്പൻ', 'ഏലേലക്കരടി' നൃത്തങ്ങൾ ഗ്രാമീണ കൂട്ടായ്മകളുടെ പ്രതീകങ്ങളാണ്.",
+      "elementEn": "Key Instruments: Kozhal (pipe), Thavi, & Para drum beats.",
+      "elementMl": "പ്രധാന വാദ്യങ്ങൾ: കുഴൽ, തവി, തകിൽ, പറ മേളങ്ങൾ."
+    },
+    {
+      "id": "cult_2",
+      "type": "food",
+      "titleEn": "Millet-centric Gastronomy & Forest Teas",
+      "titleMl": "പാരമ്പര്യ ധാന്യ വിഭവങ്ങളും കാട്ടുതേനും",
+      "subtitleEn": "Vanya Ragi, Chama, & Bamboo Rice",
+      "subtitleMl": "റാഗി, ചാമ, മുളയരി കഞ്ഞി",
+      "image": "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=800&auto=format&fit=crop&q=80",
+      "descEn": "Nutrition in the valley traces back to ancient millets. Standard meals center around nourishing Ragi Porridge (റാഗി കുറുക്ക്), Chama rice, and steaming forest tea mixed with immune-boosting country roots. Native bamboo rice payasam made during winter seasons is an absolute sweet delicacy.",
+      "descMl": "പ്രകൃതിയോടിണങ്ങിയ പരമ്പരാഗത തനിമയാണ് അട്ടപ്പാടിയിലെ ഭക്ഷണരീതിക്ക്. പോഷകഗുണമേറിയ റാഗി കുറുക്ക്, ചാമച്ചോറ്, ഔഷധവേരുകൾ ചേർത്ത കാട്ടുചായ എന്നിവ ഊരുകളിലെ നിത്യഭക്ഷണമാണ്. കൂടാതെ മുളയരി പായസം പ്രത്യേക ഉത്സവങ്ങളിലെ മധുരവിഭവമാണ്.",
+      "elementEn": "Try: Organic Wild Honey & Bamboo Seed Payasam.",
+      "elementMl": "രുചിച്ചുനോക്കൂ: ശുദ്ധമായ കാട്ടുതേൻ, മുളയരി പായസം."
+    }
+  ],
+  "stays": [
+    {
+      "id": "stay_1",
+      "nameEn": "Silent Valley Eco Forest Lodge",
+      "nameMl": "സൈലന്റ് വാലി ഇക്കോ ലോഗ് ഹൗസ്",
+      "typeEn": "Govt-owned Eco Haven",
+      "typeMl": "സർക്കാർ ഉടമസ്ഥതയിലുള്ള വനം കുടിലുകൾ",
+      "locationEn": "Mukkali Nodal",
+      "locationMl": "മുക്കാലി വില്ലേജ്",
+      "image": "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=800&auto=format&fit=crop&q=80",
+      "priceEn": "₹2,500 - ₹4,500 per night",
+      "priceMl": "പ്രതിദിനം ₹2,500 - ₹4,500",
+      "featuresEn": [
+        "Owned by Forest Department",
+        "Authentic native guides",
+        "Organic food mess"
+      ],
+      "featuresMl": [
+        "വനം വകുപ്പ് നിയന്ത്രണത്തിൽ",
+        "തദ്ദേശീയരായ ഗൈഡുകൾ",
+        "നാടൻ ഭക്ഷണശാല"
+      ]
+    },
+    {
+      "id": "stay_2",
+      "nameEn": "Bhavani Riverside Nature Estate",
+      "nameMl": "ഭവാനി റിവർസൈഡ് നേച്ചർ എസ്റ്റേറ്റ്",
+      "typeEn": "Premium Private Lodge",
+      "typeMl": "പ്രീമിയം പ്രൈവറ്റ് റിസോർട്ട്",
+      "locationEn": "Agali Hills",
+      "locationMl": "അഗളി കുന്നുകൾ",
+      "image": "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&auto=format&fit=crop&q=80",
+      "priceEn": "₹4,000 - ₹7,000 per night",
+      "priceMl": "പ്രതിദിനം ₹4,000 - ₹7,000",
+      "featuresEn": [
+        "Panoramic river frontage",
+        "Campfire under stars",
+        "Jeep trekking options"
+      ],
+      "featuresMl": [
+        "ഭവാനിപ്പുഴയുടെ സുന്ദരമായ കാഴ്ച",
+        "നിവേദ്യമായ ക്യാമ്പ്ഫയർ",
+        "ഓഫ്-റോഡ് ജീപ്പ് സവാരി"
+      ]
+    },
+    {
+      "id": "stay_3",
+      "nameEn": "Agali Valley HomeStays",
+      "nameMl": "അഗളി വാലി ഹോംസ്റ്റേകൾ",
+      "typeEn": "Community Farm Stay",
+      "typeMl": "തദ്ദേശീയ കർഷക ഭവനങ്ങൾ",
+      "locationEn": "Thavalam-Agali corridor",
+      "locationMl": "താവളം-അഗളി റോഡ്",
+      "image": "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800&auto=format&fit=crop&q=80",
+      "priceEn": "₹1,200 - ₹2,000 per night",
+      "priceMl": "പ്രതിദിനം ₹1,200 - ₹2,000",
+      "featuresEn": [
+        "Hosted by farming families",
+        "Spice garden walking tour",
+        "Home-cooked traditional dishes"
+      ],
+      "featuresMl": [
+        "നാടൻ കർഷക കുടുംബങ്ങളോടൊപ്പം",
+        "സുഗന്ധവ്യഞ്ജന തോട്ട സന്ദർശനം",
+        "രുചികരമായ നാടൻ കഞ്ഞി വിഭവങ്ങൾ"
+      ]
+    }
+  ],
+  "travelogues": [
+    {
+      "id": "trav_1",
+      "titleEn": "Monsoon Magic: Walking Through Silent Valley Catchments",
+      "titleMl": "വർഷകാലത്തെ പ്രകൃതി വസന്തം: സൈലന്റ് വാലിയിലൂടെ ഒരു കാൽനട യാത്ര",
+      "authorEn": "Fayis Mohammed, Travel Columnist",
+      "authorMl": "ഫായിസ് മുഹമ്മദ്, യാത്രാവിവരണ ചരിത്രകാരൻ",
+      "date": "June 2026",
+      "snippetEn": "Heavy mist envelops the towering teak canopies. Droplets fall from ancient moss-laden trees as the wild Siruvani streams hum a distant lullaby. Walking on the damp orange leaf litter of Mukkali ranger trails resets your perspective completely...",
+      "snippetMl": "കനത്ത കോടമഞ്ഞ് ഉയരമുള്ള നിത്യഹരിത മരങ്ങളെ തഴുകിപ്പോകുന്നു. വൃക്ഷത്തലപ്പുകളിൽ നിന്ന് വീഴുന്ന ഓരോ മഴത്തുള്ളിയും ശിരുവാണിപ്പുഴയുടെ ഹൃദയതാളങ്ങൾക്ക് മാറ്റുകൂട്ടുന്നു. മുക്കാലിയിലെ ഈ അടിപ്പാതയിലൂടെയുള്ള നടത്തം പ്രകൃതിയുടെ മറ്റൊരു ലോകത്തേക്ക് നമ്മെ കൊണ്ടുപോകും...",
+      "readTimeEn": "5 min read",
+      "readTimeMl": "5 മിനുട്ട് വായന"
+    },
+    {
+      "id": "trav_2",
+      "titleEn": "Reverence & Height: Gaining Perspective at the base of deity peak Malleswara",
+      "titleMl": "കരുത്തിന്റെ പ്രതീകം: മല്ലേശ്വരൻ മുടിയുടെ താഴ്വാരങ്ങളിലൂടെയുള്ള അനുഭവം",
+      "authorEn": "Adv. Rajesh K., Agali",
+      "authorMl": "അഡ്വ. രാജേഷ് കെ., അഗളി",
+      "date": "May 2026",
+      "snippetEn": "Every tribal community member elders look up to Malleswaram peak with sheer silence and respect. Trekking to the perimeter during the Shivratri night when giant beacons are lit atop is an otherworldly experience where drum beats echo along valleys...",
+      "snippetMl": "അട്ടപ്പാടിയിലെ ഓരോ ജനവിഭാഗത്തിനും മല്ലേശ്വരൻ മുടി കേവലമൊരു പർവ്വതമല്ല; വലിയൊരു വിശ്വാസമാണ്. ശിവരാത്രി ദിനത്തിൽ മലമുകളിൽ മല്ലേശ്വരൻ ദീപം പ്രകാശിക്കുമ്പോൾ അതിർത്തികളിൽ മുഴങ്ങുന്ന തുടിമേളങ്ങളുടെ ശബ്ദം നാടിൻ്റെ ഐക്യത്തിൻ്റെ പ്രതീകമാണ്...",
+      "readTimeEn": "4 min read",
+      "readTimeMl": "4 മിനുട്ട് വായന"
+    }
+  ],
+  "photos": [
+    {
+      "id": "photo_1",
+      "url": "https://images.unsplash.com/photo-1549221194-4fa7a41413f4?w=1000&auto=format&fit=crop",
+      "titleEn": "Misty Evergreen Canopies of Silent Valley",
+      "titleMl": "കോടമഞ്ഞിൽ മൂടിയ സൈലന്റ് വാലി നിബിഡവനങ്ങൾ",
+      "descEn": "A pristine early morning viewpoint inside the deep core rainforest.",
+      "descMl": "പ്രഭാതത്തിൽ സൈലന്റ് വാലി ദേശീയോദ്യാനത്തിനുള്ളിൽ നിന്നുള്ള വന്യമായ ദൃശ്യം."
+    },
+    {
+      "id": "photo_2",
+      "url": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1000&auto=format&fit=crop",
+      "titleEn": "Malleswara Peak Shrouded in Silken Clouds",
+      "titleMl": "മല്ലേശ്വരൻ മുടിയെ തഴുകുന്ന മേഘജാലം",
+      "descEn": "Revered vertical peak holding sacred importance for native tribal hamlets.",
+      "descMl": "ആദിവാസി ഊരുകൾ പവിത്രമായി കാണുന്ന അട്ടപ്പാടിയുടെ കാവൽ ദൈവം."
+    },
+    {
+      "id": "photo_3",
+      "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1000&auto=format&fit=crop",
+      "titleEn": "Primal Siruvani Streams Carrying Sweet Water",
+      "titleMl": "മലനിരകളിൽ നിന്നൊഴുകിയെത്തുന്ന ശിരുവാണി പുഴ",
+      "descEn": "Purest, famously sweet water reservoir streams flowing through deep blocks.",
+      "descMl": "വിഖ്യാതമായ മധുരമേറിയ ഈ കുടിവെള്ള നദി കാടുകളുടെ ഹൃദയം തൊട്ടൊഴുകുന്നു."
+    },
+    {
+      "id": "photo_4",
+      "url": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1000&auto=format&fit=crop",
+      "titleEn": "Ancient Bamboo Thickets near Bhavani Banks",
+      "titleMl": "ഭവാനിപ്പുഴയോരത്തെ പുരാതന മുളങ്കാടുകൾ",
+      "descEn": "Home to beautiful indigenous birds and natural wilderness vibes.",
+      "descMl": "അപൂർവ പക്ഷികൾക്ക് താവളമൊരുക്കുന്ന താവളത്തിലെ നിബിഡമായ ഈ മുളങ്കാടുകൾ."
+    },
+    {
+      "id": "photo_5",
+      "url": "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=1000&auto=format&fit=crop",
+      "titleEn": "Ragi and Millet Farmlands of Pudur Grama Panchayat",
+      "titleMl": "പുതൂരിലെ മനോഹരമായ പരമ്പരാഗത റാഗി കൃഷിയിടം",
+      "descEn": "Ensuring deep nutrition and historic self-reliance across block boundaries.",
+      "descMl": "അട്ടപ്പാടിക്ക് തനതായ ആരോഗ്യസുരക്ഷ പകരുന്ന പുരാതന ധാന്യ വിള നിലങ്ങൾ."
+    },
+    {
+      "id": "photo_6",
+      "url": "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1000&auto=format&fit=crop",
+      "titleEn": "Rustic Wooden Walkway in Mukkali Buffer Zone",
+      "titleMl": "മുക്കാലി ബഫർ സോണിലെ പ്രകൃതിദത്ത നടപ്പാത",
+      "descEn": "Step closer to untouched, moss-covered wilderness of Silent Valley.",
+      "descMl": "సైలന്റ് വാലിയുടെ അതിർത്തി വനങ്ങളിൽ സഞ്ചാരികൾക്കായി ഒരുക്കിയ സുന്ദരമായ കാട്ടുപാത."
+    }
+  ],
+  "busRoutes": [
+    {
+      "id": "bus_1",
+      "routeEn": "Mannarkkad - Mukkali - Agali - Anaikatty",
+      "routeMl": "മണ്ണാർക്കാട് - മുക്കാലി - അഗളി - ആനക്കട്ടി",
+      "type": "KSRTC",
+      "busTypeEn": "Fast Passenger / Ordinary Local Connections",
+      "busTypeMl": "ഫാസ്റ്റ് പാസഞ്ചർ / ഓർഡിനറി സർവീസുകൾ",
+      "runsEn": "Daily Line",
+      "runsMl": "എല്ലാ ദിവസവും",
+      "frequencyEn": "Every 45 minutes",
+      "frequencyMl": "ഓരോ 45 മിനിറ്റിലും സർവീസ്",
+      "timingsEn": "First Bus: 05:30 AM, Last Bus: 08:30 PM",
+      "timingsMl": "ആദ്യ ബസ്: 05:30 AM, അവസാന ബസ്: 08:30 PM",
+      "list": [
+        {
+          "time": "05:30 AM",
+          "typeEn": "KSRTC Ordinary",
+          "typeMl": "KSRTC ഓർഡിനറി",
+          "viaCodeEn": "Mukkali, Agali",
+          "viaCodeMl": "മുക്കാലി, അഗളി വഴി"
+        },
+        {
+          "time": "06:15 AM",
+          "typeEn": "KSRTC FP",
+          "typeMl": "KSRTC ഫാസ്റ്റ് പാസഞ്ചർ",
+          "viaCodeEn": "Mukkali, Agali, Anaikatty",
+          "viaCodeMl": "മുക്കാലി, അഗളി, ആനക്കട്ടി വഴി"
+        },
+        {
+          "time": "07:00 AM",
+          "typeEn": "Private Stage Carrier",
+          "typeMl": "സ്വകാര്യ ബസ്",
+          "viaCodeEn": "Mukkali, Agali, Kottathara",
+          "viaCodeMl": "മുക്കാലി, അഗളി, കോട്ടത്തറ വഴി"
+        },
+        {
+          "time": "08:15 AM",
+          "typeEn": "KSRTC Ordinary",
+          "typeMl": "KSRTC ഓർഡിനറി",
+          "viaCodeEn": "Ittiyadi, Agali",
+          "viaCodeMl": "ഇറ്റിയാടി, അഗളി വഴി"
+        },
+        {
+          "time": "09:30 AM",
+          "typeEn": "KSRTC FP",
+          "typeMl": "KSRTC ഫാസ്റ്റ് പാസഞ്ചർ",
+          "viaCodeEn": "Mukkali, Agali, Anaikatty",
+          "viaCodeMl": "മുക്കാലി, അഗളി, ആനക്കട്ടി വഴി"
+        },
+        {
+          "time": "11:15 AM",
+          "typeEn": "Private Stage Carrier",
+          "typeMl": "സ്വകാര്യ ബസ്",
+          "viaCodeEn": "Goolikadavu, Agali",
+          "viaCodeMl": "കൂളിക്കടവ്, അഗളി വഴി"
+        },
+        {
+          "time": "12:45 PM",
+          "typeEn": "KSRTC Ordinary",
+          "typeMl": "KSRTC ഓർഡിനറി",
+          "viaCodeEn": "Mukkali, Agali",
+          "viaCodeMl": "മുക്കാലി, അഗളി വഴി"
+        },
+        {
+          "time": "02:00 PM",
+          "typeEn": "KSRTC FP",
+          "typeMl": "KSRTC ഫാസ്റ്റ് പാസഞ്ചർ",
+          "viaCodeEn": "Mukkali, Agali, Anaikatty",
+          "viaCodeMl": "മുക്കാലി, അഗളി, ആനക്കട്ടി വഴി"
+        },
+        {
+          "time": "03:30 PM",
+          "typeEn": "Private Stage Carrier",
+          "typeMl": "സ്വകാര്യ ബസ്",
+          "viaCodeEn": "Mukkali, Agali, Sholayur",
+          "viaCodeMl": "മുക്കാലി, അഗളി, ഷോളയൂർ വഴി"
+        },
+        {
+          "time": "04:45 PM",
+          "typeEn": "KSRTC Ordinary",
+          "typeMl": "KSRTC ഓർഡിനറി",
+          "viaCodeEn": "Mukkali, Agali",
+          "viaCodeMl": "മുക്കാലി, അഗളി വഴി"
+        },
+        {
+          "time": "05:55 PM",
+          "typeEn": "KSRTC FP",
+          "typeMl": "KSRTC ഫാസ്റ്റ് പാസഞ്ചർ",
+          "viaCodeEn": "Mukkali, Agali, Anaikatty",
+          "viaCodeMl": "മുക്കാലി, അഗളി, ആനക്കട്ടി വഴി"
+        },
+        {
+          "time": "07:15 PM",
+          "typeEn": "Private Stage Carrier",
+          "typeMl": "സ്വകാര്യ ബസ്",
+          "viaCodeEn": "Mukkali, Agali",
+          "viaCodeMl": "മുക്കാലി, അഗളി വഴി"
+        },
+        {
+          "time": "08:30 PM",
+          "typeEn": "KSRTC Ordinary (Night Stay)",
+          "typeMl": "KSRTC രാത്രി സർവീസ് (താലൂക്ക് ആശുപത്രി വഴി)",
+          "viaCodeEn": "Mukkali, Agali Stay",
+          "viaCodeMl": "മുക്കാലി, അഗളി (രാത്രി താമസം)"
+        }
+      ]
+    },
+    {
+      "id": "bus_2",
+      "routeEn": "Coimbatore - Anaikatty - Agali",
+      "routeMl": "കോയമ്പത്തൂർ (ഗാന്ധിപുരം) - ആനക്കട്ടി - അഗളി",
+      "type": "TNSTC",
+      "busTypeEn": "Interstate Ordinary / Express Coach",
+      "busTypeMl": "അന്തർസംസ്ഥാന തമിഴ്നാട് സർവ്വീസ്",
+      "runsEn": "Daily Line",
+      "runsMl": "എല്ലാ ദിവസവും",
+      "frequencyEn": "Every 30-40 minutes",
+      "frequencyMl": "ഓരോ 30-40 മിനിറ്റിലും സർവീസ്",
+      "timingsEn": "Border shuttle service with TNSTC connection",
+      "timingsMl": "ആനക്കട്ടി അതിർത്തിയിൽ നിന്ന് കോയമ്പത്തൂരിലേക്ക് നിരന്തര സർവീസുകൾ ലഭ്യമാണ്",
+      "list": [
+        {
+          "time": "06:00 AM",
+          "typeEn": "TNSTC Ordinary",
+          "typeMl": "തമിഴ്‌നാട് സർക്കാർ ബസ്",
+          "viaCodeEn": "Thadagam Road, Kanuvai",
+          "viaCodeMl": "തടാകം റോഡ്, കണുവായി വഴി"
+        },
+        {
+          "time": "07:15 AM",
+          "typeEn": "TNSTC Ordinary",
+          "typeMl": "തമിഴ്‌നാട് സർക്കാർ ബസ്",
+          "viaCodeEn": "Thadagam Road, Anaikatty",
+          "viaCodeMl": "തടാകം റോഡ്, ആനക്കട്ടി വഴി"
+        },
+        {
+          "time": "08:30 AM",
+          "typeEn": "Private Interstate Bus",
+          "typeMl": "സ്വകാര്യ ബസ് സർവീസ്",
+          "viaCodeEn": "Gandhipuram, Kanuvai",
+          "viaCodeMl": "ഗാന്ധിപുരം, കണുവായി വഴി"
+        },
+        {
+          "time": "10:00 AM",
+          "typeEn": "TNSTC Ordinary",
+          "typeMl": "തമിഴ്‌നാട് സർക്കാർ ബസ്",
+          "viaCodeEn": "Thadagam Road",
+          "viaCodeMl": "തടാകം റോഡ് വഴി"
+        },
+        {
+          "time": "11:45 AM",
+          "typeEn": "TNSTC Express",
+          "typeMl": "തമിഴ്‌നാട് എക്സ്പ്രസ്സ്",
+          "viaCodeEn": "Coimbatore Town Hall, Anaikatty",
+          "viaCodeMl": "കോയമ്പത്തൂർ ടൗൺ ഹാൾ വഴി"
+        },
+        {
+          "time": "01:15 PM",
+          "typeEn": "Private Stage Carrier",
+          "typeMl": "സ്വകാര്യ ബസ്",
+          "viaCodeEn": "Gandhipuram, Anaikatty",
+          "viaCodeMl": "ഗാന്ധിപുരം, ആനക്കട്ടി വഴി"
+        },
+        {
+          "time": "02:45 PM",
+          "typeEn": "TNSTC Ordinary",
+          "typeMl": "തമിഴ്‌നാട് സർക്കാർ ബസ്",
+          "viaCodeEn": "Thadagam Road",
+          "viaCodeMl": "തടാകം റോഡ് വഴി"
+        },
+        {
+          "time": "04:15 PM",
+          "typeEn": "TNSTC Express",
+          "typeMl": "തമിഴ്‌നാട് എക്സ്പ്രസ്സ്",
+          "viaCodeEn": "Coimbatore Gandhipuram",
+          "viaCodeMl": "കോയമ്പത്തൂർ ഗാന്ധിപുരം വഴി"
+        },
+        {
+          "time": "05:30 PM",
+          "typeEn": "Private Town Bus",
+          "typeMl": "സ്വകാര്യ നഗര ബസ്",
+          "viaCodeEn": "Thadagam Road",
+          "viaCodeMl": "തടാകം റോഡ് വഴി"
+        },
+        {
+          "time": "06:45 PM",
+          "typeEn": "TNSTC Ordinary",
+          "typeMl": "തമിഴ്‌നാട് സർക്കാർ ബസ്",
+          "viaCodeEn": "Anaikatty Gate",
+          "viaCodeMl": "ആനക്കട്ടി ഗേറ്റ് വഴി"
+        },
+        {
+          "time": "08:15 PM",
+          "typeEn": "TNSTC Ordinary (Last Transit)",
+          "typeMl": "തമിഴ്‌നാട് സർക്കാർ ബസ് (അവസാന ട്രാൻസിറ്റ്)",
+          "viaCodeEn": "Thadagam Road",
+          "viaCodeMl": "തടാകം റോഡ് വഴി"
+        }
+      ]
+    },
+    {
+      "id": "bus_3",
+      "routeEn": "Agali - Sholayur - Anaikatty",
+      "routeMl": "അഗളി - ഷോളയൂർ - ആനക്കട്ടി (മേഖലാ സർവീസ്)",
+      "type": "PRIVATE",
+      "busTypeEn": "Valley Ordinary Stage Carrier",
+      "busTypeMl": "വാലി ഓർഡിനറി പ്രൈവറ്റ് ബസ്",
+      "runsEn": "Daily Line",
+      "runsMl": "എല്ലാ ദിവസവും",
+      "frequencyEn": "Every 1 hour",
+      "frequencyMl": "ഓരോ 1 മണിക്കൂർ ഇടവിട്ട് സർവീസ്",
+      "timingsEn": "First Bus: 06:45 AM, Last Bus: 07:30 PM",
+      "timingsMl": "ആദ്യ ബസ്: 06:45 AM, അവസാന ബസ്: 07:30 PM",
+      "list": [
+        {
+          "time": "06:45 AM",
+          "typeEn": "Private Ordinary",
+          "typeMl": "സ്വകാര്യ ഓർഡിനറി ബസ്",
+          "viaCodeEn": "Goolikadavu, Sholayur",
+          "viaCodeMl": "കൂളിക്കടവ്, ഷോളയൂർ വഴി"
+        },
+        {
+          "time": "07:50 AM",
+          "typeEn": "Private Ordinary",
+          "typeMl": "സ്വകാര്യ ഓർഡിനറി ബസ്",
+          "viaCodeEn": "Kottathara, Sholayur",
+          "viaCodeMl": "കോട്ടത്തറ, ഷോളയൂർ വഴി"
+        },
+        {
+          "time": "09:00 AM",
+          "typeEn": "Private Ordinary",
+          "typeMl": "സ്വകാര്യ ഓർഡിനറി ബസ്",
+          "viaCodeEn": "Goolikadavu, Sholayur",
+          "viaCodeMl": "കൂളിക്കടവ്, ഷോളയൂർ വഴി"
+        },
+        {
+          "time": "10:30 AM",
+          "typeEn": "Private Ordinary",
+          "typeMl": "സ്വകാര്യ ഓർഡിനറി ബസ്",
+          "viaCodeEn": "Goolikadavu, Sholayur",
+          "viaCodeMl": "കൂളിക്കടവ്, ഷോളയൂർ വഴി"
+        },
+        {
+          "time": "12:00 PM",
+          "typeEn": "Private Ordinary",
+          "typeMl": "സ്വകാര്യ ഓർഡിനറി ബസ്",
+          "viaCodeEn": "Kottathara, Sholayur",
+          "viaCodeMl": "കോട്ടത്തറ, ഷോളയൂർ വഴി"
+        },
+        {
+          "time": "01:30 PM",
+          "typeEn": "Private Ordinary",
+          "typeMl": "സ്വകാര്യ ഓർഡിനറി ബസ്",
+          "viaCodeEn": "Goolikadavu, Sholayur",
+          "viaCodeMl": "കൂളിക്കടവ്, ഷോളയൂർ വഴി"
+        },
+        {
+          "time": "03:00 PM",
+          "typeEn": "Private Ordinary",
+          "typeMl": "സ്വകാര്യ ഓർഡിനറി ബസ്",
+          "viaCodeEn": "Goolikadavu, Sholayur",
+          "viaCodeMl": "കൂളിക്കടവ്, ഷോളയൂർ വഴി"
+        },
+        {
+          "time": "04:30 PM",
+          "typeEn": "Private Ordinary",
+          "typeMl": "സ്വകാര്യ ഓർഡിനറി ബസ്",
+          "viaCodeEn": "Kottathara, Sholayur",
+          "viaCodeMl": "കോട്ടത്തറ, ഷോളയൂർ വഴി"
+        },
+        {
+          "time": "06:00 PM",
+          "typeEn": "Private Ordinary",
+          "typeMl": "സ്വകാര്യ ഓർഡിനറി ബസ്",
+          "viaCodeEn": "Goolikadavu, Sholayur",
+          "viaCodeMl": "കൂളിക്കടവ്, ഷോളയൂർ വഴി"
+        },
+        {
+          "time": "07:30 PM",
+          "typeEn": "Private Ordinary (Last Bus)",
+          "typeMl": "സ്വകാര്യ ഓർഡിനറി ബസ് (അവസാന സർവീസ്)",
+          "viaCodeEn": "Goolikadavu, Sholayur",
+          "viaCodeMl": "കൂളിക്കടവ്, ഷോളയൂർ വഴി"
+        }
+      ]
+    },
+    {
+      "id": "bus_4",
+      "routeEn": "Agali - Pudur - Mulli",
+      "routeMl": "അഗളി - പുതൂർ - മുള്ളി (വനമേഖലാ തനി നാടൻ പാത)",
+      "type": "KSRTC",
+      "busTypeEn": "Hill Forest Ordinary Route",
+      "busTypeMl": "മലയോര ഫോറസ്റ്റ് സർവീസ്",
+      "runsEn": "Daily Line",
+      "runsMl": "എല്ലാ ദിവസവും",
+      "frequencyEn": "Limited Services (3 times/day)",
+      "frequencyMl": "പ്രതിദിനം 3 സർവീസുകൾ (രണ്ടു ദിശകളിലേക്കും)",
+      "timingsEn": "Essential lifeline for tribal hamlets & Mulli Checkpost Connection",
+      "timingsMl": "മുള്ളി ഫോറസ്റ്റ് ചെക്ക്പോസ്റ്റും പുതൂർ പഞ്ചായത്തിലെ ആദിവാസി ഊരുകളും ബന്ധിപ്പിക്കുന്ന അത്യാവശ്യ വണ്ടി",
+      "list": [
+        {
+          "time": "07:05 AM",
+          "typeEn": "KSRTC Ordinary (Up)",
+          "typeMl": "KSRTC ഓർഡിനറി - ഹിൽ റൂട്ട്",
+          "viaCodeEn": "Kottathara, Pudur",
+          "viaCodeMl": "കോട്ടത്തറ, പുതൂർ വഴി"
+        },
+        {
+          "time": "08:30 AM",
+          "typeEn": "KSRTC Ordinary (Down)",
+          "typeMl": "KSRTC മടക്ക സർവീസ്",
+          "viaCodeEn": "Mulli to Agali",
+          "viaCodeMl": "മുള്ളിയിൽ നിന്ന് അഗളിയിലേക്ക്"
+        },
+        {
+          "time": "12:45 PM",
+          "typeEn": "KSRTC Ordinary (Up)",
+          "typeMl": "KSRTC ഉച്ച സർവീസ്",
+          "viaCodeEn": "Kottathara, Pudur, Mulli",
+          "viaCodeMl": "കോട്ടത്തറ, പുതൂർ, മുള്ളി വഴി"
+        },
+        {
+          "time": "02:15 PM",
+          "typeEn": "KSRTC Ordinary (Down)",
+          "typeMl": "KSRTC മടക്ക സർവീസ്",
+          "viaCodeEn": "Mulli to Agali",
+          "viaCodeMl": "മുള്ളിയിൽ നിന്ന് അഗളിയിലേക്ക്"
+        },
+        {
+          "time": "05:00 PM",
+          "typeEn": "KSRTC Ordinary (Up - Night Stay)",
+          "typeMl": "KSRTC വൈകുന്നേരത്തെ ആശ്രയം (ഊരുകളിലേക്കുള്ള തിരിച്ചുപോക്ക്)",
+          "viaCodeEn": "Pudur, Mulli (Pudur Night Stay)",
+          "viaCodeMl": "പുതൂർ, മുള്ളി വഴി (പുതൂരിൽ രാത്രി താമസം)"
+        }
+      ]
+    },
+    {
+      "id": "bus_5",
+      "routeEn": "Palakkad - Mannarkkad - Agali - Anaikatty",
+      "routeMl": "പാലക്കാട് - മണ്ണാർക്കാട് - അഗളി - ആനക്കട്ടി",
+      "type": "KSRTC",
+      "busTypeEn": "Fast Passenger / Town Connection Bus",
+      "busTypeMl": "ഫാസ്റ്റ് പാസഞ്ചർ / ലിങ്ക് സർവീസ്",
+      "runsEn": "Daily Line",
+      "runsMl": "എല്ലാ ദിവസവും",
+      "frequencyEn": "Regular Scheduled Interval",
+      "frequencyMl": "കൃത്യമായ സമയക്രമങ്ങളിൽ സർവീസ്",
+      "timingsEn": "Palakkad District HQ Direct Connection",
+      "timingsMl": "പാലക്കാട് ജില്ലാ ആസ്ഥാനത്തേക്ക് നേരിട്ടുള്ള മികച്ച കണക്റ്റിവിറ്റി",
+      "list": [
+        {
+          "time": "05:05 AM",
+          "typeEn": "KSRTC Fast Passenger",
+          "typeMl": "KSRTC ഫാസ്റ്റ് പാസഞ്ചർ (ആനക്കട്ടി ആദ്യം)",
+          "viaCodeEn": "Mannarkkad, Kanjikode, Palakkad Depot",
+          "viaCodeMl": "മണ്ണാർക്കാട്, പാലക്കാട് ഡിപ്പോ വഴി"
+        },
+        {
+          "time": "08:15 AM",
+          "typeEn": "KSRTC Ordinary",
+          "typeMl": "KSRTC ഓർഡിനറി സർവീസ്",
+          "viaCodeEn": "Thavalam, Mannarkkad, Palakkad",
+          "viaCodeMl": "താവളം, മണ്ണാർക്കാട്, പാലക്കാട് വഴി"
+        },
+        {
+          "time": "11:45 AM",
+          "typeEn": "KSRTC Fast Passenger",
+          "typeMl": "KSRTC ഫാസ്റ്റ് പാസഞ്ചർ",
+          "viaCodeEn": "Chirakkal, Mannarkkad",
+          "viaCodeMl": "ചിറക്കൽ, മണ്ണാർക്കാട് വഴി"
+        },
+        {
+          "time": "02:20 PM",
+          "typeEn": "KSRTC Fast Passenger",
+          "typeMl": "KSRTC ഫാസ്റ്റ് പാസഞ്ചർ (Palakkad Return)",
+          "viaCodeEn": "Mannarkkad, Palakkad Hub",
+          "viaCodeMl": "മണ്ണാർക്കാട്, പാലക്കാട് ഹബ് വഴി"
+        },
+        {
+          "time": "04:30 PM",
+          "typeEn": "KSRTC Fast Passenger (Last Link)",
+          "typeMl": "KSRTC പാസഞ്ചർ (അവസാന ലിങ്ക് ബസ്)",
+          "viaCodeEn": "Mannarkkad Town, Palakkad Depot",
+          "viaCodeMl": "മണ്ണാർക്കാട് ടൗൺ, പാലക്കാട് ഡിപ്പോ വഴി"
+        }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "id": "route_1",
+      "routeEn": "Mannarkkad - Mukkali - Agali - Anaikatty",
+      "routeMl": "മണ്ണാർക്കാട് - മുക്കാലി - അഗളി - ആനക്കട്ടി"
+    },
+    {
+      "id": "route_2",
+      "routeEn": "Coimbatore - Anaikatty - Agali",
+      "routeMl": "കോയമ്പത്തൂർ (ഗാന്ധിപുരം) - ആനക്കട്ടി - അഗളി"
+    },
+    {
+      "id": "route_3",
+      "routeEn": "Agali - Sholayur - Anaikatty",
+      "routeMl": "അഗളി - ഷോളയൂർ - ആനക്കട്ടി (മേഖലാ സർവീസ്)"
+    },
+    {
+      "id": "route_4",
+      "routeEn": "Agali - Pudur - Mulli",
+      "routeMl": "അഗളി - പുതൂർ - മുള്ളി (വനമേഖലാ തനി നാടൻ പാത)"
+    },
+    {
+      "id": "route_5",
+      "routeEn": "Palakkad - Mannarkkad - Agali - Anaikatty",
+      "routeMl": "പാലക്കാട് - മണ്ണാർക്കാട് - അഗളി - ആനക്കട്ടി"
+    }
+  ],
+  "notices": [
+    {
+      "id": "not_test_1782150571028",
+      "titleEn": "[LIVE TEST ALERT] Mukkali Forest Checkpost Timing Update",
+      "titleMl": "[ലൈവ് ടെസ്റ്റ് അലർട്ട്] മുക്കാലി ഫോറസ്റ്റ് ചെക്ക്പോസ്റ്റ് സമയമാറ്റ ജാഗ്രത",
+      "contentEn": "Verified: Notice loading and publishing is working 100% flawlessly! This test alert is generated directly on your live board.",
+      "contentMl": "അറിയിപ്പുകൾ ശരിയായി ലഭ്യമാകുന്നുണ്ടെന്ന് ഇതിനാൽ ഉറപ്പുവരുത്തുന്നു! ഈ ടെസ്റ്റ് അറിയിപ്പ് നിങ്ങളുടെ ഡാഷ്‌ബോർഡിൽ തത്സമയം എത്തിയിട്ടുണ്ട്.",
+      "type": "attention",
+      "severity": "high",
+      "date": "2026-06-22",
+      "active": true
+    },
+    {
+      "id": "not_1",
+      "titleEn": "Caution: Wild Elephant Crossing near Mukkali",
+      "titleMl": "ജാഗ്രതാ നിർദ്ദേശം: മുക്കാലിയിൽ കാട്ടാന സാന്നിധ്യം",
+      "contentEn": "Frequent wild elephant movements have been reported along the Mukkali-Anakkal forest route. Public is advised to avoid travel from 6 PM to 6 AM and drive slowly.",
+      "contentMl": "മുക്കാലി-ആനക്കൽ വനപാതയിൽ കാട്ടാനകളുടെ സാന്നിധ്യം ഉള്ളതായി റിപ്പോർട്ട് ചെയ്തിരിക്കുന്നു. വൈകിട്ട് 6 മുതൽ രാവിലെ 6 വരെയുള്ള യാത്രകൾ പരമാവധി ഒഴിവാക്കുക.",
+      "type": "caution",
+      "severity": "high",
+      "date": "2026-06-20",
+      "active": true
+    },
+    {
+      "id": "not_2",
+      "titleEn": "Landslide Warning: Heavy Rain Alert",
+      "titleMl": "മഴ മുന്നറിയിപ്പ്: ഉരുൾപൊട്ടൽ ജാഗ്രത",
+      "contentEn": "With heavy rains continuing in Attappadi hills, flash flood and landslide warnings are in place for Sholayur and Pudur hillsides. Keep emergency numbers standby.",
+      "contentMl": "അട്ടപ്പാടി മലനിരകളിൽ മഴ തുടരുന്നതിനാൽ ഷോളയൂർ, പുതൂർ മേഖലകളിൽ ഉരുൾപൊട്ടൽ ജാഗ്രതാ നിർദ്ദേശം നൽകിയിരിക്കുന്നു. അടിയന്തര ഹെൽപ്‌ലൈനുകൾ ബന്ധപ്പെടാൻ സൂക്ഷിക്കുക.",
+      "type": "caution",
+      "severity": "high",
+      "date": "2026-06-19",
+      "active": true
+    },
+    {
+      "id": "not_3",
+      "titleEn": "Free Tribal Health Screening Camp",
+      "titleMl": "സൗജന്യ മെഡിക്കൽ ക്യാമ്പ് അഗളിയിൽ",
+      "contentEn": "A comprehensive free health screening and wellness checkup camp will be held at Agali Community Hall on June 25th from 9 AM. Free medicines will be distributed.",
+      "contentMl": "അഗളി കമ്മ്യൂണിറ്റി ഹാളിൽ ജൂൺ 25-ന് രാവിലെ 9 മണി മുതൽ സൗജന്യ മെഡിക്കൽ ക്യാമ്പ് സംഘടിപ്പിക്കുന്നു. സൗജന്യ മരുന്നുകളും പരിശോധനകളും ലഭ്യമാണ്.",
+      "type": "notice",
+      "severity": "medium",
+      "date": "2026-06-18",
+      "active": true
+    }
+  ],
+  "lpgDeliveries": [
+    {
+      "id": "lpg_1",
+      "agencyNameEn": "Matha Indane Gas Agency (Agali)",
+      "agencyNameMl": "മാതാ ഇൻഡെയ്ൻ ഗ്യാസ് ഏജൻസി (അഗളി)",
+      "areasEn": "Agali, Kallamala, Mukkali, Goolikkadavu, Pudur, Sholayur, Silent Valley road, and areas across Attappadi",
+      "areasMl": "അഗളി, കള്ളമല, മുക്കാലി, ഗൂളിക്കടവ്, പുതൂർ, ഷോളയൂർ, സൈലന്റ് വാലി റോഡ്, അട്ടപ്പാടിയിലുടനീളമുള്ള പ്രദേശങ്ങൾ",
+      "date": "Saturday, 20 June",
+      "statusEn": "Delivering Today",
+      "statusMl": "ഇന്ന് വിതരണമുണ്ട്",
+      "contact": "04924254254",
+      "notesEn": "Sole authorized distributor for the Attappadi region.",
+      "notesMl": "അട്ടപ്പാടി മേഖലയിലെ ഏക അംഗീകൃത വിതരണക്കാർ."
+    }
+  ],
+  "autos": [
+    {
+      "id": "auto_1",
+      "driverNameEn": "Ramesh Kumar",
+      "driverNameMl": "രമേശ് കുമാർ",
+      "autoNumber": "KL-48-Q-4532",
+      "contact": "+919495123456",
+      "locationEn": "Agali",
+      "locationMl": "അഗളി",
+      "isAvailable": true,
+      "registeredDate": "2026-06-01"
+    },
+    {
+      "id": "auto_2",
+      "driverNameEn": "Saji Sebastian",
+      "driverNameMl": "സജി സെബാസ്റ്റ്യൻ",
+      "autoNumber": "KL-48-R-9811",
+      "contact": "+919847123400",
+      "locationEn": "Goolikkadavu",
+      "locationMl": "ഗൂളിക്കടവ്",
+      "isAvailable": true,
+      "registeredDate": "2026-06-02"
+    },
+    {
+      "id": "auto_3",
+      "driverNameEn": "Mani Swamy",
+      "driverNameMl": "മണി സ്വാമി",
+      "autoNumber": "KL-48-S-5544",
+      "contact": "+918075124312",
+      "locationEn": "Sholayur",
+      "locationMl": "ഷോളയൂർ",
+      "isAvailable": true,
+      "registeredDate": "2026-06-03"
+    },
+    {
+      "id": "auto_4",
+      "driverNameEn": "Unnikrishnan K.",
+      "driverNameMl": "ഉണ്ണികൃഷ്ണൻ കെ.",
+      "autoNumber": "KL-48-B-0714",
+      "contact": "+919446985472",
+      "locationEn": "Pudur",
+      "locationMl": "പുതൂർ",
+      "isAvailable": true,
+      "registeredDate": "2026-06-05"
+    },
+    {
+      "id": "auto_5",
+      "driverNameEn": "Senthil Kumar",
+      "driverNameMl": "സെന്തിൽ കുമാർ",
+      "autoNumber": "KL-48-D-1290",
+      "contact": "+917025816301",
+      "locationEn": "Anakatti",
+      "locationMl": "ആനക്കട്ടി",
+      "isAvailable": false,
+      "registeredDate": "2026-06-08"
+    }
+  ],
+  "adConfig": {
+    "leftAd": {
+      "titleEn": "Contact for Ads",
+      "titleMl": "പരസ്യങ്ങൾക്ക് ബന്ധപ്പെടുക",
+      "subtitleEn": "Enquire Now",
+      "subtitleMl": "വിശദവിവരങ്ങൾക്ക്",
+      "contact": "+91 9447471224",
+      "actionType": "share",
+      "externalUrl": "",
+      "image": ""
+    },
+    "rightAd": {
+      "titleEn": "Attappadi Online Ads",
+      "titleMl": "പരസ്യങ്ങൾക്ക് വിളിക്കുക",
+      "subtitleEn": "Contact: +91 9447471224",
+      "subtitleMl": "ബന്ധപ്പെടുക: +91 9447471224",
+      "contact": "+91 9447471224",
+      "actionType": "phone",
+      "externalUrl": "",
+      "image": ""
+    }
+  }
+}
