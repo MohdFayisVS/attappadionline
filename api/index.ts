@@ -23,6 +23,42 @@ app.use((req, res, next) => {
   next();
 });
 
+// Lazy Firestore database loader helper for Serverless Environments
+let isDbInitialized = false;
+let dbInitPromise: Promise<void> | null = null;
+
+async function ensureDbInitialized() {
+  if (isDbInitialized) return;
+  if (!dbInitPromise) {
+    dbInitPromise = initFirestoreDatabase().then(() => {
+      isDbInitialized = true;
+    }).catch(err => {
+      dbInitPromise = null; // reset to retry on next request
+      throw err;
+    });
+  }
+  return dbInitPromise;
+}
+
+// On-demand database synchronization middleware
+app.use(async (req, res, next) => {
+  const isAuthOrDebugRoute = req.path === "/api/admin/login" || 
+                             req.path === "/admin/login" || 
+                             req.path === "/api/debug-route-details" ||
+                             req.path.includes("debug");
+  
+  if (isAuthOrDebugRoute) {
+    return next();
+  }
+
+  try {
+    await ensureDbInitialized();
+  } catch (err) {
+    console.error("❌ Lazy database synchronization failed:", err);
+  }
+  next();
+});
+
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
@@ -740,7 +776,7 @@ async function initFirestoreDatabase() {
     { col: "routes", defaultSeed: defaultRoutes }
   ];
 
-  for (const entry of collections) {
+  await Promise.all(collections.map(async (entry) => {
     const key = entry.col;
     try {
       const qSnap = await getDocs(collection(firestoreDb, entry.col));
@@ -771,7 +807,7 @@ async function initFirestoreDatabase() {
         database[key] = entry.defaultSeed;
       }
     }
-  }
+  }));
 
   // Load adConfig from metadata collection
   try {
@@ -1797,14 +1833,13 @@ app.all("*", (req, res) => {
 
 // Setup dev server with Vite OR static server in production
 async function startServer() {
-  // Synchronize with Firestore before starting request listeners
-  try {
-    await initFirestoreDatabase();
-  } catch (err) {
-    console.error("❌ Critical error during Firestore initialization:", err);
-  }
-
   if (!process.env.VERCEL) {
+    // For non-serverless server, synchronize immediately on start
+    try {
+      await initFirestoreDatabase();
+    } catch (err) {
+      console.error("❌ Critical error during Firestore initialization:", err);
+    }
     if (process.env.NODE_ENV !== "production") {
       // Dynamically import Vite only in development to prevent native dependency issues on Vercel
       const { createServer: createViteServer } = await import("vite");
