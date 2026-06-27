@@ -1781,6 +1781,20 @@ app.get("/api/weather", (req, res) => {
   res.json(weatherData);
 });
 
+app.all("*", (req, res) => {
+  res.status(200).json({
+    message: "Attappadi Online Catch-all Router Debug",
+    url: req.url,
+    originalUrl: req.originalUrl,
+    method: req.method,
+    headers: req.headers,
+    env: {
+      NODE_ENV: process.env.NODE_ENV,
+      VERCEL: process.env.VERCEL
+    }
+  });
+});
+
 // Setup dev server with Vite OR static server in production
 async function startServer() {
   // Synchronize with Firestore before starting request listeners
