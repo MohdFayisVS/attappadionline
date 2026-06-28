@@ -17,6 +17,8 @@ const PORT = 3000;
 
 // URL Rewrite Middleware for Vercel Serverless routing compat
 app.use((req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+
   // Vercel edge router rewrites the request URL path to /api/index.ts.
   // We restore the original path from the matched path header so Express can route correctly.
   const matchedPath = req.headers["x-matched-path"] || req.headers["x-vercel-matched-path"];
