@@ -12,7 +12,7 @@ import {
   IdCard
 } from "lucide-react";
 import { NoticeItem } from "../types";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "motion";
 
 export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "ml"; onDownloadCard?: (not: NoticeItem) => void }) {
   const [notices, setNotices] = useState<NoticeItem[]>([]);

@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { EventItem } from "../types";
 import ShareButtons from "./ShareButtons";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "motion";
 
 const weekDaysEn = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const weekDaysMl = ["ഞായർ", "തിങ്കൾ", "ചൊവ്വാ", "ബുധൻ", "വ്യാഴം", "വെള്ളി", "ശനി"];

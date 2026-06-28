@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "motion";
 import { MapPin, Compass, UtensilsCrossed, Hotel, BookOpen, Image as ImageIcon, X, ChevronLeft, ChevronRight, Share2, Volume2, Bus, Clock, Search, Info, Sliders, Plus, Trash, Link, RotateCcw, Copy, Check, Move } from "lucide-react";
 import { DestinationItem, CultureItem, StayItem, TravelogueItem, PhotoItem, BusRouteItem } from "../types";
 
