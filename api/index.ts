@@ -2,6 +2,11 @@ import express from "express";
 import path from "path";
 import fs from "fs";
 import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // Firebase is imported dynamically inside database operations to optimize serverless cold starts
 
 // Load environment variables
