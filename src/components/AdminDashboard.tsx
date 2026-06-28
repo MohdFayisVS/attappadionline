@@ -5,7 +5,7 @@ import {
   Upload, Bus, MapPin, Compass, UtensilsCrossed, Hotel, Image as ImageIcon, Clock, Activity, ListOrdered,
   Megaphone, Flame, Truck
 } from "lucide-react";
-import { motion, AnimatePresence } from "motion";
+import { motion, AnimatePresence } from "motion/react";
 import { 
   NewsPost, EventItem, DirectoryItem, OpinionItem, EmergencyContact, 
   DestinationItem, CultureItem, StayItem, TravelogueItem, PhotoItem, BusRouteItem, BusStopTransit,

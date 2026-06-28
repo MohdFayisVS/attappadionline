@@ -4,7 +4,7 @@ import {
   Settings, ChevronLeft, ChevronRight, X, AlertTriangle, CloudSun, Phone, BookOpen, Clock, Search, Share2,
   Bookmark, Sun, Moon, Megaphone, Newspaper, Zap, Sparkles, IdCard, Bus, Car, ShoppingBag, Utensils
 } from "lucide-react";
-import { motion, AnimatePresence } from "motion";
+import { motion, AnimatePresence } from "motion/react";
 import { NewsPost, EventItem, DirectoryItem, EmergencyContact, NoticeItem } from "./types";
 import LatestNews from "./components/LatestNews";
 import WeatherWidget from "./components/WeatherWidget";
