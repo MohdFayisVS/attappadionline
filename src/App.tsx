@@ -895,7 +895,7 @@ export default function App() {
                   {lang === "en" ? "FEATURED REPORT" : "പ്രത്യേക റിപ്പോർട്ട്"}
                 </span>
                 
-                {sliderPosts[currSliderIdx].regions.map(r => (
+                {(sliderPosts[currSliderIdx].regions || []).map(r => (
                   <span key={r} className="text-[10px] uppercase font-bold text-sky-200 bg-sky-950/80 border border-sky-800 px-2 py-0.5 rounded inline-flex items-center gap-1">
                     <MapPin className="w-3 h-3 text-yellow-300" />
                     {r}
@@ -1799,7 +1799,7 @@ export default function App() {
                     {/* Nodal regions tags footer */}
                     <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-gray-100">
                       <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mr-1">Region Tags:</span>
-                      {selectedArticle.regions.map(r => (
+                      {(selectedArticle.regions || []).map(r => (
                         <span key={r} className="text-xs bg-gray-100 border text-slate-800 font-bold px-3 py-1 rounded capitalize flex items-center gap-0.5">
                           <MapPin className="w-3.5 h-3.5 text-red-600" /> {r}
                         </span>
@@ -1864,7 +1864,7 @@ export default function App() {
                       {/* Related recommendations based on category and tags */}
                       {(() => {
                         const relatedArticles = news
-                          .filter(n => n.id !== selectedArticle.id && (n.category === selectedArticle.category || n.regions.some(r => selectedArticle.regions.includes(r))))
+                          .filter(n => n.id !== selectedArticle.id && (n.category === selectedArticle.category || (n.regions || []).some(r => (selectedArticle.regions || []).includes(r))))
                           .slice(0, 2);
                         if (relatedArticles.length === 0) return null;
                         return (

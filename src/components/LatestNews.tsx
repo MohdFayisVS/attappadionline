@@ -47,7 +47,7 @@ export default function LatestNews({
     }
 
     // 2. Region Filter
-    if (activeRegion !== "all" && !post.regions.includes(activeRegion)) {
+    if (activeRegion !== "all" && !(post.regions || []).includes(activeRegion)) {
       return false;
     }
 
@@ -212,7 +212,7 @@ export default function LatestNews({
               {/* Card Footer tags */}
               <div className="p-4 pt-0 border-t border-gray-50 dark:border-slate-800 flex justify-between items-center bg-gray-50/50 dark:bg-slate-900/50">
                 <div className="flex flex-wrap gap-1">
-                  {post.regions.map(r => (
+                  {(post.regions || []).map(r => (
                     <span key={r} className="flex items-center gap-0.5 text-[10px] text-[#005689] dark:text-sky-300 font-bold bg-sky-50 dark:bg-sky-950/40 px-1.5 py-0.5 rounded border border-sky-100 dark:border-sky-900/30 capitalize">
                       <MapPin className="w-2.5 h-2.5" />
                       {r}
