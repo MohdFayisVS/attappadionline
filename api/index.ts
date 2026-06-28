@@ -3,8 +3,7 @@ import path from "path";
 import fs from "fs";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, getDoc } from "firebase/firestore/lite";
+// Firebase is imported dynamically inside database operations to optimize serverless cold starts
 
 // Load environment variables
 dotenv.config();
@@ -572,18 +571,7 @@ const defaultAutos = [
 const CONFIG_PATH = path.join(__dirname, "firebase-applet-config.json");
 let firestoreDb: any = null;
 
-if (fs.existsSync(CONFIG_PATH)) {
-  try {
-    const config = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf-8"));
-    const firebaseApp = initializeApp(config);
-    firestoreDb = getFirestore(firebaseApp, config.firestoreDatabaseId || "(default)");
-    console.log("🔥 Firebase App & Firestore Client initialized successfully. Database ID:", config.firestoreDatabaseId);
-  } catch (error) {
-    console.error("❌ Failed to parse firebase-applet-config.json or initialize Firebase. Operating in local JSON fallback mode.", error);
-  }
-} else {
-  console.warn("⚠️ No 'firebase-applet-config.json' found. Operating in local JSON fallback mode.");
-}
+// Firestore will be initialized dynamically on first query inside initFirestoreDatabase()
 
 let lastSavedDatabase: any = null;
 
@@ -673,6 +661,7 @@ function loadDatabase() {
 // Background sync function: Diff local memory state vs lastSavedDatabase and persist any changes
 async function saveToFirestore(currentDb: any) {
   if (!firestoreDb) return;
+  const { doc, setDoc, deleteDoc } = await import("firebase/firestore/lite");
   if (!lastSavedDatabase) {
     lastSavedDatabase = JSON.parse(JSON.stringify(currentDb));
     return;
@@ -748,11 +737,28 @@ async function initFirestoreDatabase() {
   const fallbackLocalDb = loadDatabase();
 
   if (!firestoreDb) {
+    if (fs.existsSync(CONFIG_PATH)) {
+      try {
+        const { initializeApp } = await import("firebase/app");
+        const { getFirestore } = await import("firebase/firestore/lite");
+        const config = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf-8"));
+        const firebaseApp = initializeApp(config);
+        firestoreDb = getFirestore(firebaseApp, config.firestoreDatabaseId || "(default)");
+        console.log("🔥 Firebase App & Firestore Client initialized successfully. Database ID:", config.firestoreDatabaseId);
+      } catch (error) {
+        console.error("❌ Failed to parse firebase-applet-config.json or initialize Firebase. Operating in local JSON fallback mode.", error);
+      }
+    }
+  }
+
+  if (!firestoreDb) {
     console.warn("Firestore not initialized. Loading local data.");
     database = fallbackLocalDb || loadDatabase();
     lastSavedDatabase = JSON.parse(JSON.stringify(database));
     return;
   }
+
+  const { collection, getDocs, doc, setDoc, getDoc } = await import("firebase/firestore/lite");
 
   console.log("⚡ Fetching and synchronizing Firestore data...");
   const collections = [
