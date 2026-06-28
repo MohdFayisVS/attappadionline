@@ -535,6 +535,12 @@ const DEFAULT_MAP_LINES = [
 ];
 
 export default function ExploreAttappadi({ lang, initialTab = "destinations", isAdmin = false, hideTabsSelection = false }: ExploreAttappadiProps) {
+  const safeParseArray = (val: any): string[] => {
+    if (Array.isArray(val)) return val;
+    if (typeof val === "string") return val.split(",").map(x => x.trim()).filter(Boolean);
+    return [];
+  };
+
   const [activeTab, setActiveTab] = useState<"destinations" | "food" | "stays" | "travelogues" | "photos" | "culture" | "busTimings">(initialTab);
 
   const [mapNodes, setMapNodes] = useState<{ id: string; x: number; y: number; nameEn: string; nameMl: string }[]>(() => {
@@ -734,7 +740,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                 </div>
                 <div className="px-4 pb-4 pt-1">
                   <div className="border-t border-gray-100 pt-3 flex flex-wrap gap-1.5">
-                    {(lang === "en" ? dest.highlightsEn : dest.highlightsMl).map((highlight, index) => (
+                    {safeParseArray(lang === "en" ? dest.highlightsEn : dest.highlightsMl).map((highlight, index) => (
                       <span key={index} className="text-[10px] bg-slate-100 text-slate-800 font-bold px-2 py-0.5 rounded">
                         ✓ {highlight}
                       </span>
@@ -817,12 +823,16 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                       {lang === "en" ? stay.nameEn : stay.nameMl}
                     </h4>
                     <ul className="space-y-1 pt-1.5">
-                      {stay.featuresEn.map((feat, fIdx) => (
-                        <li key={fIdx} className="text-[10px] text-gray-400 flex items-center gap-1">
-                          <span className="text-emerald-600 font-black">✔</span>
-                          {lang === "en" ? feat : stay.featuresMl[fIdx]}
-                        </li>
-                      ))}
+                      {(() => {
+                        const featsEn = safeParseArray(stay.featuresEn);
+                        const featsMl = safeParseArray(stay.featuresMl);
+                        return featsEn.map((feat, fIdx) => (
+                          <li key={fIdx} className="text-[10px] text-gray-400 flex items-center gap-1">
+                            <span className="text-emerald-600 font-black">✔</span>
+                            {lang === "en" ? feat : (featsMl[fIdx] || feat)}
+                          </li>
+                        ));
+                      })()}
                     </ul>
                   </div>
                 </div>
