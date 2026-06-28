@@ -4,10 +4,7 @@ import fs from "fs";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, getDoc, setLogLevel } from "firebase/firestore";
-
-// Suppress benign gRPC idle connection and stream termination warnings in Node environment
-setLogLevel("error");
+import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, getDoc } from "firebase/firestore/lite";
 
 // Load environment variables
 dotenv.config();
