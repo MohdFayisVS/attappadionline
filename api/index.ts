@@ -1,7 +1,6 @@
 import express from "express";
 import path from "path";
 import fs from "fs";
-import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 // Firebase is imported dynamically inside database operations to optimize serverless cold starts
 
@@ -1671,6 +1670,7 @@ app.post("/api/admin/translate", async (req, res) => {
       return res.status(503).json({ error: "Gemini API key is not configured on the server. Please check Settings > Secrets." });
     }
 
+    const { GoogleGenAI } = await import("@google/genai");
     const ai = new GoogleGenAI({
       apiKey: apiKey,
       httpOptions: {
@@ -1755,6 +1755,7 @@ app.post("/api/admin/ai-generate", async (req, res) => {
       return res.status(503).json({ error: "Gemini API key is not configured on the server. Please check Settings > Secrets." });
     }
 
+    const { GoogleGenAI } = await import("@google/genai");
     const ai = new GoogleGenAI({
       apiKey,
       httpOptions: {
