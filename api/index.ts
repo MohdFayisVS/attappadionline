@@ -17,6 +17,13 @@ const PORT = 3000;
 
 // URL Rewrite Middleware for Vercel Serverless routing compat
 app.use((req, res, next) => {
+  // Vercel edge router rewrites the request URL path to /api/index.ts.
+  // We restore the original path from the matched path header so Express can route correctly.
+  const matchedPath = req.headers["x-matched-path"] || req.headers["x-vercel-matched-path"];
+  if (matchedPath && typeof matchedPath === "string") {
+    req.url = matchedPath;
+  }
+
   if (process.env.VERCEL && req.url && !req.url.startsWith("/api")) {
     req.url = "/api" + req.url;
   }
@@ -743,10 +750,10 @@ async function initFirestoreDatabase() {
   if (!firestoreDb) {
     if (fs.existsSync(CONFIG_PATH)) {
       try {
-        const { initializeApp } = await import("firebase/app");
+        const { initializeApp, getApps } = await import("firebase/app");
         const { getFirestore } = await import("firebase/firestore/lite");
         const config = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf-8"));
-        const firebaseApp = initializeApp(config);
+        const firebaseApp = getApps().length === 0 ? initializeApp(config) : getApps()[0];
         firestoreDb = getFirestore(firebaseApp, config.firestoreDatabaseId || "(default)");
         console.log("🔥 Firebase App & Firestore Client initialized successfully. Database ID:", config.firestoreDatabaseId);
       } catch (error) {
@@ -1826,7 +1833,7 @@ app.get("/api/weather", (req, res) => {
   res.json(weatherData);
 });
 
-app.all("*", (req, res) => {
+app.all("/api/debug-route-details", (req, res) => {
   res.status(200).json({
     message: "Attappadi Online Catch-all Router Debug",
     url: req.url,
