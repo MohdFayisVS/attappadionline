@@ -229,6 +229,21 @@ export interface LocalShop {
   itemsMl: string;
 }
 
+export interface LostAndFoundItem {
+  id: string;
+  type: "lost" | "found";
+  itemTitleEn: string;
+  itemTitleMl: string;
+  descriptionEn: string;
+  descriptionMl: string;
+  reporterName: string;
+  contactNumber: string;
+  locationEn: string;
+  locationMl: string;
+  dateReported: string;
+  status: "active" | "resolved";
+}
+
 
 
 

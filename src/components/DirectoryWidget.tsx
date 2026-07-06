@@ -2,9 +2,9 @@ import { useState, useEffect, FormEvent } from "react";
 import { 
   Phone, Search, AlertOctagon, HeartHandshake, ShieldAlert, 
   Truck, TreePine, Flame, MapPin, PlusCircle, CheckCircle, 
-  X, Radio, Sparkles, MessageSquare, Trash2, Power, IdCard 
+  X, Radio, Sparkles, MessageSquare, Trash2, Power, IdCard, HelpCircle
 } from "lucide-react";
-import { DirectoryItem, EmergencyContact, LpgDelivery, AutoTaxi, LocalShop } from "../types";
+import { DirectoryItem, EmergencyContact, LpgDelivery, AutoTaxi, LocalShop, LostAndFoundItem } from "../types";
 import { ShoppingBag, Store, Send } from "lucide-react";
 
 const PRE_SEEDED_SHOPS: LocalShop[] = [
@@ -130,8 +130,31 @@ export default function DirectoryWidget({
   const [lpgList, setLpgList] = useState<LpgDelivery[]>([]);
   const [autos, setAutos] = useState<AutoTaxi[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [currTab, setCurrTab] = useState<"emergency" | "lpg" | "commercial" | "autorikshaw" | "shopping">(initialTab || "lpg");
+  const [currTab, setCurrTab] = useState<"emergency" | "lpg" | "commercial" | "autorikshaw" | "shopping" | "lostfound">(initialTab || "lpg");
   const [categoryFilter, setCategoryFilter] = useState("all");
+
+  // Lost & Found states
+  const [lostFoundList, setLostFoundList] = useState<LostAndFoundItem[]>([]);
+  const [isReportingItem, setIsReportingItem] = useState(false);
+  const [lfType, setLfType] = useState<"lost" | "found">("lost");
+  const [lfTitleEn, setLfTitleEn] = useState("");
+  const [lfTitleMl, setLfTitleMl] = useState("");
+  const [lfDescEn, setLfDescEn] = useState("");
+  const [lfDescMl, setLfDescMl] = useState("");
+  const [lfReporterName, setLfReporterName] = useState("");
+  const [lfContact, setLfContact] = useState("");
+  const [lfLocationEn, setLfLocationEn] = useState("Agali");
+  const [lfLocationMl, setLfLocationMl] = useState("അഗളി");
+  const [lfSubmitting, setLfSubmitting] = useState(false);
+
+  // Resolution verification states
+  const [resolvingItem, setResolvingItem] = useState<LostAndFoundItem | null>(null);
+  const [resolveContactInput, setResolveContactInput] = useState("");
+  const [resolveError, setResolveError] = useState("");
+  const [resolveSuccess, setResolveSuccess] = useState("");
+
+  // Sub-tabs filters for Lost & Found
+  const [lfFilterTab, setLfFilterTab] = useState<"all" | "lost" | "found">("all");
 
   // Local Shopping states
   const [selectedShopTown, setSelectedShopTown] = useState("all");
@@ -165,6 +188,7 @@ export default function DirectoryWidget({
     fetchEmergency();
     fetchLpg();
     fetchAutos();
+    fetchLostFound();
 
     const savedId = localStorage.getItem("my_registered_auto_id");
     if (savedId) {
@@ -184,6 +208,100 @@ export default function DirectoryWidget({
       setMyListing(null);
     }
   }, [myAutoId, autos]);
+
+  const fetchLostFound = async () => {
+    try {
+      const res = await fetch("/api/lostfound");
+      const data = await res.json();
+      setLostFoundList(data);
+    } catch (e) {
+      console.error("Failed to load Lost & Found items:", e);
+    }
+  };
+
+  const handleReportSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setRegError("");
+    setRegSuccess("");
+    setLfSubmitting(true);
+
+    try {
+      const res = await fetch("/api/lostfound", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: lfType,
+          itemTitleEn: lfTitleEn,
+          itemTitleMl: lfTitleMl,
+          descriptionEn: lfDescEn,
+          descriptionMl: lfDescMl,
+          reporterName: lfReporterName,
+          contactNumber: lfContact,
+          locationEn: lfLocationEn,
+          locationMl: lfLocationMl
+        })
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || "Failed to publish report");
+      }
+
+      setRegSuccess(lang === "en" ? "Report published successfully!" : "വിവരം വിജയകരമായി പ്രസിദ്ധീകരിച്ചു!");
+      
+      // Reset form
+      setLfTitleEn("");
+      setLfTitleMl("");
+      setLfDescEn("");
+      setLfDescMl("");
+      setLfReporterName("");
+      setLfContact("");
+      setLfLocationEn("Agali");
+      setLfLocationMl("അഗളി");
+
+      fetchLostFound();
+
+      setTimeout(() => {
+        setIsReportingItem(false);
+        setRegSuccess("");
+      }, 1500);
+    } catch (err: any) {
+      setRegError(err.message || "An error occurred");
+    } finally {
+      setLfSubmitting(false);
+    }
+  };
+
+  const handleResolveSubmit = async () => {
+    if (!resolvingItem) return;
+    setResolveError("");
+    setResolveSuccess("");
+
+    try {
+      const res = await fetch(`/api/lostfound/resolve/${resolvingItem.id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contactNumber: resolveContactInput })
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || "Verification failed");
+      }
+
+      setResolveSuccess(lang === "en" ? "Report resolved successfully!" : "വിവരം വിജയകരമായി ഒഴിവാക്കി!");
+      
+      fetchLostFound();
+
+      setTimeout(() => {
+        setResolvingItem(null);
+        setResolveContactInput("");
+        setResolveSuccess("");
+      }, 1500);
+    } catch (err: any) {
+      setResolveError(err.message || "Incorrect number");
+    }
+  };
 
   const fetchDirectory = async () => {
     const res = await fetch("/api/directory");
@@ -409,10 +527,17 @@ export default function DirectoryWidget({
           </button>
           <button
             onClick={() => setCurrTab("shopping")}
-            className={`flex-1 min-w-[90px] py-3 text-center transition flex justify-center items-center gap-1 cursor-pointer ${currTab === "shopping" ? "bg-fuchsia-50 text-fuchsia-800 border-b-2 border-fuchsia-600 font-extrabold" : "text-gray-500 hover:bg-gray-100"}`}
+            className={`flex-1 min-w-[90px] py-3 text-center transition flex justify-center items-center gap-1 border-r cursor-pointer ${currTab === "shopping" ? "bg-fuchsia-50 text-fuchsia-800 border-b-2 border-fuchsia-600 font-extrabold" : "text-gray-500 hover:bg-gray-100"}`}
           >
             <ShoppingBag className="w-3.5 h-3.5 text-fuchsia-600 shrink-0" />
             <span className="truncate">{lang === "en" ? "LOCAL SHOPPING" : "വ്യാപാരശാലകൾ"}</span>
+          </button>
+          <button
+            onClick={() => setCurrTab("lostfound")}
+            className={`flex-1 min-w-[90px] py-3 text-center transition flex justify-center items-center gap-1 cursor-pointer ${currTab === "lostfound" ? "bg-rose-50 text-rose-800 border-b-2 border-rose-600 font-extrabold" : "text-gray-500 hover:bg-gray-100"}`}
+          >
+            <HelpCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+            <span className="truncate">{lang === "en" ? "LOST & FOUND" : "നഷ്ടപ്പെട്ടവ/ലഭിച്ചവ"}</span>
           </button>
         </div>
       )}
@@ -970,7 +1095,7 @@ export default function DirectoryWidget({
                 : "💡 ശ്രദ്ധിക്കുക: ചാർജ്ജ് വിവരങ്ങളും സുരക്ഷിത യാത്രയും ഡ്രൈവറുമായി നേരിട്ട് ഉറപ്പുവരുത്തുക."}
             </p>
           </div>
-        ) : (
+        ) : currTab === "shopping" ? (
           /* LOCAL SHOPPING TAB CONTAINER */
           <div className="space-y-4 animate-fade-in text-slate-800">
             {/* Intro Header */}
@@ -1181,8 +1306,373 @@ export default function DirectoryWidget({
                 : "💡 നിർദ്ദേശം: പണമിടപാടുകളും സാധനങ്ങളുടെ ലഭ്യതയും വിലവിവരങ്ങളും അതതു കടക്കാരുമായി നേരിട്ട് ചാറ്റിൽ സംസാരിച്ചു തീരുമാനിക്കുക."}
             </p>
           </div>
-        )}
+        ) : currTab === "lostfound" ? (
+          /* LOST & FOUND SERVICES TAB */
+          <div className="space-y-4 animate-fade-in relative">
+            
+            {/* Header intro banner */}
+            <div className="bg-rose-50 border border-rose-100 rounded-md p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-rose-950">
+              <div className="space-y-0.5">
+                <h4 className="text-xs font-black flex items-center gap-1.5 text-rose-800">
+                  <span className="p-1 bg-rose-100 rounded text-base animate-bounce">📢</span>
+                  {lang === "en" ? "Lost & Found Board" : "നഷ്ടപ്പെട്ടവ & ലഭിച്ചവ ബോർഡ്"}
+                </h4>
+                <p className="text-[11px] text-rose-800/90 leading-snug">
+                  {lang === "en" 
+                    ? "Report lost or found objects in the Attappadi area to notify others, or search lists to help recover items."
+                    : "അട്ടപ്പാടിയിൽ എവിടെയെങ്കിലും വെച്ച് സാധനങ്ങൾ നഷ്ടപ്പെടുകയോ ലഭിക്കുകയോ ചെയ്താൽ ഇവിടെ വിവരങ്ങൾ പങ്കുവെക്കാം."}
+                </p>
+              </div>
+
+              {!isReportingItem && (
+                <button
+                  onClick={() => setIsReportingItem(true)}
+                  className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-[10px] sm:text-xs rounded-md shadow-xs transition uppercase tracking-wider flex items-center justify-center gap-1 shrink-0 self-start sm:self-center cursor-pointer"
+                >
+                  <PlusCircle className="w-3.5 h-3.5" />
+                  {lang === "en" ? "Report Item" : "വിവരം ചേർക്കാം"}
+                </button>
+              )}
+            </div>
+
+            {/* REPORT FORM COMPONENT */}
+            {isReportingItem && (
+              <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-3 shadow-xs">
+                <h4 className="text-xs font-black text-[#052962] uppercase tracking-wider flex items-center justify-between border-b pb-1.5 mb-2">
+                  <span>{lang === "en" ? "Report Lost / Found Item" : "നഷ്ടപ്പെട്ടതോ ലഭിച്ചതോ ആയ വിവരം ചേർക്കുക"}</span>
+                  <button onClick={() => { setIsReportingItem(false); setRegError(""); setRegSuccess(""); }} className="text-gray-400 hover:text-red-500 font-black cursor-pointer">X</button>
+                </h4>
+                
+                <form onSubmit={handleReportSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  {/* Type Selector */}
+                  <div className="space-y-1 sm:col-span-2">
+                    <label className="block text-[11px] font-bold text-slate-700">{lang === "en" ? "Report Type*" : "റിപ്പോർട്ട് തരം*"}</label>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setLfType("lost")}
+                        className={`flex-1 py-1.5 rounded font-black text-center border transition cursor-pointer ${lfType === "lost" ? "bg-rose-600 text-white border-rose-600" : "bg-white text-rose-600 border-rose-200 hover:bg-rose-50"}`}
+                      >
+                        {lang === "en" ? "LOST (നഷ്ടപ്പെട്ടു)" : "നഷ്ടപ്പെട്ടു"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setLfType("found")}
+                        className={`flex-1 py-1.5 rounded font-black text-center border transition cursor-pointer ${lfType === "found" ? "bg-emerald-600 text-white border-emerald-600" : "bg-white text-emerald-600 border-emerald-200 hover:bg-emerald-50"}`}
+                      >
+                        {lang === "en" ? "FOUND (ലഭിച്ചു)" : "ലഭിച്ചു"}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Title En */}
+                  <div className="space-y-1">
+                    <label className="block text-[11px] font-bold text-slate-700">{lang === "en" ? "Item Name / Title (English)*" : "സാധനത്തിന്റെ പേര് (ഇംഗ്ലീഷ്)*"}</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Wallet with ID, Black bag, keys..."
+                      value={lfTitleEn}
+                      onChange={(e) => setLfTitleEn(e.target.value)}
+                      className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white"
+                    />
+                  </div>
+
+                  {/* Title Ml */}
+                  <div className="space-y-1">
+                    <label className="block text-[11px] font-bold text-slate-700">{lang === "en" ? "Item Name / Title (Malayalam)*" : "സാധനത്തിന്റെ പേര് (മലയാളം)*"}</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="ഉദാ: ബാഗ്, പഴ്‌സ്, താക്കോൽ..."
+                      value={lfTitleMl}
+                      onChange={(e) => setLfTitleMl(e.target.value)}
+                      className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white font-anek-malayalam font-semibold"
+                    />
+                  </div>
+
+                  {/* Description En */}
+                  <div className="space-y-1">
+                    <label className="block text-[11px] font-bold text-slate-700">{lang === "en" ? "Description (English)" : "വിശദാംശങ്ങൾ (ഇംഗ്ലീഷ്)"}</label>
+                    <textarea
+                      rows={2}
+                      placeholder="e.g. Lost near Agali stand around 4 PM..."
+                      value={lfDescEn}
+                      onChange={(e) => setLfDescEn(e.target.value)}
+                      className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white"
+                    />
+                  </div>
+
+                  {/* Description Ml */}
+                  <div className="space-y-1">
+                    <label className="block text-[11px] font-bold text-slate-700">{lang === "en" ? "Description (Malayalam)" : "വിശദാംശങ്ങൾ (മലയാളം)"}</label>
+                    <textarea
+                      rows={2}
+                      placeholder="ഉദാ: അഗളി സ്റ്റാൻഡിന് സമീപം വെച്ച് നഷ്ടപ്പെട്ടു..."
+                      value={lfDescMl}
+                      onChange={(e) => setLfDescMl(e.target.value)}
+                      className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white font-anek-malayalam font-semibold"
+                    />
+                  </div>
+
+                  {/* Location En */}
+                  <div className="space-y-1">
+                    <label className="block text-[11px] font-bold text-slate-700">{lang === "en" ? "Location / Place (English)*" : "സ്ഥലം (ഇംഗ്ലീഷ്)*"}</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Agali, Mukkali, Sholayur..."
+                      value={lfLocationEn}
+                      onChange={(e) => setLfLocationEn(e.target.value)}
+                      className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white"
+                    />
+                  </div>
+
+                  {/* Location Ml */}
+                  <div className="space-y-1">
+                    <label className="block text-[11px] font-bold text-slate-700">{lang === "en" ? "Location / Place (Malayalam)*" : "സ്ഥലം (മലയാളം)*"}</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="ഉദാ: അഗളി, മുക്കാലി..."
+                      value={lfLocationMl}
+                      onChange={(e) => setLfLocationMl(e.target.value)}
+                      className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white font-anek-malayalam font-semibold"
+                    />
+                  </div>
+
+                  {/* Reporter Name */}
+                  <div className="space-y-1">
+                    <label className="block text-[11px] font-bold text-slate-700">{lang === "en" ? "Your Name*" : "നിങ്ങളുടെ പേര്*"}</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Ramesh"
+                      value={lfReporterName}
+                      onChange={(e) => setLfReporterName(e.target.value)}
+                      className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white"
+                    />
+                  </div>
+
+                  {/* Contact Number */}
+                  <div className="space-y-1">
+                    <label className="block text-[11px] font-bold text-slate-700">{lang === "en" ? "Contact Mobile Number*" : "ബന്ധപ്പെടേണ്ട മൊബൈൽ നമ്പർ*"}</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. 9876543210"
+                      value={lfContact}
+                      onChange={(e) => setLfContact(e.target.value)}
+                      className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white"
+                    />
+                  </div>
+
+                  {/* Feedback Message */}
+                  {regError && <div className="sm:col-span-2 text-rose-600 text-[10.5px] font-bold leading-normal">{regError}</div>}
+                  {regSuccess && <div className="sm:col-span-2 text-emerald-600 text-[10.5px] font-bold leading-normal animate-pulse">{regSuccess}</div>}
+
+                  {/* Form Action Buttons */}
+                  <div className="flex gap-2 sm:col-span-2 pt-1">
+                    <button
+                      type="submit"
+                      disabled={lfSubmitting}
+                      className={`flex-1 py-2 bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs rounded shadow uppercase tracking-wider transition cursor-pointer select-none ${lfSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
+                    >
+                      📢 {lfSubmitting ? (lang === "en" ? "Publishing..." : "പ്രസിദ്ധീകരിക്കുന്നു...") : (lang === "en" ? "Publish Report" : "വിവരം പ്രസിദ്ധീകരിക്കുക")}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setIsReportingItem(false); setRegError(""); setRegSuccess(""); }}
+                      className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded transition cursor-pointer"
+                    >
+                      {lang === "en" ? "Cancel" : "റദ്ദാക്കുക"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+
+            {/* FILTERS & SEARCH ROW */}
+            <div className="bg-slate-50 border border-slate-100 rounded-lg p-3 space-y-2.5">
+              <div className="flex flex-col sm:flex-row gap-2">
+                {/* Search Text */}
+                <div className="relative flex-1">
+                  <span className="absolute left-3 inset-y-0 flex items-center text-gray-400">
+                    <Search className="w-3.5 h-3.5" />
+                  </span>
+                  <input
+                    type="text"
+                    placeholder={lang === "en" ? "Search items, descriptions, places..." : "സാധനങ്ങൾ, വിവരണങ്ങൾ, സ്ഥലങ്ങൾ തിരയുക..."}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full border border-gray-200 pl-8 pr-3 py-1.5 rounded text-xs focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white placeholder-gray-400 font-semibold"
+                  />
+                </div>
+
+                {/* Sub-tab selection */}
+                <div className="flex bg-white border border-gray-200 rounded p-0.5 text-[10px] font-black uppercase tracking-wider">
+                  <button
+                    onClick={() => setLfFilterTab("all")}
+                    className={`px-3 py-1 rounded transition cursor-pointer ${lfFilterTab === "all" ? "bg-rose-600 text-white shadow-xs" : "text-slate-650 hover:bg-slate-50"}`}
+                  >
+                    {lang === "en" ? "All" : "എല്ലാം"}
+                  </button>
+                  <button
+                    onClick={() => setLfFilterTab("lost")}
+                    className={`px-3 py-1 rounded transition cursor-pointer ${lfFilterTab === "lost" ? "bg-rose-600 text-white shadow-xs" : "text-slate-650 hover:bg-slate-50"}`}
+                  >
+                    {lang === "en" ? "Lost" : "നഷ്ടപ്പെട്ടവ"}
+                  </button>
+                  <button
+                    onClick={() => setLfFilterTab("found")}
+                    className={`px-3 py-1 rounded transition cursor-pointer ${lfFilterTab === "found" ? "bg-rose-600 text-white shadow-xs" : "text-slate-650 hover:bg-slate-50"}`}
+                  >
+                    {lang === "en" ? "Found" : "ലഭിച്ചവ"}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* REPORTS GRID LISTING */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[350px] overflow-y-auto pr-0.5">
+              {(() => {
+                const q = searchQuery.toLowerCase().trim();
+                const filtered = lostFoundList.filter(item => {
+                  if (lfFilterTab !== "all" && item.type !== lfFilterTab) return false;
+                  if (q) {
+                    const matchTitle = item.itemTitleEn.toLowerCase().includes(q) || item.itemTitleMl.toLowerCase().includes(q);
+                    const matchDesc = item.descriptionEn.toLowerCase().includes(q) || item.descriptionMl.toLowerCase().includes(q);
+                    const matchLoc = item.locationEn.toLowerCase().includes(q) || item.locationMl.toLowerCase().includes(q);
+                    return matchTitle || matchDesc || matchLoc;
+                  }
+                  return true;
+                });
+
+                if (filtered.length === 0) {
+                  return (
+                    <div className="col-span-full py-12 text-center text-xs text-gray-400 bg-white border border-slate-100 rounded-lg">
+                      <HelpCircle className="w-10 h-10 mx-auto text-gray-300 mb-2 animate-pulse" />
+                      <p>{lang === "en" ? "No Lost & Found reports match your search context." : "വിവരങ്ങൾ ഒന്നും ലഭ്യമല്ല."}</p>
+                    </div>
+                  );
+                }
+
+                return filtered.map(item => {
+                  const isLost = item.type === "lost";
+                  return (
+                    <div 
+                      key={item.id}
+                      className={`bg-white rounded-lg border-l-4 p-3 flex flex-col justify-between gap-3 shadow-2xs hover:shadow-sm transition ${isLost ? "border-rose-500 border border-slate-205" : "border-emerald-500 border border-slate-205"}`}
+                    >
+                      <div className="space-y-1.5">
+                        <div className="flex justify-between items-start">
+                          <span className={`text-[8.5px] font-black uppercase px-2 py-0.5 rounded ${isLost ? "bg-rose-50 text-rose-700 border border-rose-100" : "bg-emerald-50 text-emerald-700 border border-emerald-100"}`}>
+                            {isLost ? (lang === "en" ? "LOST" : "നഷ്ടപ്പെട്ടു") : (lang === "en" ? "FOUND" : "ലഭിച്ചു")}
+                          </span>
+                          <span className="text-[9px] text-gray-400 font-mono">
+                            {new Date(item.dateReported).toLocaleDateString(lang === "ml" ? "ml-IN" : "en-US")}
+                          </span>
+                        </div>
+
+                        <div>
+                          <h4 className="font-extrabold text-[#052962] text-sm leading-tight">
+                            {lang === "en" ? item.itemTitleEn : item.itemTitleMl}
+                          </h4>
+                          <p className="text-slate-500 text-[11px] leading-relaxed mt-1 font-semibold">
+                            {lang === "en" ? item.descriptionEn : item.descriptionMl}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2.5 pt-2 border-t border-gray-100">
+                        <div className="flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-gray-400 font-bold">
+                          <span className="flex items-center gap-0.5">
+                            <MapPin className="w-3.5 h-3.5 text-red-500" />
+                            {lang === "en" ? item.locationEn : item.locationMl}
+                          </span>
+                          <span>
+                            By: <strong className="text-slate-700">{item.reporterName}</strong>
+                          </span>
+                        </div>
+
+                        <div className="flex gap-2">
+                          <a
+                            href={`tel:${item.contactNumber}`}
+                            className="flex-1 py-1.5 bg-[#052962] hover:bg-[#005689] text-white rounded text-[11px] font-black flex items-center justify-center gap-1 cursor-pointer transition select-none"
+                          >
+                            <Phone className="w-3.5 h-3.5 shrink-0" />
+                            <span>{lang === "en" ? "CALL REPORTER" : "ബന്ധപ്പെടുക"}</span>
+                          </a>
+                          <button
+                            onClick={() => {
+                              setResolvingItem(item);
+                              setResolveContactInput("");
+                              setResolveError("");
+                              setResolveSuccess("");
+                            }}
+                            className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 rounded text-[11px] font-black cursor-pointer transition"
+                          >
+                            {lang === "en" ? "Resolve" : "തീർപ്പാക്കുക"}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                });
+              })()}
+            </div>
+
+            <p className="text-[10px] text-slate-400 text-center italic mt-1 bg-slate-50 p-1.5 rounded border border-gray-150/40 select-none">
+              {lang === "en" 
+                ? "💡 Note: Attappadi Online provides this board to connect people. Please verify details carefully and coordinate handovers at safe public locations."
+                : "💡 കുറിപ്പ്: ആളുകൾ തമ്മിൽ ബന്ധപ്പെടാനാണ് ഈ സൗകര്യം. സാധനങ്ങൾ കൈമാറുന്നതിന് മുൻപ് വിവരങ്ങൾ കൃത്യമായി ബോധ്യപ്പെട്ടു എന്ന് ഉറപ്പ് വരുത്തുക."}
+            </p>
+
+          </div>
+        ) : null}
       </div>
+
+      {/* RESOLVE VERIFICATION MODAL OVERLAY */}
+      {resolvingItem && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-[9999] animate-fade-in">
+          <div className="bg-white rounded-lg border border-slate-200 shadow-lg p-5 max-w-sm w-full space-y-4 text-slate-800">
+            <h4 className="font-serif-guardian font-extrabold text-sm md:text-base text-[#052962] border-b pb-2 flex justify-between items-center select-none">
+              <span>{lang === "en" ? "Verify to Resolve Item" : "റിപ്പോർട്ട് ഒഴിവാക്കാൻ സ്ഥിരീകരിക്കുക"}</span>
+              <button onClick={() => { setResolvingItem(null); setResolveError(""); setResolveContactInput(""); }} className="text-gray-400 hover:text-red-500 font-black cursor-pointer">X</button>
+            </h4>
+            <p className="text-[11px] text-slate-500 leading-normal font-semibold">
+              {lang === "en" 
+                ? "Please enter the contact phone number you submitted with this report to verify ownership and remove the listing."
+                : "റിപ്പോർട്ട് ഒഴിവാക്കാനായി നിങ്ങൾ നൽകിയ ഫോൺ നമ്പർ താഴെ നൽകി സ്ഥിരീകരിക്കുക."}
+            </p>
+            <input
+              type="text"
+              placeholder={lang === "en" ? "e.g. 9876543210" : "മൊബൈൽ നമ്പർ നൽകുക..."}
+              value={resolveContactInput}
+              onChange={(e) => setResolveContactInput(e.target.value)}
+              className="w-full border border-gray-250 p-2 rounded text-xs focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white font-semibold"
+            />
+            
+            {resolveError && <p className="text-[10.5px] text-rose-600 font-bold leading-normal">{resolveError}</p>}
+            {resolveSuccess && <p className="text-[10.5px] text-emerald-600 font-bold leading-normal animate-pulse">{resolveSuccess}</p>}
+
+            <div className="flex gap-2 pt-1 select-none">
+              <button
+                onClick={handleResolveSubmit}
+                className="flex-1 py-2 bg-rose-600 hover:bg-rose-700 text-white font-black text-xs rounded uppercase tracking-wider transition cursor-pointer"
+              >
+                {lang === "en" ? "Confirm & Resolve" : "സ്ഥിരീകരിക്കുക"}
+              </button>
+              <button
+                onClick={() => { setResolvingItem(null); setResolveError(""); setResolveContactInput(""); }}
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded transition cursor-pointer"
+              >
+                {lang === "en" ? "Cancel" : "റദ്ദാക്കുക"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

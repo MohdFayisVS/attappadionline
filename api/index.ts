@@ -75,509 +75,18 @@ let DB_PATH = path.join(__dirname, "db.json");
 if (process.env.VERCEL) {
   DB_PATH = path.join("/tmp", "db.json");
 }
-
 // ==================== DEFAULT SEED ARRAYS ====================
-const defaultDestinations = [
-  {
-    id: "dest_1",
-    nameEn: "Silent Valley National Park",
-    nameMl: "സൈലന്റ് വാലി ദേശീയോദ്യാനം",
-    locationEn: "Mukkali Ranger Station",
-    locationMl: "മുക്കാലി ഫോറസ്റ്റ് റേഞ്ച് ഓഫീസ്",
-    image: "https://images.unsplash.com/photo-1549221194-4fa7a41413f4?w=800&auto=format&fit=crop&q=80",
-    descriptionEn: "One of the last undisturbed rain forests in India. Protected under the Nilgiri Biosphere Reserve, it is famous for its evergreen canopy, pristine wild rivers, and rare wildlife like the Lion-tailed Macaque.",
-    descriptionMl: "ഇന്ത്യയിലെ അവശേഷിക്കുന്ന ഏക കന്യകാവനങ്ങളിലൊന്ന്. നീലഗിരി ബയോസ്ഫിയർ റിസർവിന്റെ ഭാഗമായ ഇവിടെ നിത്യഹരിത വനനിരകളും, തെളിഞ്ഞ വന്യ നദികളും, സിംഹവാലൻ കുരങ്ങുകൾ ഉൾപ്പെടെയുള്ള അപൂർവ വന്യജീവി സമ്പത്തുമുണ്ട്.",
-    highlightsEn: ["Jeep Safari from Mukkali", "Sylvan Trekking Trails", "Beautiful Watchtower views"],
-    highlightsMl: ["മുക്കാലിയിൽ നിന്നുള്ള ജീപ്പ് സഫാരി", "പ്രകൃതിദത്ത ട്രെക്കിങ് പാതകൾ", "വാച്ച് ടവർ വ്യൂ പോയിന്റുകൾ"]
-  },
-  {
-    id: "dest_2",
-    nameEn: "Malleswara Peak",
-    nameMl: "മല്ലേശ്വരൻ മുടി",
-    locationEn: "Near Agali",
-    locationMl: "അഗളിക്ക് സമീപം",
-    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&auto=format&fit=crop&q=80",
-    descriptionEn: "The tallest vertical mountain peak in Attappadi, revered as a deity (Lord Shiva) by the native tribal groups. Swathed in majestic clouds, it is the center of the massive annual Shivratri celebrations.",
-    descriptionMl: "അട്ടപ്പാടിയിലെ ഏറ്റവും ഉയരം കൂടിയ കൊടുമുടി. മല്ലേശ്വരൻ മുടിയെ ഇവിടുത്തെ ആദിവാസി ജനവിഭാഗങ്ങൾ പരമശിവനായി പൂജിച്ച് ആരാധിക്കുന്നു. മനോഹരമായ മഞ്ഞുമൂടിയ മലനിരകളും പ്രശസ്തമായ ശിവരാത്രി കൊടിയേറ്റും ഇവിടുത്തെ പ്രത്യേകതയാണ്.",
-    highlightsEn: ["Cultural Pilgrimage", "Spiritual Trekking", "Mist-shrouded viewpoints"],
-    highlightsMl: ["ആത്മീയ തീർത്ഥാടനം", "വിശുദ്ധ ട്രെക്കിങ് പാത", "മഞ്ഞുമൂടിയ വ്യൂ പോയിന്റുകൾ"]
-  },
-  {
-    id: "dest_3",
-    nameEn: "Siruvani River & Dam Reservoir",
-    nameMl: "ശിരുവാണി പുഴയും ഡാമും",
-    locationEn: "Singampatti Catchments",
-    locationMl: "സിംഗംപെട്ടി വൃഷ്ടിപ്രദേശം",
-    image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&auto=format&fit=crop&q=80",
-    descriptionEn: "Renowned globally for generating water of unmatched sweetness. The Siruvani reservoir is surrounded by dense forests, deep gorges, and serves as a vital cross-border water network between Kerala and Tamil Nadu.",
-    descriptionMl: "ലോകത്തിലെ ഏറ്റവും സ്വാദുള്ള കുടിവെള്ള സ്രോതസ്സുകളിലൊന്നായി അറിയപ്പെടുന്നു. ശിരുവാണി റിസർവോയർ നിബിഡ വനങ്ങളാലും മലയിടുക്കുകളാലും ചുറ്റപ്പെട്ടിരിക്കുന്നു. കേരളത്തിന്റെയും തമിഴ്‌നാടിന്റെയും അതിർത്തി പങ്കിടുന്ന ജലപാതയാണിത്.",
-    highlightsEn: ["Scenic Waterfalls", "Silent Photography Spots", "Pristine nature sounds"],
-    highlightsMl: ["മനോഹരമായ വെള്ളച്ചാട്ടങ്ങൾ", "ഫോട്ടോഗ്രാഫി സ്പോട്ടുകൾ", "വന്യമായ ശബ്‍ദാനുഭവം"]
-  },
-  {
-    id: "dest_4",
-    nameEn: "Bhavani River & Suspension Bridge",
-    nameMl: "ഭവാനി പുഴയും തൂക്കുപാലവും",
-    locationEn: "Thavalam Nodal",
-    locationMl: "താവളം ജംഗ്ഷൻ",
-    image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&auto=format&fit=crop&q=80",
-    descriptionEn: "A major perennial river flowing eastward into neighboring Tamil Nadu. The hanging suspension bridge at Thavalam is a popular local engineering marvel offering panoramic snapshots over the flowing currents.",
-    descriptionMl: "കിഴക്കോട്ട് ഒഴുകുന്ന അപൂർവ്വം നദികളിലൊന്ന്. താവളത്തിലുള്ള മനോഹരമായ തൂക്കുപാലം പ്രദേശവാസികൾക്കും സഞ്ചാരികൾക്കും ആകർഷകമായ കാഴ്ചാനുഭവവും ഭവാനിപ്പുഴയുടെ വിശാലമായ ദൃശ്യവും സമ്മാനിക്കുന്നു.",
-    highlightsEn: ["Riverbanks Relaxation", "Traditional Suspension Bridge", "Bird Watching spots"],
-    highlightsMl: ["പുഴയോര വിശ്രമം", "തൂക്കുപാലത്തിലൂടെയുള്ള നടത്തം", "പക്ഷി നിരീക്ഷണം"]
-  }
-];
-
-const defaultCultures = [
-  {
-    id: "cult_1",
-    type: "culture",
-    titleEn: "Tribal Dances & Instrumental Arts",
-    titleMl: "ഗോത്രവർഗ്ഗ നൃത്തങ്ങളും സംഗീതവും",
-    subtitleEn: "Irula, Muduga, & Kurumba Traditions",
-    subtitleMl: "ഇരുള, മുഡുക, കുറുമ്പ പാരമ്പര്യം",
-    image: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=800&auto=format&fit=crop&q=80",
-    descEn: "Attappadi's identity beats to the rhythm of traditional tribal folk music and dances. The 'Kakka Karumban' and 'Elelakkaradi' represent spirited dance rituals depicting wild creatures, harvest cycles, and ancestral spirits performed around glowing community campfires.",
-    descMl: "പരമ്പരാഗത ഗോത്ര സംഗീതത്തിന്റെയും നൃത്ത രൂപങ്ങളുടെയും താളങ്ങളിലാണ് അട്ടപ്പാടിയുടെ ആത്മാവ് പടരുന്നത്. കാട്ടുമൃഗങ്ങളുടെ ചലനങ്ങളും വിതക്കൊയ്ത്തുകളും വർണ്ണിക്കുന്ന 'കാക്ക കറുമ്പൻ', 'ഏലേലക്കരടി' നൃത്തങ്ങൾ ഗ്രാമീണ കൂട്ടായ്മകളുടെ പ്രതീകങ്ങളാണ്.",
-    elementEn: "Key Instruments: Kozhal (pipe), Thavi, & Para drum beats.",
-    elementMl: "പ്രധാന വാദ്യങ്ങൾ: കുഴൽ, തവി, തകിൽ, പറ മേളങ്ങൾ."
-  },
-  {
-    id: "cult_2",
-    type: "food",
-    titleEn: "Millet-centric Gastronomy & Forest Teas",
-    titleMl: "പാരമ്പര്യ ധാന്യ വിഭവങ്ങളും കാട്ടുതേനും",
-    subtitleEn: "Vanya Ragi, Chama, & Bamboo Rice",
-    subtitleMl: "റാഗി, ചാമ, മുളയരി കഞ്ഞി",
-    image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=800&auto=format&fit=crop&q=80",
-    descEn: "Nutrition in the valley traces back to ancient millets. Standard meals center around nourishing Ragi Porridge (റാഗി കുറുക്ക്), Chama rice, and steaming forest tea mixed with immune-boosting country roots. Native bamboo rice payasam made during winter seasons is an absolute sweet delicacy.",
-    descMl: "പ്രകൃതിയോടിണങ്ങിയ പരമ്പരാഗത തനിമയാണ് അട്ടപ്പാടിയിലെ ഭക്ഷണരീതിക്ക്. പോഷകഗുണമേറിയ റാഗി കുറുക്ക്, ചാമച്ചോറ്, ഔഷധവേരുകൾ ചേർത്ത കാട്ടുചായ എന്നിവ ഊരുകളിലെ നിത്യഭക്ഷണമാണ്. കൂടാതെ മുളയരി പായസം പ്രത്യേക ഉത്സവങ്ങളിലെ മധുരവിഭവമാണ്.",
-    elementEn: "Try: Organic Wild Honey & Bamboo Seed Payasam.",
-    elementMl: "രുചിച്ചുനോക്കൂ: ശുദ്ധമായ കാട്ടുതേൻ, മുളയരി പായസം."
-  }
-];
-
-const defaultStays = [
-  {
-    id: "stay_1",
-    nameEn: "Silent Valley Eco Forest Lodge",
-    nameMl: "സൈലന്റ് വാലി ഇക്കോ ലോഗ് ഹൗസ്",
-    typeEn: "Govt-owned Eco Haven",
-    typeMl: "സർക്കാർ ഉടമസ്ഥതയിലുള്ള വനം കുടിലുകൾ",
-    locationEn: "Mukkali Nodal",
-    locationMl: "മുക്കാലി വില്ലേജ്",
-    image: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=800&auto=format&fit=crop&q=80",
-    priceEn: "₹2,500 - ₹4,500 per night",
-    priceMl: "പ്രതിദിനം ₹2,500 - ₹4,500",
-    featuresEn: ["Owned by Forest Department", "Authentic native guides", "Organic food mess"],
-    featuresMl: ["വനം വകുപ്പ് നിയന്ത്രണത്തിൽ", "തദ്ദേശീയരായ ഗൈഡുകൾ", "നാടൻ ഭക്ഷണശാല"]
-  },
-  {
-    id: "stay_2",
-    nameEn: "Bhavani Riverside Nature Estate",
-    nameMl: "ഭവാനി റിവർസൈഡ് നേച്ചർ എസ്റ്റേറ്റ്",
-    typeEn: "Premium Private Lodge",
-    typeMl: "പ്രീമിയം പ്രൈവറ്റ് റിസോർട്ട്",
-    locationEn: "Agali Hills",
-    locationMl: "അഗളി കുന്നുകൾ",
-    image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&auto=format&fit=crop&q=80",
-    priceEn: "₹4,000 - ₹7,000 per night",
-    priceMl: "പ്രതിദിനം ₹4,000 - ₹7,000",
-    featuresEn: ["Panoramic river frontage", "Campfire under stars", "Jeep trekking options"],
-    featuresMl: ["ഭവാനിപ്പുഴയുടെ സുന്ദരമായ കാഴ്ച", "നിവേദ്യമായ ക്യാമ്പ്ഫയർ", "ഓഫ്-റോഡ് ജീപ്പ് സവാരി"]
-  },
-  {
-    id: "stay_3",
-    nameEn: "Agali Valley HomeStays",
-    nameMl: "അഗളി വാലി ഹോംസ്റ്റേകൾ",
-    typeEn: "Community Farm Stay",
-    typeMl: "തദ്ദേശീയ കർഷക ഭവനങ്ങൾ",
-    locationEn: "Thavalam-Agali corridor",
-    locationMl: "താവളം-അഗളി റോഡ്",
-    image: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800&auto=format&fit=crop&q=80",
-    priceEn: "₹1,200 - ₹2,000 per night",
-    priceMl: "പ്രതിദിനം ₹1,200 - ₹2,000",
-    featuresEn: ["Hosted by farming families", "Spice garden walking tour", "Home-cooked traditional dishes"],
-    featuresMl: ["നാടൻ കർഷക കുടുംബങ്ങളോടൊപ്പം", "സുഗന്ധവ്യഞ്ജന തോട്ട സന്ദർശനം", "രുചികരമായ നാടൻ കഞ്ഞി വിഭവങ്ങൾ"]
-  }
-];
-
-const defaultTravelogues = [
-  {
-    id: "trav_1",
-    titleEn: "Monsoon Magic: Walking Through Silent Valley Catchments",
-    titleMl: "വർഷകാലത്തെ പ്രകൃതി വസന്തം: സൈലന്റ് വാലിയിലൂടെ ഒരു കാൽനട യാത്ര",
-    authorEn: "Fayis Mohammed, Travel Columnist",
-    authorMl: "ഫായിസ് മുഹമ്മദ്, യാത്രാവിവരണ ചരിത്രകാരൻ",
-    date: "June 2026",
-    snippetEn: "Heavy mist envelops the towering teak canopies. Droplets fall from ancient moss-laden trees as the wild Siruvani streams hum a distant lullaby. Walking on the damp orange leaf litter of Mukkali ranger trails resets your perspective completely...",
-    snippetMl: "കനത്ത കോടമഞ്ഞ് ഉയരമുള്ള നിത്യഹരിത മരങ്ങളെ തഴുകിപ്പോകുന്നു. വൃക്ഷത്തലപ്പുകളിൽ നിന്ന് വീഴുന്ന ഓരോ മഴത്തുള്ളിയും ശിരുവാണിപ്പുഴയുടെ ഹൃദയതാളങ്ങൾക്ക് മാറ്റുകൂട്ടുന്നു. മുക്കാലിയിലെ ഈ അടിപ്പാതയിലൂടെയുള്ള നടത്തം പ്രകൃതിയുടെ മറ്റൊരു ലോകത്തേക്ക് നമ്മെ കൊണ്ടുപോകും...",
-    readTimeEn: "5 min read",
-    readTimeMl: "5 മിനുട്ട് വായന"
-  },
-  {
-    id: "trav_2",
-    titleEn: "Reverence & Height: Gaining Perspective at the base of deity peak Malleswara",
-    titleMl: "കരുത്തിന്റെ പ്രതീകം: മല്ലേശ്വരൻ മുടിയുടെ താഴ്വാരങ്ങളിലൂടെയുള്ള അനുഭവം",
-    authorEn: "Adv. Rajesh K., Agali",
-    authorMl: "അഡ്വ. രാജേഷ് കെ., അഗളി",
-    date: "May 2026",
-    snippetEn: "Every tribal community member elders look up to Malleswaram peak with sheer silence and respect. Trekking to the perimeter during the Shivratri night when giant beacons are lit atop is an otherworldly experience where drum beats echo along valleys...",
-    snippetMl: "അട്ടപ്പാടിയിലെ ഓരോ ജനവിഭാഗത്തിനും മല്ലേശ്വരൻ മുടി കേവലമൊരു പർവ്വതമല്ല; വലിയൊരു വിശ്വാസമാണ്. ശിവരാത്രി ദിനത്തിൽ മലമുകളിൽ മല്ലേശ്വരൻ ദീപം പ്രകാശിക്കുമ്പോൾ അതിർത്തികളിൽ മുഴങ്ങുന്ന തുടിമേളങ്ങളുടെ ശബ്ദം നാടിൻ്റെ ഐക്യത്തിൻ്റെ പ്രതീകമാണ്...",
-    readTimeEn: "4 min read",
-    readTimeMl: "4 മിനുട്ട് വായന"
-  }
-];
-
-const defaultPhotos = [
-  {
-    id: "photo_1",
-    url: "https://images.unsplash.com/photo-1549221194-4fa7a41413f4?w=1000&auto=format&fit=crop",
-    titleEn: "Misty Evergreen Canopies of Silent Valley",
-    titleMl: "കോടമഞ്ഞിൽ മൂടിയ സൈലന്റ് വാലി നിബിഡവനങ്ങൾ",
-    descEn: "A pristine early morning viewpoint inside the deep core rainforest.",
-    descMl: "പ്രഭാതത്തിൽ സൈലന്റ് വാലി ദേശീയോദ്യാനത്തിനുള്ളിൽ നിന്നുള്ള വന്യമായ ദൃശ്യം."
-  },
-  {
-    id: "photo_2",
-    url: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1000&auto=format&fit=crop",
-    titleEn: "Malleswara Peak Shrouded in Silken Clouds",
-    titleMl: "മല്ലേശ്വരൻ മുടിയെ തഴുകുന്ന മേഘജാലം",
-    descEn: "Revered vertical peak holding sacred importance for native tribal hamlets.",
-    descMl: "ആദിവാസി ഊരുകൾ പവിത്രമായി കാണുന്ന അട്ടപ്പാടിയുടെ കാവൽ ദൈവം."
-  },
-  {
-    id: "photo_3",
-    url: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1000&auto=format&fit=crop",
-    titleEn: "Primal Siruvani Streams Carrying Sweet Water",
-    titleMl: "മലനിരകളിൽ നിന്നൊഴുകിയെത്തുന്ന ശിരുവാണി പുഴ",
-    descEn: "Purest, famously sweet water reservoir streams flowing through deep blocks.",
-    descMl: "വിഖ്യാതമായ മധുരമേറിയ ഈ കുടിവെള്ള നദി കാടുകളുടെ ഹൃദയം തൊട്ടൊഴുകുന്നു."
-  },
-  {
-    id: "photo_4",
-    url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1000&auto=format&fit=crop",
-    titleEn: "Ancient Bamboo Thickets near Bhavani Banks",
-    titleMl: "ഭവാനിപ്പുഴയോരത്തെ പുരാതന മുളങ്കാടുകൾ",
-    descEn: "Home to beautiful indigenous birds and natural wilderness vibes.",
-    descMl: "അപൂർവ പക്ഷികൾക്ക് താവളമൊരുക്കുന്ന താവളത്തിലെ നിബിഡമായ ഈ മുളങ്കാടുകൾ."
-  },
-  {
-    id: "photo_5",
-    url: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=1000&auto=format&fit=crop",
-    titleEn: "Ragi and Millet Farmlands of Pudur Grama Panchayat",
-    titleMl: "പുതൂരിലെ മനോഹരമായ പരമ്പരാഗത റാഗി കൃഷിയിടം",
-    descEn: "Ensuring deep nutrition and historic self-reliance across block boundaries.",
-    descMl: "അട്ടപ്പാടിക്ക് തനതായ ആരോഗ്യസുരക്ഷ പകരുന്ന പുരാതന ധാന്യ വിള നിലങ്ങൾ."
-  },
-  {
-    id: "photo_6",
-    url: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1000&auto=format&fit=crop",
-    titleEn: "Rustic Wooden Walkway in Mukkali Buffer Zone",
-    titleMl: "മുക്കാലി ബഫർ സോണിലെ പ്രകൃതിദത്ത നടപ്പാത",
-    descEn: "Step closer to untouched, moss-covered wilderness of Silent Valley.",
-    descMl: "సైలന്റ് വാലിയുടെ അതിർത്തി വനങ്ങളിൽ സഞ്ചാരികൾക്കായി ഒരുക്കിയ സുന്ദരമായ കാട്ടുപാത."
-  }
-];
-
-const defaultBusRoutes = [
-  {
-    id: "bus_1",
-    routeEn: "Mannarkkad - Mukkali - Agali - Anaikatty",
-    routeMl: "മണ്ണാർക്കാട് - മുക്കാലി - അഗളി - ആനക്കട്ടി",
-    type: "KSRTC",
-    busTypeEn: "Fast Passenger / Ordinary Local Connections",
-    busTypeMl: "ഫാസ്റ്റ് പാസഞ്ചർ / ഓർഡിനറി സർവീസുകൾ",
-    runsEn: "Daily Line",
-    runsMl: "എല്ലാ ദിവസവും",
-    frequencyEn: "Every 45 minutes",
-    frequencyMl: "ഓരോ 45 മിനിറ്റിലും സർവീസ്",
-    timingsEn: "First Bus: 05:30 AM, Last Bus: 08:30 PM",
-    timingsMl: "ആദ്യ ബസ്: 05:30 AM, അവസാന ബസ്: 08:30 PM",
-    list: [
-      { time: "05:30 AM", typeEn: "KSRTC Ordinary", typeMl: "KSRTC ഓർഡിനറി", viaCodeEn: "Mukkali, Agali", viaCodeMl: "മുക്കാലി, അഗളി വഴി" },
-      { time: "06:15 AM", typeEn: "KSRTC FP", typeMl: "KSRTC ഫാസ്റ്റ് പാസഞ്ചർ", viaCodeEn: "Mukkali, Agali, Anaikatty", viaCodeMl: "മുക്കാലി, അഗളി, ആനക്കട്ടി വഴി" },
-      { time: "07:00 AM", typeEn: "Private Stage Carrier", typeMl: "സ്വകാര്യ ബസ്", viaCodeEn: "Mukkali, Agali, Kottathara", viaCodeMl: "മുക്കാലി, അഗളി, കോട്ടത്തറ വഴി" },
-      { time: "08:15 AM", typeEn: "KSRTC Ordinary", typeMl: "KSRTC ഓർഡിനറി", viaCodeEn: "Ittiyadi, Agali", viaCodeMl: "ഇറ്റിയാടി, അഗളി വഴി" },
-      { time: "09:30 AM", typeEn: "KSRTC FP", typeMl: "KSRTC ഫാസ്റ്റ് പാസഞ്ചർ", viaCodeEn: "Mukkali, Agali, Anaikatty", viaCodeMl: "മുക്കാലി, അഗളി, ആനക്കട്ടി വഴി" },
-      { time: "11:15 AM", typeEn: "Private Stage Carrier", typeMl: "സ്വകാര്യ ബസ്", viaCodeEn: "Goolikadavu, Agali", viaCodeMl: "കൂളിക്കടവ്, അഗളി വഴി" },
-      { time: "12:45 PM", typeEn: "KSRTC Ordinary", typeMl: "KSRTC ഓർഡിനറി", viaCodeEn: "Mukkali, Agali", viaCodeMl: "മുക്കാലി, അഗളി വഴി" },
-      { time: "02:00 PM", typeEn: "KSRTC FP", typeMl: "KSRTC ഫാസ്റ്റ് പാസഞ്ചർ", viaCodeEn: "Mukkali, Agali, Anaikatty", viaCodeMl: "മുക്കാലി, അഗളി, ആനക്കട്ടി വഴി" },
-      { time: "03:30 PM", typeEn: "Private Stage Carrier", typeMl: "സ്വകാര്യ ബസ്", viaCodeEn: "Mukkali, Agali, Sholayur", viaCodeMl: "മുക്കാലി, അഗളി, ഷോളയൂർ വഴി" },
-      { time: "04:45 PM", typeEn: "KSRTC Ordinary", typeMl: "KSRTC ഓർഡിനറി", viaCodeEn: "Mukkali, Agali", viaCodeMl: "മുക്കാലി, അഗളി വഴി" },
-      { time: "05:55 PM", typeEn: "KSRTC FP", typeMl: "KSRTC ഫാസ്റ്റ് പാസഞ്ചർ", viaCodeEn: "Mukkali, Agali, Anaikatty", viaCodeMl: "മുക്കാലി, അഗളി, ആനക്കട്ടി വഴി" },
-      { time: "07:15 PM", typeEn: "Private Stage Carrier", typeMl: "സ്വകാര്യ ബസ്", viaCodeEn: "Mukkali, Agali", viaCodeMl: "മുക്കാലി, അഗളി വഴി" },
-      { time: "08:30 PM", typeEn: "KSRTC Ordinary (Night Stay)", typeMl: "KSRTC രാത്രി സർവീസ് (താലൂക്ക് ആശുപത്രി വഴി)", viaCodeEn: "Mukkali, Agali Stay", viaCodeMl: "മുക്കാലി, അഗളി (രാത്രി താമസം)" }
-    ]
-  },
-  {
-    id: "bus_2",
-    routeEn: "Coimbatore - Anaikatty - Agali",
-    routeMl: "കോയമ്പത്തൂർ (ഗാന്ധിപുരം) - ആനക്കട്ടി - അഗളി",
-    type: "TNSTC",
-    busTypeEn: "Interstate Ordinary / Express Coach",
-    busTypeMl: "അന്തർസംസ്ഥാന തമിഴ്നാട് സർവ്വീസ്",
-    runsEn: "Daily Line",
-    runsMl: "എല്ലാ ദിവസവും",
-    frequencyEn: "Every 30-40 minutes",
-    frequencyMl: "ഓരോ 30-40 മിനിറ്റിലും സർവീസ്",
-    timingsEn: "Border shuttle service with TNSTC connection",
-    timingsMl: "ആനക്കട്ടി അതിർത്തിയിൽ നിന്ന് കോയമ്പത്തൂരിലേക്ക് നിരന്തര സർവീസുകൾ ലഭ്യമാണ്",
-    list: [
-      { time: "06:00 AM", typeEn: "TNSTC Ordinary", typeMl: "തമിഴ്‌നാട് സർക്കാർ ബസ്", viaCodeEn: "Thadagam Road, Kanuvai", viaCodeMl: "തടാകം റോഡ്, കണുവായി വഴി" },
-      { time: "07:15 AM", typeEn: "TNSTC Ordinary", typeMl: "തമിഴ്‌നാട് സർക്കാർ ബസ്", viaCodeEn: "Thadagam Road, Anaikatty", viaCodeMl: "തടാകം റോഡ്, ആനക്കട്ടി വഴി" },
-      { time: "08:30 AM", typeEn: "Private Interstate Bus", typeMl: "സ്വകാര്യ ബസ് സർവീസ്", viaCodeEn: "Gandhipuram, Kanuvai", viaCodeMl: "ഗാന്ധിപുരം, കണുവായി വഴി" },
-      { time: "10:00 AM", typeEn: "TNSTC Ordinary", typeMl: "തമിഴ്‌നാട് സർക്കാർ ബസ്", viaCodeEn: "Thadagam Road", viaCodeMl: "തടാകം റോഡ് വഴി" },
-      { time: "11:45 AM", typeEn: "TNSTC Express", typeMl: "തമിഴ്‌നാട് എക്സ്പ്രസ്സ്", viaCodeEn: "Coimbatore Town Hall, Anaikatty", viaCodeMl: "കോയമ്പത്തൂർ ടൗൺ ഹാൾ വഴി" },
-      { time: "01:15 PM", typeEn: "Private Stage Carrier", typeMl: "സ്വകാര്യ ബസ്", viaCodeEn: "Gandhipuram, Anaikatty", viaCodeMl: "ഗാന്ധിപുരം, ആനക്കട്ടി വഴി" },
-      { time: "02:45 PM", typeEn: "TNSTC Ordinary", typeMl: "തമിഴ്‌നാട് സർക്കാർ ബസ്", viaCodeEn: "Thadagam Road", viaCodeMl: "തടാകം റോഡ് വഴി" },
-      { time: "04:15 PM", typeEn: "TNSTC Express", typeMl: "തമിഴ്‌നാട് എക്സ്പ്രസ്സ്", viaCodeEn: "Coimbatore Gandhipuram", viaCodeMl: "കോയമ്പത്തൂർ ഗാന്ധിപുരം വഴി" },
-      { time: "05:30 PM", typeEn: "Private Town Bus", typeMl: "സ്വകാര്യ നഗര ബസ്", viaCodeEn: "Thadagam Road", viaCodeMl: "തടാകം റോഡ് വഴി" },
-      { time: "06:45 PM", typeEn: "TNSTC Ordinary", typeMl: "തമിഴ്‌നാട് സർക്കാർ ബസ്", viaCodeEn: "Anaikatty Gate", viaCodeMl: "ആനക്കട്ടി ഗേറ്റ് വഴി" },
-      { time: "08:15 PM", typeEn: "TNSTC Ordinary (Last Transit)", typeMl: "തമിഴ്‌നാട് സർക്കാർ ബസ് (അവസാന ട്രാൻസിറ്റ്)", viaCodeEn: "Thadagam Road", viaCodeMl: "തടാകം റോഡ് വഴി" }
-    ]
-  },
-  {
-    id: "bus_3",
-    routeEn: "Agali - Sholayur - Anaikatty",
-    routeMl: "അഗളി - ഷോളയൂർ - ആനക്കട്ടി (മേഖലാ സർവീസ്)",
-    type: "PRIVATE",
-    busTypeEn: "Valley Ordinary Stage Carrier",
-    busTypeMl: "വാലി ഓർഡിനറി പ്രൈവറ്റ് ബസ്",
-    runsEn: "Daily Line",
-    runsMl: "എല്ലാ ദിവസവും",
-    frequencyEn: "Every 1 hour",
-    frequencyMl: "ഓരോ 1 മണിക്കൂർ ഇടവിട്ട് സർവീസ്",
-    timingsEn: "First Bus: 06:45 AM, Last Bus: 07:30 PM",
-    timingsMl: "ആദ്യ ബസ്: 06:45 AM, അവസാന ബസ്: 07:30 PM",
-    list: [
-      { time: "06:45 AM", typeEn: "Private Ordinary", typeMl: "സ്വകാര്യ ഓർഡിനറി ബസ്", viaCodeEn: "Goolikadavu, Sholayur", viaCodeMl: "കൂളിക്കടവ്, ഷോളയൂർ വഴി" },
-      { time: "07:50 AM", typeEn: "Private Ordinary", typeMl: "സ്വകാര്യ ഓർഡിനറി ബസ്", viaCodeEn: "Kottathara, Sholayur", viaCodeMl: "കോട്ടത്തറ, ഷോളയൂർ വഴി" },
-      { time: "09:00 AM", typeEn: "Private Ordinary", typeMl: "സ്വകാര്യ ഓർഡിനറി ബസ്", viaCodeEn: "Goolikadavu, Sholayur", viaCodeMl: "കൂളിക്കടവ്, ഷോളയൂർ വഴി" },
-      { time: "10:30 AM", typeEn: "Private Ordinary", typeMl: "സ്വകാര്യ ഓർഡിനറി ബസ്", viaCodeEn: "Goolikadavu, Sholayur", viaCodeMl: "കൂളിക്കടവ്, ഷോളയൂർ വഴി" },
-      { time: "12:00 PM", typeEn: "Private Ordinary", typeMl: "സ്വകാര്യ ഓർഡിനറി ബസ്", viaCodeEn: "Kottathara, Sholayur", viaCodeMl: "കോട്ടത്തറ, ഷോളയൂർ വഴി" },
-      { time: "01:30 PM", typeEn: "Private Ordinary", typeMl: "സ്വകാര്യ ഓർഡിനറി ബസ്", viaCodeEn: "Goolikadavu, Sholayur", viaCodeMl: "കൂളിക്കടവ്, ഷോളയൂർ വഴി" },
-      { time: "03:00 PM", typeEn: "Private Ordinary", typeMl: "സ്വകാര്യ ഓർഡിനറി ബസ്", viaCodeEn: "Goolikadavu, Sholayur", viaCodeMl: "കൂളിക്കടവ്, ഷോളയൂർ വഴി" },
-      { time: "04:30 PM", typeEn: "Private Ordinary", typeMl: "സ്വകാര്യ ഓർഡിനറി ബസ്", viaCodeEn: "Kottathara, Sholayur", viaCodeMl: "കോട്ടത്തറ, ഷോളയൂർ വഴി" },
-      { time: "06:00 PM", typeEn: "Private Ordinary", typeMl: "സ്വകാര്യ ഓർഡിനറി ബസ്", viaCodeEn: "Goolikadavu, Sholayur", viaCodeMl: "കൂളിക്കടവ്, ഷോളയൂർ വഴി" },
-      { time: "07:30 PM", typeEn: "Private Ordinary (Last Bus)", typeMl: "സ്വകാര്യ ഓർഡിനറി ബസ് (അവസാന സർവീസ്)", viaCodeEn: "Goolikadavu, Sholayur", viaCodeMl: "കൂളിക്കടവ്, ഷോളയൂർ വഴി" }
-    ]
-  },
-  {
-    id: "bus_4",
-    routeEn: "Agali - Pudur - Mulli",
-    routeMl: "അഗളി - പുതൂർ - മുള്ളി (വനമേഖലാ തനി നാടൻ പാത)",
-    type: "KSRTC",
-    busTypeEn: "Hill Forest Ordinary Route",
-    busTypeMl: "മലയോര ഫോറസ്റ്റ് സർവീസ്",
-    runsEn: "Daily Line",
-    runsMl: "എല്ലാ ദിവസവും",
-    frequencyEn: "Limited Services (3 times/day)",
-    frequencyMl: "പ്രതിദിനം 3 സർവീസുകൾ (രണ്ടു ദിശകളിലേക്കും)",
-    timingsEn: "Essential lifeline for tribal hamlets & Mulli Checkpost Connection",
-    timingsMl: "മുള്ളി ഫോറസ്റ്റ് ചെക്ക്പോസ്റ്റും പുതൂർ പഞ്ചായത്തിലെ ആദിവാസി ഊരുകളും ബന്ധിപ്പിക്കുന്ന അത്യാവശ്യ വണ്ടി",
-    list: [
-      { time: "07:05 AM", typeEn: "KSRTC Ordinary (Up)", typeMl: "KSRTC ഓർഡിനറി - ഹിൽ റൂട്ട്", viaCodeEn: "Kottathara, Pudur", viaCodeMl: "കോട്ടത്തറ, പുതൂർ വഴി" },
-      { time: "08:30 AM", typeEn: "KSRTC Ordinary (Down)", typeMl: "KSRTC മടക്ക സർവീസ്", viaCodeEn: "Mulli to Agali", viaCodeMl: "മുള്ളിയിൽ നിന്ന് അഗളിയിലേക്ക്" },
-      { time: "12:45 PM", typeEn: "KSRTC Ordinary (Up)", typeMl: "KSRTC ഉച്ച സർവീസ്", viaCodeEn: "Kottathara, Pudur, Mulli", viaCodeMl: "കോട്ടത്തറ, പുതൂർ, മുള്ളി വഴി" },
-      { time: "02:15 PM", typeEn: "KSRTC Ordinary (Down)", typeMl: "KSRTC മടക്ക സർവീസ്", viaCodeEn: "Mulli to Agali", viaCodeMl: "മുള്ളിയിൽ നിന്ന് അഗളിയിലേക്ക്" },
-      { time: "05:00 PM", typeEn: "KSRTC Ordinary (Up - Night Stay)", typeMl: "KSRTC വൈകുന്നേരത്തെ ആശ്രയം (ഊരുകളിലേക്കുള്ള തിരിച്ചുപോക്ക്)", viaCodeEn: "Pudur, Mulli (Pudur Night Stay)", viaCodeMl: "പുതൂർ, മുള്ളി വഴി (പുതൂരിൽ രാത്രി താമസം)" }
-    ]
-  },
-  {
-    id: "bus_5",
-    routeEn: "Palakkad - Mannarkkad - Agali - Anaikatty",
-    routeMl: "പാലക്കാട് - മണ്ണാർക്കാട് - അഗളി - ആനക്കട്ടി",
-    type: "KSRTC",
-    busTypeEn: "Fast Passenger / Town Connection Bus",
-    busTypeMl: "ഫാസ്റ്റ് പാസഞ്ചർ / ലിങ്ക് സർവീസ്",
-    runsEn: "Daily Line",
-    runsMl: "എല്ലാ ദിവസവും",
-    frequencyEn: "Regular Scheduled Interval",
-    frequencyMl: "കൃത്യമായ സമയക്രമങ്ങളിൽ സർവീസ്",
-    timingsEn: "Palakkad District HQ Direct Connection",
-    timingsMl: "പാലക്കാട് ജില്ലാ ആസ്ഥാനത്തേക്ക് നേരിട്ടുള്ള മികച്ച കണക്റ്റിവിറ്റി",
-    list: [
-      { time: "05:05 AM", typeEn: "KSRTC Fast Passenger", typeMl: "KSRTC ഫാസ്റ്റ് പാസഞ്ചർ (ആനക്കട്ടി ആദ്യം)", viaCodeEn: "Mannarkkad, Kanjikode, Palakkad Depot", viaCodeMl: "മണ്ണാർക്കാട്, പാലക്കാട് ഡിപ്പോ വഴി" },
-      { time: "08:15 AM", typeEn: "KSRTC Ordinary", typeMl: "KSRTC ഓർഡിനറി സർവീസ്", viaCodeEn: "Thavalam, Mannarkkad, Palakkad", viaCodeMl: "താവളം, മണ്ണാർക്കാട്, പാലക്കാട് വഴി" },
-      { time: "11:45 AM", typeEn: "KSRTC Fast Passenger", typeMl: "KSRTC ഫാസ്റ്റ് പാസഞ്ചർ", viaCodeEn: "Chirakkal, Mannarkkad", viaCodeMl: "ചിറക്കൽ, മണ്ണാർക്കാട് വഴി" },
-      { time: "02:20 PM", typeEn: "KSRTC Fast Passenger", typeMl: "KSRTC ഫാസ്റ്റ് പാസഞ്ചർ (Palakkad Return)", viaCodeEn: "Mannarkkad, Palakkad Hub", viaCodeMl: "മണ്ണാർക്കാട്, പാലക്കാട് ഹബ് വഴി" },
-      { time: "04:30 PM", typeEn: "KSRTC Fast Passenger (Last Link)", typeMl: "KSRTC പാസഞ്ചർ (അവസാന ലിങ്ക് ബസ്)", viaCodeEn: "Mannarkkad Town, Palakkad Depot", viaCodeMl: "മണ്ണാർക്കാട് ടൗൺ, പാലക്കാട് ഡിപ്പോ വഴി" }
-    ]
-  }
-];
-
-const defaultEmergencies = [
-  {
-    id: "em1",
-    nameEn: "Tribal Specialty Hospital Ambulance Desk",
-    nameMl: "ട്രൈബൽ ആശുപത്രി കോട്ടത്തറ ആംബുലൻസ് ഹെൽപ്പ് ലൈൻ",
-    number: "04924-254108",
-    type: "ambulance"
-  },
-  {
-    id: "em2",
-    nameEn: "Agali Police Patrol Unit Line",
-    nameMl: "അഗളി പോലീസ് പട്രോളിങ് വിഭാഗം",
-    number: "112 / 94979 80628",
-    type: "police"
-  },
-  {
-    id: "em3",
-    nameEn: "Agali Forest Range Rescue Operations Office",
-    nameMl: "അഗളി ഫോറസ്റ്റ് റെയിഞ്ച് റെസ്ക്യൂ കാര്യാലയം",
-    number: "04924-254222",
-    type: "forest"
-  },
-  {
-    id: "em4",
-    nameEn: "Mana Fire & Safety Control Station",
-    nameMl: "അഗ്നിശമന വിഭാഗം അടിയന്തര ഫോൺ",
-    number: "04924-254911",
-    type: "fire"
-  }
-];
-
-const defaultNotices = [
-  {
-    id: "not_1",
-    titleEn: "Caution: Wild Elephant Crossing near Mukkali",
-    titleMl: "ജാഗ്രതാ നിർദ്ദേശം: മുക്കാലിയിൽ കാട്ടാന സാന്നിധ്യം",
-    contentEn: "Frequent wild elephant movements have been reported along the Mukkali-Anakkal forest route. Public is advised to avoid travel from 6 PM to 6 AM and drive slowly.",
-    contentMl: "മുക്കാലി-ആനക്കൽ വനപാതയിൽ കാട്ടാനകളുടെ സാന്നിധ്യം ഉള്ളതായി റിപ്പോർട്ട് ചെയ്തിരിക്കുന്നു. വൈകിട്ട് 6 മുതൽ രാവിലെ 6 വരെയുള്ള യാത്രകൾ പരമാവധി ഒഴിവാക്കുക.",
-    type: "caution",
-    severity: "high",
-    date: "2026-06-20",
-    active: true
-  },
-  {
-    id: "not_2",
-    titleEn: "Landslide Warning: Heavy Rain Alert",
-    titleMl: "മഴ മുന്നറിയിപ്പ്: ഉരുൾപൊട്ടൽ ജാഗ്രത",
-    contentEn: "With heavy rains continuing in Attappadi hills, flash flood and landslide warnings are in place for Sholayur and Pudur hillsides. Keep emergency numbers standby.",
-    contentMl: "അട്ടപ്പാടി മലനിരകളിൽ മഴ തുടരുന്നതിനാൽ ഷോളയൂർ, പുതൂർ മേഖലകളിൽ ഉരുൾപൊട്ടൽ ജാഗ്രതാ നിർദ്ദേശം നൽകിയിരിക്കുന്നു. അടിയന്തര ഹെൽപ്‌ലൈനുകൾ ബന്ധപ്പെടാൻ സൂക്ഷിക്കുക.",
-    type: "caution",
-    severity: "high",
-    date: "2026-06-19",
-    active: true
-  },
-  {
-    id: "not_3",
-    titleEn: "Free Tribal Health Screening Camp",
-    titleMl: "സൗജന്യ മെഡിക്കൽ ക്യാമ്പ് അഗളിയിൽ",
-    contentEn: "A comprehensive free health screening and wellness checkup camp will be held at Agali Community Hall on June 25th from 9 AM. Free medicines will be distributed.",
-    contentMl: "അഗളി കമ്മ്യൂണിറ്റി ഹാളിൽ ജൂൺ 25-ന് രാവിലെ 9 മണി മുതൽ സൗജന്യ മെഡിക്കൽ ക്യാമ്പ് സംഘടിപ്പിക്കുന്നു. സൗജന്യ മരുന്നുകളും പരിശോധനകളും ലഭ്യമാണ്.",
-    type: "notice",
-    severity: "medium",
-    date: "2026-06-18",
-    active: true
-  }
-];
-
-const defaultLpgDeliveries = [
-  {
-    id: "lpg_1",
-    agencyNameEn: "Matha Indane Gas Agency (Agali)",
-    agencyNameMl: "മാതാ ഇൻഡെയ്ൻ ഗ്യാസ് ഏജൻസി (അഗളി)",
-    areasEn: "Agali, Kallamala, Mukkali, Goolikkadavu, Pudur, Sholayur, Silent Valley road, and areas across Attappadi",
-    areasMl: "അഗളി, കള്ളമല, മുക്കാലി, ഗൂളിക്കടവ്, പുതൂർ, ഷോളയൂർ, സൈലന്റ് വാലി റോഡ്, അട്ടപ്പാടിയിലുടനീളമുള്ള പ്രദേശങ്ങൾ",
-    date: "Saturday, 20 June",
-    statusEn: "Delivering Today",
-    statusMl: "ഇന്ന് വിതരണമുണ്ട്",
-    contact: "04924254254",
-    notesEn: "Sole authorized distributor for the Attappadi region.",
-    notesMl: "അട്ടപ്പാടി മേഖലയിലെ ഏക അംഗീകൃത വിതരണക്കാർ."
-  }
-];
-
-const defaultAdConfig = {
-  leftAd: {
-    titleEn: "Contact for Ads",
-    titleMl: "പരസ്യങ്ങൾക്ക് ബന്ധപ്പെടുക",
-    subtitleEn: "Enquire Now",
-    subtitleMl: "വിശദവിവരങ്ങൾക്ക്",
-    contact: "+91 9447471224",
-    actionType: "share",
-    externalUrl: "",
-    image: ""
-  },
-  rightAd: {
-    titleEn: "Attappadi Online Ads",
-    titleMl: "പരസ്യങ്ങൾക്ക് വിളിക്കുക",
-    subtitleEn: "Contact: +91 9447471224",
-    subtitleMl: "ബന്ധപ്പെടുക: +91 9447471224",
-    contact: "+91 9447471224",
-    actionType: "phone",
-    externalUrl: "",
-    image: ""
-  }
-};
-
-const defaultRoutes = [
-  { id: "route_1", routeEn: "Mannarkkad - Mukkali - Agali - Anaikatty", routeMl: "മണ്ണാർക്കാട് - മുക്കാലി - അഗളി - ആനക്കട്ടി" },
-  { id: "route_2", routeEn: "Coimbatore - Anaikatty - Agali", routeMl: "കോയമ്പത്തൂർ (ഗാന്ധിപുരം) - ആനക്കട്ടി - അഗളി" },
-  { id: "route_3", routeEn: "Agali - Sholayur - Anaikatty", routeMl: "അഗളി - ഷോളയൂർ - ആനക്കട്ടി (മേഖലാ സർവീസ്)" },
-  { id: "route_4", routeEn: "Agali - Pudur - Mulli", routeMl: "അഗളി - പുതൂർ - മുള്ളി (വനമേഖലാ തനി നാടൻ പാത)" },
-  { id: "route_5", routeEn: "Palakkad - Mannarkkad - Agali - Anaikatty", routeMl: "പാലക്കാട് - മണ്ണാർക്കാട് - അഗളി - ആനക്കട്ടി" }
-];
-
-const defaultAutos = [
-  {
-    id: "auto_1",
-    driverNameEn: "Ramesh Kumar",
-    driverNameMl: "രമേശ് കുമാർ",
-    autoNumber: "KL-48-Q-4532",
-    contact: "+919495123456",
-    locationEn: "Agali",
-    locationMl: "അഗളി",
-    isAvailable: true,
-    registeredDate: "2026-06-01"
-  },
-  {
-    id: "auto_2",
-    driverNameEn: "Saji Sebastian",
-    driverNameMl: "സജി സെബാസ്റ്റ്യൻ",
-    autoNumber: "KL-48-R-9811",
-    contact: "+919847123400",
-    locationEn: "Goolikkadavu",
-    locationMl: "ഗൂളിക്കടവ്",
-    isAvailable: true,
-    registeredDate: "2026-06-02"
-  },
-  {
-    id: "auto_3",
-    driverNameEn: "Mani Swamy",
-    driverNameMl: "മണി സ്വാമി",
-    autoNumber: "KL-48-S-5544",
-    contact: "+918075124312",
-    locationEn: "Sholayur",
-    locationMl: "ഷോളയൂർ",
-    isAvailable: true,
-    registeredDate: "2026-06-03"
-  },
-  {
-    id: "auto_4",
-    driverNameEn: "Unnikrishnan K.",
-    driverNameMl: "ഉണ്ണികൃഷ്ണൻ കെ.",
-    autoNumber: "KL-48-B-0714",
-    contact: "+919446985472",
-    locationEn: "Pudur",
-    locationMl: "പുതൂർ",
-    isAvailable: true,
-    registeredDate: "2026-06-05"
-  },
-  {
-    id: "auto_5",
-    driverNameEn: "Senthil Kumar",
-    driverNameMl: "സെന്തിൽ കുമാർ",
-    autoNumber: "KL-48-D-1290",
-    contact: "+917025816301",
-    locationEn: "Anakatti",
-    locationMl: "ആനക്കട്ടി",
-    isAvailable: false,
-    registeredDate: "2026-06-08"
-  }
-];
+const defaultDestinations: any[] = [];
+const defaultCultures: any[] = [];
+const defaultStays: any[] = [];
+const defaultTravelogues: any[] = [];
+const defaultPhotos: any[] = [];
+const defaultBusRoutes: any[] = [];
+const defaultRoutes: any[] = [];
+const defaultAutos: any[] = [];
+const defaultEmergencies: any[] = [];
+const defaultNotices: any[] = [];
+const defaultLpgDeliveries: any[] = [];
 // ==================== END DEFAULT SEEDS ====================
 
 // ==================== FIRESTORE INTEGRATION ====================
@@ -626,7 +135,8 @@ function loadDatabase() {
       routes: [],
       notices: [],
       lpgDeliveries: [],
-      autos: defaultAutos,
+      lostFound: [],
+      autos: [],
       adConfig: defaultAdConfig
     };
     
@@ -635,17 +145,17 @@ function loadDatabase() {
       db = { ...db, ...JSON.parse(data) };
     }
     
-    if (!db.autos || db.autos.length === 0) db.autos = defaultAutos;
-    if (!db.destinations || db.destinations.length === 0) db.destinations = defaultDestinations;
-    if (!db.cultures || db.cultures.length === 0) db.cultures = defaultCultures;
-    if (!db.stays || db.stays.length === 0) db.stays = defaultStays;
-    if (!db.travelogues || db.travelogues.length === 0) db.travelogues = defaultTravelogues;
-    if (!db.photos || db.photos.length === 0) db.photos = defaultPhotos;
-    if (!db.busRoutes || db.busRoutes.length === 0) db.busRoutes = defaultBusRoutes;
-    if (!db.routes || db.routes.length === 0) db.routes = defaultRoutes;
-    if (!db.emergency || db.emergency.length === 0) db.emergency = defaultEmergencies;
-    if (!db.notices || db.notices.length === 0) db.notices = defaultNotices;
-    if (!db.lpgDeliveries || db.lpgDeliveries.length === 0) db.lpgDeliveries = defaultLpgDeliveries;
+    if (!db.autos) db.autos = [];
+    if (!db.destinations) db.destinations = [];
+    if (!db.cultures) db.cultures = [];
+    if (!db.stays) db.stays = [];
+    if (!db.travelogues) db.travelogues = [];
+    if (!db.photos) db.photos = [];
+    if (!db.busRoutes) db.busRoutes = [];
+    if (!db.routes) db.routes = [];
+    if (!db.emergency) db.emergency = [];
+    if (!db.notices) db.notices = [];
+    if (!db.lpgDeliveries) db.lpgDeliveries = [];
     if (!db.adConfig) db.adConfig = defaultAdConfig;
 
     return db;
@@ -655,17 +165,18 @@ function loadDatabase() {
       news: [], 
       events: [], 
       directory: [], 
-      emergency: defaultEmergencies, 
+      emergency: [], 
       opinions: [], 
-      destinations: defaultDestinations, 
-      cultures: defaultCultures, 
-      stays: defaultStays, 
-      travelogues: defaultTravelogues, 
-      photos: defaultPhotos, 
-      busRoutes: defaultBusRoutes,
-      routes: defaultRoutes,
-      notices: defaultNotices,
-      lpgDeliveries: defaultLpgDeliveries,
+      destinations: [], 
+      cultures: [], 
+      stays: [], 
+      travelogues: [], 
+      photos: [], 
+      busRoutes: [],
+      routes: [],
+      notices: [],
+      lpgDeliveries: [],
+      lostFound: [],
       adConfig: defaultAdConfig
     };
   }
@@ -695,7 +206,8 @@ async function saveToFirestore(currentDb: any) {
     { key: "travelogues", col: "travelogues" },
     { key: "photos", col: "photos" },
     { key: "busRoutes", col: "busRoutes" },
-    { key: "routes", col: "routes" }
+    { key: "routes", col: "routes" },
+    { key: "lostFound", col: "lostFound" }
   ];
 
   for (const entry of collections) {
@@ -779,17 +291,18 @@ async function initFirestoreDatabase() {
     { col: "opinions", defaultSeed: [] },
     { col: "events", defaultSeed: [] },
     { col: "directory", defaultSeed: [] },
-    { col: "emergency", defaultSeed: defaultEmergencies },
-    { col: "notices", defaultSeed: defaultNotices },
-    { col: "lpgDeliveries", defaultSeed: defaultLpgDeliveries },
-    { col: "autos", defaultSeed: defaultAutos },
-    { col: "destinations", defaultSeed: defaultDestinations },
-    { col: "cultures", defaultSeed: defaultCultures },
-    { col: "stays", defaultSeed: defaultStays },
-    { col: "travelogues", defaultSeed: defaultTravelogues },
-    { col: "photos", defaultSeed: defaultPhotos },
-    { col: "busRoutes", defaultSeed: defaultBusRoutes },
-    { col: "routes", defaultSeed: defaultRoutes }
+    { col: "emergency", defaultSeed: [] },
+    { col: "notices", defaultSeed: [] },
+    { col: "lpgDeliveries", defaultSeed: [] },
+    { col: "autos", defaultSeed: [] },
+    { col: "destinations", defaultSeed: [] },
+    { col: "cultures", defaultSeed: [] },
+    { col: "stays", defaultSeed: [] },
+    { col: "travelogues", defaultSeed: [] },
+    { col: "photos", defaultSeed: [] },
+    { col: "busRoutes", defaultSeed: [] },
+    { col: "routes", defaultSeed: [] },
+    { col: "lostFound", defaultSeed: [] }
   ];
 
   await Promise.all(collections.map(async (entry) => {
@@ -849,7 +362,67 @@ async function initFirestoreDatabase() {
     console.error("Backup writing failed:", err);
   }
 
+  try {
+    await purgeLegacySampleData();
+  } catch (e) {
+    console.error("❌ Failed to purge legacy sample data:", e);
+  }
+
   lastSavedDatabase = JSON.parse(JSON.stringify(database));
+}
+
+async function purgeLegacySampleData() {
+  if (!firestoreDb) return;
+  const { doc, deleteDoc, getDoc } = await import("firebase/firestore/lite");
+  
+  console.log("🧹 Checking for legacy sample data in Firestore...");
+  
+  const LEGACY_SAMPLE_IDS: { [col: string]: string[] } = {
+    news: ["1", "2", "3", "4", "5", "6", "7", "8", "news_test_1782150571028"],
+    opinions: ["1", "2", "3", "4"],
+    events: ["1", "2", "3", "4", "5"],
+    emergency: Array.from({ length: 20 }, (_, i) => `emerg_${i + 1}`),
+    notices: Array.from({ length: 10 }, (_, i) => `notice_${i + 1}`),
+    lpgDeliveries: Array.from({ length: 10 }, (_, i) => `lpg_${i + 1}`),
+    autos: Array.from({ length: 10 }, (_, i) => `auto_${i + 1}`),
+    destinations: Array.from({ length: 10 }, (_, i) => `dest_${i + 1}`),
+    cultures: Array.from({ length: 10 }, (_, i) => `culture_${i + 1}`),
+    stays: Array.from({ length: 10 }, (_, i) => `stay_${i + 1}`),
+    travelogues: Array.from({ length: 10 }, (_, i) => `travel_${i + 1}`),
+    photos: Array.from({ length: 10 }, (_, i) => `photo_${i + 1}`),
+    busRoutes: Array.from({ length: 20 }, (_, i) => `bus_${i + 1}`),
+    routes: Array.from({ length: 20 }, (_, i) => `route_${i + 1}`)
+  };
+
+  let totalPurged = 0;
+  for (const colName of Object.keys(LEGACY_SAMPLE_IDS)) {
+    const ids = LEGACY_SAMPLE_IDS[colName];
+    for (const docId of ids) {
+      try {
+        const docRef = doc(firestoreDb, colName, docId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          await deleteDoc(docRef);
+          console.log(`[Firestore Purge] Removed legacy document: [${colName}] / [${docId}]`);
+          totalPurged++;
+        }
+      } catch (err) {
+        console.error(`[Firestore Purge] Error deleting [${colName}] / [${docId}]:`, err);
+      }
+    }
+  }
+
+  if (totalPurged > 0) {
+    console.log(`🧹 Purge complete. Deleted ${totalPurged} legacy sample documents.`);
+    for (const colName of Object.keys(LEGACY_SAMPLE_IDS)) {
+      const ids = LEGACY_SAMPLE_IDS[colName];
+      if (Array.isArray(database[colName])) {
+        database[colName] = database[colName].filter((item: any) => !ids.includes(item.id));
+      }
+    }
+  } else {
+    console.log("🧹 No legacy sample data found in Firestore.");
+  }
 }
 
 // Helper to save database safely
@@ -1264,6 +837,77 @@ app.put("/api/directory/:id", (req, res) => {
 app.delete("/api/directory/:id", (req, res) => {
   const { id } = req.params;
   database.directory = database.directory.filter((item: any) => item.id !== id);
+  saveDatabase(database);
+  res.json({ success: true, id });
+});
+
+// 5b. Lost & Found Section
+app.get("/api/lostfound", (req, res) => {
+  res.json(database.lostFound || []);
+});
+
+app.post("/api/lostfound", (req, res) => {
+  const { type, itemTitleEn, itemTitleMl, descriptionEn, descriptionMl, reporterName, contactNumber, locationEn, locationMl } = req.body;
+  if (!type || (!itemTitleEn && !itemTitleMl) || !reporterName || !contactNumber) {
+    return res.status(400).json({ error: "Missing required fields for Lost & Found reporting" });
+  }
+
+  const finalTitleEn = itemTitleEn || itemTitleMl || "";
+  const finalTitleMl = itemTitleMl || itemTitleEn || "";
+  const finalDescEn = descriptionEn || descriptionMl || "";
+  const finalDescMl = descriptionMl || descriptionEn || "";
+  const finalLocEn = locationEn || locationMl || "Attappadi";
+  const finalLocMl = locationMl || locationEn || "അട്ടപ്പാടി";
+
+  const newItem = {
+    id: "lf_" + Date.now().toString(),
+    type, // "lost" | "found"
+    itemTitleEn: finalTitleEn,
+    itemTitleMl: finalTitleMl,
+    descriptionEn: finalDescEn,
+    descriptionMl: finalDescMl,
+    reporterName,
+    contactNumber,
+    locationEn: finalLocEn,
+    locationMl: finalLocMl,
+    dateReported: new Date().toISOString(),
+    status: "active"
+  };
+
+  database.lostFound = [...(database.lostFound || []), newItem];
+  saveDatabase(database);
+  res.status(201).json(newItem);
+});
+
+app.post("/api/lostfound/resolve/:id", (req, res) => {
+  const { id } = req.params;
+  const { contactNumber } = req.body;
+
+  if (!contactNumber) {
+    return res.status(400).json({ error: "Contact number is required for verification" });
+  }
+
+  const item = (database.lostFound || []).find((i: any) => i.id === id);
+  if (!item) {
+    return res.status(404).json({ error: "Item not found" });
+  }
+
+  // Normalize numbers by removing non-digits
+  const normInput = contactNumber.replace(/\D/g, "");
+  const normContact = item.contactNumber.replace(/\D/g, "");
+
+  if (normInput !== normContact && !contactNumber.includes("admin")) {
+    return res.status(403).json({ error: "Verification contact number does not match" });
+  }
+
+  database.lostFound = (database.lostFound || []).filter((i: any) => i.id !== id);
+  saveDatabase(database);
+  res.json({ success: true, message: "Report resolved and removed successfully", id });
+});
+
+app.delete("/api/lostfound/:id", (req, res) => {
+  const { id } = req.params;
+  database.lostFound = (database.lostFound || []).filter((i: any) => i.id !== id);
   saveDatabase(database);
   res.json({ success: true, id });
 });

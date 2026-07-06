@@ -19,8 +19,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
-  const [activeTab, setActiveTab] = useState<"news" | "opinions" | "events" | "explore" | "buses" | "directory" | "emergency" | "notices" | "lpg" | "ads" | "card-generator" | "tickers">("news");
+  const [activeTab, setActiveTab] = useState<"news" | "opinions" | "events" | "explore" | "buses" | "directory" | "emergency" | "notices" | "lpg" | "ads" | "card-generator" | "tickers" | "lostfound">("news");
   const [exploreSubTab, setExploreSubTab] = useState<"destinations" | "cultures" | "stays" | "travelogues" | "photos">("destinations");
+  const [lostFoundList, setLostFoundList] = useState<LostAndFoundItem[]>([]);
 
   // Success message toaster helper
   const [successMessage, setSuccessMessage] = useState("");
@@ -489,6 +490,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     fetchRoutes();
     fetchNotices();
     fetchLpg();
+    fetchLostFound();
     fetchAdConfig();
     fetchDbDiagnostic();
   };
@@ -564,6 +566,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   const fetchRoutes = () => fetch("/api/routes").then(r => r.json()).then(setRoutesList).catch(console.error);
   const fetchNotices = () => fetch("/api/notices").then(r => r.json()).then(setNoticesList).catch(console.error);
   const fetchLpg = () => fetch("/api/lpg").then(r => r.json()).then(setLpgList).catch(console.error);
+  const fetchLostFound = () => fetch("/api/lostfound").then(r => r.json()).then(setLostFoundList).catch(console.error);
   const fetchAdConfig = () => {
     fetch("/api/adconfig")
       .then(r => r.json())
@@ -786,6 +789,23 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
         if (response.ok) {
           triggerToast("News article removed successfully.");
           fetchNews();
+        }
+        setDeleteConfirm(null);
+      }
+    });
+  };
+
+  const handleDeleteLostFound = async (id: string) => {
+    setDeleteConfirm({
+      id,
+      type: "lostfound",
+      title: "Delete Lost & Found Report",
+      message: "Are you sure you want to permanently delete this reported item?",
+      onConfirm: async () => {
+        const response = await fetch(`/api/lostfound/${id}`, { method: "DELETE" });
+        if (response.ok) {
+          triggerToast("Reported item removed successfully.");
+          fetchLostFound();
         }
         setDeleteConfirm(null);
       }
@@ -2107,6 +2127,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
               { id: "emergency", label: "🚨 Emergency Numbers" },
               { id: "notices", label: "📢 Notices & Alerts (അറിയിപ്പുകൾ)" },
               { id: "lpg", label: "🚚 LPG Gas Delivery (ഗ്യാസ് വിതരണം)" },
+              { id: "lostfound", label: "🔍 Lost & Found (നഷ്ടപ്പെട്ടവ)" },
               { id: "ads", label: "📢 Side Ads (പരസ്യങ്ങൾ)" },
               { id: "card-generator", label: "🎨 Social Card Maker (NEW)" }
             ].map((item) => (
@@ -5797,6 +5818,90 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
               </div>
 
             </div>
+          </div>
+        )}
+
+        {/* ==================== 9b. LOST & FOUND BOARD MANAGEMENT ==================== */}
+        {activeTab === "lostfound" && (
+          <div className="space-y-6 animate-fade-in text-xs text-gray-800">
+            <div className="border-b pb-4 flex justify-between items-center bg-white p-4 rounded-lg shadow-2xs border">
+              <div>
+                <span className="text-[10px] bg-rose-500 text-white font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">
+                  Community Listings
+                </span>
+                <h2 className="font-serif font-extrabold text-[#052962] text-xl mt-1">
+                  Lost & Found Reports (നഷ്ടപ്പെട്ടവ & ലഭിച്ചവ)
+                </h2>
+                <p className="text-[10px] text-slate-500 mt-1">
+                  Manage the public reported items board. Delete listings that are resolved, outdated, or violate guidelines.
+                </p>
+              </div>
+
+              <button 
+                type="button"
+                onClick={fetchLostFound} 
+                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-lg transition text-[10px] cursor-pointer"
+              >
+                Refresh Board List
+              </button>
+            </div>
+
+            {/* List block */}
+            <div className="bg-white rounded-lg p-6 border shadow-xs space-y-4">
+              <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-2 flex items-center justify-between">
+                <span>Active Board Listings ({lostFoundList.length})</span>
+              </h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[600px] overflow-y-auto pr-1">
+                {lostFoundList.length === 0 ? (
+                  <div className="col-span-full py-12 text-center text-slate-400">
+                    No lost or found items are currently reported on the public board.
+                  </div>
+                ) : (
+                  lostFoundList.map((item) => (
+                    <div 
+                      key={item.id} 
+                      className={`p-4 rounded-lg border-l-4 border bg-slate-50 hover:bg-rose-50/10 transition flex justify-between gap-4 items-start ${item.type === "lost" ? "border-rose-500 border-slate-200" : "border-emerald-500 border-slate-200"}`}
+                    >
+                      <div className="space-y-1.5 min-w-0 flex-1">
+                        <div className="flex gap-2 items-center">
+                          <span className={`text-[8px] font-black px-2 py-0.5 rounded uppercase tracking-wider border ${item.type === "lost" ? "bg-rose-100 text-rose-800 border-rose-200" : "bg-emerald-100 text-emerald-800 border-emerald-200"}`}>
+                            {item.type}
+                          </span>
+                          <span className="text-[9px] text-slate-400 font-mono">
+                            {new Date(item.dateReported).toLocaleDateString()}
+                          </span>
+                        </div>
+                        
+                        <h4 className="font-extrabold text-slate-900 text-xs">
+                          {item.itemTitleEn} <span className="text-slate-400 font-normal">| {item.itemTitleMl}</span>
+                        </h4>
+                        <p className="text-[11px] text-slate-600 leading-tight">
+                          <strong className="text-slate-700">Description:</strong> {item.descriptionEn} 
+                          <span className="block text-slate-400 text-[10px] font-medium font-sans">({item.descriptionMl})</span>
+                        </p>
+                        <p className="text-[10px] text-slate-500">
+                          📍 Place: {item.locationEn} ({item.locationMl})
+                        </p>
+                        <p className="text-[10px] text-slate-500 font-bold">
+                          Reporter: {item.reporterName} ({item.contactNumber})
+                        </p>
+                      </div>
+
+                      <button 
+                        type="button"
+                        onClick={() => handleDeleteLostFound(item.id)} 
+                        className="p-1.5 bg-red-50 text-red-700 rounded hover:bg-red-750 hover:text-white border border-red-200 transition cursor-pointer shrink-0 self-center"
+                        title="Delete Report"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+
           </div>
         )}
 
