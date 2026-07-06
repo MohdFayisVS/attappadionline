@@ -317,16 +317,44 @@ async function initFirestoreDatabase() {
   const fallbackLocalDb = loadDatabase();
 
   if (!firestoreDb) {
-    if (fs.existsSync(CONFIG_PATH)) {
+    let config: any = null;
+
+    if (process.env.FIREBASE_CONFIG_JSON) {
+      try {
+        config = JSON.parse(process.env.FIREBASE_CONFIG_JSON);
+        console.log("🔥 Loaded Firebase configuration from FIREBASE_CONFIG_JSON env variable.");
+      } catch (err) {
+        console.error("❌ Failed to parse FIREBASE_CONFIG_JSON env variable:", err);
+      }
+    } else if (process.env.FIREBASE_PROJECT_ID) {
+      config = {
+        projectId: process.env.FIREBASE_PROJECT_ID,
+        appId: process.env.FIREBASE_APP_ID,
+        apiKey: process.env.FIREBASE_API_KEY,
+        authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+        storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+        firestoreDatabaseId: process.env.FIREBASE_DATABASE_ID || "(default)"
+      };
+      console.log("🔥 Loaded Firebase configuration from individual env variables.");
+    } else if (fs.existsSync(CONFIG_PATH)) {
+      try {
+        config = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf-8"));
+        console.log("🔥 Loaded Firebase configuration from firebase-applet-config.json file.");
+      } catch (err) {
+        console.error("❌ Failed to parse config file:", err);
+      }
+    }
+
+    if (config) {
       try {
         const { initializeApp, getApps } = await import("firebase/app");
         const { getFirestore } = await import("firebase/firestore/lite");
-        const config = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf-8"));
         const firebaseApp = getApps().length === 0 ? initializeApp(config) : getApps()[0];
         firestoreDb = getFirestore(firebaseApp, config.firestoreDatabaseId || "(default)");
-        console.log("🔥 Firebase App & Firestore Client initialized successfully. Database ID:", config.firestoreDatabaseId);
+        console.log("🔥 Firebase App & Firestore Client initialized successfully. Database ID:", config.firestoreDatabaseId || "(default)");
       } catch (error) {
-        console.error("❌ Failed to parse firebase-applet-config.json or initialize Firebase. Operating in local JSON fallback mode.", error);
+        console.error("❌ Failed to initialize Firebase from config:", error);
       }
     }
   }
@@ -428,9 +456,9 @@ async function initFirestoreDatabase() {
 
 async function purgeLegacySampleData() {
   if (!firestoreDb) return;
-  const { doc, deleteDoc, getDoc } = await import("firebase/firestore/lite");
+  const { doc, deleteDoc } = await import("firebase/firestore/lite");
   
-  console.log("🧹 Checking for legacy sample data in Firestore...");
+  console.log("🧹 Running legacy sample data purge in Firestore (parallel)...");
   
   const LEGACY_SAMPLE_IDS: { [col: string]: string[] } = {
     news: ["news_test_1782150571028", "1", "2", "3", "4", "5", "6", "7"],
@@ -450,35 +478,25 @@ async function purgeLegacySampleData() {
     autos: ["auto_1", "auto_2", "auto_3", "auto_4", "auto_5"]
   };
 
-  let totalPurged = 0;
+  const deletePromises: Promise<void>[] = [];
   for (const colName of Object.keys(LEGACY_SAMPLE_IDS)) {
     const ids = LEGACY_SAMPLE_IDS[colName];
     for (const docId of ids) {
-      try {
-        const docRef = doc(firestoreDb, colName, docId);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          await deleteDoc(docRef);
-          console.log(`[Firestore Purge] Removed legacy document: [${colName}] / [${docId}]`);
-          totalPurged++;
+      const docRef = doc(firestoreDb, colName, docId);
+      const promise = deleteDoc(docRef).then(() => {
+        // Remove from memory immediately if loaded
+        if (Array.isArray(database[colName])) {
+          database[colName] = database[colName].filter((item: any) => item.id !== docId);
         }
-      } catch (err) {
-        console.error(`[Firestore Purge] Error deleting [${colName}] / [${docId}]:`, err);
-      }
+      }).catch((err) => {
+        console.error(`[Firestore Purge] Failed to delete [${colName}] / [${docId}]:`, err);
+      });
+      deletePromises.push(promise);
     }
   }
 
-  if (totalPurged > 0) {
-    console.log(`🧹 Purge complete. Deleted ${totalPurged} legacy sample documents.`);
-    for (const colName of Object.keys(LEGACY_SAMPLE_IDS)) {
-      const ids = LEGACY_SAMPLE_IDS[colName];
-      if (Array.isArray(database[colName])) {
-        database[colName] = database[colName].filter((item: any) => !ids.includes(item.id));
-      }
-    }
-  } else {
-    console.log("🧹 No legacy sample data found in Firestore.");
-  }
+  await Promise.all(deletePromises);
+  console.log("🧹 Parallel purge of legacy sample documents complete.");
 }
 
 // Helper to save database safely
@@ -486,19 +504,18 @@ function saveDatabase(data: any) {
   try {
     fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
     fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), "utf-8");
-    
-    // Trigger Firestore background syncing (safe & non-blocking)
-    if (firestoreDb) {
-      const syncPromise = saveToFirestore(data).catch((err) => {
-        console.error("❌ Firestore background sync failed:", err);
-      });
-      pendingWrites.push(syncPromise);
-    }
-    return true;
   } catch (err) {
-    console.error("Database writing error:", err);
-    return false;
+    console.warn("⚠️ Local JSON backup write skipped (likely read-only serverless environment):", err);
   }
+
+  // Trigger Firestore background syncing (safe & non-blocking)
+  if (firestoreDb) {
+    const syncPromise = saveToFirestore(data).catch((err) => {
+      console.error("❌ Firestore background sync failed:", err);
+    });
+    pendingWrites.push(syncPromise);
+  }
+  return true;
 }
 
 // API ENDPOINTS
@@ -1545,7 +1562,26 @@ app.all("/api/debug-route-details", (req, res) => {
     headers: req.headers,
     env: {
       NODE_ENV: process.env.NODE_ENV,
-      VERCEL: process.env.VERCEL
+      VERCEL: process.env.VERCEL,
+      FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID || "(not set)"
+    },
+    firestore: {
+      initialized: !!firestoreDb,
+      configPath: CONFIG_PATH,
+      configExists: fs.existsSync(CONFIG_PATH),
+      hasPendingWrites: pendingWrites.length
+    },
+    databaseSummary: {
+      newsCount: (database.news || []).length,
+      opinionsCount: (database.opinions || []).length,
+      eventsCount: (database.events || []).length,
+      directoryCount: (database.directory || []).length,
+      emergencyCount: (database.emergency || []).length,
+      noticesCount: (database.notices || []).length,
+      destinationsCount: (database.destinations || []).length,
+      culturesCount: (database.cultures || []).length,
+      staysCount: (database.stays || []).length,
+      lostFoundCount: (database.lostFound || []).length
     }
   });
 });
