@@ -13,7 +13,6 @@
   "routes": [],
   "notices": [],
   "lpgDeliveries": [],
-  "lostFound": [],
   "autos": [],
   "adConfig": {
     "leftAd": {
@@ -36,5 +35,6 @@
       "externalUrl": "",
       "image": ""
     }
-  }
+  },
+  "lostFound": []
 }

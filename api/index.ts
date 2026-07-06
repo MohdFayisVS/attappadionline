@@ -87,6 +87,30 @@ const defaultAutos: any[] = [];
 const defaultEmergencies: any[] = [];
 const defaultNotices: any[] = [];
 const defaultLpgDeliveries: any[] = [];
+
+const defaultAdConfig = {
+  leftAd: {
+    titleEn: "Contact for Ads",
+    titleMl: "പരസ്യങ്ങൾക്ക് ബന്ധപ്പെടുക",
+    subtitleEn: "Enquire Now",
+    subtitleMl: "വിശദവിവരങ്ങൾക്ക്",
+    contact: "+91 9447471224",
+    actionType: "share",
+    externalUrl: "",
+    image: ""
+  },
+  rightAd: {
+    titleEn: "Attappadi Online Ads",
+    titleMl: "പരസ്യങ്ങൾക്ക് വിളിക്കുക",
+    subtitleEn: "Contact: +91 9447471224",
+    subtitleMl: "ബന്ധപ്പെടുക: +91 9447471224",
+    contact: "+91 9447471224",
+    actionType: "phone",
+    externalUrl: "",
+    image: ""
+  }
+};
+
 // ==================== END DEFAULT SEEDS ====================
 
 // ==================== FIRESTORE INTEGRATION ====================
