@@ -32,6 +32,37 @@ app.use((req, res, next) => {
   next();
 });
 
+// Queue of pending Firestore write promises. We block the HTTP response in Serverless environments
+// until these write promises are settled, preventing Vercel from freezing/killing the execution thread prematurely.
+let pendingWrites: Promise<any>[] = [];
+
+app.use((req, res, next) => {
+  const originalJson = res.json;
+  const originalSend = res.send;
+
+  const awaitPendingWritesAndRespond = async (respondFn: Function, ...args: any[]) => {
+    if (pendingWrites.length > 0) {
+      console.log(`⏳ Awaiting ${pendingWrites.length} pending Firestore writes before finishing response...`);
+      const currentWrites = [...pendingWrites];
+      pendingWrites = [];
+      await Promise.all(currentWrites);
+    }
+    respondFn.apply(res, args);
+  };
+
+  res.json = function(...args: any[]) {
+    awaitPendingWritesAndRespond(originalJson, ...args);
+    return res;
+  };
+
+  res.send = function(...args: any[]) {
+    awaitPendingWritesAndRespond(originalSend, ...args);
+    return res;
+  };
+
+  next();
+});
+
 // Lazy Firestore database loader helper for Serverless Environments
 let isDbInitialized = false;
 let dbInitPromise: Promise<void> | null = null;
@@ -402,20 +433,21 @@ async function purgeLegacySampleData() {
   console.log("🧹 Checking for legacy sample data in Firestore...");
   
   const LEGACY_SAMPLE_IDS: { [col: string]: string[] } = {
-    news: ["1", "2", "3", "4", "5", "6", "7", "8", "news_test_1782150571028"],
-    opinions: ["1", "2", "3", "4"],
-    events: ["1", "2", "3", "4", "5"],
-    emergency: Array.from({ length: 20 }, (_, i) => `emerg_${i + 1}`),
-    notices: Array.from({ length: 10 }, (_, i) => `notice_${i + 1}`),
-    lpgDeliveries: Array.from({ length: 10 }, (_, i) => `lpg_${i + 1}`),
-    autos: Array.from({ length: 10 }, (_, i) => `auto_${i + 1}`),
-    destinations: Array.from({ length: 10 }, (_, i) => `dest_${i + 1}`),
-    cultures: Array.from({ length: 10 }, (_, i) => `culture_${i + 1}`),
-    stays: Array.from({ length: 10 }, (_, i) => `stay_${i + 1}`),
-    travelogues: Array.from({ length: 10 }, (_, i) => `travel_${i + 1}`),
-    photos: Array.from({ length: 10 }, (_, i) => `photo_${i + 1}`),
-    busRoutes: Array.from({ length: 20 }, (_, i) => `bus_${i + 1}`),
-    routes: Array.from({ length: 20 }, (_, i) => `route_${i + 1}`)
+    news: ["news_test_1782150571028", "1", "2", "3", "4", "5", "6", "7"],
+    opinions: ["o1", "o2"],
+    events: ["e1", "e2", "e3"],
+    directory: ["d1", "d2", "d3", "d4", "d5", "d6"],
+    emergency: ["em1", "em2", "em3", "em4"],
+    destinations: ["dest_1", "dest_2", "dest_3", "dest_4"],
+    cultures: ["cult_1", "cult_2"],
+    stays: ["stay_1", "stay_2", "stay_3"],
+    travelogues: ["trav_1", "trav_2"],
+    photos: ["photo_1", "photo_2", "photo_3", "photo_4", "photo_5", "photo_6"],
+    busRoutes: ["bus_1", "bus_2", "bus_3", "bus_4", "bus_5"],
+    routes: ["route_1", "route_2", "route_3", "route_4", "route_5"],
+    notices: ["not_test_1782150571028", "not_1", "not_2", "not_3"],
+    lpgDeliveries: ["lpg_1"],
+    autos: ["auto_1", "auto_2", "auto_3", "auto_4", "auto_5"]
   };
 
   let totalPurged = 0;
@@ -457,9 +489,10 @@ function saveDatabase(data: any) {
     
     // Trigger Firestore background syncing (safe & non-blocking)
     if (firestoreDb) {
-      saveToFirestore(data).catch((err) => {
+      const syncPromise = saveToFirestore(data).catch((err) => {
         console.error("❌ Firestore background sync failed:", err);
       });
+      pendingWrites.push(syncPromise);
     }
     return true;
   } catch (err) {

@@ -1,0 +1,272 @@
+637: 
+638:   const collections = [
+639:     { key: "news", col: "news" },
+640:     { key: "opinions", col: "opinions" },
+641:     { key: "events", col: "events" },
+642:     { key: "directory", col: "directory" },
+643:     { key: "emergency", col: "emergency" },
+644:     { key: "notices", col: "notices" },
+645:     { key: "lpgDeliveries", col: "lpgDeliveries" },
+646:     { key: "autos", col: "autos" },
+647:     { key: "destinations", col: "destinations" },
+648:     { key: "cultures", col: "cultures" },
+649:     { key: "stays", col: "stays" },
+650:     { key: "travelogues", col: "travelogues" },
+651:     { key: "photos", col: "photos" },
+652:     { key: "busRoutes", col: "busRoutes" },
+653:     { key: "routes", col: "routes" }
+714:   console.log("⚡ Fetching and synchronizing Firestore data...");
+715:   const collections = [
+716:     { col: "news", defaultSeed: [] },
+717:     { col: "opinions", defaultSeed: [] },
+718:     { col: "events", defaultSeed: [] },
+719:     { col: "directory", defaultSeed: [] },
+720:     { col: "emergency", defaultSeed: defaultEmergencies },
+721:     { col: "notices", defaultSeed: defaultNotices },
+722:     { col: "lpgDeliveries", defaultSeed: defaultLpgDeliveries },
+723:     { col: "autos", defaultSeed: defaultAutos },
+724:     { col: "destinations", defaultSeed: defaultDestinations },
+725:     { col: "cultures", defaultSeed: defaultCultures },
+726:     { col: "stays", defaultSeed: defaultStays },
+727:     { col: "travelogues", defaultSeed: defaultTravelogues },
+728:     { col: "photos", defaultSeed: defaultPhotos },
+729:     { col: "busRoutes", defaultSeed: defaultBusRoutes },
+730:     { col: "routes", defaultSeed: defaultRoutes }
+715:   const collections = [
+716:     { col: "news", defaultSeed: [] },
+717:     { col: "opinions", defaultSeed: [] },
+718:     { col: "events", defaultSeed: [] },
+719:     { col: "directory", defaultSeed: [] },
+720:     { col: "emergency", defaultSeed: defaultEmergencies },
+721:     { col: "notices", defaultSeed: defaultNotices },
+722:     { col: "lpgDeliveries", defaultSeed: defaultLpgDeliveries },
+723:     { col: "autos", defaultSeed: defaultAutos },
+724:     { col: "destinations", defaultSeed: defaultDestinations },
+725:     { col: "cultures", defaultSeed: defaultCultures },
+726:     { col: "stays", defaultSeed: defaultStays },
+727:     { col: "travelogues", defaultSeed: defaultTravelogues },
+728:     { col: "photos", defaultSeed: defaultPhotos },
+729:     { col: "busRoutes", defaultSeed: defaultBusRoutes },
+730:     { col: "routes", defaultSeed: defaultRoutes }
+731:   ];
+716:     { col: "news", defaultSeed: [] },
+717:     { col: "opinions", defaultSeed: [] },
+718:     { col: "events", defaultSeed: [] },
+719:     { col: "directory", defaultSeed: [] },
+720:     { col: "emergency", defaultSeed: defaultEmergencies },
+721:     { col: "notices", defaultSeed: defaultNotices },
+722:     { col: "lpgDeliveries", defaultSeed: defaultLpgDeliveries },
+723:     { col: "autos", defaultSeed: defaultAutos },
+724:     { col: "destinations", defaultSeed: defaultDestinations },
+725:     { col: "cultures", defaultSeed: defaultCultures },
+726:     { col: "stays", defaultSeed: defaultStays },
+727:     { col: "travelogues", defaultSeed: defaultTravelogues },
+728:     { col: "photos", defaultSeed: defaultPhotos },
+729:     { col: "busRoutes", defaultSeed: defaultBusRoutes },
+730:     { col: "routes", defaultSeed: defaultRoutes }
+731:   ];
+732: 
+717:     { col: "opinions", defaultSeed: [] },
+718:     { col: "events", defaultSeed: [] },
+719:     { col: "directory", defaultSeed: [] },
+720:     { col: "emergency", defaultSeed: defaultEmergencies },
+721:     { col: "notices", defaultSeed: defaultNotices },
+722:     { col: "lpgDeliveries", defaultSeed: defaultLpgDeliveries },
+723:     { col: "autos", defaultSeed: defaultAutos },
+724:     { col: "destinations", defaultSeed: defaultDestinations },
+725:     { col: "cultures", defaultSeed: defaultCultures },
+726:     { col: "stays", defaultSeed: defaultStays },
+727:     { col: "travelogues", defaultSeed: defaultTravelogues },
+728:     { col: "photos", defaultSeed: defaultPhotos },
+729:     { col: "busRoutes", defaultSeed: defaultBusRoutes },
+730:     { col: "routes", defaultSeed: defaultRoutes }
+731:   ];
+732: 
+733:   for (const entry of collections) {
+718:     { col: "events", defaultSeed: [] },
+719:     { col: "directory", defaultSeed: [] },
+720:     { col: "emergency", defaultSeed: defaultEmergencies },
+721:     { col: "notices", defaultSeed: defaultNotices },
+722:     { col: "lpgDeliveries", defaultSeed: defaultLpgDeliveries },
+723:     { col: "autos", defaultSeed: defaultAutos },
+724:     { col: "destinations", defaultSeed: defaultDestinations },
+725:     { col: "cultures", defaultSeed: defaultCultures },
+726:     { col: "stays", defaultSeed: defaultStays },
+727:     { col: "travelogues", defaultSeed: defaultTravelogues },
+728:     { col: "photos", defaultSeed: defaultPhotos },
+729:     { col: "busRoutes", defaultSeed: defaultBusRoutes },
+730:     { col: "routes", defaultSeed: defaultRoutes }
+731:   ];
+732: 
+733:   for (const entry of collections) {
+734:     const key = entry.col;
+719:     { col: "directory", defaultSeed: [] },
+720:     { col: "emergency", defaultSeed: defaultEmergencies },
+721:     { col: "notices", defaultSeed: defaultNotices },
+722:     { col: "lpgDeliveries", defaultSeed: defaultLpgDeliveries },
+723:     { col: "autos", defaultSeed: defaultAutos },
+724:     { col: "destinations", defaultSeed: defaultDestinations },
+725:     { col: "cultures", defaultSeed: defaultCultures },
+726:     { col: "stays", defaultSeed: defaultStays },
+727:     { col: "travelogues", defaultSeed: defaultTravelogues },
+728:     { col: "photos", defaultSeed: defaultPhotos },
+729:     { col: "busRoutes", defaultSeed: defaultBusRoutes },
+730:     { col: "routes", defaultSeed: defaultRoutes }
+731:   ];
+732: 
+733:   for (const entry of collections) {
+734:     const key = entry.col;
+735:     try {
+720:     { col: "emergency", defaultSeed: defaultEmergencies },
+721:     { col: "notices", defaultSeed: defaultNotices },
+722:     { col: "lpgDeliveries", defaultSeed: defaultLpgDeliveries },
+723:     { col: "autos", defaultSeed: defaultAutos },
+724:     { col: "destinations", defaultSeed: defaultDestinations },
+725:     { col: "cultures", defaultSeed: defaultCultures },
+726:     { col: "stays", defaultSeed: defaultStays },
+727:     { col: "travelogues", defaultSeed: defaultTravelogues },
+728:     { col: "photos", defaultSeed: defaultPhotos },
+729:     { col: "busRoutes", defaultSeed: defaultBusRoutes },
+730:     { col: "routes", defaultSeed: defaultRoutes }
+731:   ];
+732: 
+733:   for (const entry of collections) {
+734:     const key = entry.col;
+735:     try {
+736:       const qSnap = await getDocs(collection(firestoreDb, entry.col));
+721:     { col: "notices", defaultSeed: defaultNotices },
+722:     { col: "lpgDeliveries", defaultSeed: defaultLpgDeliveries },
+723:     { col: "autos", defaultSeed: defaultAutos },
+724:     { col: "destinations", defaultSeed: defaultDestinations },
+725:     { col: "cultures", defaultSeed: defaultCultures },
+726:     { col: "stays", defaultSeed: defaultStays },
+727:     { col: "travelogues", defaultSeed: defaultTravelogues },
+728:     { col: "photos", defaultSeed: defaultPhotos },
+729:     { col: "busRoutes", defaultSeed: defaultBusRoutes },
+730:     { col: "routes", defaultSeed: defaultRoutes }
+731:   ];
+732: 
+733:   for (const entry of collections) {
+734:     const key = entry.col;
+735:     try {
+736:       const qSnap = await getDocs(collection(firestoreDb, entry.col));
+737:       const items: any[] = [];
+722:     { col: "lpgDeliveries", defaultSeed: defaultLpgDeliveries },
+723:     { col: "autos", defaultSeed: defaultAutos },
+724:     { col: "destinations", defaultSeed: defaultDestinations },
+725:     { col: "cultures", defaultSeed: defaultCultures },
+726:     { col: "stays", defaultSeed: defaultStays },
+727:     { col: "travelogues", defaultSeed: defaultTravelogues },
+728:     { col: "photos", defaultSeed: defaultPhotos },
+729:     { col: "busRoutes", defaultSeed: defaultBusRoutes },
+730:     { col: "routes", defaultSeed: defaultRoutes }
+731:   ];
+732: 
+733:   for (const entry of collections) {
+734:     const key = entry.col;
+735:     try {
+736:       const qSnap = await getDocs(collection(firestoreDb, entry.col));
+737:       const items: any[] = [];
+738:       qSnap.forEach((docSnap) => {
+723:     { col: "autos", defaultSeed: defaultAutos },
+724:     { col: "destinations", defaultSeed: defaultDestinations },
+725:     { col: "cultures", defaultSeed: defaultCultures },
+726:     { col: "stays", defaultSeed: defaultStays },
+727:     { col: "travelogues", defaultSeed: defaultTravelogues },
+728:     { col: "photos", defaultSeed: defaultPhotos },
+729:     { col: "busRoutes", defaultSeed: defaultBusRoutes },
+730:     { col: "routes", defaultSeed: defaultRoutes }
+731:   ];
+732: 
+733:   for (const entry of collections) {
+734:     const key = entry.col;
+735:     try {
+736:       const qSnap = await getDocs(collection(firestoreDb, entry.col));
+737:       const items: any[] = [];
+738:       qSnap.forEach((docSnap) => {
+739:         items.push({ id: docSnap.id, ...docSnap.data() });
+724:     { col: "destinations", defaultSeed: defaultDestinations },
+725:     { col: "cultures", defaultSeed: defaultCultures },
+726:     { col: "stays", defaultSeed: defaultStays },
+727:     { col: "travelogues", defaultSeed: defaultTravelogues },
+728:     { col: "photos", defaultSeed: defaultPhotos },
+729:     { col: "busRoutes", defaultSeed: defaultBusRoutes },
+730:     { col: "routes", defaultSeed: defaultRoutes }
+731:   ];
+732: 
+733:   for (const entry of collections) {
+734:     const key = entry.col;
+735:     try {
+736:       const qSnap = await getDocs(collection(firestoreDb, entry.col));
+737:       const items: any[] = [];
+738:       qSnap.forEach((docSnap) => {
+739:         items.push({ id: docSnap.id, ...docSnap.data() });
+740:       });
+725:     { col: "cultures", defaultSeed: defaultCultures },
+726:     { col: "stays", defaultSeed: defaultStays },
+727:     { col: "travelogues", defaultSeed: defaultTravelogues },
+728:     { col: "photos", defaultSeed: defaultPhotos },
+729:     { col: "busRoutes", defaultSeed: defaultBusRoutes },
+730:     { col: "routes", defaultSeed: defaultRoutes }
+731:   ];
+732: 
+733:   for (const entry of collections) {
+734:     const key = entry.col;
+735:     try {
+736:       const qSnap = await getDocs(collection(firestoreDb, entry.col));
+737:       const items: any[] = [];
+738:       qSnap.forEach((docSnap) => {
+739:         items.push({ id: docSnap.id, ...docSnap.data() });
+740:       });
+741: 
+726:     { col: "stays", defaultSeed: defaultStays },
+727:     { col: "travelogues", defaultSeed: defaultTravelogues },
+728:     { col: "photos", defaultSeed: defaultPhotos },
+729:     { col: "busRoutes", defaultSeed: defaultBusRoutes },
+730:     { col: "routes", defaultSeed: defaultRoutes }
+731:   ];
+732: 
+733:   for (const entry of collections) {
+734:     const key = entry.col;
+735:     try {
+736:       const qSnap = await getDocs(collection(firestoreDb, entry.col));
+737:       const items: any[] = [];
+738:       qSnap.forEach((docSnap) => {
+739:         items.push({ id: docSnap.id, ...docSnap.data() });
+740:       });
+741: 
+742:       if (items.length === 0 && entry.defaultSeed.length > 0) {
+727:     { col: "travelogues", defaultSeed: defaultTravelogues },
+728:     { col: "photos", defaultSeed: defaultPhotos },
+729:     { col: "busRoutes", defaultSeed: defaultBusRoutes },
+730:     { col: "routes", defaultSeed: defaultRoutes }
+731:   ];
+732: 
+733:   for (const entry of collections) {
+734:     const key = entry.col;
+735:     try {
+736:       const qSnap = await getDocs(collection(firestoreDb, entry.col));
+737:       const items: any[] = [];
+738:       qSnap.forEach((docSnap) => {
+739:         items.push({ id: docSnap.id, ...docSnap.data() });
+740:       });
+741: 
+742:       if (items.length === 0 && entry.defaultSeed.length > 0) {
+743:         console.log(`🌱 Firestore collection [${entry.col}] is empty. Seeding ${entry.defaultSeed.length} defaults...`);
+728:     { col: "photos", defaultSeed: defaultPhotos },
+729:     { col: "busRoutes", defaultSeed: defaultBusRoutes },
+730:     { col: "routes", defaultSeed: defaultRoutes }
+731:   ];
+732: 
+733:   for (const entry of collections) {
+734:     const key = entry.col;
+735:     try {
+736:       const qSnap = await getDocs(collection(firestoreDb, entry.col));
+737:       const items: any[] = [];
+738:       qSnap.forEach((docSnap) => {
+739:         items.push({ id: docSnap.id, ...docSnap.data() });
+740:       });
+741: 
+742:       if (items.length === 0 && entry.defaultSeed.length > 0) {
+743:         console.log(`🌱 Firestore collection [${entry.col}] is empty. Seeding ${entry.defaultSeed.length} defaults...`);
+744:         for (const seedItem of entry.defaultSeed) {
