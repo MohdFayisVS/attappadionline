@@ -418,6 +418,54 @@ export default function App() {
   const renderAdBox = (ad: any) => {
     if (!ad) return null;
     
+    // If there is an uploaded custom ad image, render it cleanly as a full-bleed clickable banner
+    if (ad.image) {
+      const isInternalAction = ad.actionType === "share";
+      
+      const imageElement = (
+        <div className="relative w-full h-24 sm:h-28 bg-slate-900 border border-white/10 rounded-lg overflow-hidden group cursor-pointer shadow-xs select-none">
+          <img 
+            src={ad.image} 
+            alt="Advertisement" 
+            className="w-full h-full object-cover group-hover:scale-[1.005] transition duration-500" 
+            referrerPolicy="no-referrer"
+          />
+        </div>
+      );
+
+      if (isInternalAction) {
+        return (
+          <div 
+            onClick={() => setActiveAdDetail({
+              title: lang === "en" ? "Ad Details" : "പരസ്യ വിവരങ്ങൾ",
+              subtitle: "",
+              contact: ad.contact,
+              image: ad.image
+            })}
+          >
+            {imageElement}
+          </div>
+        );
+      }
+
+      let href = "#";
+      if (ad.actionType === "phone") href = `tel:${ad.contact}`;
+      if (ad.actionType === "whatsapp") href = getWhatsAppLink(ad.contact);
+      if (ad.actionType === "website") href = ad.externalUrl || "#";
+
+      return (
+        <a 
+          href={href} 
+          target={ad.actionType === "website" ? "_blank" : undefined} 
+          rel={ad.actionType === "website" ? "noopener noreferrer" : undefined}
+          className="block w-full"
+        >
+          {imageElement}
+        </a>
+      );
+    }
+    
+    // Fallback: If no image is present, render the original text-based callout ad block
     const title = lang === "ml" ? ad.titleMl || ad.titleEn : ad.titleEn || ad.titleMl;
     const subtitle = lang === "ml" ? ad.subtitleMl || ad.subtitleEn : ad.subtitleEn || ad.subtitleMl;
     
@@ -442,18 +490,6 @@ export default function App() {
         }) : undefined}
         className="relative flex flex-row items-center justify-between w-full h-20 bg-slate-900/40 border border-white/10 rounded-lg p-3 hover:bg-slate-900/65 hover:border-[#ffe500]/40 transition duration-300 cursor-pointer select-none overflow-hidden group gap-3"
       >
-        {ad.image ? (
-          <div className="absolute inset-0 z-0">
-            <img 
-              src={ad.image} 
-              alt={title} 
-              className="w-full h-full object-cover opacity-65 group-hover:scale-105 transition duration-500" 
-              referrerPolicy="no-referrer"
-            />
-            <div className="absolute inset-0 bg-slate-950/70 group-hover:bg-slate-950/60 transition duration-300"></div>
-          </div>
-        ) : null}
-
         <div className="relative z-10 flex flex-row items-center justify-between h-full w-full gap-3">
           <div className="flex items-center gap-3 min-w-0 text-left">
             <div className="w-10 h-10 rounded-md bg-[#ffe500]/10 flex items-center justify-center text-[#ffe500] shrink-0 group-hover:scale-110 transition duration-300">

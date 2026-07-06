@@ -5930,108 +5930,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     <span className="text-[10px] bg-slate-200 text-slate-700 px-2.5 py-0.5 rounded-full font-bold">Homepage Ticker Left</span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[10px] uppercase font-bold text-slate-505 mb-1">Headline Text (EN)</label>
-                      <input 
-                        type="text" 
-                        value={adForm.leftAd.titleEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setAdForm(prev => ({
-                            ...prev,
-                            leftAd: { ...prev.leftAd, titleEn: val }
-                          }));
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "titleEn", "titleMl", (updater: any) => {
-                              setAdForm(prev => ({
-                                ...prev,
-                                leftAd: typeof updater === "function" ? updater(prev.leftAd) : updater
-                              }));
-                            }, "ml");
-                          }
-                        }}
-                        className="w-full border rounded p-2 text-xs" 
-                        placeholder="e.g. Call for Ads"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] uppercase font-bold text-slate-505 mb-1">ശീർഷകം (ML) (Headline)</label>
-                      <input 
-                        type="text" 
-                        value={adForm.leftAd.titleMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setAdForm(prev => ({
-                            ...prev,
-                            leftAd: { ...prev.leftAd, titleMl: val }
-                          }));
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "titleMl", "titleEn", (updater: any) => {
-                              setAdForm(prev => ({
-                                ...prev,
-                                leftAd: typeof updater === "function" ? updater(prev.leftAd) : updater
-                              }));
-                            }, "en");
-                          }
-                        }}
-                        className="w-full border rounded p-2 text-xs font-serif" 
-                        placeholder="e.g. പരസ്യങ്ങൾക്ക് വിളിക്കുക"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[10px] uppercase font-bold text-slate-505 mb-1">Subtitle / Body (EN)</label>
-                      <input 
-                        type="text" 
-                        value={adForm.leftAd.subtitleEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setAdForm(prev => ({
-                            ...prev,
-                            leftAd: { ...prev.leftAd, subtitleEn: val }
-                          }));
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "subtitleEn", "subtitleMl", (updater: any) => {
-                              setAdForm(prev => ({
-                                ...prev,
-                                leftAd: typeof updater === "function" ? updater(prev.leftAd) : updater
-                              }));
-                            }, "ml");
-                          }
-                        }}
-                        className="w-full border rounded p-2 text-xs" 
-                        placeholder="e.g. Highlight your brand now"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] uppercase font-bold text-slate-505 mb-1">ഉപശീർഷകം (ML) (Subtitle)</label>
-                      <input 
-                        type="text" 
-                        value={adForm.leftAd.subtitleMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setAdForm(prev => ({
-                            ...prev,
-                            leftAd: { ...prev.leftAd, subtitleMl: val }
-                          }));
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "subtitleMl", "subtitleEn", (updater: any) => {
-                              setAdForm(prev => ({
-                                ...prev,
-                                leftAd: typeof updater === "function" ? updater(prev.leftAd) : updater
-                              }));
-                            }, "en");
-                          }
-                        }}
-                        className="w-full border rounded p-2 text-xs font-serif" 
-                        placeholder="e.g. കുറഞ്ഞ നിരക്കിൽ പരസ്യങ്ങൾ"
-                      />
-                    </div>
-                  </div>
-
+                  {/* Lead contact and action style */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[10px] uppercase font-bold text-slate-505 mb-1">Lead Contact Number</label>
@@ -6172,22 +6071,13 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                           <img 
                             src={adForm.leftAd.image} 
                             alt="Left ad cover" 
-                            className="w-full h-full object-cover opacity-40" 
+                            className="w-full h-full object-cover" 
                             referrerPolicy="no-referrer"
                           />
-                          <div className="absolute inset-0 bg-slate-950/80"></div>
                         </div>
-                      ) : null}
-                      <div className="relative flex items-center gap-2 text-white overflow-hidden">
-                        <Megaphone className="w-4 h-4 text-[#ffe500] shrink-0" />
-                        <div className="text-[10px] truncate leading-tight">
-                          <strong className="text-yellow-400 font-black block">{adForm.leftAd.titleEn || "Contact for Ads"}</strong>
-                          <span className="text-[8px] text-slate-300 block">{adForm.leftAd.subtitleEn || "Enquire Now"}</span>
-                        </div>
-                      </div>
-                      <div className="relative text-[9px] bg-[#005689] px-2 py-0.5 rounded text-yellow-300 font-extrabold shadow-sm shrink-0 uppercase tracking-widest font-mono">
-                        {adForm.leftAd.actionType === "phone" ? "Dial" : adForm.leftAd.actionType === "whatsapp" ? "Chat" : adForm.leftAd.actionType === "website" ? "Visit" : "Info"}
-                      </div>
+                      ) : (
+                        <span className="text-[9px] text-slate-400 italic mx-auto">No custom image uploaded (displays text fallback)</span>
+                      )}
                     </div>
                   </div>
 
@@ -6203,108 +6093,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     <span className="text-[10px] bg-slate-200 text-slate-700 px-2.5 py-0.5 rounded-full font-bold">Homepage Ticker Right</span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[10px] uppercase font-bold text-slate-505 mb-1">Headline Text (EN)</label>
-                      <input 
-                        type="text" 
-                        value={adForm.rightAd.titleEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setAdForm(prev => ({
-                            ...prev,
-                            rightAd: { ...prev.rightAd, titleEn: val }
-                          }));
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "titleEn", "titleMl", (updater: any) => {
-                              setAdForm(prev => ({
-                                ...prev,
-                                rightAd: typeof updater === "function" ? updater(prev.rightAd) : updater
-                              }));
-                            }, "ml");
-                          }
-                        }}
-                        className="w-full border rounded p-2 text-xs" 
-                        placeholder="e.g. Spot Ads Available"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] uppercase font-bold text-slate-505 mb-1">ശീർഷകം (ML) (Headline)</label>
-                      <input 
-                        type="text" 
-                        value={adForm.rightAd.titleMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setAdForm(prev => ({
-                            ...prev,
-                            rightAd: { ...prev.rightAd, titleMl: val }
-                          }));
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "titleMl", "titleEn", (updater: any) => {
-                              setAdForm(prev => ({
-                                ...prev,
-                                rightAd: typeof updater === "function" ? updater(prev.rightAd) : updater
-                              }));
-                            }, "en");
-                          }
-                        }}
-                        className="w-full border rounded p-2 text-xs font-serif" 
-                        placeholder="e.g. പരസ്യങ്ങൾക്ക് ബന്ധപ്പെടുക"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[10px] uppercase font-bold text-slate-505 mb-1">Subtitle / Body (EN)</label>
-                      <input 
-                        type="text" 
-                        value={adForm.rightAd.subtitleEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setAdForm(prev => ({
-                            ...prev,
-                            rightAd: { ...prev.rightAd, subtitleEn: val }
-                          }));
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "subtitleEn", "subtitleMl", (updater: any) => {
-                              setAdForm(prev => ({
-                                ...prev,
-                                rightAd: typeof updater === "function" ? updater(prev.rightAd) : updater
-                              }));
-                            }, "ml");
-                          }
-                        }}
-                        className="w-full border rounded p-2 text-xs" 
-                        placeholder="e.g. Expand your retail business"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] uppercase font-bold text-slate-505 mb-1">ഉപശീർഷകം (ML) (Subtitle)</label>
-                      <input 
-                        type="text" 
-                        value={adForm.rightAd.subtitleMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setAdForm(prev => ({
-                            ...prev,
-                            rightAd: { ...prev.rightAd, subtitleMl: val }
-                          }));
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "subtitleMl", "subtitleEn", (updater: any) => {
-                              setAdForm(prev => ({
-                                ...prev,
-                                rightAd: typeof updater === "function" ? updater(prev.rightAd) : updater
-                              }));
-                            }, "en");
-                          }
-                        }}
-                        className="w-full border rounded p-2 text-xs font-serif" 
-                        placeholder="e.g. കച്ചവടങ്ങൾ വളർത്താം"
-                      />
-                    </div>
-                  </div>
-
+                  {/* Lead contact and action style */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[10px] uppercase font-bold text-slate-505 mb-1">Lead Contact Number</label>
@@ -6445,22 +6234,13 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                           <img 
                             src={adForm.rightAd.image} 
                             alt="Right ad cover" 
-                            className="w-full h-full object-cover opacity-40" 
+                            className="w-full h-full object-cover" 
                             referrerPolicy="no-referrer"
                           />
-                          <div className="absolute inset-0 bg-slate-950/80"></div>
                         </div>
-                      ) : null}
-                      <div className="relative flex items-center gap-2 text-white overflow-hidden">
-                        <Megaphone className="w-4 h-4 text-[#ffe500] shrink-0" />
-                        <div className="text-[10px] truncate leading-tight">
-                          <strong className="text-yellow-400 font-black block">{adForm.rightAd.titleEn || "Attappadi Online Ads"}</strong>
-                          <span className="text-[8px] text-slate-300 block">{adForm.rightAd.subtitleEn || "Contact: +91 9447471224"}</span>
-                        </div>
-                      </div>
-                      <div className="relative text-[9px] bg-[#005689] px-2 py-0.5 rounded text-yellow-300 font-extrabold shadow-sm shrink-0 uppercase tracking-widest font-mono">
-                        {adForm.rightAd.actionType === "phone" ? "Dial" : adForm.rightAd.actionType === "whatsapp" ? "Chat" : adForm.rightAd.actionType === "website" ? "Visit" : "Info"}
-                      </div>
+                      ) : (
+                        <span className="text-[9px] text-slate-400 italic mx-auto">No custom image uploaded (displays text fallback)</span>
+                      )}
                     </div>
                   </div>
 
