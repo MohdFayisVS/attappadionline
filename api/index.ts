@@ -150,7 +150,7 @@ let firestoreDb: any = null;
 
 // Firestore will be initialized dynamically on first query inside initFirestoreDatabase()
 
-let lastSavedDatabase: any = null;
+
 
 // Initial database structure
 let database: any = { 
@@ -237,80 +237,7 @@ function loadDatabase() {
   }
 }
 
-// Background sync function: Diff local memory state vs lastSavedDatabase and persist any changes
-async function saveToFirestore(currentDb: any) {
-  if (!firestoreDb) return;
-  const { doc, setDoc, deleteDoc } = await import("firebase/firestore/lite");
-  if (!lastSavedDatabase) {
-    lastSavedDatabase = JSON.parse(JSON.stringify(currentDb));
-    return;
-  }
 
-  const collections = [
-    { key: "news", col: "news" },
-    { key: "opinions", col: "opinions" },
-    { key: "events", col: "events" },
-    { key: "directory", col: "directory" },
-    { key: "emergency", col: "emergency" },
-    { key: "notices", col: "notices" },
-    { key: "lpgDeliveries", col: "lpgDeliveries" },
-    { key: "autos", col: "autos" },
-    { key: "destinations", col: "destinations" },
-    { key: "cultures", col: "cultures" },
-    { key: "stays", col: "stays" },
-    { key: "travelogues", col: "travelogues" },
-    { key: "photos", col: "photos" },
-    { key: "busRoutes", col: "busRoutes" },
-    { key: "routes", col: "routes" },
-    { key: "lostFound", col: "lostFound" }
-  ];
-
-  for (const entry of collections) {
-    const currentList = currentDb[entry.key] || [];
-    const lastList = lastSavedDatabase[entry.key] || [];
-
-    // 1. Find additions & updates
-    for (const item of currentList) {
-      const lastItem = lastList.find((x: any) => x.id === item.id);
-      if (!lastItem || JSON.stringify(lastItem) !== JSON.stringify(item)) {
-        try {
-          const cleanItem = { ...item };
-          const docId = cleanItem.id;
-          delete cleanItem.id; // Usually we don't save the Firestore document ID redundant inside the doc
-          await setDoc(doc(firestoreDb, entry.col, docId), cleanItem);
-          console.log(`[Firestore Sync] Saved/Updated [${entry.col}] / [${docId}]`);
-        } catch (e) {
-          console.error(`[Firestore Sync] Failed to save [${entry.col}] / [${item.id}]:`, e);
-        }
-      }
-    }
-
-    // 2. Find deletions
-    for (const lastItem of lastList) {
-      if (!currentList.some((x: any) => x.id === lastItem.id)) {
-        try {
-          await deleteDoc(doc(firestoreDb, entry.col, lastItem.id));
-          console.log(`[Firestore Sync] Deleted [${entry.col}] / [${lastItem.id}]`);
-        } catch (e) {
-          console.error(`[Firestore Sync] Failed to delete [${entry.col}] / [${lastItem.id}]:`, e);
-        }
-      }
-    }
-  }
-
-  // Check adConfig
-  if (JSON.stringify(currentDb.adConfig) !== JSON.stringify(lastSavedDatabase.adConfig)) {
-    try {
-      await setDoc(doc(firestoreDb, "metadata", "adConfig"), currentDb.adConfig);
-      console.log(`[Firestore Sync] Saved metadata/adConfig`);
-    } catch (e) {
-      console.error(`[Firestore Sync] Failed to save metadata/adConfig:`, e);
-    }
-  }
-
-  // Update last status representation
-  lastSavedDatabase = JSON.parse(JSON.stringify(currentDb));
-}
 
 // Synchronizes and loads everything on server startup
 async function initFirestoreDatabase() {
@@ -362,7 +289,6 @@ async function initFirestoreDatabase() {
   if (!firestoreDb) {
     console.warn("Firestore not initialized. Loading local data.");
     database = fallbackLocalDb || loadDatabase();
-    lastSavedDatabase = JSON.parse(JSON.stringify(database));
     return;
   }
 
@@ -450,8 +376,6 @@ async function initFirestoreDatabase() {
   } catch (e) {
     console.error("❌ Failed to purge legacy sample data:", e);
   }
-
-  lastSavedDatabase = JSON.parse(JSON.stringify(database));
 }
 
 async function purgeLegacySampleData() {
@@ -507,15 +431,58 @@ function saveDatabase(data: any) {
   } catch (err) {
     console.warn("⚠️ Local JSON backup write skipped (likely read-only serverless environment):", err);
   }
-
-  // Trigger Firestore background syncing (safe & non-blocking)
-  if (firestoreDb) {
-    const syncPromise = saveToFirestore(data).catch((err) => {
-      console.error("❌ Firestore background sync failed:", err);
-    });
-    pendingWrites.push(syncPromise);
-  }
   return true;
+}
+
+// Real-time Firestore helper: Fetch a collection directly from firestore, falling back to local database memory
+async function getCollectionData(colName: string): Promise<any[]> {
+  if (!firestoreDb) {
+    return database[colName] || [];
+  }
+  const { collection, getDocs } = await import("firebase/firestore/lite");
+  try {
+    const qSnap = await getDocs(collection(firestoreDb, colName));
+    const items: any[] = [];
+    qSnap.forEach((docSnap) => {
+      items.push({ id: docSnap.id, ...docSnap.data() });
+    });
+    // Sync to local memory cache so local fallbacks are kept up to date
+    database[colName] = items;
+    return items;
+  } catch (err) {
+    console.error(`❌ Firestore direct read failed for [${colName}]:`, err);
+    return database[colName] || [];
+  }
+}
+
+// Real-time Firestore helper: Save or update a single document directly in firestore
+async function writeItemToFirestore(colName: string, id: string, item: any): Promise<void> {
+  if (!firestoreDb) return;
+  const { doc, setDoc } = await import("firebase/firestore/lite");
+  try {
+    const cleanItem = { ...item };
+    delete cleanItem.id;
+    const writePromise = setDoc(doc(firestoreDb, colName, id), cleanItem);
+    pendingWrites.push(writePromise);
+    await writePromise;
+    console.log(`[Firestore Direct Write] Saved [${colName}] / [${id}]`);
+  } catch (err) {
+    console.error(`❌ Firestore direct write failed for [${colName}] / [${id}]:`, err);
+  }
+}
+
+// Real-time Firestore helper: Delete a single document directly in firestore
+async function deleteItemFromFirestore(colName: string, id: string): Promise<void> {
+  if (!firestoreDb) return;
+  const { doc, deleteDoc } = await import("firebase/firestore/lite");
+  try {
+    const deletePromise = deleteDoc(doc(firestoreDb, colName, id));
+    pendingWrites.push(deletePromise);
+    await deletePromise;
+    console.log(`[Firestore Direct Delete] Deleted [${colName}] / [${id}]`);
+  } catch (err) {
+    console.error(`❌ Firestore direct delete failed for [${colName}] / [${id}]:`, err);
+  }
 }
 
 // API ENDPOINTS
@@ -592,11 +559,12 @@ app.get("/api/admin/db-diagnostic", async (req, res) => {
 });
 
 // 2. News CRUD
-app.get("/api/news", (req, res) => {
-  res.json(database.news || []);
+app.get("/api/news", async (req, res) => {
+  const data = await getCollectionData("news");
+  res.json(data);
 });
 
-app.post("/api/news", (req, res) => {
+app.post("/api/news", async (req, res) => {
   const { titleEn, titleMl, contentEn, contentMl, category, regions, image, isSlide, isCard } = req.body;
   if (!titleEn || !titleMl || !contentEn || !contentMl || !category) {
     return res.status(400).json({ error: "Missing required fields for news publishing" });
@@ -617,63 +585,75 @@ app.post("/api/news", (req, res) => {
     isCard: !!isCard
   };
 
-  database.news = [newPost, ...database.news];
+  database.news = [newPost, ...(database.news || [])];
   saveDatabase(database);
+  await writeItemToFirestore("news", newPost.id, newPost);
   res.status(201).json(newPost);
 });
 
-app.put("/api/news/:id", (req, res) => {
+app.put("/api/news/:id", async (req, res) => {
   const { id } = req.params;
   const { titleEn, titleMl, contentEn, contentMl, category, regions, image, isSlide, isCard } = req.body;
   
-  let found = false;
-  database.news = database.news.map((item: any) => {
-    if (item.id === id) {
-      found = true;
-      return {
-        ...item,
-        titleEn: titleEn !== undefined ? titleEn : item.titleEn,
-        titleMl: titleMl !== undefined ? titleMl : item.titleMl,
-        contentEn: contentEn !== undefined ? contentEn : item.contentEn,
-        contentMl: contentMl !== undefined ? contentMl : item.contentMl,
-        category: category !== undefined ? category : item.category,
-        regions: regions !== undefined ? regions : item.regions,
-        image: image !== undefined ? image : item.image,
-        isSlide: isSlide !== undefined ? !!isSlide : item.isSlide,
-        isCard: isCard !== undefined ? !!isCard : item.isCard
-      };
-    }
-    return item;
-  });
+  const newsList = await getCollectionData("news");
+  const itemIndex = newsList.findIndex((item: any) => item.id === id);
 
-  if (found) {
+  if (itemIndex !== -1) {
+    const updatedPost = {
+      ...newsList[itemIndex],
+      titleEn: titleEn !== undefined ? titleEn : newsList[itemIndex].titleEn,
+      titleMl: titleMl !== undefined ? titleMl : newsList[itemIndex].titleMl,
+      contentEn: contentEn !== undefined ? contentEn : newsList[itemIndex].contentEn,
+      contentMl: contentMl !== undefined ? contentMl : newsList[itemIndex].contentMl,
+      category: category !== undefined ? category : newsList[itemIndex].category,
+      regions: regions !== undefined ? regions : newsList[itemIndex].regions,
+      image: image !== undefined ? image : newsList[itemIndex].image,
+      isSlide: isSlide !== undefined ? !!isSlide : newsList[itemIndex].isSlide,
+      isCard: isCard !== undefined ? !!isCard : newsList[itemIndex].isCard
+    };
+
+    database.news = (database.news || []).map((item: any) => item.id === id ? updatedPost : item);
     saveDatabase(database);
+    await writeItemToFirestore("news", id, updatedPost);
     res.json({ success: true, id });
   } else {
     res.status(404).json({ error: "News item not found" });
   }
 });
 
-app.delete("/api/news/:id", (req, res) => {
+app.delete("/api/news/:id", async (req, res) => {
   const { id } = req.params;
-  database.news = database.news.filter((item: any) => item.id !== id);
+  database.news = (database.news || []).filter((item: any) => item.id !== id);
   saveDatabase(database);
+  await deleteItemFromFirestore("news", id);
   res.json({ success: true, id });
 });
 
-// Ad Config routes
-app.get("/api/adconfig", (req, res) => {
+app.get("/api/adconfig", async (req, res) => {
+  if (!firestoreDb) {
+    return res.json(database.adConfig || defaultAdConfig);
+  }
+  const { doc, getDoc } = await import("firebase/firestore/lite");
+  try {
+    const configSnap = await getDoc(doc(firestoreDb, "metadata", "adConfig"));
+    if (configSnap.exists()) {
+      database.adConfig = configSnap.data();
+      return res.json(database.adConfig);
+    }
+  } catch (err) {
+    console.error("❌ Failed to fetch adConfig directly:", err);
+  }
   res.json(database.adConfig || defaultAdConfig);
 });
 
-app.put("/api/adconfig", (req, res) => {
+app.put("/api/adconfig", async (req, res) => {
   const { leftAd, rightAd } = req.body;
   
   if (!leftAd || !rightAd) {
     return res.status(400).json({ error: "Missing leftAd or rightAd setup parameters" });
   }
 
-  database.adConfig = {
+  const updatedConfig = {
     leftAd: {
       titleEn: leftAd.titleEn || "",
       titleMl: leftAd.titleMl || "",
@@ -696,22 +676,36 @@ app.put("/api/adconfig", (req, res) => {
     }
   };
 
+  database.adConfig = updatedConfig;
   saveDatabase(database);
-  res.json({ success: true, adConfig: database.adConfig });
+
+  if (firestoreDb) {
+    const { doc, setDoc } = await import("firebase/firestore/lite");
+    try {
+      const writePromise = setDoc(doc(firestoreDb, "metadata", "adConfig"), updatedConfig);
+      pendingWrites.push(writePromise);
+      await writePromise;
+      console.log("[Firestore Direct Write] Saved metadata/adConfig");
+    } catch (err) {
+      console.error("❌ Firestore direct write failed for metadata/adConfig:", err);
+    }
+  }
+
+  res.json({ success: true, adConfig: updatedConfig });
 });
 
-app.post("/api/news/:id/view", (req, res) => {
+app.post("/api/news/:id/view", async (req, res) => {
   const { id } = req.params;
-  let found = false;
-  database.news = database.news.map((item: any) => {
-    if (item.id === id) {
-      found = true;
-      return { ...item, views: (item.views || 0) + 1 };
-    }
-    return item;
-  });
-  if (found) {
+  const newsList = await getCollectionData("news");
+  const itemIndex = newsList.findIndex((item: any) => item.id === id);
+  if (itemIndex !== -1) {
+    const updatedPost = {
+      ...newsList[itemIndex],
+      views: (newsList[itemIndex].views || 0) + 1
+    };
+    database.news = (database.news || []).map((item: any) => item.id === id ? updatedPost : item);
     saveDatabase(database);
+    await writeItemToFirestore("news", id, updatedPost);
     res.json({ success: true });
   } else {
     res.status(404).json({ error: "News not found" });
@@ -719,11 +713,12 @@ app.post("/api/news/:id/view", (req, res) => {
 });
 
 // 3. User Opinion Board
-app.get("/api/opinions", (req, res) => {
-  res.json(database.opinions || []);
+app.get("/api/opinions", async (req, res) => {
+  const data = await getCollectionData("opinions");
+  res.json(data);
 });
 
-app.post("/api/opinions", (req, res) => {
+app.post("/api/opinions", async (req, res) => {
   const { authorName, titleEn, titleMl, contentEn, contentMl, approved } = req.body;
   if (!authorName || !titleEn || !contentEn) {
     return res.status(400).json({ error: "Missing author name, title, or opinion content." });
@@ -740,63 +735,69 @@ app.post("/api/opinions", (req, res) => {
     approved: approved !== undefined ? !!approved : false
   };
 
-  database.opinions = [newOpinion, ...database.opinions];
+  database.opinions = [newOpinion, ...(database.opinions || [])];
   saveDatabase(database);
+  await writeItemToFirestore("opinions", newOpinion.id, newOpinion);
   res.status(201).json(newOpinion);
 });
 
-app.put("/api/opinions/:id", (req, res) => {
+app.put("/api/opinions/:id", async (req, res) => {
   const { id } = req.params;
   const { authorName, titleEn, titleMl, contentEn, contentMl, approved } = req.body;
-  let found = false;
-  database.opinions = database.opinions.map((op: any) => {
-    if (op.id === id) {
-      found = true;
-      return {
-        ...op,
-        authorName: authorName !== undefined ? authorName : op.authorName,
-        titleEn: titleEn !== undefined ? titleEn : op.titleEn,
-        titleMl: titleMl !== undefined ? titleMl : op.titleMl,
-        contentEn: contentEn !== undefined ? contentEn : op.contentEn,
-        contentMl: contentMl !== undefined ? contentMl : op.contentMl,
-        approved: approved !== undefined ? !!approved : op.approved
-      };
-    }
-    return op;
-  });
-  if (found) {
+  
+  const opinionsList = await getCollectionData("opinions");
+  const itemIndex = opinionsList.findIndex((op: any) => op.id === id);
+
+  if (itemIndex !== -1) {
+    const updatedOpinion = {
+      ...opinionsList[itemIndex],
+      authorName: authorName !== undefined ? authorName : opinionsList[itemIndex].authorName,
+      titleEn: titleEn !== undefined ? titleEn : opinionsList[itemIndex].titleEn,
+      titleMl: titleMl !== undefined ? titleMl : opinionsList[itemIndex].titleMl,
+      contentEn: contentEn !== undefined ? contentEn : opinionsList[itemIndex].contentEn,
+      contentMl: contentMl !== undefined ? contentMl : opinionsList[itemIndex].contentMl,
+      approved: approved !== undefined ? !!approved : opinionsList[itemIndex].approved
+    };
+
+    database.opinions = (database.opinions || []).map((op: any) => op.id === id ? updatedOpinion : op);
     saveDatabase(database);
+    await writeItemToFirestore("opinions", id, updatedOpinion);
     res.json({ success: true, id });
   } else {
     res.status(404).json({ error: "Opinion not found" });
   }
 });
 
-app.post("/api/opinions/approve/:id", (req, res) => {
+app.post("/api/opinions/approve/:id", async (req, res) => {
   const { id } = req.params;
-  database.opinions = database.opinions.map((op: any) => {
-    if (op.id === id) {
-      return { ...op, approved: true };
-    }
-    return op;
-  });
-  saveDatabase(database);
-  res.json({ success: true });
+  const opinionsList = await getCollectionData("opinions");
+  const itemIndex = opinionsList.findIndex((op: any) => op.id === id);
+  if (itemIndex !== -1) {
+    const updatedOpinion = { ...opinionsList[itemIndex], approved: true };
+    database.opinions = (database.opinions || []).map((op: any) => op.id === id ? updatedOpinion : op);
+    saveDatabase(database);
+    await writeItemToFirestore("opinions", id, updatedOpinion);
+    res.json({ success: true });
+  } else {
+    res.status(404).json({ error: "Opinion not found" });
+  }
 });
 
-app.post("/api/opinions/delete/:id", (req, res) => {
+app.post("/api/opinions/delete/:id", async (req, res) => {
   const { id } = req.params;
-  database.opinions = database.opinions.filter((op: any) => op.id !== id);
+  database.opinions = (database.opinions || []).filter((op: any) => op.id !== id);
   saveDatabase(database);
+  await deleteItemFromFirestore("opinions", id);
   res.json({ success: true });
 });
 
 // 4. Events Calendar
-app.get("/api/events", (req, res) => {
-  res.json(database.events || []);
+app.get("/api/events", async (req, res) => {
+  const data = await getCollectionData("events");
+  res.json(data);
 });
 
-app.post("/api/events", (req, res) => {
+app.post("/api/events", async (req, res) => {
   const { titleEn, titleMl, date, time, locationEn, locationMl, descriptionEn, descriptionMl } = req.body;
   if (!titleEn || !titleMl || !date || !locationEn || !locationMl) {
     return res.status(400).json({ error: "Missing required event fields" });
@@ -814,53 +815,56 @@ app.post("/api/events", (req, res) => {
     descriptionMl: descriptionMl || ""
   };
 
-  database.events = [newEvent, ...database.events];
+  database.events = [newEvent, ...(database.events || [])];
   saveDatabase(database);
+  await writeItemToFirestore("events", newEvent.id, newEvent);
   res.status(201).json(newEvent);
 });
 
-app.put("/api/events/:id", (req, res) => {
+app.put("/api/events/:id", async (req, res) => {
   const { id } = req.params;
   const { titleEn, titleMl, date, time, locationEn, locationMl, descriptionEn, descriptionMl } = req.body;
-  let found = false;
-  database.events = database.events.map((ev: any) => {
-    if (ev.id === id) {
-      found = true;
-      return {
-        ...ev,
-        titleEn: titleEn !== undefined ? titleEn : ev.titleEn,
-        titleMl: titleMl !== undefined ? titleMl : ev.titleMl,
-        date: date !== undefined ? date : ev.date,
-        time: time !== undefined ? time : ev.time,
-        locationEn: locationEn !== undefined ? locationEn : ev.locationEn,
-        locationMl: locationMl !== undefined ? locationMl : ev.locationMl,
-        descriptionEn: descriptionEn !== undefined ? descriptionEn : ev.descriptionEn,
-        descriptionMl: descriptionMl !== undefined ? descriptionMl : ev.descriptionMl
-      };
-    }
-    return ev;
-  });
-  if (found) {
+  
+  const eventsList = await getCollectionData("events");
+  const itemIndex = eventsList.findIndex((ev: any) => ev.id === id);
+
+  if (itemIndex !== -1) {
+    const updatedEvent = {
+      ...eventsList[itemIndex],
+      titleEn: titleEn !== undefined ? titleEn : eventsList[itemIndex].titleEn,
+      titleMl: titleMl !== undefined ? titleMl : eventsList[itemIndex].titleMl,
+      date: date !== undefined ? date : eventsList[itemIndex].date,
+      time: time !== undefined ? time : eventsList[itemIndex].time,
+      locationEn: locationEn !== undefined ? locationEn : eventsList[itemIndex].locationEn,
+      locationMl: locationMl !== undefined ? locationMl : eventsList[itemIndex].locationMl,
+      descriptionEn: descriptionEn !== undefined ? descriptionEn : eventsList[itemIndex].descriptionEn,
+      descriptionMl: descriptionMl !== undefined ? descriptionMl : eventsList[itemIndex].descriptionMl
+    };
+
+    database.events = (database.events || []).map((ev: any) => ev.id === id ? updatedEvent : ev);
     saveDatabase(database);
+    await writeItemToFirestore("events", id, updatedEvent);
     res.json({ success: true, id });
   } else {
     res.status(404).json({ error: "Event not found" });
   }
 });
 
-app.delete("/api/events/:id", (req, res) => {
+app.delete("/api/events/:id", async (req, res) => {
   const { id } = req.params;
-  database.events = database.events.filter((ev: any) => ev.id !== id);
+  database.events = (database.events || []).filter((ev: any) => ev.id !== id);
   saveDatabase(database);
+  await deleteItemFromFirestore("events", id);
   res.json({ success: true, id });
 });
 
 // 5. Local Services Directory
-app.get("/api/directory", (req, res) => {
-  res.json(database.directory || []);
+app.get("/api/directory", async (req, res) => {
+  const data = await getCollectionData("directory");
+  res.json(data);
 });
 
-app.post("/api/directory", (req, res) => {
+app.post("/api/directory", async (req, res) => {
   const { nameEn, nameMl, category, contact, locationEn, locationMl } = req.body;
   if (!nameEn || !nameMl || !category || !contact) {
     return res.status(400).json({ error: "Missing directory required fields" });
@@ -876,51 +880,54 @@ app.post("/api/directory", (req, res) => {
     locationMl: locationMl || "അട്ടപ്പാടി"
   };
 
-  database.directory = [...database.directory, newListing];
+  database.directory = [...(database.directory || []), newListing];
   saveDatabase(database);
+  await writeItemToFirestore("directory", newListing.id, newListing);
   res.status(201).json(newListing);
 });
 
-app.put("/api/directory/:id", (req, res) => {
+app.put("/api/directory/:id", async (req, res) => {
   const { id } = req.params;
   const { nameEn, nameMl, category, contact, locationEn, locationMl } = req.body;
-  let found = false;
-  database.directory = database.directory.map((item: any) => {
-    if (item.id === id) {
-      found = true;
-      return {
-        ...item,
-        nameEn: nameEn !== undefined ? nameEn : item.nameEn,
-        nameMl: nameMl !== undefined ? nameMl : item.nameMl,
-        category: category !== undefined ? category : item.category,
-        contact: contact !== undefined ? contact : item.contact,
-        locationEn: locationEn !== undefined ? locationEn : item.locationEn,
-        locationMl: locationMl !== undefined ? locationMl : item.locationMl
-      };
-    }
-    return item;
-  });
-  if (found) {
+  
+  const directoryList = await getCollectionData("directory");
+  const itemIndex = directoryList.findIndex((item: any) => item.id === id);
+
+  if (itemIndex !== -1) {
+    const updatedListing = {
+      ...directoryList[itemIndex],
+      nameEn: nameEn !== undefined ? nameEn : directoryList[itemIndex].nameEn,
+      nameMl: nameMl !== undefined ? nameMl : directoryList[itemIndex].nameMl,
+      category: category !== undefined ? category : directoryList[itemIndex].category,
+      contact: contact !== undefined ? contact : directoryList[itemIndex].contact,
+      locationEn: locationEn !== undefined ? locationEn : directoryList[itemIndex].locationEn,
+      locationMl: locationMl !== undefined ? locationMl : directoryList[itemIndex].locationMl
+    };
+
+    database.directory = (database.directory || []).map((item: any) => item.id === id ? updatedListing : item);
     saveDatabase(database);
+    await writeItemToFirestore("directory", id, updatedListing);
     res.json({ success: true, id });
   } else {
     res.status(404).json({ error: "Directory entry not found" });
   }
 });
 
-app.delete("/api/directory/:id", (req, res) => {
+app.delete("/api/directory/:id", async (req, res) => {
   const { id } = req.params;
-  database.directory = database.directory.filter((item: any) => item.id !== id);
+  database.directory = (database.directory || []).filter((item: any) => item.id !== id);
   saveDatabase(database);
+  await deleteItemFromFirestore("directory", id);
   res.json({ success: true, id });
 });
 
 // 5b. Lost & Found Section
-app.get("/api/lostfound", (req, res) => {
-  res.json(database.lostFound || []);
+app.get("/api/lostfound", async (req, res) => {
+  const data = await getCollectionData("lostFound");
+  res.json(data);
 });
 
-app.post("/api/lostfound", (req, res) => {
+app.post("/api/lostfound", async (req, res) => {
   const { type, itemTitleEn, itemTitleMl, descriptionEn, descriptionMl, reporterName, contactNumber, locationEn, locationMl } = req.body;
   if (!type || (!itemTitleEn && !itemTitleMl) || !reporterName || !contactNumber) {
     return res.status(400).json({ error: "Missing required fields for Lost & Found reporting" });
@@ -950,10 +957,11 @@ app.post("/api/lostfound", (req, res) => {
 
   database.lostFound = [...(database.lostFound || []), newItem];
   saveDatabase(database);
+  await writeItemToFirestore("lostFound", newItem.id, newItem);
   res.status(201).json(newItem);
 });
 
-app.post("/api/lostfound/resolve/:id", (req, res) => {
+app.post("/api/lostfound/resolve/:id", async (req, res) => {
   const { id } = req.params;
   const { contactNumber } = req.body;
 
@@ -961,7 +969,8 @@ app.post("/api/lostfound/resolve/:id", (req, res) => {
     return res.status(400).json({ error: "Contact number is required for verification" });
   }
 
-  const item = (database.lostFound || []).find((i: any) => i.id === id);
+  const lostFoundList = await getCollectionData("lostFound");
+  const item = lostFoundList.find((i: any) => i.id === id);
   if (!item) {
     return res.status(404).json({ error: "Item not found" });
   }
@@ -976,22 +985,25 @@ app.post("/api/lostfound/resolve/:id", (req, res) => {
 
   database.lostFound = (database.lostFound || []).filter((i: any) => i.id !== id);
   saveDatabase(database);
+  await deleteItemFromFirestore("lostFound", id);
   res.json({ success: true, message: "Report resolved and removed successfully", id });
 });
 
-app.delete("/api/lostfound/:id", (req, res) => {
+app.delete("/api/lostfound/:id", async (req, res) => {
   const { id } = req.params;
   database.lostFound = (database.lostFound || []).filter((i: any) => i.id !== id);
   saveDatabase(database);
+  await deleteItemFromFirestore("lostFound", id);
   res.json({ success: true, id });
 });
 
 // 6. Emergency Contacts CRUD
-app.get("/api/emergency", (req, res) => {
-  res.json(database.emergency || []);
+app.get("/api/emergency", async (req, res) => {
+  const data = await getCollectionData("emergency");
+  res.json(data);
 });
 
-app.post("/api/emergency", (req, res) => {
+app.post("/api/emergency", async (req, res) => {
   const { nameEn, nameMl, number, type } = req.body;
   if (!nameEn || !nameMl || !number || !type) {
     return res.status(400).json({ error: "Missing required emergency fields" });
@@ -1005,49 +1017,52 @@ app.post("/api/emergency", (req, res) => {
     type
   };
 
-  database.emergency = [...database.emergency, newEmerg];
+  database.emergency = [...(database.emergency || []), newEmerg];
   saveDatabase(database);
+  await writeItemToFirestore("emergency", newEmerg.id, newEmerg);
   res.status(201).json(newEmerg);
 });
 
-app.put("/api/emergency/:id", (req, res) => {
+app.put("/api/emergency/:id", async (req, res) => {
   const { id } = req.params;
   const { nameEn, nameMl, number, type } = req.body;
-  let found = false;
-  database.emergency = database.emergency.map((em: any) => {
-    if (em.id === id) {
-      found = true;
-      return {
-        ...em,
-        nameEn: nameEn !== undefined ? nameEn : em.nameEn,
-        nameMl: nameMl !== undefined ? nameMl : em.nameMl,
-        number: number !== undefined ? number : em.number,
-        type: type !== undefined ? type : em.type
-      };
-    }
-    return em;
-  });
-  if (found) {
+  
+  const emergencyList = await getCollectionData("emergency");
+  const itemIndex = emergencyList.findIndex((em: any) => em.id === id);
+
+  if (itemIndex !== -1) {
+    const updatedEmerg = {
+      ...emergencyList[itemIndex],
+      nameEn: nameEn !== undefined ? nameEn : emergencyList[itemIndex].nameEn,
+      nameMl: nameMl !== undefined ? nameMl : emergencyList[itemIndex].nameMl,
+      number: number !== undefined ? number : emergencyList[itemIndex].number,
+      type: type !== undefined ? type : emergencyList[itemIndex].type
+    };
+
+    database.emergency = (database.emergency || []).map((em: any) => em.id === id ? updatedEmerg : em);
     saveDatabase(database);
+    await writeItemToFirestore("emergency", id, updatedEmerg);
     res.json({ success: true, id });
   } else {
     res.status(404).json({ error: "Emergency contact not found" });
   }
 });
 
-app.delete("/api/emergency/:id", (req, res) => {
+app.delete("/api/emergency/:id", async (req, res) => {
   const { id } = req.params;
-  database.emergency = database.emergency.filter((em: any) => em.id !== id);
+  database.emergency = (database.emergency || []).filter((em: any) => em.id !== id);
   saveDatabase(database);
+  await deleteItemFromFirestore("emergency", id);
   res.json({ success: true, id });
 });
 
 // Notices CRUD Endpoints
-app.get("/api/notices", (req, res) => {
-  res.json(database.notices || []);
+app.get("/api/notices", async (req, res) => {
+  const data = await getCollectionData("notices");
+  res.json(data);
 });
 
-app.post("/api/notices", (req, res) => {
+app.post("/api/notices", async (req, res) => {
   const { titleEn, titleMl, contentEn, contentMl, type, severity, date, active, image } = req.body;
   if (!noticesParamsCheck(req.body)) {
     return res.status(400).json({ error: "Missing required fields for Notice" });
@@ -1068,6 +1083,7 @@ app.post("/api/notices", (req, res) => {
 
   database.notices = [...(database.notices || []), newNotice];
   saveDatabase(database);
+  await writeItemToFirestore("notices", newNotice.id, newNotice);
   res.status(201).json(newNotice);
 });
 
@@ -1075,50 +1091,51 @@ function noticesParamsCheck(body: any) {
   return body.titleEn && body.titleMl && body.contentEn && body.contentMl;
 }
 
-app.put("/api/notices/:id", (req, res) => {
+app.put("/api/notices/:id", async (req, res) => {
   const { id } = req.params;
   const { titleEn, titleMl, contentEn, contentMl, type, severity, date, active, image } = req.body;
-  let found = false;
-  database.notices = (database.notices || []).map((not: any) => {
-    if (not.id === id) {
-      found = true;
-      return {
-        ...not,
-        titleEn: titleEn !== undefined ? titleEn : not.titleEn,
-        titleMl: titleMl !== undefined ? titleMl : not.titleMl,
-        contentEn: contentEn !== undefined ? contentEn : not.contentEn,
-        contentMl: contentMl !== undefined ? contentMl : not.contentMl,
-        type: type !== undefined ? type : not.type,
-        severity: severity !== undefined ? severity : not.severity,
-        date: date !== undefined ? date : not.date,
-        active: active !== undefined ? active : not.active,
-        image: image !== undefined ? image : not.image
-      };
-    }
-    return not;
-  });
+  
+  const noticesList = await getCollectionData("notices");
+  const itemIndex = noticesList.findIndex((not: any) => not.id === id);
 
-  if (found) {
+  if (itemIndex !== -1) {
+    const updatedNotice = {
+      ...noticesList[itemIndex],
+      titleEn: titleEn !== undefined ? titleEn : noticesList[itemIndex].titleEn,
+      titleMl: titleMl !== undefined ? titleMl : noticesList[itemIndex].titleMl,
+      contentEn: contentEn !== undefined ? contentEn : noticesList[itemIndex].contentEn,
+      contentMl: contentMl !== undefined ? contentMl : noticesList[itemIndex].contentMl,
+      type: type !== undefined ? type : noticesList[itemIndex].type,
+      severity: severity !== undefined ? severity : noticesList[itemIndex].severity,
+      date: date !== undefined ? date : noticesList[itemIndex].date,
+      active: active !== undefined ? active : noticesList[itemIndex].active,
+      image: image !== undefined ? image : noticesList[itemIndex].image
+    };
+
+    database.notices = (database.notices || []).map((not: any) => not.id === id ? updatedNotice : not);
     saveDatabase(database);
+    await writeItemToFirestore("notices", id, updatedNotice);
     res.json({ success: true, id });
   } else {
     res.status(404).json({ error: "Notice not found" });
   }
 });
 
-app.delete("/api/notices/:id", (req, res) => {
+app.delete("/api/notices/:id", async (req, res) => {
   const { id } = req.params;
   database.notices = (database.notices || []).filter((not: any) => not.id !== id);
   saveDatabase(database);
+  await deleteItemFromFirestore("notices", id);
   res.json({ success: true, id });
 });
 
 // LPG Deliveries CRUD Endpoints
-app.get("/api/lpg", (req, res) => {
-  res.json(database.lpgDeliveries || []);
+app.get("/api/lpg", async (req, res) => {
+  const data = await getCollectionData("lpgDeliveries");
+  res.json(data);
 });
 
-app.post("/api/lpg", (req, res) => {
+app.post("/api/lpg", async (req, res) => {
   const { agencyNameEn, agencyNameMl, areasEn, areasMl, date, statusEn, statusMl, contact, notesEn, notesMl } = req.body;
   if (!agencyNameEn || !agencyNameMl || !areasEn || !areasMl || !date || !contact) {
     return res.status(400).json({ error: "Missing required fields for LPG Delivery" });
@@ -1140,54 +1157,56 @@ app.post("/api/lpg", (req, res) => {
 
   database.lpgDeliveries = [...(database.lpgDeliveries || []), newLpg];
   saveDatabase(database);
+  await writeItemToFirestore("lpgDeliveries", newLpg.id, newLpg);
   res.status(201).json(newLpg);
 });
 
-app.put("/api/lpg/:id", (req, res) => {
+app.put("/api/lpg/:id", async (req, res) => {
   const { id } = req.params;
   const { agencyNameEn, agencyNameMl, areasEn, areasMl, date, statusEn, statusMl, contact, notesEn, notesMl } = req.body;
-  let found = false;
-  database.lpgDeliveries = (database.lpgDeliveries || []).map((lpg: any) => {
-    if (lpg.id === id) {
-      found = true;
-      return {
-        ...lpg,
-        agencyNameEn: agencyNameEn !== undefined ? agencyNameEn : lpg.agencyNameEn,
-        agencyNameMl: agencyNameMl !== undefined ? agencyNameMl : lpg.agencyNameMl,
-        areasEn: areasEn !== undefined ? areasEn : lpg.areasEn,
-        areasMl: areasMl !== undefined ? areasMl : lpg.areasMl,
-        date: date !== undefined ? date : lpg.date,
-        statusEn: statusEn !== undefined ? statusEn : lpg.statusEn,
-        statusMl: statusMl !== undefined ? statusMl : lpg.statusMl,
-        contact: contact !== undefined ? contact : lpg.contact,
-        notesEn: notesEn !== undefined ? notesEn : lpg.notesEn,
-        notesMl: notesMl !== undefined ? notesMl : lpg.notesMl
-      };
-    }
-    return lpg;
-  });
+  
+  const lpgList = await getCollectionData("lpgDeliveries");
+  const itemIndex = lpgList.findIndex((lpg: any) => lpg.id === id);
 
-  if (found) {
+  if (itemIndex !== -1) {
+    const updatedLpg = {
+      ...lpgList[itemIndex],
+      agencyNameEn: agencyNameEn !== undefined ? agencyNameEn : lpgList[itemIndex].agencyNameEn,
+      agencyNameMl: agencyNameMl !== undefined ? agencyNameMl : lpgList[itemIndex].agencyNameMl,
+      areasEn: areasEn !== undefined ? areasEn : lpgList[itemIndex].areasEn,
+      areasMl: areasMl !== undefined ? areasMl : lpgList[itemIndex].areasMl,
+      date: date !== undefined ? date : lpgList[itemIndex].date,
+      statusEn: statusEn !== undefined ? statusEn : lpgList[itemIndex].statusEn,
+      statusMl: statusMl !== undefined ? statusMl : lpgList[itemIndex].statusMl,
+      contact: contact !== undefined ? contact : lpgList[itemIndex].contact,
+      notesEn: notesEn !== undefined ? notesEn : lpgList[itemIndex].notesEn,
+      notesMl: notesMl !== undefined ? notesMl : lpgList[itemIndex].notesMl
+    };
+
+    database.lpgDeliveries = (database.lpgDeliveries || []).map((lpg: any) => lpg.id === id ? updatedLpg : lpg);
     saveDatabase(database);
+    await writeItemToFirestore("lpgDeliveries", id, updatedLpg);
     res.json({ success: true, id });
   } else {
     res.status(404).json({ error: "LPG delivery schedule not found" });
   }
 });
 
-app.delete("/api/lpg/:id", (req, res) => {
+app.delete("/api/lpg/:id", async (req, res) => {
   const { id } = req.params;
   database.lpgDeliveries = (database.lpgDeliveries || []).filter((lpg: any) => lpg.id !== id);
   saveDatabase(database);
+  await deleteItemFromFirestore("lpgDeliveries", id);
   res.json({ success: true, id });
 });
 
 // Autorikshaw Taxi Service Endpoints
-app.get("/api/autos", (req, res) => {
-  res.json(database.autos || []);
+app.get("/api/autos", async (req, res) => {
+  const data = await getCollectionData("autos");
+  res.json(data);
 });
 
-app.post("/api/autos", (req, res) => {
+app.post("/api/autos", async (req, res) => {
   const { driverNameEn, driverNameMl, autoNumber, contact, locationEn, locationMl, isAvailable } = req.body;
   if (!driverNameEn || !driverNameMl || !autoNumber || !contact || !locationEn || !locationMl) {
     return res.status(400).json({ error: "Missing required fields for Autorikshaw Service" });
@@ -1207,186 +1226,245 @@ app.post("/api/autos", (req, res) => {
 
   database.autos = [...(database.autos || []), newAuto];
   saveDatabase(database);
+  await writeItemToFirestore("autos", newAuto.id, newAuto);
   res.status(201).json(newAuto);
 });
 
-app.put("/api/autos/:id", (req, res) => {
+app.put("/api/autos/:id", async (req, res) => {
   const { id } = req.params;
   const { driverNameEn, driverNameMl, autoNumber, contact, locationEn, locationMl, isAvailable } = req.body;
-  let found = false;
   
-  database.autos = (database.autos || []).map((aut: any) => {
-    if (aut.id === id) {
-      found = true;
-      return {
-        ...aut,
-        driverNameEn: driverNameEn !== undefined ? driverNameEn : aut.driverNameEn,
-        driverNameMl: driverNameMl !== undefined ? driverNameMl : aut.driverNameMl,
-        autoNumber: autoNumber !== undefined ? autoNumber : aut.autoNumber,
-        contact: contact !== undefined ? contact : aut.contact,
-        locationEn: locationEn !== undefined ? locationEn : aut.locationEn,
-        locationMl: locationMl !== undefined ? locationMl : aut.locationMl,
-        isAvailable: isAvailable !== undefined ? Boolean(isAvailable) : aut.isAvailable
-      };
-    }
-    return aut;
-  });
+  const autosList = await getCollectionData("autos");
+  const itemIndex = autosList.findIndex((aut: any) => aut.id === id);
 
-  if (found) {
+  if (itemIndex !== -1) {
+    const updatedAuto = {
+      ...autosList[itemIndex],
+      driverNameEn: driverNameEn !== undefined ? driverNameEn : autosList[itemIndex].driverNameEn,
+      driverNameMl: driverNameMl !== undefined ? driverNameMl : autosList[itemIndex].driverNameMl,
+      autoNumber: autoNumber !== undefined ? autoNumber : autosList[itemIndex].autoNumber,
+      contact: contact !== undefined ? contact : autosList[itemIndex].contact,
+      locationEn: locationEn !== undefined ? locationEn : autosList[itemIndex].locationEn,
+      locationMl: locationMl !== undefined ? locationMl : autosList[itemIndex].locationMl,
+      isAvailable: isAvailable !== undefined ? Boolean(isAvailable) : autosList[itemIndex].isAvailable
+    };
+
+    database.autos = (database.autos || []).map((aut: any) => aut.id === id ? updatedAuto : aut);
     saveDatabase(database);
+    await writeItemToFirestore("autos", id, updatedAuto);
     res.json({ success: true, id });
   } else {
     res.status(404).json({ error: "Autorikshaw entry not found" });
   }
 });
 
-app.delete("/api/autos/:id", (req, res) => {
+app.delete("/api/autos/:id", async (req, res) => {
   const { id } = req.params;
   database.autos = (database.autos || []).filter((aut: any) => aut.id !== id);
   saveDatabase(database);
+  await deleteItemFromFirestore("autos", id);
   res.json({ success: true, id });
 });
 
 
 // 7. EXPLORE ATTAPPADI SUB-SECTIONS (destinations, cultures, stays, travelogues, photos)
 // DESTINATIONS
-app.get("/api/destinations", (req, res) => res.json(database.destinations || []));
-app.post("/api/destinations", (req, res) => {
+app.get("/api/destinations", async (req, res) => {
+  const data = await getCollectionData("destinations");
+  res.json(data);
+});
+app.post("/api/destinations", async (req, res) => {
   const item = { id: "dest_" + Date.now().toString(), ...req.body };
   database.destinations = [...(database.destinations || []), item];
   saveDatabase(database);
+  await writeItemToFirestore("destinations", item.id, item);
   res.status(201).json(item);
 });
-app.put("/api/destinations/:id", (req, res) => {
+app.put("/api/destinations/:id", async (req, res) => {
   const { id } = req.params;
-  database.destinations = (database.destinations || []).map((x: any) => x.id === id ? { ...x, ...req.body } : x);
+  const list = await getCollectionData("destinations");
+  const current = list.find((x: any) => x.id === id) || {};
+  const updatedItem = { ...current, ...req.body, id };
+  database.destinations = (database.destinations || []).map((x: any) => x.id === id ? updatedItem : x);
   saveDatabase(database);
+  await writeItemToFirestore("destinations", id, updatedItem);
   res.json({ success: true, id });
 });
-app.delete("/api/destinations/:id", (req, res) => {
+app.delete("/api/destinations/:id", async (req, res) => {
   const { id } = req.params;
   database.destinations = (database.destinations || []).filter((x: any) => x.id !== id);
   saveDatabase(database);
+  await deleteItemFromFirestore("destinations", id);
   res.json({ success: true, id });
 });
 
 // CULTURES/FOOD
-app.get("/api/cultures", (req, res) => res.json(database.cultures || []));
-app.post("/api/cultures", (req, res) => {
+app.get("/api/cultures", async (req, res) => {
+  const data = await getCollectionData("cultures");
+  res.json(data);
+});
+app.post("/api/cultures", async (req, res) => {
   const item = { id: "cult_" + Date.now().toString(), ...req.body };
   database.cultures = [...(database.cultures || []), item];
   saveDatabase(database);
+  await writeItemToFirestore("cultures", item.id, item);
   res.status(201).json(item);
 });
-app.put("/api/cultures/:id", (req, res) => {
+app.put("/api/cultures/:id", async (req, res) => {
   const { id } = req.params;
-  database.cultures = (database.cultures || []).map((x: any) => x.id === id ? { ...x, ...req.body } : x);
+  const list = await getCollectionData("cultures");
+  const current = list.find((x: any) => x.id === id) || {};
+  const updatedItem = { ...current, ...req.body, id };
+  database.cultures = (database.cultures || []).map((x: any) => x.id === id ? updatedItem : x);
   saveDatabase(database);
+  await writeItemToFirestore("cultures", id, updatedItem);
   res.json({ success: true, id });
 });
-app.delete("/api/cultures/:id", (req, res) => {
+app.delete("/api/cultures/:id", async (req, res) => {
   const { id } = req.params;
   database.cultures = (database.cultures || []).filter((x: any) => x.id !== id);
   saveDatabase(database);
+  await deleteItemFromFirestore("cultures", id);
   res.json({ success: true, id });
 });
 
 // STAYS
-app.get("/api/stays", (req, res) => res.json(database.stays || []));
-app.post("/api/stays", (req, res) => {
+app.get("/api/stays", async (req, res) => {
+  const data = await getCollectionData("stays");
+  res.json(data);
+});
+app.post("/api/stays", async (req, res) => {
   const item = { id: "stay_" + Date.now().toString(), ...req.body };
   database.stays = [...(database.stays || []), item];
   saveDatabase(database);
+  await writeItemToFirestore("stays", item.id, item);
   res.status(201).json(item);
 });
-app.put("/api/stays/:id", (req, res) => {
+app.put("/api/stays/:id", async (req, res) => {
   const { id } = req.params;
-  database.stays = (database.stays || []).map((x: any) => x.id === id ? { ...x, ...req.body } : x);
+  const list = await getCollectionData("stays");
+  const current = list.find((x: any) => x.id === id) || {};
+  const updatedItem = { ...current, ...req.body, id };
+  database.stays = (database.stays || []).map((x: any) => x.id === id ? updatedItem : x);
   saveDatabase(database);
+  await writeItemToFirestore("stays", id, updatedItem);
   res.json({ success: true, id });
 });
-app.delete("/api/stays/:id", (req, res) => {
+app.delete("/api/stays/:id", async (req, res) => {
   const { id } = req.params;
   database.stays = (database.stays || []).filter((x: any) => x.id !== id);
   saveDatabase(database);
+  await deleteItemFromFirestore("stays", id);
   res.json({ success: true, id });
 });
 
 // TRAVELOGUES
-app.get("/api/travelogues", (req, res) => res.json(database.travelogues || []));
-app.post("/api/travelogues", (req, res) => {
+app.get("/api/travelogues", async (req, res) => {
+  const data = await getCollectionData("travelogues");
+  res.json(data);
+});
+app.post("/api/travelogues", async (req, res) => {
   const item = { id: "trav_" + Date.now().toString(), ...req.body };
   database.travelogues = [...(database.travelogues || []), item];
   saveDatabase(database);
+  await writeItemToFirestore("travelogues", item.id, item);
   res.status(201).json(item);
 });
-app.put("/api/travelogues/:id", (req, res) => {
+app.put("/api/travelogues/:id", async (req, res) => {
   const { id } = req.params;
-  database.travelogues = (database.travelogues || []).map((x: any) => x.id === id ? { ...x, ...req.body } : x);
+  const list = await getCollectionData("travelogues");
+  const current = list.find((x: any) => x.id === id) || {};
+  const updatedItem = { ...current, ...req.body, id };
+  database.travelogues = (database.travelogues || []).map((x: any) => x.id === id ? updatedItem : x);
   saveDatabase(database);
+  await writeItemToFirestore("travelogues", id, updatedItem);
   res.json({ success: true, id });
 });
-app.delete("/api/travelogues/:id", (req, res) => {
+app.delete("/api/travelogues/:id", async (req, res) => {
   const { id } = req.params;
   database.travelogues = (database.travelogues || []).filter((x: any) => x.id !== id);
   saveDatabase(database);
+  await deleteItemFromFirestore("travelogues", id);
   res.json({ success: true, id });
 });
 
 // PHOTO HUB
-app.get("/api/photos", (req, res) => res.json(database.photos || []));
-app.post("/api/photos", (req, res) => {
+app.get("/api/photos", async (req, res) => {
+  const data = await getCollectionData("photos");
+  res.json(data);
+});
+app.post("/api/photos", async (req, res) => {
   const item = { id: "photo_" + Date.now().toString(), ...req.body };
   database.photos = [...(database.photos || []), item];
   saveDatabase(database);
+  await writeItemToFirestore("photos", item.id, item);
   res.status(201).json(item);
 });
-app.put("/api/photos/:id", (req, res) => {
+app.put("/api/photos/:id", async (req, res) => {
   const { id } = req.params;
-  database.photos = (database.photos || []).map((x: any) => x.id === id ? { ...x, ...req.body } : x);
+  const list = await getCollectionData("photos");
+  const current = list.find((x: any) => x.id === id) || {};
+  const updatedItem = { ...current, ...req.body, id };
+  database.photos = (database.photos || []).map((x: any) => x.id === id ? updatedItem : x);
   saveDatabase(database);
+  await writeItemToFirestore("photos", id, updatedItem);
   res.json({ success: true, id });
 });
-app.delete("/api/photos/:id", (req, res) => {
+app.delete("/api/photos/:id", async (req, res) => {
   const { id } = req.params;
   database.photos = (database.photos || []).filter((x: any) => x.id !== id);
   saveDatabase(database);
+  await deleteItemFromFirestore("photos", id);
   res.json({ success: true, id });
 });
 
 // BUS TIMINGS/ROUTES
-app.get("/api/busroutes", (req, res) => res.json(database.busRoutes || []));
-app.post("/api/busroutes", (req, res) => {
+app.get("/api/busroutes", async (req, res) => {
+  const data = await getCollectionData("busRoutes");
+  res.json(data);
+});
+app.post("/api/busroutes", async (req, res) => {
   const item = { id: "bus_" + Date.now().toString(), ...req.body };
   database.busRoutes = [...(database.busRoutes || []), item];
   saveDatabase(database);
+  await writeItemToFirestore("busRoutes", item.id, item);
   res.status(201).json(item);
 });
-app.put("/api/busroutes/:id", (req, res) => {
+app.put("/api/busroutes/:id", async (req, res) => {
   const { id } = req.params;
-  database.busRoutes = (database.busRoutes || []).map((x: any) => x.id === id ? { ...x, ...req.body } : x);
+  const list = await getCollectionData("busRoutes");
+  const current = list.find((x: any) => x.id === id) || {};
+  const updatedItem = { ...current, ...req.body, id };
+  database.busRoutes = (database.busRoutes || []).map((x: any) => x.id === id ? updatedItem : x);
   saveDatabase(database);
+  await writeItemToFirestore("busRoutes", id, updatedItem);
   res.json({ success: true, id });
 });
-app.delete("/api/busroutes/:id", (req, res) => {
+app.delete("/api/busroutes/:id", async (req, res) => {
   const { id } = req.params;
   database.busRoutes = (database.busRoutes || []).filter((x: any) => x.id !== id);
   saveDatabase(database);
+  await deleteItemFromFirestore("busRoutes", id);
   res.json({ success: true, id });
 });
 
 // GENERIC ROUTES ENDPOINTS
-app.get("/api/routes", (req, res) => res.json(database.routes || []));
-app.post("/api/routes", (req, res) => {
+app.get("/api/routes", async (req, res) => {
+  const data = await getCollectionData("routes");
+  res.json(data);
+});
+app.post("/api/routes", async (req, res) => {
   const item = { id: "route_" + Date.now().toString(), ...req.body };
   database.routes = [...(database.routes || []), item];
   saveDatabase(database);
+  await writeItemToFirestore("routes", item.id, item);
   res.status(201).json(item);
 });
-app.delete("/api/routes/:id", (req, res) => {
+app.delete("/api/routes/:id", async (req, res) => {
   const { id } = req.params;
   database.routes = (database.routes || []).filter((x: any) => x.id !== id);
   saveDatabase(database);
+  await deleteItemFromFirestore("routes", id);
   res.json({ success: true, id });
 });
 
