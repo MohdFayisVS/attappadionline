@@ -7,13 +7,15 @@ import {
   X, Smartphone, Monitor, AlertTriangle
 } from "lucide-react";
 import Logo from "./Logo";
-import { NewsPost, OpinionItem, EventItem, PhotoItem } from "../types";
+import { NewsPost, OpinionItem, EventItem, PhotoItem, NoticeItem, LpgDelivery } from "../types";
 
 interface SocialCardGeneratorProps {
   newsList: NewsPost[];
   opinionsList: OpinionItem[];
   eventsList: EventItem[];
   photosList: PhotoItem[];
+  noticesList?: NoticeItem[];
+  lpgList?: LpgDelivery[];
   triggerToast: (msg: string) => void;
 }
 
@@ -86,6 +88,8 @@ export default function SocialCardGenerator({
   opinionsList,
   eventsList,
   photosList,
+  noticesList = [],
+  lpgList = [],
   triggerToast
 }: SocialCardGeneratorProps) {
   // Aggregate all sources for searchable dropdown
@@ -418,8 +422,44 @@ export default function SocialCardGenerator({
       });
     });
 
+    // 5. Notices (Announcements)
+    if (noticesList) {
+      noticesList.forEach((not) => {
+        arr.push({
+          id: `notice-${not.id}`,
+          dbId: not.id,
+          type: "announcement",
+          categoryLabel: `📢 ANNOUNCEMENT: ${not.type.toUpperCase()}`,
+          titleEn: not.titleEn,
+          titleMl: not.titleMl,
+          contentEn: not.contentEn,
+          contentMl: not.contentMl,
+          image: not.image || "",
+          date: not.date
+        });
+      });
+    }
+
+    // 6. LPG Gas Deliveries (Gas Delivery)
+    if (lpgList) {
+      lpgList.forEach((lpg) => {
+        arr.push({
+          id: `lpg-${lpg.id}`,
+          dbId: lpg.id,
+          type: "gas delivery",
+          categoryLabel: "🚚 GAS DELIVERY ROUTE",
+          titleEn: `${lpg.agencyNameEn} Delivery Route`,
+          titleMl: `${lpg.agencyNameMl} ഗ്യാസ് വിതരണം`,
+          contentEn: `Areas: ${lpg.areasEn}\nStatus: ${lpg.statusEn}\nContact: ${lpg.contact}`,
+          contentMl: `സ്ഥലങ്ങൾ: ${lpg.areasMl}\nനിലവാരം: ${lpg.statusMl}\nഫോൺ: ${lpg.contact}`,
+          image: "",
+          date: lpg.date
+        });
+      });
+    }
+
     setSourceItems(arr);
-  }, [newsList, opinionsList, eventsList, photosList]);
+  }, [newsList, opinionsList, eventsList, photosList, noticesList, lpgList]);
 
   // Load selected source values into form
   const handleSelectSource = (item: any) => {
@@ -427,7 +467,23 @@ export default function SocialCardGenerator({
     setDropdownOpen(false);
     
     // Auto populate values
-    setCardType(item.type.toUpperCase() === "NEWS" ? "NEWS BULLETIN" : item.type.toUpperCase() === "OPINION" ? "OPINION COLUMNS" : item.type.toUpperCase() === "EVENT" ? "COMMUNITY EVENT" : "PHOTO STORY");
+    let calculatedCardType = "LATEST UPDATE";
+    const typeUpper = item.type.toUpperCase();
+    if (typeUpper === "NEWS") {
+      calculatedCardType = "NEWS BULLETIN";
+    } else if (typeUpper === "OPINION") {
+      calculatedCardType = "OPINION COLUMNS";
+    } else if (typeUpper === "EVENT") {
+      calculatedCardType = "COMMUNITY EVENT";
+    } else if (typeUpper === "PHOTO") {
+      calculatedCardType = "PHOTO STORY";
+    } else if (typeUpper === "ANNOUNCEMENT") {
+      calculatedCardType = "OFFICIAL NOTICE";
+    } else if (typeUpper === "GAS DELIVERY") {
+      calculatedCardType = "LPG GAS UPDATE";
+    }
+    setCardType(calculatedCardType);
+
     setHeadlineEn(item.titleEn || "");
     setHeadlineMl(item.titleMl || "");
     

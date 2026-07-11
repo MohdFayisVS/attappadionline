@@ -6286,6 +6286,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             opinionsList={opinionsList}
             eventsList={eventsList}
             photosList={photosList}
+            noticesList={noticesList}
+            lpgList={lpgList}
             triggerToast={triggerToast}
           />
         )}
