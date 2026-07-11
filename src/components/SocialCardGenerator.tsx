@@ -816,9 +816,11 @@ export default function SocialCardGenerator({
     // Pre-resolve styles inside the target card
     convertElementTreeStyles(cardElement as HTMLElement);
 
+    const element = cardElement as HTMLElement;
+    const originalTransform = element.style.transform;
+    const originalTransformOrigin = element.style.transformOrigin;
+
     try {
-      const element = cardElement as HTMLElement;
-      
       // Target measurements
       let width = 1080;
       let height = 1080;
@@ -830,10 +832,19 @@ export default function SocialCardGenerator({
         height = 675;
       }
 
+      // Temporarily remove transform on the live element so html2canvas computes the true untransformed dimensions correctly
+      element.style.transform = "none";
+      element.style.transformOrigin = "top left";
+      
+      // Force layout calculation
+      element.offsetHeight;
+
       // High quality export options
       const canvas = await html2canvas(element, {
         width: width,
         height: height,
+        windowWidth: width,
+        windowHeight: height,
         scale: 2, // Retinal high resolution multiplier
         useCORS: true,
         allowTaint: true,
@@ -848,6 +859,10 @@ export default function SocialCardGenerator({
           }
         }
       });
+
+      // Restore live element styles right after generation to minimize layout shifting time
+      element.style.transform = originalTransform;
+      element.style.transformOrigin = originalTransformOrigin;
 
       const dataUrl = canvas.toDataURL("image/png", 1.0);
       const link = document.createElement("a");
@@ -865,6 +880,12 @@ export default function SocialCardGenerator({
       setIsGenerating(false);
       alert("Failed to render high fidelity image. This can sometimes occur due to external visual assets blocking CORS. Please load/paste a client-safe URL or upload standard photos from your local device.");
     } finally {
+      // Restore live element styles if not already done
+      try {
+        element.style.transform = originalTransform;
+        element.style.transformOrigin = originalTransformOrigin;
+      } catch (_) {}
+
       // Restore target element tree modified styles
       savedTreeElementsInlineStyles.forEach(({ element, originalStyleText }) => {
         try {
