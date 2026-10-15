@@ -260,10 +260,3 @@ body {
   .ao-header-wordmark { font-size: clamp(2.4rem, 10vw, 3.7rem); }
 }
 
-/* Browser font fallback for Tamil Unicode ranges inside mixed-language strings. */
-@font-face {
-  font-family: "AO Tamil Fallback";
-  src: local("Anek Tamil");
-  unicode-range: U+0B80-0BFF;
-  font-display: swap;
-}
