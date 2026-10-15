@@ -70,7 +70,7 @@ export default function LatestNews({
         
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           {/* Category Tabs */}
-          <div className="flex bg-slate-50 dark:bg-slate-950 border dark:border-slate-800 rounded-lg p-1 text-xs font-bold uppercase w-full md:w-auto">
+          <div className="ao-news-tabs flex bg-slate-50 dark:bg-slate-950 border dark:border-slate-800 rounded-lg p-1 text-xs font-bold uppercase w-full md:w-auto overflow-x-auto">
             <button
               onClick={() => setActiveCategoryTab("all")}
               className={`flex-1 md:flex-none px-4 py-1.5 rounded-md transition cursor-pointer ${activeCategoryTab === "all" ? "bg-[#052962] dark:bg-blue-600 text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
@@ -113,10 +113,11 @@ export default function LatestNews({
         </div>
 
         {/* Region selector pills inside filtering header */}
-        <div className="border-t border-gray-100 dark:border-slate-800 pt-3 flex flex-wrap items-center gap-1.5">
+        <div className="border-t border-gray-100 dark:border-slate-800 pt-3 flex flex-col sm:flex-row items-start sm:items-center gap-2">
           <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mr-2 block">
             {lang === "en" ? "Region Filter:" : "മേഖല തിരഞ്ഞെടുക്കുക:"}
           </span>
+          <div className="ao-region-nav flex w-full min-w-0 gap-2 overflow-x-auto whitespace-nowrap pb-2 sm:pb-1">
           {Object.keys(regionNames).map((key) => (
             <button
               key={key}
@@ -126,12 +127,13 @@ export default function LatestNews({
               {lang === "en" ? regionNames[key].en : regionNames[key].ml}
             </button>
           ))}
+          </div>
         </div>
 
       </div>
 
       {/* Main Grid display feed */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
         {filteredPosts.length === 0 ? (
           <div className="col-span-full text-center bg-white dark:bg-slate-900 border dark:border-slate-800 rounded-lg py-12 px-4 shadow-sm text-gray-400">
             <Globe className="w-12 h-12 mx-auto text-gray-300 mb-3 animate-spin duration-3000" />
@@ -146,7 +148,10 @@ export default function LatestNews({
             <article 
               key={post.id}
               onClick={() => onPostSelect(post)}
-              className="bg-white dark:bg-slate-900 border dark:border-slate-800 rounded-lg shadow-sm hover:shadow-lg hover:border-gray-300 dark:hover:border-slate-700 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col justify-between group"
+              onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); onPostSelect(post); } }}
+              tabIndex={0}
+              aria-label={`${lang === "en" ? "Read article" : "വാർത്ത വായിക്കുക"}: ${lang === "en" ? post.titleEn : post.titleMl}`}
+              className="ao-news-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col justify-between group focus-visible:outline-2 focus-visible:outline-offset-2"
             >
               <div>
                 
@@ -155,7 +160,7 @@ export default function LatestNews({
                   <img 
                     src={post.image} 
                     alt={post.titleEn} 
-                    className="object-cover w-full h-full group-hover:scale-106 transition duration-700"
+                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async"
                     referrerPolicy="no-referrer"
                   />
                   
@@ -181,7 +186,7 @@ export default function LatestNews({
                 </div>
 
                 {/* Body Content */}
-                <div className="p-4 space-y-3">
+                <div className="p-4 sm:p-5 space-y-3">
                   
                   {/* Meta taggers */}
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-gray-400">
@@ -196,12 +201,12 @@ export default function LatestNews({
                   </div>
 
                   {/* Headline */}
-                  <h4 className="font-serif-guardian font-extrabold text-[#052962] dark:text-slate-150 leading-snug group-hover:text-[#005689] dark:group-hover:text-blue-400 transition-colors text-base line-clamp-2 md:line-clamp-3">
+                  <h4 className="font-serif-guardian font-extrabold text-[#052962] dark:text-slate-100 leading-snug group-hover:text-[#005689] dark:group-hover:text-blue-400 transition-colors text-lg sm:text-xl line-clamp-3">
                     {lang === "en" ? post.titleEn : post.titleMl}
                   </h4>
 
                   {/* Description snippet */}
-                  <p className="text-xs text-gray-600 dark:text-slate-400 leading-relaxed line-clamp-3">
+                  <p className="text-sm text-gray-600 dark:text-slate-400 leading-relaxed line-clamp-3">
                     {lang === "en" ? post.contentEn : post.contentMl}
                   </p>
 
@@ -210,7 +215,7 @@ export default function LatestNews({
               </div>
 
               {/* Card Footer tags */}
-              <div className="p-4 pt-0 border-t border-gray-50 dark:border-slate-800 flex justify-between items-center bg-gray-50/50 dark:bg-slate-900/50">
+              <div className="p-4 sm:px-5 border-t border-gray-100 dark:border-slate-800 flex flex-wrap justify-between items-center gap-3 bg-gray-50/50 dark:bg-slate-900/50">
                 <div className="flex flex-wrap gap-1">
                   {(post.regions || []).map(r => (
                     <span key={r} className="flex items-center gap-0.5 text-[10px] text-[#005689] dark:text-sky-300 font-bold bg-sky-50 dark:bg-sky-950/40 px-1.5 py-0.5 rounded border border-sky-100 dark:border-sky-900/30 capitalize">
@@ -234,7 +239,7 @@ export default function LatestNews({
                     </button>
                   )}
                   <span className="text-xs font-bold text-[#052962] group-hover:translate-x-1.5 transition duration-300 flex items-center gap-0.5">
-                    Read article <ChevronRight className="w-3.5 h-3.5" />
+                    {lang === "en" ? "Read article" : "വാർത്ത വായിക്കുക"} <ChevronRight className="w-3.5 h-3.5" />
                   </span>
                 </div>
               </div>
