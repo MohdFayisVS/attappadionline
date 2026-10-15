@@ -504,7 +504,7 @@ export default function App() {
             <div className="min-w-0 flex flex-col">
               <div className="flex items-center gap-1.5 mb-1">
                 <span className="text-[9px] text-[#ffe500] font-mono tracking-wider uppercase font-bold px-1.5 py-0.5 bg-black/50 rounded shadow whitespace-nowrap">
-                  Ad / പരസ്യം
+                  Advertisement
                 </span>
                 {ad.contact && (
                   <span className="text-[9px] text-slate-300 font-mono tracking-wider uppercase font-semibold px-1.5 py-0.5 bg-white/10 rounded truncate max-w-[120px]">
@@ -1993,7 +1993,7 @@ export default function App() {
                       onClick={() => setSelectedArticle(null)}
                       className="px-6 py-2 bg-[#052962] hover:bg-slate-900 text-white font-bold text-xs rounded transition uppercase tracking-wide cursor-pointer"
                     >
-                      Close article (വായിച്ചു കഴിഞ്ഞു)
+                      Close article
                     </button>
                   </div>
 
