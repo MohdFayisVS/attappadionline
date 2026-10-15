@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Anek+Malayalam:wght@300;400;500;600;700;800&family=Anek+Tamil:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anek+Latin:wght@300;400;500;600;700;800&family=Anek+Malayalam:wght@300;400;500;600;700;800&family=Anek+Tamil:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
 
 @variant dark (&:where(.dark, .dark *));
@@ -7,7 +7,7 @@
   --font-sans: "Inter", "Anek Malayalam", sans-serif;
   --font-anek-malayalam: "Anek Malayalam", sans-serif;
   --font-anek-tamil: "Anek Tamil", sans-serif;
-  --font-anek-english: "Inter", "Anek Malayalam", sans-serif;
+  --font-anek-english: "Anek Latin", "Anek Malayalam", sans-serif;
   --font-serif-guardian: "Playfair Display", "Anek Malayalam", Georgia, serif;
   
   /* Sleek Interface Theme Color Palette */
@@ -260,3 +260,10 @@ body {
   .ao-header-wordmark { font-size: clamp(2.4rem, 10vw, 3.7rem); }
 }
 
+
+/* The language selector affects editorial content, never site chrome. */
+#main-content[lang="ml"], #news-read-modal[lang="ml"] { font-family: "Anek Malayalam", sans-serif; }
+#main-content[lang="ta"], #news-read-modal[lang="ta"] { font-family: "Anek Tamil", sans-serif; }
+#main-content[lang="en"], #news-read-modal[lang="en"] { font-family: "Anek Latin", sans-serif; }
+header, footer { font-family: "Anek Latin", sans-serif; }
+header [lang="ta"] { font-family: "Anek Tamil", sans-serif; }
