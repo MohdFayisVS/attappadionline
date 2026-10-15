@@ -4,10 +4,7 @@ import fs from "fs";
 import dotenv from "dotenv";
 import { requireAdmin } from "./middleware/requireAdmin";
 import { requiresAdmin } from "./middleware/routePolicy";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = process.cwd();
 
 // Firebase is imported dynamically inside database operations to optimize serverless cold starts
 
@@ -229,45 +226,12 @@ async function initFirestoreDatabase() {
   const fallbackLocalDb = loadDatabase();
 
   if (!firestoreDb) {
-    let config: any = null;
-
-    if (process.env.FIREBASE_CONFIG_JSON) {
-      try {
-        config = JSON.parse(process.env.FIREBASE_CONFIG_JSON);
-        console.log("🔥 Loaded Firebase configuration from FIREBASE_CONFIG_JSON env variable.");
-      } catch (err) {
-        console.error("❌ Failed to parse FIREBASE_CONFIG_JSON env variable:", err);
-      }
-    } else if (process.env.FIREBASE_PROJECT_ID) {
-      config = {
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        appId: process.env.FIREBASE_APP_ID,
-        apiKey: process.env.FIREBASE_API_KEY,
-        authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-        storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-        messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-        firestoreDatabaseId: process.env.FIREBASE_DATABASE_ID || "(default)"
-      };
-      console.log("🔥 Loaded Firebase configuration from individual env variables.");
-    } else if (fs.existsSync(CONFIG_PATH)) {
-      try {
-        config = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf-8"));
-        console.log("🔥 Loaded Firebase configuration from firebase-applet-config.json file.");
-      } catch (err) {
-        console.error("❌ Failed to parse config file:", err);
-      }
-    }
-
-    if (config) {
-      try {
-        const { initializeApp, getApps } = await import("firebase/app");
-        const { getFirestore } = await import("firebase/firestore/lite");
-        const firebaseApp = getApps().length === 0 ? initializeApp(config) : getApps()[0];
-        firestoreDb = getFirestore(firebaseApp, config.firestoreDatabaseId || "(default)");
-        console.log("🔥 Firebase App & Firestore Client initialized successfully. Database ID:", config.firestoreDatabaseId || "(default)");
-      } catch (error) {
-        console.error("❌ Failed to initialize Firebase from config:", error);
-      }
+    try {
+      const { getServerFirestore } = await import("./serverFirestore");
+      firestoreDb = getServerFirestore();
+      console.log("Firebase Admin Firestore initialized");
+    } catch (error) {
+      console.error("Firebase Admin Firestore initialization failed:", error);
     }
   }
 
@@ -277,7 +241,7 @@ async function initFirestoreDatabase() {
     return;
   }
 
-  const { collection, getDocs, doc, setDoc, getDoc } = await import("firebase/firestore/lite");
+  const { collection, getDocs, doc, setDoc, getDoc } = await import("./serverFirestore");
 
   console.log("⚡ Fetching and synchronizing Firestore data...");
   const collections = [
@@ -335,7 +299,7 @@ async function initFirestoreDatabase() {
   // Load adConfig from metadata collection
   try {
     const configSnap = await getDoc(doc(firestoreDb, "metadata", "adConfig"));
-    if (configSnap.exists()) {
+    if (configSnap.exists) {
       database.adConfig = configSnap.data();
       console.log("✅ Loaded adConfig from metadata/adConfig");
     } else {
@@ -375,7 +339,7 @@ async function getCollectionData(colName: string): Promise<any[]> {
   if (!firestoreDb) {
     return database[colName] || [];
   }
-  const { collection, getDocs } = await import("firebase/firestore/lite");
+  const { collection, getDocs } = await import("./serverFirestore");
   try {
     const qSnap = await getDocs(collection(firestoreDb, colName));
     const items: any[] = [];
@@ -394,7 +358,7 @@ async function getCollectionData(colName: string): Promise<any[]> {
 // Real-time Firestore helper: Save or update a single document directly in firestore
 async function writeItemToFirestore(colName: string, id: string, item: any): Promise<void> {
   if (!firestoreDb) throw new Error("Firestore unavailable: refusing to acknowledge an unpersisted mutation.");
-  const { doc, setDoc } = await import("firebase/firestore/lite");
+  const { doc, setDoc } = await import("./serverFirestore");
   try {
     const cleanItem = { ...item };
     delete cleanItem.id;
@@ -410,7 +374,7 @@ async function writeItemToFirestore(colName: string, id: string, item: any): Pro
 // Real-time Firestore helper: Delete a single document directly in firestore
 async function deleteItemFromFirestore(colName: string, id: string): Promise<void> {
   if (!firestoreDb) throw new Error("Firestore unavailable: refusing to acknowledge an unpersisted mutation.");
-  const { doc, deleteDoc } = await import("firebase/firestore/lite");
+  const { doc, deleteDoc } = await import("./serverFirestore");
   try {
     const deletePromise = deleteDoc(doc(firestoreDb, colName, id));
     await deletePromise;
@@ -439,7 +403,7 @@ app.post("/api/admin/login", (_req, res) => {
 
 // 1b. Database Diagnostic Endpoint
 app.get("/api/admin/db-diagnostic", async (req, res) => {
-  const { collection, getDocs } = await import("firebase/firestore/lite");
+  const { collection, getDocs } = await import("./serverFirestore");
   let isUsingFirestore = !!firestoreDb;
   let status = "disconnected";
   let errorMessage = null;
@@ -587,10 +551,10 @@ app.get("/api/adconfig", async (req, res) => {
   if (!firestoreDb) {
     return res.json(database.adConfig || defaultAdConfig);
   }
-  const { doc, getDoc } = await import("firebase/firestore/lite");
+  const { doc, getDoc } = await import("./serverFirestore");
   try {
     const configSnap = await getDoc(doc(firestoreDb, "metadata", "adConfig"));
-    if (configSnap.exists()) {
+    if (configSnap.exists) {
       database.adConfig = configSnap.data();
       return res.json(database.adConfig);
     }
@@ -631,7 +595,7 @@ app.put("/api/adconfig", async (req, res) => {
   };
 
   if (firestoreDb) {
-    const { doc, setDoc } = await import("firebase/firestore/lite");
+    const { doc, setDoc } = await import("./serverFirestore");
     try {
       const writePromise = setDoc(doc(firestoreDb, "metadata", "adConfig"), updatedConfig);
         await writePromise;
