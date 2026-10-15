@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Anek+Malayalam:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anek+Malayalam:wght@300;400;500;600;700;800&family=Anek+Tamil:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
 
 @variant dark (&:where(.dark, .dark *));
@@ -6,6 +6,7 @@
 @theme {
   --font-sans: "Inter", "Anek Malayalam", sans-serif;
   --font-anek-malayalam: "Anek Malayalam", sans-serif;
+  --font-anek-tamil: "Anek Tamil", sans-serif;
   --font-anek-english: "Inter", "Anek Malayalam", sans-serif;
   --font-serif-guardian: "Playfair Display", "Anek Malayalam", Georgia, serif;
   
@@ -121,6 +122,12 @@ body {
 [lang="en"] {
   font-family: var(--font-anek-english);
 }
+
+/* Anek Tamil for Tamil language and all Tamil-script text, including mixed-language UI. */
+[lang="ta"], [lang="ta"] *, .ao-tamil-text {
+  font-family: var(--font-anek-tamil);
+}
+
 
 /* Custom scrollbar to keep layout highly polished and clean */
 ::-webkit-scrollbar {
@@ -251,4 +258,12 @@ body {
 }
 @media (max-width: 639px) {
   .ao-header-wordmark { font-size: clamp(2.4rem, 10vw, 3.7rem); }
+}
+
+/* Browser font fallback for Tamil Unicode ranges inside mixed-language strings. */
+@font-face {
+  font-family: "AO Tamil Fallback";
+  src: local("Anek Tamil");
+  unicode-range: U+0B80-0BFF;
+  font-display: swap;
 }
