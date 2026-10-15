@@ -348,7 +348,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
                     {/* Content Section */}
                     <div className="flex-1 min-w-0 space-y-1.5">
                       <h4 className="text-xs font-black text-slate-900 leading-snug line-clamp-2 uppercase">
-                        {lang !== "ml" ? ev.titleEn : ev.titleMl}
+                        {lang === "ml" ? ev.titleMl : lang === "ta" ? (ev.titleTa || ev.titleEn) : ev.titleEn}
                       </h4>
                       
                       {/* Secondary parameters */}
@@ -359,13 +359,13 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
                         </span>
                         <span className="flex items-center gap-0.5 max-w-[145px] truncate text-slate-700">
                           <MapPin className="w-3.5 h-3.5 text-[#052962] shrink-0" />
-                          <span>{lang !== "ml" ? ev.locationEn : ev.locationMl}</span>
+                          <span>{lang === "ml" ? ev.locationMl : lang === "ta" ? (ev.locationTa || ev.locationEn) : ev.locationEn}</span>
                         </span>
                       </div>
 
                       {/* Snippet expand block */}
                       <p className="text-[10.5px] text-slate-500 leading-normal line-clamp-2 italic font-medium pt-1 border-t border-slate-100">
-                        {lang !== "ml" ? ev.descriptionEn : ev.descriptionMl}
+                        {lang === "ml" ? ev.descriptionMl : lang === "ta" ? (ev.descriptionTa || ev.descriptionEn) : ev.descriptionEn}
                       </p>
 
                       {/* Sharing triggers */}
@@ -380,7 +380,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
                           </button>
                         )}
                         <ShareButtons 
-                          title={lang !== "ml" ? ev.titleEn : ev.titleMl}
+                          title={lang === "ml" ? ev.titleMl : lang === "ta" ? (ev.titleTa || ev.titleEn) : ev.titleEn}
                           summary={lang !== "ml" ? `${ev.locationEn} at ${ev.time}` : `${ev.locationMl}, ${ev.time}`}
                           url={`${window.location.origin}/#event-${ev.id}`}
                           layout="bubble"
