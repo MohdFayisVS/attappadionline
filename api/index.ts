@@ -538,9 +538,13 @@ app.put("/api/news/:id", async (req, res) => {
       isCard: isCard !== undefined ? !!isCard : newsList[itemIndex].isCard
     };
 
+    try {
+      await writeItemToFirestore("news", id, updatedPost);
+    } catch {
+      return res.status(503).json({ error: "Unable to persist news update" });
+    }
     database.news = (database.news || []).map((item: any) => item.id === id ? updatedPost : item);
     saveDatabase(database);
-    await writeItemToFirestore("news", id, updatedPost);
     res.json({ success: true, id });
   } else {
     res.status(404).json({ error: "News item not found" });
@@ -549,9 +553,13 @@ app.put("/api/news/:id", async (req, res) => {
 
 app.delete("/api/news/:id", async (req, res) => {
   const { id } = req.params;
+  try {
+    await deleteItemFromFirestore("news", id);
+  } catch {
+    return res.status(503).json({ error: "Unable to delete news item" });
+  }
   database.news = (database.news || []).filter((item: any) => item.id !== id);
   saveDatabase(database);
-  await deleteItemFromFirestore("news", id);
   res.json({ success: true, id });
 });
 
