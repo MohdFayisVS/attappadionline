@@ -16,9 +16,8 @@ const credential = process.env.FIREBASE_SERVICE_ACCOUNT_JSON
   ? cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON))
   : applicationDefault();
 initializeApp({ projectId, credential });
-const db = getFirestore();
 const databaseId = process.env.FIREBASE_DATABASE_ID || "(default)";
-if (databaseId !== "(default)") throw new Error("Non-default database backup requires explicit implementation; refusing partial export");
+const db = getFirestore(databaseId);
 const dir = resolve(process.env.BACKUP_DIR || "./private-backups");
 await mkdir(dir, { recursive: true, mode: 0o700 });
 const stamp = new Date().toISOString().replace(/[:.]/g, "-");
