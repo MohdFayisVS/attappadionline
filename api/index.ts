@@ -439,6 +439,7 @@ app.post("/api/admin/login", (_req, res) => {
 
 // 1b. Database Diagnostic Endpoint
 app.get("/api/admin/db-diagnostic", async (req, res) => {
+  const { collection, getDocs } = await import("firebase/firestore/lite");
   let isUsingFirestore = !!firestoreDb;
   let status = "disconnected";
   let errorMessage = null;
