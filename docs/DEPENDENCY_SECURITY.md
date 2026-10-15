@@ -24,3 +24,9 @@ Important affected packages include:
 5. Keep the production audit gate blocking merges until high and critical production findings are resolved or a documented, time-bounded risk exception is approved.
 
 **Do not deploy or merge this draft until remediation and staging validation are complete.**
+
+## Verified lockfile versions
+
+The current `package-lock.json` contains `proxy-addr@2.0.7`, `@grpc/grpc-js@1.9.16` and `1.14.4` (nested under `google-gax`), `@fastify/busboy@3.2.0`, `fast-xml-parser@5.9.3`, and `qs@6.15.2`. Direct SDK versions are `firebase@12.15.0` and `firebase-admin@14.1.0`.
+
+These are the installed versions, not verified patched target versions. Update only after checking compatible published releases and regenerating the lockfile with npm.
