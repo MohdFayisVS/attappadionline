@@ -4,7 +4,7 @@
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: "Inter", "Anek Malayalam", sans-serif;
+  --font-sans: "Anek Latin", sans-serif;
   --font-anek-malayalam: "Anek Malayalam", sans-serif;
   --font-anek-tamil: "Anek Tamil", sans-serif;
   --font-anek-english: "Anek Latin", "Anek Malayalam", sans-serif;
@@ -267,3 +267,27 @@ body {
 #main-content[lang="en"], #news-read-modal[lang="en"] { font-family: "Anek Latin", sans-serif; }
 header, footer { font-family: "Anek Latin", sans-serif; }
 header [lang="ta"] { font-family: "Anek Tamil", sans-serif; }
+
+/* Consistent Anek typography for English UI across the entire page.
+   Newspaper display serif is reserved for the publication masthead and article headlines. */
+#latest-news-section h3,
+#latest-news-section span,
+#main-content aside,
+#main-content aside *,
+#main-content button,
+#main-content input,
+#main-content textarea,
+#main-content select,
+.ao-news-tabs,
+.ao-region-nav,
+.ao-region-nav *,
+.ao-news-card > div:last-child,
+.ao-news-card > div:last-child * {
+  font-family: "Anek Latin", sans-serif;
+}
+#main-content[lang="ml"] .ao-news-card h4,
+#main-content[lang="ml"] .ao-news-card p { font-family: "Anek Malayalam", sans-serif; }
+#main-content[lang="ta"] .ao-news-card h4,
+#main-content[lang="ta"] .ao-news-card p { font-family: "Anek Tamil", sans-serif; }
+#main-content[lang="en"] .ao-news-card h4,
+#main-content[lang="en"] .ao-news-card p { font-family: "Anek Latin", sans-serif; }
