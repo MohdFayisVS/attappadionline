@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { MessageSquare, Send, CheckCircle2, User, Sparkles, BookOpen } from "lucide-react";
 import { OpinionItem } from "../types";
 
-export default function OpinionsWidget({ lang }: { lang: "en" | "ml" }) {
+export default function OpinionsWidget({ lang }: { lang: "en" | "ml" | "ta" }) {
   const [opinions, setOpinions] = useState<OpinionItem[]>([]);
   const [loading, setLoading] = useState(true);
 
