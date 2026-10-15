@@ -233,3 +233,22 @@ body {
 @media (max-width: 639px) {
   .ao-newspaper-date { font-size: 1.125rem; text-align: center; }
 }
+
+/* Newspaper-inspired masthead: edition strip, calendar and strong brand hierarchy */
+.ao-edition-strip { color-scheme: light; }
+.ao-edition-calendar { align-self: stretch; }
+.ao-edition-promos > * { min-width: 0; }
+.ao-masthead-brand { flex: 0 1 auto; }
+.ao-masthead-row { min-width: 0; }
+.ao-header-wordmark { line-height: .96; letter-spacing: -.065em; }
+@media (min-width: 1024px) {
+  .ao-masthead-brand { max-width: 58%; }
+  .ao-header-shortcuts { max-width: 43%; }
+}
+@media (max-width: 767px) {
+  .ao-edition-calendar time { min-height: 72px; }
+  .ao-edition-promos { display: none; }
+}
+@media (max-width: 639px) {
+  .ao-header-wordmark { font-size: clamp(2.4rem, 10vw, 3.7rem); }
+}
