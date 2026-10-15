@@ -373,56 +373,7 @@ async function initFirestoreDatabase() {
     console.error("Backup writing failed:", err);
   }
 
-  try {
-    await purgeLegacySampleData();
-  } catch (e) {
-    console.error("❌ Failed to purge legacy sample data:", e);
-  }
-}
-
-async function purgeLegacySampleData() {
-  if (!firestoreDb) return;
-  const { doc, deleteDoc } = await import("firebase/firestore/lite");
-  
-  console.log("🧹 Running legacy sample data purge in Firestore (parallel)...");
-  
-  const LEGACY_SAMPLE_IDS: { [col: string]: string[] } = {
-    news: ["news_test_1782150571028", "1", "2", "3", "4", "5", "6", "7"],
-    opinions: ["o1", "o2"],
-    events: ["e1", "e2", "e3"],
-    directory: ["d1", "d2", "d3", "d4", "d5", "d6"],
-    emergency: ["em1", "em2", "em3", "em4"],
-    destinations: ["dest_1", "dest_2", "dest_3", "dest_4"],
-    cultures: ["cult_1", "cult_2"],
-    stays: ["stay_1", "stay_2", "stay_3"],
-    travelogues: ["trav_1", "trav_2"],
-    photos: ["photo_1", "photo_2", "photo_3", "photo_4", "photo_5", "photo_6"],
-    busRoutes: ["bus_1", "bus_2", "bus_3", "bus_4", "bus_5"],
-    routes: ["route_1", "route_2", "route_3", "route_4", "route_5"],
-    notices: ["not_test_1782150571028", "not_1", "not_2", "not_3"],
-    lpgDeliveries: ["lpg_1"],
-    autos: ["auto_1", "auto_2", "auto_3", "auto_4", "auto_5"]
-  };
-
-  const deletePromises: Promise<void>[] = [];
-  for (const colName of Object.keys(LEGACY_SAMPLE_IDS)) {
-    const ids = LEGACY_SAMPLE_IDS[colName];
-    for (const docId of ids) {
-      const docRef = doc(firestoreDb, colName, docId);
-      const promise = deleteDoc(docRef).then(() => {
-        // Remove from memory immediately if loaded
-        if (Array.isArray(database[colName])) {
-          database[colName] = database[colName].filter((item: any) => item.id !== docId);
-        }
-      }).catch((err) => {
-        console.error(`[Firestore Purge] Failed to delete [${colName}] / [${docId}]:`, err);
-      });
-      deletePromises.push(promise);
-    }
-  }
-
-  await Promise.all(deletePromises);
-  console.log("🧹 Parallel purge of legacy sample documents complete.");
+  // No destructive data cleanup is permitted during API initialization.
 }
 
 // Helper to save database safely
