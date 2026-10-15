@@ -627,9 +627,9 @@ export default function App() {
         <a href="#main-content" className="ao-skip-link">Skip to main content</a>
         
         {/* Top bar with real-time stats & language switchers */}
-        <div className="ao-header-utility flex flex-col sm:flex-row justify-between items-center px-4 sm:px-6 py-2 border-b border-blue-900/50 gap-2">
+        <div className="ao-header-utility flex flex-col sm:flex-row justify-between items-center px-4 sm:px-6 py-3 border-b border-blue-900/50 gap-2">
           <div className="flex flex-wrap justify-center sm:justify-start items-center gap-4 text-xs font-semibold uppercase tracking-wider text-slate-200">
-            <span>{new Date().toLocaleDateString(lang === "ml" ? "ml-IN" : "en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</span>
+            <time dateTime={currentTime.toISOString().slice(0, 10)} className="ao-newspaper-date font-serif-guardian text-base sm:text-lg md:text-xl font-bold normal-case tracking-normal text-white leading-tight">{currentTime.toLocaleDateString(lang === "ml" ? "ml-IN" : "en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</time>
             <span className="text-[#ffe500] font-bold inline-flex items-center gap-1"><MapPin className="w-3 h-3" /> Agali, Attappadi</span>
             <span className="flex items-center gap-1.5 bg-black/25 px-2.5 py-0.5 rounded text-[11px] font-mono font-bold tracking-tight text-white border border-white/5 shadow-inner">
               <Clock className="w-3.5 h-3.5 text-[#ffe500] animate-pulse" />
