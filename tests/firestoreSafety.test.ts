@@ -20,3 +20,8 @@ test("Firestore helper errors are propagated", () => {
 test("content mutation paths return service unavailable on failed persistence", () => {
   assert.match(source, /Database operation failed; no changes were saved/);
 });
+
+test("writes and deletes reject unavailable Firestore", () => {
+  const matches = source.match(/if \(!firestoreDb\) throw new Error\("Firestore unavailable:/g) || [];
+  assert.equal(matches.length, 2);
+});
