@@ -120,7 +120,7 @@ export default function DirectoryWidget({
   initialTab,
   hideHeaderTabs = false
 }: { 
-  lang: "en" | "ml"; 
+  lang: "en" | "ml" | "ta"; 
   onDownloadCard?: (item: LpgDelivery) => void;
   initialTab?: "emergency" | "lpg" | "commercial" | "autorikshaw" | "shopping";
   hideHeaderTabs?: boolean;
@@ -247,7 +247,7 @@ export default function DirectoryWidget({
         throw new Error(errData.error || "Failed to publish report");
       }
 
-      setRegSuccess(lang === "en" ? "Report published successfully!" : "വിവരം വിജയകരമായി പ്രസിദ്ധീകരിച്ചു!");
+      setRegSuccess(lang !== "ml" ? "Report published successfully!" : "വിവരം വിജയകരമായി പ്രസിദ്ധീകരിച്ചു!");
       
       // Reset form
       setLfTitleEn("");
@@ -289,7 +289,7 @@ export default function DirectoryWidget({
         throw new Error(errData.error || "Verification failed");
       }
 
-      setResolveSuccess(lang === "en" ? "Report resolved successfully!" : "വിവരം വിജയകരമായി ഒഴിവാക്കി!");
+      setResolveSuccess(lang !== "ml" ? "Report resolved successfully!" : "വിവരം വിജയകരമായി ഒഴിവാക്കി!");
       
       fetchLostFound();
 
@@ -363,7 +363,7 @@ export default function DirectoryWidget({
     setRegSuccess("");
 
     if (!regNameEn.trim() || !regNameMl.trim() || !regNumber.trim() || !regContact.trim()) {
-      setRegError(lang === "en" ? "Please fill all fields" : "ദയവായി എല്ലാ വിവരങ്ങളും നൽകുക");
+      setRegError(lang !== "ml" ? "Please fill all fields" : "ദയവായി എല്ലാ വിവരങ്ങളും നൽകുക");
       return;
     }
 
@@ -387,7 +387,7 @@ export default function DirectoryWidget({
 
       if (res.ok) {
         const data = await res.json();
-        setRegSuccess(lang === "en" ? "Service registered successfully!" : "ഓട്ടോ സർവീസ് വിജയകരമായി രജിസ്റ്റർ ചെയ്തു!");
+        setRegSuccess(lang !== "ml" ? "Service registered successfully!" : "ഓട്ടോ സർവീസ് വിജയകരമായി രജിസ്റ്റർ ചെയ്തു!");
         localStorage.setItem("my_registered_auto_id", data.id);
         setMyAutoId(data.id);
 
@@ -502,42 +502,42 @@ export default function DirectoryWidget({
             className={`flex-1 min-w-[90px] py-3 text-center transition flex justify-center items-center gap-1 border-r cursor-pointer ${currTab === "lpg" ? "bg-amber-50 text-amber-800 border-b-2 border-amber-500 font-extrabold" : "text-gray-500 hover:bg-gray-100"}`}
           >
             <Flame className="w-3.5 h-3.5 text-amber-600 animate-pulse shrink-0" />
-            <span className="truncate">{lang === "en" ? "LPG TODAY" : "ഇന്നത്തെ ഗ്യാസ്"}</span>
+            <span className="truncate">{lang !== "ml" ? "LPG TODAY" : "ഇന്നത്തെ ഗ്യാസ്"}</span>
           </button>
           <button
             onClick={() => setCurrTab("emergency")}
             className={`flex-1 min-w-[90px] py-3 text-center transition flex justify-center items-center gap-1 border-r cursor-pointer ${currTab === "emergency" ? "bg-red-50 text-red-700 border-b-2 border-red-600 font-extrabold" : "text-gray-500 hover:bg-gray-100"}`}
           >
             <AlertOctagon className="w-3.5 h-3.5 text-red-600 shrink-0" />
-            <span className="truncate">{lang === "en" ? "EMERGENCY" : "ഹെൽപ്‌ലൈനുകൾ"}</span>
+            <span className="truncate">{lang !== "ml" ? "EMERGENCY" : "ഹെൽപ്‌ലൈനുകൾ"}</span>
           </button>
           <button
             onClick={() => setCurrTab("commercial")}
             className={`flex-1 min-w-[90px] py-3 text-center transition flex justify-center items-center gap-1 border-r cursor-pointer ${currTab === "commercial" ? "bg-sky-50 text-sky-800 border-b-2 border-sky-600 font-extrabold" : "text-gray-500 hover:bg-gray-100"}`}
           >
             <Phone className="w-3.5 h-3.5 text-sky-700 shrink-0" />
-            <span className="truncate">{lang === "en" ? "DIRECTORY" : "ഡയറക്ടറി"}</span>
+            <span className="truncate">{lang !== "ml" ? "DIRECTORY" : "ഡയറക്ടറി"}</span>
           </button>
           <button
             onClick={() => setCurrTab("autorikshaw")}
             className={`flex-1 min-w-[90px] py-3 text-center transition flex justify-center items-center gap-1 border-r cursor-pointer ${currTab === "autorikshaw" ? "bg-emerald-50 text-emerald-800 border-b-2 border-emerald-600 font-extrabold" : "text-gray-500 hover:bg-gray-100"}`}
           >
             <Radio className="w-3.5 h-3.5 text-emerald-600 shrink-0 animate-pulse" />
-            <span className="truncate">{lang === "en" ? "AUTO TAXI" : "ഓട്ടോ റിക്ഷ"}</span>
+            <span className="truncate">{lang !== "ml" ? "AUTO TAXI" : "ഓട്ടോ റിക്ഷ"}</span>
           </button>
           <button
             onClick={() => setCurrTab("shopping")}
             className={`flex-1 min-w-[90px] py-3 text-center transition flex justify-center items-center gap-1 border-r cursor-pointer ${currTab === "shopping" ? "bg-fuchsia-50 text-fuchsia-800 border-b-2 border-fuchsia-600 font-extrabold" : "text-gray-500 hover:bg-gray-100"}`}
           >
             <ShoppingBag className="w-3.5 h-3.5 text-fuchsia-600 shrink-0" />
-            <span className="truncate">{lang === "en" ? "LOCAL SHOPPING" : "വ്യാപാരശാലകൾ"}</span>
+            <span className="truncate">{lang !== "ml" ? "LOCAL SHOPPING" : "വ്യാപാരശാലകൾ"}</span>
           </button>
           <button
             onClick={() => setCurrTab("lostfound")}
             className={`flex-1 min-w-[90px] py-3 text-center transition flex justify-center items-center gap-1 cursor-pointer ${currTab === "lostfound" ? "bg-rose-50 text-rose-800 border-b-2 border-rose-600 font-extrabold" : "text-gray-500 hover:bg-gray-100"}`}
           >
             <HelpCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
-            <span className="truncate">{lang === "en" ? "LOST & FOUND" : "നഷ്ടപ്പെട്ടവ/ലഭിച്ചവ"}</span>
+            <span className="truncate">{lang !== "ml" ? "LOST & FOUND" : "നഷ്ടപ്പെട്ടവ/ലഭിച്ചവ"}</span>
           </button>
         </div>
       )}
@@ -555,7 +555,7 @@ export default function DirectoryWidget({
             <div className="space-y-2 max-h-[340px] overflow-y-auto pr-0.5">
               {lpgList.length === 0 ? (
                 <div className="p-8 text-center text-xs text-gray-400">
-                  {lang === "en" ? "No LPG deliveries scheduled today." : "ഇന്ന് ഗ്യാസ് ഡെലിവറി വിവരങ്ങൾ ലഭ്യമല്ല."}
+                  {lang !== "ml" ? "No LPG deliveries scheduled today." : "ഇന്ന് ഗ്യാസ് ഡെലിവറി വിവരങ്ങൾ ലഭ്യമല്ല."}
                 </div>
               ) : (
                 lpgList.map((item) => (
@@ -567,23 +567,23 @@ export default function DirectoryWidget({
                       <div className="space-y-1">
                         <div className="flex flex-wrap items-center gap-1.5">
                           <span className="text-[8px] sm:text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-200">
-                            ⚡ {lang === "en" ? item.statusEn : item.statusMl}
+                            ⚡ {lang !== "ml" ? item.statusEn : item.statusMl}
                           </span>
                           <span className="text-[9px] text-slate-400 font-semibold font-mono">📅 {item.date}</span>
                         </div>
                         
                         <h4 className="text-xs font-black text-slate-900 leading-tight">
-                          {lang === "en" ? item.agencyNameEn : item.agencyNameMl}
+                          {lang !== "ml" ? item.agencyNameEn : item.agencyNameMl}
                         </h4>
                         
                         <div className="text-[11px] text-slate-700 leading-normal">
-                          <span className="font-extrabold text-amber-700">📍 {lang === "en" ? "Areas: " : "സ്ഥലങ്ങൾ: "}</span>
-                          <span className="font-medium bg-amber-50/50 px-1 py-0.5 rounded border border-amber-100/45">{lang === "en" ? item.areasEn : item.areasMl}</span>
+                          <span className="font-extrabold text-amber-700">📍 {lang !== "ml" ? "Areas: " : "സ്ഥലങ്ങൾ: "}</span>
+                          <span className="font-medium bg-amber-50/50 px-1 py-0.5 rounded border border-amber-100/45">{lang !== "ml" ? item.areasEn : item.areasMl}</span>
                         </div>
 
                         {(item.notesEn || item.notesMl) && (
                           <p className="text-[10px] text-slate-500 bg-slate-50 px-2 py-0.5 rounded inline-block italic leading-tight">
-                            ℹ️ {lang === "en" ? item.notesEn : item.notesMl}
+                            ℹ️ {lang !== "ml" ? item.notesEn : item.notesMl}
                           </p>
                         )}
                       </div>
@@ -592,10 +592,10 @@ export default function DirectoryWidget({
                         <a 
                           href={`tel:${item.contact}`}
                           className="flex flex-col items-center justify-center gap-1 p-2 bg-amber-50 hover:bg-[#ffe500] text-amber-950 rounded-md border border-amber-200 hover:border-transparent transition text-center shrink-0 cursor-pointer min-w-[76px] w-full"
-                          title={lang === "en" ? "Call Agency" : "ഏജൻസി വിളിക്കുക"}
+                          title={lang !== "ml" ? "Call Agency" : "ഏജൻസി വിളിക്കുക"}
                         >
                           <Flame className="w-3.5 h-3.5 text-amber-700 animate-pulse" />
-                          <span className="text-[8px] font-bold uppercase tracking-wider">{lang === "en" ? "CALL NOW" : "വിളിക്കുക"}</span>
+                          <span className="text-[8px] font-bold uppercase tracking-wider">{lang !== "ml" ? "CALL NOW" : "വിളിക്കുക"}</span>
                           <span className="text-[8px] font-mono font-bold text-slate-600 leading-none">{item.contact}</span>
                         </a>
 
@@ -604,9 +604,9 @@ export default function DirectoryWidget({
                             type="button"
                             onClick={() => onDownloadCard(item)}
                             className="w-full flex items-center justify-center gap-1 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-200 rounded font-black text-[9px] uppercase tracking-wider cursor-pointer transition active:scale-95 text-center leading-none"
-                            title={lang === "en" ? "Download as styled greeting card graphic" : "നിറമുള്ള അറിയിപ്പ് കാർഡ് രൂപത്തിൽ ഡൗൺലോഡ് ചെയ്യാം"}
+                            title={lang !== "ml" ? "Download as styled greeting card graphic" : "നിറമുള്ള അറിയിപ്പ് കാർഡ് രൂപത്തിൽ ഡൗൺലോഡ് ചെയ്യാം"}
                           >
-                            <IdCard className="w-3.5 h-3.5 text-amber-700 font-bold shrink-0" /> {lang === "en" ? "CARD" : "കാർഡ്"}
+                            <IdCard className="w-3.5 h-3.5 text-amber-700 font-bold shrink-0" /> {lang !== "ml" ? "CARD" : "കാർഡ്"}
                           </button>
                         )}
                       </div>
@@ -637,7 +637,7 @@ export default function DirectoryWidget({
                     </div>
                     <div>
                       <h4 className="text-xs font-extrabold text-gray-800 leading-tight">
-                        {lang === "en" ? em.nameEn : em.nameMl}
+                        {lang !== "ml" ? em.nameEn : em.nameMl}
                       </h4>
                       <span className="text-[10px] text-gray-400 capitalize">{em.type} Desk</span>
                     </div>
@@ -664,7 +664,7 @@ export default function DirectoryWidget({
               </span>
               <input 
                 type="text"
-                placeholder={lang === "en" ? "Search plumber, jeep operators, hospital..." : "ഡയറക്ടറിയിൽ തിരയുക..."}
+                placeholder={lang !== "ml" ? "Search plumber, jeep operators, hospital..." : "ഡയറക്ടറിയിൽ തിരയുക..."}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full border border-gray-200 pl-8 pr-3 py-1.5 rounded text-xs focus:ring-1 focus:ring-[#005689] focus:outline-none placeholder-gray-400"
@@ -709,7 +709,7 @@ export default function DirectoryWidget({
             <div className="space-y-2 max-h-[290px] overflow-y-auto pr-0.5">
               {filteredDirectory.length === 0 ? (
                 <div className="p-8 text-center text-xs text-gray-400">
-                  {lang === "en" ? "No service directory match." : "വിവരങ്ങൾ ലഭ്യമല്ല."}
+                  {lang !== "ml" ? "No service directory match." : "വിവരങ്ങൾ ലഭ്യമല്ല."}
                 </div>
               ) : (
                 filteredDirectory.map((item) => (
@@ -719,10 +719,10 @@ export default function DirectoryWidget({
                   >
                     <div>
                       <h4 className="font-bold text-[#052962] leading-tight mb-0.5">
-                        {lang === "en" ? item.nameEn : item.nameMl}
+                        {lang !== "ml" ? item.nameEn : item.nameMl}
                       </h4>
                       <p className="text-[9px] text-gray-400 uppercase font-semibold">
-                        {item.category} • {lang === "en" ? item.locationEn : item.locationMl}
+                        {item.category} • {lang !== "ml" ? item.locationEn : item.locationMl}
                       </p>
                     </div>
                     
@@ -751,7 +751,7 @@ export default function DirectoryWidget({
               <div className="space-y-0.5">
                 <h4 className="text-xs font-black flex items-center gap-1.5 text-emerald-800">
                   <span className="p-1 bg-emerald-100 rounded text-base animate-bounce">🛺</span>
-                  {lang === "en" ? "Autorikshaw Taxi Finder" : "പ്രാദേശിക ഓട്ടോ ടാക്സി ഡയറക്ടറി"}
+                  {lang !== "ml" ? "Autorikshaw Taxi Finder" : "പ്രാദേശിക ഓട്ടോ ടാക്സി ഡയറക്ടറി"}
                 </h4>
                 <p className="text-[11px] text-emerald-800/90 leading-snug">
                   {lang === "en" 
@@ -766,7 +766,7 @@ export default function DirectoryWidget({
                   className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-[10px] sm:text-xs rounded-md shadow-xs transition uppercase tracking-wider flex items-center justify-center gap-1 shrink-0 self-start sm:self-center cursor-pointer"
                 >
                   <PlusCircle className="w-3.5 h-3.5" />
-                  {lang === "en" ? "Join as Driver" : "ഓട്ടോ രജിസ്റ്റർ ചെയ്യാം"}
+                  {lang !== "ml" ? "Join as Driver" : "ഓട്ടോ രജിസ്റ്റർ ചെയ്യാം"}
                 </button>
               )}
             </div>
@@ -777,18 +777,18 @@ export default function DirectoryWidget({
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <span className="text-[9px] bg-yellow-400 text-[#0c4035] font-black uppercase px-2 py-0.5 rounded shadow-sm tracking-widest leading-none">
-                      {lang === "en" ? "My Registered Active Service" : "നിങ്ങളുടെ സജീവ ഓട്ടോ സർവീസ്"}
+                      {lang !== "ml" ? "My Registered Active Service" : "നിങ്ങളുടെ സജീവ ഓട്ടോ സർവീസ്"}
                     </span>
                     <span className={`inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded uppercase ${myListing.isAvailable ? "bg-emerald-100 text-emerald-900" : "bg-red-100 text-red-900"}`}>
                       <span className={`w-1.5 h-1.5 rounded-full ${myListing.isAvailable ? "bg-emerald-500 animate-pulse" : "bg-red-500"}`} />
-                      {myListing.isAvailable ? (lang === "en" ? "Online" : "ലഭ്യമാണ്") : (lang === "en" ? "Busy" : "തിരക്കിലാണ്")}
+                      {myListing.isAvailable ? (lang !== "ml" ? "Online" : "ലഭ്യമാണ്") : (lang !== "ml" ? "Busy" : "തിരക്കിലാണ്")}
                     </span>
                   </div>
                   <h4 className="text-sm font-black leading-tight">
-                    {lang === "en" ? myListing.driverNameEn : myListing.driverNameMl}
+                    {lang !== "ml" ? myListing.driverNameEn : myListing.driverNameMl}
                   </h4>
                   <p className="text-[11px] text-emerald-100 font-medium font-sans flex items-center gap-1.5">
-                    🛺 {myListing.autoNumber} • 📍 {lang === "en" ? myListing.locationEn : myListing.locationMl}
+                    🛺 {myListing.autoNumber} • 📍 {lang !== "ml" ? myListing.locationEn : myListing.locationMl}
                   </p>
                 </div>
 
@@ -804,15 +804,15 @@ export default function DirectoryWidget({
                     <Power className="w-3.5 h-3.5" />
                     <span>
                       {myListing.isAvailable 
-                        ? (lang === "en" ? "Set Busy (Offline)" : "ബിസി ആക്കുക (ഓഫ്ലൈൻ)") 
-                        : (lang === "en" ? "Set Active (Online)" : "ലഭ്യമാക്കുക (ഓൺലൈൻ)")}
+                        ? (lang !== "ml" ? "Set Busy (Offline)" : "ബിസി ആക്കുക (ഓഫ്ലൈൻ)") 
+                        : (lang !== "ml" ? "Set Active (Online)" : "ലഭ്യമാക്കുക (ഓൺലൈൻ)")}
                     </span>
                   </button>
 
                   <button
                     onClick={deleteMyListing}
                     className="p-1.5 border border-red-300 hover:bg-red-700 text-red-100 hover:text-white rounded-md transition"
-                    title={lang === "en" ? "Delete Listing Entirely" : "ലിസ്റ്റ് പൂർണ്ണമായി ഒഴിവാക്കുക"}
+                    title={lang !== "ml" ? "Delete Listing Entirely" : "ലിസ്റ്റ് പൂർണ്ണമായി ഒഴിവാക്കുക"}
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -833,7 +833,7 @@ export default function DirectoryWidget({
 
                 <div>
                   <h4 className="font-serif-guardian font-extrabold text-[#052962] text-sm">
-                    {lang === "en" ? "Register Your Autorikshaw Taxi" : "ഡ്രൈവർമാരുടെ രജിസ്ട്രേഷൻ"}
+                    {lang !== "ml" ? "Register Your Autorikshaw Taxi" : "ഡ്രൈവർമാരുടെ രജിസ്ട്രേഷൻ"}
                   </h4>
                   <p className="text-[10px] text-gray-400">
                     {lang === "en" 
@@ -858,7 +858,7 @@ export default function DirectoryWidget({
                   {/* Name English */}
                   <div className="space-y-1">
                     <label className="block text-[11px] font-bold text-slate-700">
-                      {lang === "en" ? "Driver Name (English)*" : "ഡ്രൈവർ പേര് (ഇംഗ്ലീഷിൽ)*"}
+                      {lang !== "ml" ? "Driver Name (English)*" : "ഡ്രൈവർ പേര് (ഇംഗ്ലീഷിൽ)*"}
                     </label>
                     <input 
                       type="text"
@@ -874,7 +874,7 @@ export default function DirectoryWidget({
                   <div className="space-y-1">
                     <div className="flex justify-between items-center">
                       <label className="block text-[11px] font-bold text-slate-700">
-                        {lang === "en" ? "Driver Name (Malayalam)*" : "ഡ്രൈവർ പേര് (മലയാളത്തിൽ)*"}
+                        {lang !== "ml" ? "Driver Name (Malayalam)*" : "ഡ്രൈവർ പേര് (മലയാളത്തിൽ)*"}
                       </label>
                       <button
                         type="button"
@@ -883,7 +883,7 @@ export default function DirectoryWidget({
                         className="text-[9px] font-black text-emerald-700 hover:text-emerald-900 bg-emerald-100/55 px-1.5 py-0.5 rounded flex items-center gap-0.5 border border-emerald-200"
                       >
                         <Sparkles className="w-2.5 h-2.5 text-emerald-600" />
-                        {isTranslating ? "..." : (lang === "en" ? "AUTO FILL ML" : "ഓട്ടോ ഫിൽ")}
+                        {isTranslating ? "..." : (lang !== "ml" ? "AUTO FILL ML" : "ഓട്ടോ ഫിൽ")}
                       </button>
                     </div>
                     <input 
@@ -899,7 +899,7 @@ export default function DirectoryWidget({
                   {/* Auto Number */}
                   <div className="space-y-1">
                     <label className="block text-[11px] font-bold text-slate-700">
-                      {lang === "en" ? "Vehicle Registration Number*" : "ഓട്ടോ വണ്ടി നമ്പർ*"}
+                      {lang !== "ml" ? "Vehicle Registration Number*" : "ഓട്ടോ വണ്ടി നമ്പർ*"}
                     </label>
                     <input 
                       type="text"
@@ -914,7 +914,7 @@ export default function DirectoryWidget({
                   {/* Phone Contact */}
                   <div className="space-y-1">
                     <label className="block text-[11px] font-bold text-slate-700">
-                      {lang === "en" ? "Mobile Phone Number (WhatsApp)*" : "മൊബൈൽ ഫോൺ നമ്പർ*"}
+                      {lang !== "ml" ? "Mobile Phone Number (WhatsApp)*" : "മൊബൈൽ ഫോൺ നമ്പർ*"}
                     </label>
                     <input 
                       type="text"
@@ -929,7 +929,7 @@ export default function DirectoryWidget({
                   {/* Target Town Location */}
                   <div className="space-y-1 sm:col-span-2">
                     <label className="block text-[11px] font-bold text-slate-700">
-                      {lang === "en" ? "Major Stand / Station Location*" : "കൂടുതൽ സമയം പാർക്ക് ചെയ്യുന്ന സ്റ്റാൻഡ് / സ്ഥലം*"}
+                      {lang !== "ml" ? "Major Stand / Station Location*" : "കൂടുതൽ സമയം പാർക്ക് ചെയ്യുന്ന സ്റ്റാൻഡ് / സ്ഥലം*"}
                     </label>
                     <select
                       value={regLocationEn}
@@ -950,14 +950,14 @@ export default function DirectoryWidget({
                       type="submit"
                       className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-md shadow uppercase tracking-wider transition cursor-pointer"
                     >
-                      🚀 {lang === "en" ? "Register My Auto Service" : "റെജിസ്ട്രേഷൻ പൂർത്തിയാക്കുക"}
+                      🚀 {lang !== "ml" ? "Register My Auto Service" : "റെജിസ്ട്രേഷൻ പൂർത്തിയാക്കുക"}
                     </button>
                     <button
                       type="button"
                       onClick={() => setIsRegisteringAuto(false)}
                       className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-md uppercase tracking-wider transition"
                     >
-                      {lang === "en" ? "Cancel" : "റദ്ദാക്കുക"}
+                      {lang !== "ml" ? "Cancel" : "റദ്ദാക്കുക"}
                     </button>
                   </div>
                 </form>
@@ -976,7 +976,7 @@ export default function DirectoryWidget({
                   </span>
                   <input 
                     type="text"
-                    placeholder={lang === "en" ? "Search driver name or number..." : "ഡ്രൈവർമാരെ പേരോ നമ്പറോ വെച്ച് തിരയാം..."}
+                    placeholder={lang !== "ml" ? "Search driver name or number..." : "ഡ്രൈവർമാരെ പേരോ നമ്പറോ വെച്ച് തിരയാം..."}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full border border-gray-250 pl-8 pr-3 py-1.5 rounded text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none placeholder-gray-400"
@@ -990,10 +990,10 @@ export default function DirectoryWidget({
                     onChange={(e) => setSelectedAutoLocation(e.target.value)}
                     className="w-full border border-gray-250 p-1.5 rounded text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none bg-white font-bold"
                   >
-                    <option value="all">{lang === "en" ? "All Locations" : "എല്ലാ സ്ഥലങ്ങളും"}</option>
+                    <option value="all">{lang !== "ml" ? "All Locations" : "എല്ലാ സ്ഥലങ്ങളും"}</option>
                     {TOWN_LOCATIONS.map((town) => (
                       <option key={town.en} value={town.en}>
-                        📍 {lang === "en" ? town.en : town.ml}
+                        📍 {lang !== "ml" ? town.en : town.ml}
                       </option>
                     ))}
                   </select>
@@ -1006,7 +1006,7 @@ export default function DirectoryWidget({
                 {filteredAutos.length === 0 ? (
                   <div className="p-12 text-center text-xs text-gray-400 bg-slate-50/50 rounded-xl border border-dashed border-gray-150">
                     <span className="text-3xl block mb-2 opacity-50">🛺</span>
-                    {lang === "en" ? "No registered autorikshaw taxis match your query." : "ഈ സ്ഥലത്ത് ഓട്ടോ വിവരങ്ങൾ ലഭ്യമായിട്ടില്ല."}
+                    {lang !== "ml" ? "No registered autorikshaw taxis match your query." : "ഈ സ്ഥലത്ത് ഓട്ടോ വിവരങ്ങൾ ലഭ്യമായിട്ടില്ല."}
                   </div>
                 ) : (
                   filteredAutos.map((auto) => {
@@ -1032,7 +1032,7 @@ export default function DirectoryWidget({
                                 : "bg-red-50 text-red-700 border border-red-100"
                             }`}>
                               <span className={`w-1 h-1 rounded-full ${auto.isAvailable ? "bg-emerald-500 animate-pulse" : "bg-red-400"}`} />
-                              {auto.isAvailable ? (lang === "en" ? "Available" : "ലഭ്യമാണ്") : (lang === "en" ? "Busy / Offline" : "തിരക്കിലാണ്")}
+                              {auto.isAvailable ? (lang !== "ml" ? "Available" : "ലഭ്യമാണ്") : (lang !== "ml" ? "Busy / Offline" : "തിരക്കിലാണ്")}
                             </span>
 
                             <span className="text-[9px] text-slate-400 font-bold font-mono bg-slate-100 px-1 py-0.5 rounded truncate max-w-[120px]">
@@ -1041,18 +1041,18 @@ export default function DirectoryWidget({
                             
                             {isMyOwn && (
                               <span className="text-[8px] font-black bg-[#cfecd5] text-[#144d18] px-1 py-0.5 rounded">
-                                {lang === "en" ? "YOU" : "നിങ്ങൾ"}
+                                {lang !== "ml" ? "YOU" : "നിങ്ങൾ"}
                               </span>
                             )}
                           </div>
 
                           <h4 className="font-extrabold text-[#052962] text-sm leading-tight truncate">
-                            {lang === "en" ? auto.driverNameEn : auto.driverNameMl}
+                            {lang !== "ml" ? auto.driverNameEn : auto.driverNameMl}
                           </h4>
 
                           <p className="text-[10px] text-gray-500 font-bold flex items-center gap-1">
                             <MapPin className="w-3 h-3 text-emerald-600" />
-                            {lang === "en" ? auto.locationEn : auto.locationMl} Stand
+                            {lang !== "ml" ? auto.locationEn : auto.locationMl} Stand
                           </p>
                         </div>
 
@@ -1062,7 +1062,7 @@ export default function DirectoryWidget({
                           <a
                             href={`tel:${auto.contact}`}
                             className="p-2 border bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border-gray-200 hover:border-emerald-300 rounded shadow-3xs flex items-center justify-center transition shrink-0 cursor-pointer"
-                            title={lang === "en" ? "Call Driver" : "വിളിക്കുക"}
+                            title={lang !== "ml" ? "Call Driver" : "വിളിക്കുക"}
                           >
                             <Phone className="w-3.5 h-3.5" />
                           </a>
@@ -1077,7 +1077,7 @@ export default function DirectoryWidget({
                             target="_blank"
                             rel="noreferrer"
                             className="p-2 border bg-emerald-600 hover:bg-emerald-700 text-white border-transparent rounded shadow-3xs flex items-center justify-center transition shrink-0 cursor-pointer"
-                            title={lang === "en" ? "WhatsApp Chat" : "വാട്സാപ്പ് ചാറ്റ്"}
+                            title={lang !== "ml" ? "WhatsApp Chat" : "വാട്സാപ്പ് ചാറ്റ്"}
                           >
                             <MessageSquare className="w-3.5 h-3.5" />
                           </a>
@@ -1103,7 +1103,7 @@ export default function DirectoryWidget({
               <div className="space-y-1">
                 <h4 className="text-sm font-black flex items-center gap-1.5 text-fuchsia-800">
                   <span className="p-1.5 bg-fuchsia-100 rounded text-base">🛍️</span>
-                  {lang === "en" ? "Attappadi Local Shopping & Orders" : "അട്ടപ്പാടി ലോക്കൽ ഷോപ്പിംഗ് പോർട്ടൽ"}
+                  {lang !== "ml" ? "Attappadi Local Shopping & Orders" : "അട്ടപ്പാടി ലോക്കൽ ഷോപ്പിംഗ് പോർട്ടൽ"}
                 </h4>
                 <p className="text-xs text-fuchsia-900 leading-relaxed font-sans">
                   {lang === "en" 
@@ -1123,7 +1123,7 @@ export default function DirectoryWidget({
                   </span>
                   <input 
                     type="text"
-                    placeholder={lang === "en" ? "Search for shops or items (e.g. honey, ragi)..." : "കടകളോ സാധനങ്ങളോ ടൈപ്പ് ചെയ്ത് തിരയുക..."}
+                    placeholder={lang !== "ml" ? "Search for shops or items (e.g. honey, ragi)..." : "കടകളോ സാധനങ്ങളോ ടൈപ്പ് ചെയ്ത് തിരയുക..."}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full border border-gray-200 pl-8 pr-3 py-1.5 rounded text-xs focus:ring-1 focus:ring-fuchsia-500 focus:outline-none bg-white placeholder-gray-400 font-semibold"
@@ -1137,10 +1137,10 @@ export default function DirectoryWidget({
                     onChange={(e) => setSelectedShopTown(e.target.value)}
                     className="w-full border border-gray-205 p-1.5 rounded text-xs focus:ring-1 focus:ring-fuchsia-500 focus:outline-none bg-white font-bold"
                   >
-                    <option value="all">{lang === "en" ? "All Towns" : "എല്ലാ നഗരങ്ങളും"}</option>
+                    <option value="all">{lang !== "ml" ? "All Towns" : "എല്ലാ നഗരങ്ങളും"}</option>
                     {TOWN_LOCATIONS.map((town) => (
                       <option key={town.en} value={town.en}>
-                        📍 {lang === "en" ? town.en : town.ml}
+                        📍 {lang !== "ml" ? town.en : town.ml}
                       </option>
                     ))}
                   </select>
@@ -1167,7 +1167,7 @@ export default function DirectoryWidget({
                         : "bg-white text-gray-600 border-gray-200 hover:bg-gray-100"
                     }`}
                   >
-                    {lang === "en" ? cat.en : cat.ml}
+                    {lang !== "ml" ? cat.en : cat.ml}
                   </button>
                 ))}
               </div>
@@ -1190,7 +1190,7 @@ export default function DirectoryWidget({
               }).length === 0 ? (
                 <div className="p-12 text-center text-xs text-gray-400 bg-slate-50/50 rounded-xl border border-dashed border-gray-155">
                   <span className="text-3xl block mb-2 opacity-60">🛍️</span>
-                  {lang === "en" ? "No local shops match your filters." : "തിരഞ്ഞെടുത്ത വിഭാഗത്തിൽ വ്യാപാരശാലകൾ ലഭ്യമല്ല."}
+                  {lang !== "ml" ? "No local shops match your filters." : "തിരഞ്ഞെടുത്ത വിഭാഗത്തിൽ വ്യാപാരശാലകൾ ലഭ്യമല്ല."}
                 </div>
               ) : (
                 PRE_SEEDED_SHOPS.filter(shop => {
@@ -1206,7 +1206,7 @@ export default function DirectoryWidget({
                   
                   return matchesSearch && matchesTown && matchesCat;
                 }).map((shop) => {
-                  const itemsList = lang === "en" ? shop.itemsEn : shop.itemsMl;
+                  const itemsList = lang !== "ml" ? shop.itemsEn : shop.itemsMl;
                   const targetMsg = customOrderText[shop.id] || "";
                   const successOrder = orderSuccess[shop.id] || false;
                   
@@ -1238,22 +1238,22 @@ export default function DirectoryWidget({
                             {shop.category}
                           </span>
                           <span className="inline-flex items-center gap-1 text-[9.5px] font-extrabold text-slate-500 bg-slate-150 px-2 py-0.5 rounded">
-                            📍 {lang === "en" ? `${shop.locationEn} Town` : shop.locationMl}
+                            📍 {lang !== "ml" ? `${shop.locationEn} Town` : shop.locationMl}
                           </span>
                         </div>
 
                         <div>
                           <h4 className="font-extrabold text-[#052962] text-sm leading-tight">
-                            {lang === "en" ? shop.nameEn : shop.nameMl}
+                            {lang !== "ml" ? shop.nameEn : shop.nameMl}
                           </h4>
                           <p className="text-[10px] text-emerald-800 bg-emerald-50 border border-emerald-100 font-bold px-2 py-0.5 rounded inline-block mt-1">
-                            🚚 {lang === "en" ? shop.deliveryEn : shop.deliveryMl}
+                            🚚 {lang !== "ml" ? shop.deliveryEn : shop.deliveryMl}
                           </p>
                         </div>
 
                         <div className="text-xs bg-slate-50 p-2 rounded border border-gray-100">
                           <span className="text-[9.5px] font-extrabold text-slate-400 block uppercase mb-1 leading-none">
-                            {lang === "en" ? "Available Items & Specialities:" : "ലഭ്യമായ പ്രധാന സാധനങ്ങൾ:"}
+                            {lang !== "ml" ? "Available Items & Specialities:" : "ലഭ്യമായ പ്രധാന സാധനങ്ങൾ:"}
                           </span>
                           <p className="text-slate-650 font-semibold leading-relaxed">
                             {itemsList}
@@ -1265,10 +1265,10 @@ export default function DirectoryWidget({
                       <div className="w-full md:w-[250px] bg-slate-50 border border-gray-200 p-3 rounded-lg flex flex-col justify-between gap-2.5 select-none self-stretch shrink-0">
                         <div className="space-y-1">
                           <label className="text-[9.5px] font-black text-slate-500 uppercase leading-none block">
-                            📋 {lang === "en" ? "Write Order List here:" : "വാങ്ങേണ്ട സാധനങ്ങളുടെ ലിസ്റ്റ്:"}
+                            📋 {lang !== "ml" ? "Write Order List here:" : "വാങ്ങേണ്ട സാധനങ്ങളുടെ ലിസ്റ്റ്:"}
                           </label>
                           <textarea
-                            placeholder={lang === "en" ? "e.g. 5kg ragi, honey bucket, 2L coconut oil" : "ഉദാഹരത്തിന്: കാട്ടുതേൻ 1 കുപ്പി, മുത്താറിപ്പൊടി 2 കിലോ..."}
+                            placeholder={lang !== "ml" ? "e.g. 5kg ragi, honey bucket, 2L coconut oil" : "ഉദാഹരത്തിന്: കാട്ടുതേൻ 1 കുപ്പി, മുത്താറിപ്പൊടി 2 കിലോ..."}
                             value={targetMsg}
                             onChange={(e) => setCustomOrderText(prev => ({ ...prev, [shop.id]: e.target.value }))}
                             className="w-full h-[65px] border border-gray-250 rounded p-1.5 text-xs focus:ring-1 focus:ring-fuchsia-400 focus:outline-none bg-white font-semibold resize-none leading-normal"
@@ -1285,12 +1285,12 @@ export default function DirectoryWidget({
                           }`}
                         >
                           <Send className="w-3.5 h-3.5" />
-                          <span>{lang === "en" ? "ORDER VIA WHATSAPP" : "വാട്സാപ്പിൽ ഓർഡർ ചെയ്യുക"}</span>
+                          <span>{lang !== "ml" ? "ORDER VIA WHATSAPP" : "വാട്സാപ്പിൽ ഓർഡർ ചെയ്യുക"}</span>
                         </button>
 
                         {successOrder && (
                           <span className="text-[9.5px] font-bold text-center text-emerald-700 animate-pulse bg-emerald-50 py-0.5 border border-emerald-100 rounded">
-                            ✔ {lang === "en" ? "Opening WhatsApp..." : "വാട്സാപ്പ് തുറക്കുന്നു..."}
+                            ✔ {lang !== "ml" ? "Opening WhatsApp..." : "വാട്സാപ്പ് തുറക്കുന്നു..."}
                           </span>
                         )}
                       </div>
@@ -1315,7 +1315,7 @@ export default function DirectoryWidget({
               <div className="space-y-0.5">
                 <h4 className="text-xs font-black flex items-center gap-1.5 text-rose-800">
                   <span className="p-1 bg-rose-100 rounded text-base animate-bounce">📢</span>
-                  {lang === "en" ? "Lost & Found Board" : "നഷ്ടപ്പെട്ടവ & ലഭിച്ചവ ബോർഡ്"}
+                  {lang !== "ml" ? "Lost & Found Board" : "നഷ്ടപ്പെട്ടവ & ലഭിച്ചവ ബോർഡ്"}
                 </h4>
                 <p className="text-[11px] text-rose-800/90 leading-snug">
                   {lang === "en" 
@@ -1330,7 +1330,7 @@ export default function DirectoryWidget({
                   className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-[10px] sm:text-xs rounded-md shadow-xs transition uppercase tracking-wider flex items-center justify-center gap-1 shrink-0 self-start sm:self-center cursor-pointer"
                 >
                   <PlusCircle className="w-3.5 h-3.5" />
-                  {lang === "en" ? "Report Item" : "വിവരം ചേർക്കാം"}
+                  {lang !== "ml" ? "Report Item" : "വിവരം ചേർക്കാം"}
                 </button>
               )}
             </div>
@@ -1339,35 +1339,35 @@ export default function DirectoryWidget({
             {isReportingItem && (
               <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-3 shadow-xs">
                 <h4 className="text-xs font-black text-[#052962] uppercase tracking-wider flex items-center justify-between border-b pb-1.5 mb-2">
-                  <span>{lang === "en" ? "Report Lost / Found Item" : "നഷ്ടപ്പെട്ടതോ ലഭിച്ചതോ ആയ വിവരം ചേർക്കുക"}</span>
+                  <span>{lang !== "ml" ? "Report Lost / Found Item" : "നഷ്ടപ്പെട്ടതോ ലഭിച്ചതോ ആയ വിവരം ചേർക്കുക"}</span>
                   <button onClick={() => { setIsReportingItem(false); setRegError(""); setRegSuccess(""); }} className="text-gray-400 hover:text-red-500 font-black cursor-pointer">X</button>
                 </h4>
                 
                 <form onSubmit={handleReportSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   {/* Type Selector */}
                   <div className="space-y-1 sm:col-span-2">
-                    <label className="block text-[11px] font-bold text-slate-700">{lang === "en" ? "Report Type*" : "റിപ്പോർട്ട് തരം*"}</label>
+                    <label className="block text-[11px] font-bold text-slate-700">{lang !== "ml" ? "Report Type*" : "റിപ്പോർട്ട് തരം*"}</label>
                     <div className="flex gap-2">
                       <button
                         type="button"
                         onClick={() => setLfType("lost")}
                         className={`flex-1 py-1.5 rounded font-black text-center border transition cursor-pointer ${lfType === "lost" ? "bg-rose-600 text-white border-rose-600" : "bg-white text-rose-600 border-rose-200 hover:bg-rose-50"}`}
                       >
-                        {lang === "en" ? "LOST" : "നഷ്ടപ്പെട്ടു"}
+                        {lang !== "ml" ? "LOST" : "നഷ്ടപ്പെട്ടു"}
                       </button>
                       <button
                         type="button"
                         onClick={() => setLfType("found")}
                         className={`flex-1 py-1.5 rounded font-black text-center border transition cursor-pointer ${lfType === "found" ? "bg-emerald-600 text-white border-emerald-600" : "bg-white text-emerald-600 border-emerald-200 hover:bg-emerald-50"}`}
                       >
-                        {lang === "en" ? "FOUND" : "ലഭിച്ചു"}
+                        {lang !== "ml" ? "FOUND" : "ലഭിച്ചു"}
                       </button>
                     </div>
                   </div>
 
                   {/* Title En */}
                   <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">{lang === "en" ? "Item Name / Title (English)*" : "സാധനത്തിന്റെ പേര് (ഇംഗ്ലീഷ്)*"}</label>
+                    <label className="block text-[11px] font-bold text-slate-700">{lang !== "ml" ? "Item Name / Title (English)*" : "സാധനത്തിന്റെ പേര് (ഇംഗ്ലീഷ്)*"}</label>
                     <input
                       type="text"
                       required
@@ -1380,7 +1380,7 @@ export default function DirectoryWidget({
 
                   {/* Title Ml */}
                   <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">{lang === "en" ? "Item Name / Title (Malayalam)*" : "സാധനത്തിന്റെ പേര് (മലയാളം)*"}</label>
+                    <label className="block text-[11px] font-bold text-slate-700">{lang !== "ml" ? "Item Name / Title (Malayalam)*" : "സാധനത്തിന്റെ പേര് (മലയാളം)*"}</label>
                     <input
                       type="text"
                       required
@@ -1393,7 +1393,7 @@ export default function DirectoryWidget({
 
                   {/* Description En */}
                   <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">{lang === "en" ? "Description (English)" : "വിശദാംശങ്ങൾ (ഇംഗ്ലീഷ്)"}</label>
+                    <label className="block text-[11px] font-bold text-slate-700">{lang !== "ml" ? "Description (English)" : "വിശദാംശങ്ങൾ (ഇംഗ്ലീഷ്)"}</label>
                     <textarea
                       rows={2}
                       placeholder="e.g. Lost near Agali stand around 4 PM..."
@@ -1405,7 +1405,7 @@ export default function DirectoryWidget({
 
                   {/* Description Ml */}
                   <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">{lang === "en" ? "Description (Malayalam)" : "വിശദാംശങ്ങൾ (മലയാളം)"}</label>
+                    <label className="block text-[11px] font-bold text-slate-700">{lang !== "ml" ? "Description (Malayalam)" : "വിശദാംശങ്ങൾ (മലയാളം)"}</label>
                     <textarea
                       rows={2}
                       placeholder="ഉദാ: അഗളി സ്റ്റാൻഡിന് സമീപം വെച്ച് നഷ്ടപ്പെട്ടു..."
@@ -1417,7 +1417,7 @@ export default function DirectoryWidget({
 
                   {/* Location En */}
                   <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">{lang === "en" ? "Location / Place (English)*" : "സ്ഥലം (ഇംഗ്ലീഷ്)*"}</label>
+                    <label className="block text-[11px] font-bold text-slate-700">{lang !== "ml" ? "Location / Place (English)*" : "സ്ഥലം (ഇംഗ്ലീഷ്)*"}</label>
                     <input
                       type="text"
                       required
@@ -1430,7 +1430,7 @@ export default function DirectoryWidget({
 
                   {/* Location Ml */}
                   <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">{lang === "en" ? "Location / Place (Malayalam)*" : "സ്ഥലം (മലയാളം)*"}</label>
+                    <label className="block text-[11px] font-bold text-slate-700">{lang !== "ml" ? "Location / Place (Malayalam)*" : "സ്ഥലം (മലയാളം)*"}</label>
                     <input
                       type="text"
                       required
@@ -1443,7 +1443,7 @@ export default function DirectoryWidget({
 
                   {/* Reporter Name */}
                   <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">{lang === "en" ? "Your Name*" : "നിങ്ങളുടെ പേര്*"}</label>
+                    <label className="block text-[11px] font-bold text-slate-700">{lang !== "ml" ? "Your Name*" : "നിങ്ങളുടെ പേര്*"}</label>
                     <input
                       type="text"
                       required
@@ -1456,7 +1456,7 @@ export default function DirectoryWidget({
 
                   {/* Contact Number */}
                   <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">{lang === "en" ? "Contact Mobile Number*" : "ബന്ധപ്പെടേണ്ട മൊബൈൽ നമ്പർ*"}</label>
+                    <label className="block text-[11px] font-bold text-slate-700">{lang !== "ml" ? "Contact Mobile Number*" : "ബന്ധപ്പെടേണ്ട മൊബൈൽ നമ്പർ*"}</label>
                     <input
                       type="text"
                       required
@@ -1478,14 +1478,14 @@ export default function DirectoryWidget({
                       disabled={lfSubmitting}
                       className={`flex-1 py-2 bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs rounded shadow uppercase tracking-wider transition cursor-pointer select-none ${lfSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
                     >
-                      📢 {lfSubmitting ? (lang === "en" ? "Publishing..." : "പ്രസിദ്ധീകരിക്കുന്നു...") : (lang === "en" ? "Publish Report" : "വിവരം പ്രസിദ്ധീകരിക്കുക")}
+                      📢 {lfSubmitting ? (lang !== "ml" ? "Publishing..." : "പ്രസിദ്ധീകരിക്കുന്നു...") : (lang !== "ml" ? "Publish Report" : "വിവരം പ്രസിദ്ധീകരിക്കുക")}
                     </button>
                     <button
                       type="button"
                       onClick={() => { setIsReportingItem(false); setRegError(""); setRegSuccess(""); }}
                       className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded transition cursor-pointer"
                     >
-                      {lang === "en" ? "Cancel" : "റദ്ദാക്കുക"}
+                      {lang !== "ml" ? "Cancel" : "റദ്ദാക്കുക"}
                     </button>
                   </div>
                 </form>
@@ -1502,7 +1502,7 @@ export default function DirectoryWidget({
                   </span>
                   <input
                     type="text"
-                    placeholder={lang === "en" ? "Search items, descriptions, places..." : "സാധനങ്ങൾ, വിവരണങ്ങൾ, സ്ഥലങ്ങൾ തിരയുക..."}
+                    placeholder={lang !== "ml" ? "Search items, descriptions, places..." : "സാധനങ്ങൾ, വിവരണങ്ങൾ, സ്ഥലങ്ങൾ തിരയുക..."}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full border border-gray-200 pl-8 pr-3 py-1.5 rounded text-xs focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white placeholder-gray-400 font-semibold"
@@ -1515,19 +1515,19 @@ export default function DirectoryWidget({
                     onClick={() => setLfFilterTab("all")}
                     className={`px-3 py-1 rounded transition cursor-pointer ${lfFilterTab === "all" ? "bg-rose-600 text-white shadow-xs" : "text-slate-650 hover:bg-slate-50"}`}
                   >
-                    {lang === "en" ? "All" : "എല്ലാം"}
+                    {lang !== "ml" ? "All" : "എല്ലാം"}
                   </button>
                   <button
                     onClick={() => setLfFilterTab("lost")}
                     className={`px-3 py-1 rounded transition cursor-pointer ${lfFilterTab === "lost" ? "bg-rose-600 text-white shadow-xs" : "text-slate-650 hover:bg-slate-50"}`}
                   >
-                    {lang === "en" ? "Lost" : "നഷ്ടപ്പെട്ടവ"}
+                    {lang !== "ml" ? "Lost" : "നഷ്ടപ്പെട്ടവ"}
                   </button>
                   <button
                     onClick={() => setLfFilterTab("found")}
                     className={`px-3 py-1 rounded transition cursor-pointer ${lfFilterTab === "found" ? "bg-rose-600 text-white shadow-xs" : "text-slate-650 hover:bg-slate-50"}`}
                   >
-                    {lang === "en" ? "Found" : "ലഭിച്ചവ"}
+                    {lang !== "ml" ? "Found" : "ലഭിച്ചവ"}
                   </button>
                 </div>
               </div>
@@ -1552,7 +1552,7 @@ export default function DirectoryWidget({
                   return (
                     <div className="col-span-full py-12 text-center text-xs text-gray-400 bg-white border border-slate-100 rounded-lg">
                       <HelpCircle className="w-10 h-10 mx-auto text-gray-300 mb-2 animate-pulse" />
-                      <p>{lang === "en" ? "No Lost & Found reports match your search context." : "വിവരങ്ങൾ ഒന്നും ലഭ്യമല്ല."}</p>
+                      <p>{lang !== "ml" ? "No Lost & Found reports match your search context." : "വിവരങ്ങൾ ഒന്നും ലഭ്യമല്ല."}</p>
                     </div>
                   );
                 }
@@ -1567,7 +1567,7 @@ export default function DirectoryWidget({
                       <div className="space-y-1.5">
                         <div className="flex justify-between items-start">
                           <span className={`text-[8.5px] font-black uppercase px-2 py-0.5 rounded ${isLost ? "bg-rose-50 text-rose-700 border border-rose-100" : "bg-emerald-50 text-emerald-700 border border-emerald-100"}`}>
-                            {isLost ? (lang === "en" ? "LOST" : "നഷ്ടപ്പെട്ടു") : (lang === "en" ? "FOUND" : "ലഭിച്ചു")}
+                            {isLost ? (lang !== "ml" ? "LOST" : "നഷ്ടപ്പെട്ടു") : (lang !== "ml" ? "FOUND" : "ലഭിച്ചു")}
                           </span>
                           <span className="text-[9px] text-gray-400 font-mono">
                             {new Date(item.dateReported).toLocaleDateString(lang === "ml" ? "ml-IN" : "en-US")}
@@ -1576,10 +1576,10 @@ export default function DirectoryWidget({
 
                         <div>
                           <h4 className="font-extrabold text-[#052962] text-sm leading-tight">
-                            {lang === "en" ? item.itemTitleEn : item.itemTitleMl}
+                            {lang !== "ml" ? item.itemTitleEn : item.itemTitleMl}
                           </h4>
                           <p className="text-slate-500 text-[11px] leading-relaxed mt-1 font-semibold">
-                            {lang === "en" ? item.descriptionEn : item.descriptionMl}
+                            {lang !== "ml" ? item.descriptionEn : item.descriptionMl}
                           </p>
                         </div>
                       </div>
@@ -1588,7 +1588,7 @@ export default function DirectoryWidget({
                         <div className="flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-gray-400 font-bold">
                           <span className="flex items-center gap-0.5">
                             <MapPin className="w-3.5 h-3.5 text-red-500" />
-                            {lang === "en" ? item.locationEn : item.locationMl}
+                            {lang !== "ml" ? item.locationEn : item.locationMl}
                           </span>
                           <span>
                             By: <strong className="text-slate-700">{item.reporterName}</strong>
@@ -1601,7 +1601,7 @@ export default function DirectoryWidget({
                             className="flex-1 py-1.5 bg-[#052962] hover:bg-[#005689] text-white rounded text-[11px] font-black flex items-center justify-center gap-1 cursor-pointer transition select-none"
                           >
                             <Phone className="w-3.5 h-3.5 shrink-0" />
-                            <span>{lang === "en" ? "CALL REPORTER" : "ബന്ധപ്പെടുക"}</span>
+                            <span>{lang !== "ml" ? "CALL REPORTER" : "ബന്ധപ്പെടുക"}</span>
                           </a>
                           <button
                             onClick={() => {
@@ -1612,7 +1612,7 @@ export default function DirectoryWidget({
                             }}
                             className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 rounded text-[11px] font-black cursor-pointer transition"
                           >
-                            {lang === "en" ? "Resolve" : "തീർപ്പാക്കുക"}
+                            {lang !== "ml" ? "Resolve" : "തീർപ്പാക്കുക"}
                           </button>
                         </div>
                       </div>
@@ -1637,7 +1637,7 @@ export default function DirectoryWidget({
         <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-[9999] animate-fade-in">
           <div className="bg-white rounded-lg border border-slate-200 shadow-lg p-5 max-w-sm w-full space-y-4 text-slate-800">
             <h4 className="font-serif-guardian font-extrabold text-sm md:text-base text-[#052962] border-b pb-2 flex justify-between items-center select-none">
-              <span>{lang === "en" ? "Verify to Resolve Item" : "റിപ്പോർട്ട് ഒഴിവാക്കാൻ സ്ഥിരീകരിക്കുക"}</span>
+              <span>{lang !== "ml" ? "Verify to Resolve Item" : "റിപ്പോർട്ട് ഒഴിവാക്കാൻ സ്ഥിരീകരിക്കുക"}</span>
               <button onClick={() => { setResolvingItem(null); setResolveError(""); setResolveContactInput(""); }} className="text-gray-400 hover:text-red-500 font-black cursor-pointer">X</button>
             </h4>
             <p className="text-[11px] text-slate-500 leading-normal font-semibold">
@@ -1647,7 +1647,7 @@ export default function DirectoryWidget({
             </p>
             <input
               type="text"
-              placeholder={lang === "en" ? "e.g. 9876543210" : "മൊബൈൽ നമ്പർ നൽകുക..."}
+              placeholder={lang !== "ml" ? "e.g. 9876543210" : "മൊബൈൽ നമ്പർ നൽകുക..."}
               value={resolveContactInput}
               onChange={(e) => setResolveContactInput(e.target.value)}
               className="w-full border border-gray-250 p-2 rounded text-xs focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white font-semibold"
@@ -1661,13 +1661,13 @@ export default function DirectoryWidget({
                 onClick={handleResolveSubmit}
                 className="flex-1 py-2 bg-rose-600 hover:bg-rose-700 text-white font-black text-xs rounded uppercase tracking-wider transition cursor-pointer"
               >
-                {lang === "en" ? "Confirm & Resolve" : "സ്ഥിരീകരിക്കുക"}
+                {lang !== "ml" ? "Confirm & Resolve" : "സ്ഥിരീകരിക്കുക"}
               </button>
               <button
                 onClick={() => { setResolvingItem(null); setResolveError(""); setResolveContactInput(""); }}
                 className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded transition cursor-pointer"
               >
-                {lang === "en" ? "Cancel" : "റദ്ദാക്കുക"}
+                {lang !== "ml" ? "Cancel" : "റദ്ദാക്കുക"}
               </button>
             </div>
           </div>
