@@ -141,11 +141,11 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
                   )}
                   <div className="flex-1 min-w-0">
                     <h4 className="text-xs font-black text-slate-800 dark:text-slate-200 leading-snug line-clamp-1">
-                      {lang !== "ml" ? not.titleEn : not.titleMl}
+                      {lang === "ml" ? not.titleMl : lang === "ta" ? (not.titleTa || not.titleEn) : not.titleEn}
                     </h4>
 
                     <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-normal line-clamp-2">
-                      {lang !== "ml" ? not.contentEn : not.contentMl}
+                      {lang === "ml" ? not.contentMl : lang === "ta" ? (not.contentTa || not.contentEn) : not.contentEn}
                     </p>
                   </div>
                 </div>
@@ -234,10 +234,10 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
 
                 <div className="space-y-1.5 text-left bg-white dark:bg-slate-900">
                   <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 leading-snug">
-                    {lang !== "ml" ? selectedNotice.titleEn : selectedNotice.titleMl}
+                    {lang === "ml" ? selectedNotice.titleMl : lang === "ta" ? (selectedNotice.titleTa || selectedNotice.titleEn) : selectedNotice.titleEn}
                   </h3>
                   <p className="text-xs text-slate-650 dark:text-slate-300 leading-relaxed font-semibold whitespace-pre-wrap pt-2 border-t border-slate-50 dark:border-slate-800">
-                    {lang !== "ml" ? selectedNotice.contentEn : selectedNotice.contentMl}
+                    {lang === "ml" ? selectedNotice.contentMl : lang === "ta" ? (selectedNotice.contentTa || selectedNotice.contentEn) : selectedNotice.contentEn}
                   </p>
                 </div>
 
