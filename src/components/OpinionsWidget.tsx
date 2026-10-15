@@ -117,11 +117,11 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" | "ta" }) {
                   </div>
 
                   <h5 className="font-serif-guardian font-bold text-sm text-[#052962] leading-snug">
-                    {lang === "ml" ? (op.titleMl || op.titleEn) : op.titleEn}
+                    {lang === "ml" ? (op.titleMl || op.titleEn) : lang === "ta" ? (op.titleTa || op.titleEn) : op.titleEn}
                   </h5>
 
                   <p className="text-xs text-gray-600 leading-relaxed italic border-l-2 border-amber-300 pl-3">
-                    "{lang === "ml" ? (op.contentMl || op.contentEn) : op.contentEn}"
+                    "{lang === "ml" ? (op.contentMl || op.contentEn) : lang === "ta" ? (op.contentTa || op.contentEn) : op.contentEn}"
                   </p>
                 </div>
               ))
