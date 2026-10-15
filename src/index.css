@@ -198,3 +198,13 @@ body {
   .ao-featured-hero { min-height: 410px; }
   .ao-featured-hero h2 { overflow-wrap: anywhere; }
 }
+
+/* Article feed polish */
+.ao-news-tabs { scrollbar-width: thin; }
+.ao-news-tabs > button { flex: 0 0 auto; min-height: 38px; white-space: nowrap; }
+.ao-news-card { min-width: 0; }
+.ao-news-card h4 { overflow-wrap: anywhere; }
+.ao-news-card:focus-visible { outline: 3px solid #e8b300; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .ao-news-card:hover { transform: translateY(-3px); }
+}
