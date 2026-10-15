@@ -633,14 +633,7 @@ export default function App() {
         
         {/* Top bar with real-time stats & language switchers */}
         <div className="ao-header-utility flex flex-col sm:flex-row justify-between items-center px-4 sm:px-6 py-2 border-b border-blue-900/50 gap-2">
-          <div className="flex flex-wrap justify-center sm:justify-start items-center gap-4 text-xs font-semibold uppercase tracking-wider text-slate-200">
-            
-            <span className="text-[#ffe500] font-bold inline-flex items-center gap-1"><MapPin className="w-3 h-3" /> Agali, Attappadi</span>
-            <span className="flex items-center gap-1.5 bg-black/25 px-2.5 py-0.5 rounded text-[11px] font-mono font-bold tracking-tight text-white border border-white/5 shadow-inner">
-              <Clock className="w-3.5 h-3.5 text-[#ffe500] animate-pulse" />
-              <span>{currentTime.toLocaleTimeString(lang === "ml" ? "ml-IN" : "en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true })}</span>
-            </span>
-          </div>
+          
           <div className="flex gap-4 text-xs font-semibold items-center select-none text-slate-300">
             <button 
               onClick={() => selectLanguage("ml")} 
@@ -681,13 +674,17 @@ export default function App() {
         {/* Newspaper edition strip: date occupies the left-hand calendar block */}
         <div className="ao-edition-strip bg-[#f8f7f3] text-[#052962] border-b border-slate-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col md:flex-row gap-3 md:gap-5 items-stretch">
-            <div className="ao-edition-calendar flex-none w-full md:w-[172px] border border-slate-300 bg-white rounded-sm overflow-hidden shadow-sm" aria-label="Today's edition date">
-              <div className="bg-[#c70000] text-white text-[10px] uppercase font-extrabold tracking-[.18em] text-center py-1.5">{tamilMode ? "இன்றைய பதிப்பு" : lang === "ml" ? "ഇന്നത്തെ പതിപ്പ്" : "Today's edition"}</div>
+            <div className="ao-edition-calendar flex-none w-full md:w-[172px] border border-slate-300 bg-white rounded-sm overflow-hidden shadow-sm" aria-label="Date and India local time">
               <time dateTime={currentTime.toISOString().slice(0, 10)} className="flex flex-row md:flex-col items-center justify-center gap-2 md:gap-0 px-3 py-2 md:py-3 text-[#052962]">
                 <span className="font-serif-guardian font-black text-4xl md:text-5xl leading-none tabular-nums">{currentTime.toLocaleDateString("en-GB", { day: "2-digit" })}</span>
                 <span className="font-serif-guardian font-bold text-base md:text-lg leading-tight">{currentTime.toLocaleDateString(tamilMode ? "ta-IN" : lang === "ml" ? "ml-IN" : "en-GB", { month: "long", year: "numeric" })}</span>
                 <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">{currentTime.toLocaleDateString(tamilMode ? "ta-IN" : lang === "ml" ? "ml-IN" : "en-GB", { weekday: "long" })}</span>
               </time>
+              <div className="ao-calendar-clock flex items-center justify-center gap-2 border-t border-slate-200 bg-slate-50 px-2 py-2 text-[#052962]">
+                <Clock className="w-4 h-4 text-[#c70000]" aria-hidden="true" />
+                <span className="font-sans text-sm sm:text-base font-bold tracking-wide tabular-nums">{currentTime.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: true, timeZone: "Asia/Kolkata" })}</span>
+                <span className="text-[10px] font-extrabold tracking-widest text-slate-500">IST</span>
+              </div>
             </div>
             <div className="ao-edition-promos flex-1 min-w-0 grid grid-cols-1 md:grid-cols-2 gap-3">
               {renderAdBox(adConfig?.leftAd || { titleEn: "Enquire for Ads", titleMl: "പരസ്യങ്ങൾക്ക് ബന്ധപ്പെടുക", subtitleEn: "Enquire Now", subtitleMl: "പരസ്യങ്ങൾ നൽകാൻ", contact: "+91 9447471224", actionType: "share", image: "" })}
