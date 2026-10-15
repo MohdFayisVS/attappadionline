@@ -464,7 +464,14 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
   // Firebase maintains session state; authorization is independently enforced by the API.
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(adminAuth, user => setIsAuthenticated(!!user));
+    const unsubscribe = onAuthStateChanged(adminAuth, async user => {
+      if (!user) { setIsAuthenticated(false); return; }
+      try {
+        const response = await adminFetch("/api/admin/db-diagnostic");
+        setIsAuthenticated(response.ok);
+        if (response.status === 403) setLoginError("This account is not authorized as an administrator.");
+      } catch { setIsAuthenticated(false); }
+    });
     return unsubscribe;
   }, []);
 
