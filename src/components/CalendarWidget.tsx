@@ -21,7 +21,7 @@ const weekDaysMl = ["ഞായർ", "തിങ്കൾ", "ചൊവ്വാ", 
 const monthNamesEn = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const monthNamesMl = ["ജനു", "ഫെബ്രു", "മാർ", "ഏപ്രി", "മേയ്", "ജൂൺ", "ജൂലൈ", "ഓഗ", "സെപ്റ്റ", "ഒക്ടോ", "നവം", "ഡിസം"];
 
-export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | "ml"; onDownloadCard?: (ev: EventItem) => void }) {
+export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | "ml" | "ta"; onDownloadCard?: (ev: EventItem) => void }) {
   const [events, setEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -107,7 +107,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
     try {
       const d = new Date(dateStr);
       const day = d.getDate();
-      const month = lang === "en" ? monthNamesEn[d.getMonth()] : monthNamesMl[d.getMonth()];
+      const month = lang !== "ml" ? monthNamesEn[d.getMonth()] : monthNamesMl[d.getMonth()];
       return { day, month };
     } catch (_) {
       return { day: "?", month: "Date" };
@@ -129,7 +129,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
       <div id="calendar-widget-wrapper" className="bg-white border p-6 text-center rounded-xl shadow-xs">
         <span className="animate-spin text-[#052962] rounded-full h-5 w-5 border-2 border-current border-t-transparent inline-block mr-2"></span>
         <span className="text-xs text-gray-400 font-anek-malayalam font-bold">
-          {lang === "en" ? "Syncing Community Calendar..." : "കലണ്ടർ വിവരങ്ങൾ ലഭ്യമാക്കുന്നു..."}
+          {lang !== "ml" ? "Syncing Community Calendar..." : "കലണ്ടർ വിവരങ്ങൾ ലഭ്യമാക്കുന്നു..."}
         </span>
       </div>
     );
@@ -148,7 +148,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
               <Sparkles className="w-3.5 h-3.5" />
             </span>
             <span className="text-[10px] uppercase font-black tracking-widest text-[#ffe500]">
-              {lang === "en" ? "CALENDAR" : "കലണ്ടർ"}
+              {lang !== "ml" ? "CALENDAR" : "കലണ്ടർ"}
             </span>
           </div>
           
@@ -157,7 +157,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
             onClick={resetToToday}
             className="text-[10px] bg-white/10 hover:bg-white/20 border border-white/20 px-2.5 py-0.5 rounded font-black transition duration-200 cursor-pointer"
           >
-            {lang === "en" ? "Today" : "ഇന്ന്"}
+            {lang !== "ml" ? "Today" : "ഇന്ന്"}
           </button>
         </div>
 
@@ -165,10 +165,10 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
         <div className="flex items-center justify-between mt-3">
           <div className="space-y-0.5">
             <h3 className="text-base font-black tracking-tight leading-none text-white">
-              {lang === "en" ? monthNamesEn[baseDate.getMonth()] : monthNamesMl[baseDate.getMonth()]} {baseDate.getFullYear()}
+              {lang !== "ml" ? monthNamesEn[baseDate.getMonth()] : monthNamesMl[baseDate.getMonth()]} {baseDate.getFullYear()}
             </h3>
             <p className="text-[10px] text-white/75 font-bold">
-              {lang === "en" ? "Swipe left / right to browse calendar timeline" : "വലത്തോട്ടും ഇടത്തോട്ടും മാറ്റി ദിവസങ്ങൾ തിരഞ്ഞെടുക്കുക"}
+              {lang !== "ml" ? "Swipe left / right to browse calendar timeline" : "വലത്തോട്ടും ഇടത്തോട്ടും മാറ്റി ദിവസങ്ങൾ തിരഞ്ഞെടുക്കുക"}
             </p>
           </div>
           
@@ -279,13 +279,13 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
           <span>
             {selectedDateFilter ? (
               <>
-                {lang === "en" ? "Filtered Date:" : "ഫിൽട്ടർ ചെയ്ത ദിവസം:"} {" "}
+                {lang !== "ml" ? "Filtered Date:" : "ഫിൽട്ടർ ചെയ്ത ദിവസം:"} {" "}
                 <span className="text-slate-900 bg-white border border-slate-200 px-2 py-0.5 rounded font-black font-anek-malayalam">
                   {selectedDateFilter}
                 </span>
               </>
             ) : (
-              lang === "en" ? "Showing all scheduled events" : "എല്ലാ തീയതികളിലെയും വിവരങ്ങൾ"
+              lang !== "ml" ? "Showing all scheduled events" : "എല്ലാ തീയതികളിലെയും വിവരങ്ങൾ"
             )}
           </span>
         </div>
@@ -296,7 +296,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
             className="flex items-center gap-1 text-[10px] text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 px-2 py-0.5 rounded transition font-black cursor-pointer"
           >
             <X className="w-3 h-3" />
-            <span>{lang === "en" ? "Show All" : "എല്ലാം കാണിക്കാം"}</span>
+            <span>{lang !== "ml" ? "Show All" : "എല്ലാം കാണിക്കാം"}</span>
           </button>
         )}
       </div>
@@ -318,7 +318,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
                 </div>
                 <div className="space-y-0.5 text-xs text-slate-400">
                   <p className="font-extrabold font-anek-malayalam text-slate-700">
-                    {lang === "en" ? "No Events Scheduled" : "പരിപാടികൾ ഒന്നും നിശ്ചയിച്ചിട്ടില്ല"}
+                    {lang !== "ml" ? "No Events Scheduled" : "പരിപാടികൾ ഒന്നും നിശ്ചയിച്ചിട്ടില്ല"}
                   </p>
                   <p className="text-[10px] leading-tight font-semibold">
                     {lang === "en"
@@ -348,7 +348,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
                     {/* Content Section */}
                     <div className="flex-1 min-w-0 space-y-1.5">
                       <h4 className="text-xs font-black text-slate-900 leading-snug line-clamp-2 uppercase">
-                        {lang === "en" ? ev.titleEn : ev.titleMl}
+                        {lang !== "ml" ? ev.titleEn : ev.titleMl}
                       </h4>
                       
                       {/* Secondary parameters */}
@@ -359,13 +359,13 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
                         </span>
                         <span className="flex items-center gap-0.5 max-w-[145px] truncate text-slate-700">
                           <MapPin className="w-3.5 h-3.5 text-[#052962] shrink-0" />
-                          <span>{lang === "en" ? ev.locationEn : ev.locationMl}</span>
+                          <span>{lang !== "ml" ? ev.locationEn : ev.locationMl}</span>
                         </span>
                       </div>
 
                       {/* Snippet expand block */}
                       <p className="text-[10.5px] text-slate-500 leading-normal line-clamp-2 italic font-medium pt-1 border-t border-slate-100">
-                        {lang === "en" ? ev.descriptionEn : ev.descriptionMl}
+                        {lang !== "ml" ? ev.descriptionEn : ev.descriptionMl}
                       </p>
 
                       {/* Sharing triggers */}
@@ -376,12 +376,12 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
                             className="px-2.5 py-1 hover:bg-amber-100 text-[#052962] hover:text-amber-800 rounded-md bg-[#ffe500]/15 border border-[#ffe500]/40 text-[9px] font-black uppercase tracking-wider transition duration-200 flex items-center gap-1 cursor-pointer select-none"
                             title="Generate Shareable Graphic Card"
                           >
-                            <IdCard className="w-3.5 h-3.5 text-amber-600 shrink-0" /> {lang === "en" ? "Card Preview" : "കാർഡ്"}
+                            <IdCard className="w-3.5 h-3.5 text-amber-600 shrink-0" /> {lang !== "ml" ? "Card Preview" : "കാർഡ്"}
                           </button>
                         )}
                         <ShareButtons 
-                          title={lang === "en" ? ev.titleEn : ev.titleMl}
-                          summary={lang === "en" ? `${ev.locationEn} at ${ev.time}` : `${ev.locationMl}, ${ev.time}`}
+                          title={lang !== "ml" ? ev.titleEn : ev.titleMl}
+                          summary={lang !== "ml" ? `${ev.locationEn} at ${ev.time}` : `${ev.locationMl}, ${ev.time}`}
                           url={`${window.location.origin}/#event-${ev.id}`}
                           layout="bubble"
                         />
