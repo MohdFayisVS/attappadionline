@@ -726,21 +726,21 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                     />
                     <span className="absolute bottom-3 left-3 bg-slate-900/80 text-white font-bold text-[10px] px-2 py-0.5 rounded tracking-wide uppercase flex items-center gap-1">
                       <MapPin className="w-3 h-3 text-[#ffe500]" />
-                      {lang !== "ml" ? dest.locationEn : dest.locationMl}
+                      {lang === "ml" ? dest.locationMl : lang === "ta" ? ((dest.locationTa) || dest.locationEn) : dest.locationEn}
                     </span>
                   </div>
                   <div className="p-4 space-y-2">
                     <h3 className="font-serif-guardian font-extrabold text-[#052962] text-lg md:text-xl">
-                      {lang !== "ml" ? dest.nameEn : dest.nameMl}
+                      {lang === "ml" ? dest.nameMl : lang === "ta" ? ((dest.nameTa) || dest.nameEn) : dest.nameEn}
                     </h3>
                     <p className="text-xs text-gray-500 leading-relaxed font-light">
-                      {lang !== "ml" ? dest.descriptionEn : dest.descriptionMl}
+                      {lang === "ml" ? dest.descriptionMl : lang === "ta" ? ((dest.descriptionTa) || dest.descriptionEn) : dest.descriptionEn}
                     </p>
                   </div>
                 </div>
                 <div className="px-4 pb-4 pt-1">
                   <div className="border-t border-gray-100 pt-3 flex flex-wrap gap-1.5">
-                    {safeParseArray(lang !== "ml" ? dest.highlightsEn : dest.highlightsMl).map((highlight, index) => (
+                    {safeParseArray(lang === "ml" ? dest.highlightsMl : lang === "ta" ? ((dest.highlightsTa) || dest.highlightsEn) : dest.highlightsEn).map((highlight, index) => (
                       <span key={index} className="text-[10px] bg-slate-100 text-slate-800 font-bold px-2 py-0.5 rounded">
                         ✓ {highlight}
                       </span>
@@ -771,19 +771,19 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                       {cult.type === "food" ? (lang !== "ml" ? "Gastronomy" : "ഭക്ഷണപാരമ്പര്യം") : (lang !== "ml" ? "Arts & Heritage" : "കലയും സംസ്‌കാരവും")}
                     </span>
                     <h3 className="font-serif-guardian font-extrabold text-slate-900 text-lg md:text-xl pt-1">
-                      {lang !== "ml" ? cult.titleEn : cult.titleMl}
+                      {lang === "ml" ? cult.titleMl : lang === "ta" ? ((cult.titleTa) || cult.titleEn) : cult.titleEn}
                     </h3>
                     <h5 className="text-[11px] text-gray-400 font-semibold uppercase tracking-wider">
-                      {lang !== "ml" ? cult.subtitleEn : cult.subtitleMl}
+                      {lang === "ml" ? cult.subtitleMl : lang === "ta" ? ((cult.subtitleTa) || cult.subtitleEn) : cult.subtitleEn}
                     </h5>
                     <p className="text-xs text-slate-600 leading-relaxed font-light">
-                      {lang !== "ml" ? cult.descEn : cult.descMl}
+                      {lang === "ml" ? cult.descMl : lang === "ta" ? ((cult.descTa) || cult.descEn) : cult.descEn}
                     </p>
                   </div>
                   <div className="bg-[#052962]/5 border-l-4 border-[#052962] p-2.5 rounded-r">
                     <p className="text-[11px] font-bold text-[#052962] flex items-center gap-1">
                       <UtensilsCrossed className="w-3.5 h-3.5 shrink-0" />
-                      {lang !== "ml" ? cult.elementEn : cult.elementMl}
+                      {lang === "ml" ? cult.elementMl : lang === "ta" ? ((cult.elementTa) || cult.elementEn) : cult.elementEn}
                     </p>
                   </div>
                 </div>
@@ -811,16 +811,16 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                       referrerPolicy="no-referrer"
                     />
                     <div className="absolute top-2 right-2 bg-green-700 text-white font-extrabold text-[9px] px-2 py-0.5 rounded tracking-wide uppercase shadow">
-                      {lang !== "ml" ? stay.typeEn : stay.typeMl}
+                      {lang === "ml" ? stay.typeMl : lang === "ta" ? ((stay.typeTa) || stay.typeEn) : stay.typeEn}
                     </div>
                   </div>
                   <div className="p-4 space-y-2">
                     <span className="text-[10px] text-gray-500 font-medium flex items-center gap-1">
                       <MapPin className="w-3 h-3 text-red-500 shrink-0" />
-                      {lang !== "ml" ? stay.locationEn : stay.locationMl}
+                      {lang === "ml" ? stay.locationMl : lang === "ta" ? ((stay.locationTa) || stay.locationEn) : stay.locationEn}
                     </span>
                     <h4 className="font-serif-guardian font-bold text-gray-800 text-sm md:text-base leading-snug">
-                      {lang !== "ml" ? stay.nameEn : stay.nameMl}
+                      {lang === "ml" ? stay.nameMl : lang === "ta" ? ((stay.nameTa) || stay.nameEn) : stay.nameEn}
                     </h4>
                     <ul className="space-y-1 pt-1.5">
                       {(() => {
@@ -838,7 +838,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                 </div>
                 <div className="p-4 border-t border-gray-100 bg-slate-50 flex items-center justify-between">
                   <span className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">{lang !== "ml" ? "Rate Estimate" : "നിരക്ക്"}</span>
-                  <span className="text-xs font-black text-[#c70000]">{lang !== "ml" ? stay.priceEn : stay.priceMl}</span>
+                  <span className="text-xs font-black text-[#c70000]">{lang === "ml" ? stay.priceMl : lang === "ta" ? ((stay.priceTa) || stay.priceEn) : stay.priceEn}</span>
                 </div>
               </motion.div>
             ))}
@@ -861,19 +861,19 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                       {lang !== "ml" ? "Bilingual Narrative" : "യാത്രാക്കുറിപ്പ്"}
                     </span>
                     <h3 className="font-serif-guardian font-extrabold text-gray-900 text-lg md:text-xl">
-                      {lang !== "ml" ? tr.titleEn : tr.titleMl}
+                      {lang === "ml" ? tr.titleMl : lang === "ta" ? ((tr.titleTa) || tr.titleEn) : tr.titleEn}
                     </h3>
                   </div>
                   <span className="text-[10px] whitespace-nowrap text-gray-400 font-mono bg-gray-100 px-2 py-0.5 rounded">
-                    {lang !== "ml" ? tr.readTimeEn : tr.readTimeMl}
+                    {lang === "ml" ? tr.readTimeMl : lang === "ta" ? ((tr.readTimeTa) || tr.readTimeEn) : tr.readTimeEn}
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 leading-relaxed font-light italic">
-                  "{lang !== "ml" ? tr.snippetEn : tr.snippetMl}"
+                  "{lang === "ml" ? tr.snippetMl : lang === "ta" ? ((tr.snippetTa) || tr.snippetEn) : tr.snippetEn}"
                 </p>
                 <div className="flex justify-between items-center pt-2 border-t border-gray-100 text-[10px] text-gray-400">
                   <span>
-                    By <strong className="text-gray-600">{lang !== "ml" ? tr.authorEn : tr.authorMl}</strong>
+                    By <strong className="text-gray-600">{lang === "ml" ? tr.authorMl : lang === "ta" ? ((tr.authorTa) || tr.authorEn) : tr.authorEn}</strong>
                   </span>
                   <span>Published: {tr.date}</span>
                 </div>
@@ -900,7 +900,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2.5">
                     <div className="text-white text-[10px] space-y-0.5 truncate">
-                      <p className="font-bold truncate">{lang !== "ml" ? ph.titleEn : ph.titleMl}</p>
+                      <p className="font-bold truncate">{lang === "ml" ? ph.titleMl : lang === "ta" ? ((ph.titleTa) || ph.titleEn) : ph.titleEn}</p>
                       <p className="text-slate-300 text-[8px] truncate">{lang !== "ml" ? "Click to expand" : "വലുതാക്കി കാണാൻ ക്ലിക്ക് ചെയ്യുക"}</p>
                     </div>
                   </div>
