@@ -623,6 +623,7 @@ export default function App() {
 
       {/* 2. CHIEF BRAND BANNER */}
       <header className="bg-[#052962] text-white relative">
+        <a href="#main-content" className="ao-skip-link">Skip to main content</a>
         
         {/* Top bar with real-time stats & language switchers */}
         <div className="flex flex-col sm:flex-row justify-between items-center px-6 py-2 border-b border-blue-900/50 gap-2">
@@ -757,7 +758,7 @@ export default function App() {
           </div>
 
           {/* Row 2: Search Bar & Persistent Navigation Menu */}
-          <div className="flex flex-col lg:flex-row justify-between items-center gap-6 pt-2">
+          <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4 lg:gap-6 pt-2">
             
             {/* Persistent Search Bar Input - The Guardian Editorial Style */}
             <div className="relative w-full max-w-sm md:max-w-md shrink-0">
@@ -789,7 +790,8 @@ export default function App() {
             </div>
 
             {/* Section Navigation desk menu */}
-            <nav className="flex flex-wrap justify-center lg:justify-end gap-x-4 sm:gap-x-5 gap-y-2 text-xs md:text-sm font-bold uppercase tracking-wide">
+            <nav aria-label="Primary navigation"
+              className="ao-primary-nav flex w-full lg:w-auto items-center justify-start lg:justify-end gap-2 overflow-x-auto overscroll-x-contain pb-2 lg:pb-0 text-xs md:text-sm font-bold uppercase tracking-wide">
             <button 
               onClick={() => { setActiveSection("news"); setActiveRegion("all"); setSearchQuery(""); }} 
               className={`pb-1 hover:text-[#ffe500] transition duration-200 ${activeSection === "news" ? "text-[#ffe500] border-b-4 border-[#ffe500] font-extrabold" : "text-white"}`}
@@ -863,9 +865,9 @@ export default function App() {
 
         {/* Third Level sub-regions row strip */}
         <div className="bg-[#dcdcdc] text-[#121212] px-6 py-2.5 text-[11px] font-bold uppercase border-b border-gray-300">
-          <div className="max-w-7xl mx-auto flex flex-wrap gap-x-5 gap-y-1 items-center">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row gap-2 sm:gap-5 items-start sm:items-center">
             <span className="text-[#c70000] shrink-0 font-black">Regions:</span>
-            <div className="flex flex-wrap gap-x-6 gap-y-1">
+            <div className="ao-region-nav flex w-full min-w-0 gap-4 overflow-x-auto whitespace-nowrap pb-1 sm:pb-0">
               {[
                 { key: "all", en: "All Regions", ml: "എല്ലാ മേഖലയും" },
                 { key: "agali", en: "Agali", ml: "അഗളി" },
@@ -971,7 +973,7 @@ export default function App() {
       )}
 
       {/* 4. MAIN THREE-COLUMN LAYOUT CONTEXT */}
-      <main className="max-w-7xl mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <main id="main-content" className="max-w-7xl mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 min-w-0">
         
         {/* LEFT COLUMN: Main News Feed or Search Results (Col spans 8 or 12) */}
         <section className={`${activeSection === "news" ? "lg:col-span-8" : "lg:col-span-12"} space-y-4`}>
