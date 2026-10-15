@@ -20,8 +20,11 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci
-      - name: Apply compatible audit fixes (no force)
-        run: npm audit fix || true
+      - name: Pin patched gRPC dependency and apply compatible fixes
+        run: |
+          npm pkg set 'overrides.@grpc/grpc-js=^1.14.5'
+          npm install --package-lock-only --ignore-scripts
+          npm audit fix || true
       - name: Verify patched dependencies
         run: |
           npm run lint
