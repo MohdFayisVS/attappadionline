@@ -223,3 +223,13 @@ body {
 @media (min-width: 1024px) {
   .ao-header-core { gap: 22px; }
 }
+
+/* Newspaper-style edition date */
+.ao-newspaper-date {
+  font-variant-numeric: lining-nums;
+  text-wrap: balance;
+  letter-spacing: -.02em;
+}
+@media (max-width: 639px) {
+  .ao-newspaper-date { font-size: 1.125rem; text-align: center; }
+}
