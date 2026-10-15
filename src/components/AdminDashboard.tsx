@@ -13,6 +13,7 @@ import {
 } from "../types";
 import SocialCardGenerator from "./SocialCardGenerator";
 import ExploreAttappadi from "./ExploreAttappadi";
+import { adminAuth, adminFetch, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "../services/adminAuth";
 
 export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -341,7 +342,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     liveTranslationTimers.current[sourceFieldPath] = setTimeout(async () => {
       setActiveLiveTranslationsCount(prev => prev + 1);
       try {
-        const response = await fetch("/api/admin/translate", {
+        const response = await adminFetch("/api/admin/translate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ text: trimmed, targetLang })
@@ -420,7 +421,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
         if (enVal && !mlVal) {
           try {
-            const response = await fetch("/api/admin/translate", {
+            const response = await adminFetch("/api/admin/translate", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ text: enVal, targetLang: "ml" })
@@ -434,7 +435,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
           }
         } else if (mlVal && !enVal) {
           try {
-            const response = await fetch("/api/admin/translate", {
+            const response = await adminFetch("/api/admin/translate", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ text: mlVal, targetLang: "en" })
@@ -461,12 +462,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     return updatedForm;
   };
 
-  // Load and authenticate
+  // Firebase maintains session state; authorization is independently enforced by the API.
   useEffect(() => {
-    const token = localStorage.getItem("attappadi_admin_token");
-    if (token === "attappadi-sec-2026-auth-token") {
-      setIsAuthenticated(true);
-    }
+    const unsubscribe = onAuthStateChanged(adminAuth, user => setIsAuthenticated(!!user));
+    return unsubscribe;
   }, []);
 
   useEffect(() => {
@@ -497,7 +496,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
   const fetchDbDiagnostic = async () => {
     try {
-      const res = await fetch("/api/admin/db-diagnostic");
+      const res = await adminFetch("/api/admin/db-diagnostic");
       if (res.ok) {
         const data = await res.json();
         setDbDiagnostic({
@@ -529,46 +528,44 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     e.preventDefault();
     setLoginError("");
     try {
-      const response = await fetch("/api/admin/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
-      });
-      const data = await response.json();
-      if (response.ok && data.success) {
-        localStorage.setItem("attappadi_admin_token", data.token);
-        setIsAuthenticated(true);
-      } else {
-        setLoginError(data.error || "Incorrect Credentials. Please try again.");
+      await signInWithEmailAndPassword(adminAuth, username.trim(), password);
+      // The API independently checks whether this Firebase UID is an administrator.
+      const check = await adminFetch("/api/admin/db-diagnostic");
+      if (!check.ok) {
+        await signOut(adminAuth);
+        setLoginError(check.status === 403 ? "This account is not authorized as an administrator." : "Administrator verification failed.");
+        return;
       }
-    } catch (_) {
-      setLoginError("Could not connect to authentication services.");
+      setPassword("");
+      setIsAuthenticated(true);
+    } catch {
+      setLoginError("Sign-in failed. Verify your administrator email and password.");
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("attappadi_admin_token");
+  const handleLogout = async () => {
+    await signOut(adminAuth);
     setIsAuthenticated(false);
   };
 
   // Fetches
-  const fetchNews = () => fetch("/api/news").then(r => r.json()).then(setNewsList).catch(console.error);
-  const fetchOpinions = () => fetch("/api/opinions").then(r => r.json()).then(setOpinionsList).catch(console.error);
-  const fetchEvents = () => fetch("/api/events").then(r => r.json()).then(setEventsList).catch(console.error);
-  const fetchDirectory = () => fetch("/api/directory").then(r => r.json()).then(setDirList).catch(console.error);
-  const fetchEmergency = () => fetch("/api/emergency").then(r => r.json()).then(setEmergencyList).catch(console.error);
-  const fetchExploreDestinations = () => fetch("/api/destinations").then(r => r.json()).then(setDestinationsList).catch(console.error);
-  const fetchExploreCultures = () => fetch("/api/cultures").then(r => r.json()).then(setCulturesList).catch(console.error);
-  const fetchExploreStays = () => fetch("/api/stays").then(r => r.json()).then(setStaysList).catch(console.error);
-  const fetchExploreTravelogues = () => fetch("/api/travelogues").then(r => r.json()).then(setTraveloguesList).catch(console.error);
-  const fetchExplorePhotos = () => fetch("/api/photos").then(r => r.json()).then(setPhotosList).catch(console.error);
-  const fetchBusRoutes = () => fetch("/api/busroutes").then(r => r.json()).then(setBusRoutesList).catch(console.error);
-  const fetchRoutes = () => fetch("/api/routes").then(r => r.json()).then(setRoutesList).catch(console.error);
-  const fetchNotices = () => fetch("/api/notices").then(r => r.json()).then(setNoticesList).catch(console.error);
-  const fetchLpg = () => fetch("/api/lpg").then(r => r.json()).then(setLpgList).catch(console.error);
-  const fetchLostFound = () => fetch("/api/lostfound").then(r => r.json()).then(setLostFoundList).catch(console.error);
+  const fetchNews = () => adminFetch("/api/news").then(r => r.json()).then(setNewsList).catch(console.error);
+  const fetchOpinions = () => adminFetch("/api/opinions").then(r => r.json()).then(setOpinionsList).catch(console.error);
+  const fetchEvents = () => adminFetch("/api/events").then(r => r.json()).then(setEventsList).catch(console.error);
+  const fetchDirectory = () => adminFetch("/api/directory").then(r => r.json()).then(setDirList).catch(console.error);
+  const fetchEmergency = () => adminFetch("/api/emergency").then(r => r.json()).then(setEmergencyList).catch(console.error);
+  const fetchExploreDestinations = () => adminFetch("/api/destinations").then(r => r.json()).then(setDestinationsList).catch(console.error);
+  const fetchExploreCultures = () => adminFetch("/api/cultures").then(r => r.json()).then(setCulturesList).catch(console.error);
+  const fetchExploreStays = () => adminFetch("/api/stays").then(r => r.json()).then(setStaysList).catch(console.error);
+  const fetchExploreTravelogues = () => adminFetch("/api/travelogues").then(r => r.json()).then(setTraveloguesList).catch(console.error);
+  const fetchExplorePhotos = () => adminFetch("/api/photos").then(r => r.json()).then(setPhotosList).catch(console.error);
+  const fetchBusRoutes = () => adminFetch("/api/busroutes").then(r => r.json()).then(setBusRoutesList).catch(console.error);
+  const fetchRoutes = () => adminFetch("/api/routes").then(r => r.json()).then(setRoutesList).catch(console.error);
+  const fetchNotices = () => adminFetch("/api/notices").then(r => r.json()).then(setNoticesList).catch(console.error);
+  const fetchLpg = () => adminFetch("/api/lpg").then(r => r.json()).then(setLpgList).catch(console.error);
+  const fetchLostFound = () => adminFetch("/api/lostfound").then(r => r.json()).then(setLostFoundList).catch(console.error);
   const fetchAdConfig = () => {
-    fetch("/api/adconfig")
+    adminFetch("/api/adconfig")
       .then(r => r.json())
       .then(data => {
         if (data) {
@@ -609,7 +606,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       try {
         // Translation for left ad
         if (adForm.leftAd.titleEn && !adForm.leftAd.titleMl) {
-          const res = await fetch("/api/admin/translate", {
+          const res = await adminFetch("/api/admin/translate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ text: adForm.leftAd.titleEn, targetLang: "ml" })
@@ -617,7 +614,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
           const d = await res.json();
           if (res.ok && d.translatedText) finalAdForm.leftAd.titleMl = d.translatedText;
         } else if (adForm.leftAd.titleMl && !adForm.leftAd.titleEn) {
-          const res = await fetch("/api/admin/translate", {
+          const res = await adminFetch("/api/admin/translate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ text: adForm.leftAd.titleMl, targetLang: "en" })
@@ -627,7 +624,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
         }
 
         if (adForm.leftAd.subtitleEn && !adForm.leftAd.subtitleMl) {
-          const res = await fetch("/api/admin/translate", {
+          const res = await adminFetch("/api/admin/translate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ text: adForm.leftAd.subtitleEn, targetLang: "ml" })
@@ -638,7 +635,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
         // Translation for right ad
         if (adForm.rightAd.titleEn && !adForm.rightAd.titleMl) {
-          const res = await fetch("/api/admin/translate", {
+          const res = await adminFetch("/api/admin/translate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ text: adForm.rightAd.titleEn, targetLang: "ml" })
@@ -646,7 +643,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
           const d = await res.json();
           if (res.ok && d.translatedText) finalAdForm.rightAd.titleMl = d.translatedText;
         } else if (adForm.rightAd.titleMl && !adForm.rightAd.titleEn) {
-          const res = await fetch("/api/admin/translate", {
+          const res = await adminFetch("/api/admin/translate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ text: adForm.rightAd.titleMl, targetLang: "en" })
@@ -656,7 +653,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
         }
 
         if (adForm.rightAd.subtitleEn && !adForm.rightAd.subtitleMl) {
-          const res = await fetch("/api/admin/translate", {
+          const res = await adminFetch("/api/admin/translate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ text: adForm.rightAd.subtitleEn, targetLang: "ml" })
@@ -674,7 +671,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     }
 
     try {
-      const response = await fetch("/api/adconfig", {
+      const response = await adminFetch("/api/adconfig", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(finalAdForm)
@@ -761,7 +758,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     const url = isEdit ? `/api/news/${editingId}` : "/api/news";
     const method = isEdit ? "PUT" : "POST";
 
-    const response = await fetch(url, {
+    const response = await adminFetch(url, {
       method: method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(translatedNews)
@@ -785,7 +782,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       title: "Delete News Article",
       message: "Are you sure you want to permanently delete this news article?",
       onConfirm: async () => {
-        const response = await fetch(`/api/news/${id}`, { method: "DELETE" });
+        const response = await adminFetch(`/api/news/${id}`, { method: "DELETE" });
         if (response.ok) {
           triggerToast("News article removed successfully.");
           fetchNews();
@@ -802,7 +799,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       title: "Delete Lost & Found Report",
       message: "Are you sure you want to permanently delete this reported item?",
       onConfirm: async () => {
-        const response = await fetch(`/api/lostfound/${id}`, { method: "DELETE" });
+        const response = await adminFetch(`/api/lostfound/${id}`, { method: "DELETE" });
         if (response.ok) {
           triggerToast("Reported item removed successfully.");
           fetchLostFound();
@@ -918,7 +915,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     }
     setAiLoading(true);
     try {
-      const response = await fetch("/api/admin/ai-generate", {
+      const response = await adminFetch("/api/admin/ai-generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ titleSuggest: aiIdea, mainPoints: aiPoints })
@@ -951,7 +948,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     }
     triggerToast("Initiating translation process...");
     try {
-      const response = await fetch("/api/admin/translate", {
+      const response = await adminFetch("/api/admin/translate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text, targetLang: target })
@@ -1002,7 +999,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     const url = isEdit ? `/api/opinions/${editingId}` : "/api/opinions";
     const method = isEdit ? "PUT" : "POST";
 
-    const response = await fetch(url, {
+    const response = await adminFetch(url, {
       method: method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(translatedOpinion)
@@ -1017,7 +1014,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   };
 
   const handleApproveOpinion = async (id: string) => {
-    const response = await fetch(`/api/opinions/approve/${id}`, { method: "POST" });
+    const response = await adminFetch(`/api/opinions/approve/${id}`, { method: "POST" });
     if (response.ok) {
       triggerToast("Opinion entry approved live!");
       fetchOpinions();
@@ -1031,7 +1028,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       title: "Delete Opinion",
       message: "Are you sure you want to permanently delete this opinion column?",
       onConfirm: async () => {
-        const response = await fetch(`/api/opinions/delete/${id}`, { method: "POST" });
+        const response = await adminFetch(`/api/opinions/delete/${id}`, { method: "POST" });
         if (response.ok) {
           triggerToast("Opinion entry removed.");
           fetchOpinions();
@@ -1074,7 +1071,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     const url = isEdit ? `/api/events/${editingId}` : "/api/events";
     const method = isEdit ? "PUT" : "POST";
 
-    const response = await fetch(url, {
+    const response = await adminFetch(url, {
       method: method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(translatedEvent)
@@ -1095,7 +1092,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       title: "Cancel Event",
       message: "Are you sure you want to permanently delete/cancel this community event?",
       onConfirm: async () => {
-        const response = await fetch(`/api/events/${id}`, { method: "DELETE" });
+        const response = await adminFetch(`/api/events/${id}`, { method: "DELETE" });
         if (response.ok) {
           triggerToast("Event removed.");
           fetchEvents();
@@ -1140,7 +1137,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     const url = isEdit ? `/api/destinations/${editingId}` : "/api/destinations";
     const method = isEdit ? "PUT" : "POST";
 
-    const response = await fetch(url, {
+    const response = await adminFetch(url, {
       method: method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1165,7 +1162,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       title: "Delete Destination",
       message: "Are you sure you want to permanently delete this destination listing?",
       onConfirm: async () => {
-        const response = await fetch(`/api/destinations/${id}`, { method: "DELETE" });
+        const response = await adminFetch(`/api/destinations/${id}`, { method: "DELETE" });
         if (response.ok) {
           triggerToast("Destination removed from Explore list.");
           fetchExploreDestinations();
@@ -1208,7 +1205,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     const url = isEdit ? `/api/cultures/${editingId}` : "/api/cultures";
     const method = isEdit ? "PUT" : "POST";
 
-    const response = await fetch(url, {
+    const response = await adminFetch(url, {
       method: method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(translatedCulture)
@@ -1229,7 +1226,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       title: "Delete Culture Item",
       message: "Are you sure you want to permanently delete this heritage/culture card?",
       onConfirm: async () => {
-        const response = await fetch(`/api/cultures/${id}`, { method: "DELETE" });
+        const response = await adminFetch(`/api/cultures/${id}`, { method: "DELETE" });
         if (response.ok) {
           triggerToast("Culture removed.");
           fetchExploreCultures();
@@ -1276,7 +1273,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     const url = isEdit ? `/api/stays/${editingId}` : "/api/stays";
     const method = isEdit ? "PUT" : "POST";
 
-    const response = await fetch(url, {
+    const response = await adminFetch(url, {
       method: method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1301,7 +1298,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       title: "Delete Lodging Option",
       message: "Are you sure you want to permanently delete this lodging/stay listing?",
       onConfirm: async () => {
-        const response = await fetch(`/api/stays/${id}`, { method: "DELETE" });
+        const response = await adminFetch(`/api/stays/${id}`, { method: "DELETE" });
         if (response.ok) {
           triggerToast("Stay option deleted.");
           fetchExploreStays();
@@ -1342,7 +1339,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     const url = isEdit ? `/api/travelogues/${editingId}` : "/api/travelogues";
     const method = isEdit ? "PUT" : "POST";
 
-    const response = await fetch(url, {
+    const response = await adminFetch(url, {
       method: method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(translatedTravelogue)
@@ -1363,7 +1360,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       title: "Remove Travelogue",
       message: "Are you sure you want to permanently delete this travelogue narrations snippet?",
       onConfirm: async () => {
-        const response = await fetch(`/api/travelogues/${id}`, { method: "DELETE" });
+        const response = await adminFetch(`/api/travelogues/${id}`, { method: "DELETE" });
         if (response.ok) {
           triggerToast("Travelogue deleted.");
           fetchExploreTravelogues();
@@ -1398,7 +1395,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     const url = isEdit ? `/api/photos/${editingId}` : "/api/photos";
     const method = isEdit ? "PUT" : "POST";
 
-    const response = await fetch(url, {
+    const response = await adminFetch(url, {
       method: method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(translatedPhoto)
@@ -1419,7 +1416,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       title: "Delete Gallery Photo",
       message: "Are you sure you want to permanently delete this gallery photo frame?",
       onConfirm: async () => {
-        const response = await fetch(`/api/photos/${id}`, { method: "DELETE" });
+        const response = await adminFetch(`/api/photos/${id}`, { method: "DELETE" });
         if (response.ok) {
           triggerToast("Frame deleted.");
           fetchExplorePhotos();
@@ -1478,7 +1475,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     const url = isEdit ? `/api/busroutes/${editingId}` : "/api/busroutes";
     const method = isEdit ? "PUT" : "POST";
 
-    const response = await fetch(url, {
+    const response = await adminFetch(url, {
       method: method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1503,7 +1500,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       title: "Remove Bus Timetable",
       message: "Are you sure you want to suspend this route transit schedule from public timetables?",
       onConfirm: async () => {
-        const response = await fetch(`/api/busroutes/${id}`, { method: "DELETE" });
+        const response = await adminFetch(`/api/busroutes/${id}`, { method: "DELETE" });
         if (response.ok) {
           triggerToast("Route timetable removed.");
           fetchBusRoutes();
@@ -1524,7 +1521,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     ]);
 
     try {
-      const response = await fetch("/api/routes", {
+      const response = await adminFetch("/api/routes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(translated)
@@ -1547,7 +1544,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       title: "Remove Registered Route",
       message: "Are you sure you want to delete this route? Disconnecting it will not affect already registered schedules, but future entries won't find it.",
       onConfirm: async () => {
-        const response = await fetch(`/api/routes/${id}`, { method: "DELETE" });
+        const response = await adminFetch(`/api/routes/${id}`, { method: "DELETE" });
         if (response.ok) {
           triggerToast("Route deleted from registry.");
           fetchRoutes();
@@ -1583,7 +1580,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     const url = isEdit ? `/api/directory/${editingId}` : "/api/directory";
     const method = isEdit ? "PUT" : "POST";
 
-    const response = await fetch(url, {
+    const response = await adminFetch(url, {
       method: method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(translatedDir)
@@ -1604,7 +1601,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       title: "Remove Listing",
       message: "Are you sure you want to permanently delete this local directory element?",
       onConfirm: async () => {
-        const response = await fetch(`/api/directory/${id}`, { method: "DELETE" });
+        const response = await adminFetch(`/api/directory/${id}`, { method: "DELETE" });
         if (response.ok) {
           triggerToast("Directory entry removed.");
           fetchDirectory();
@@ -1637,7 +1634,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     const url = isEdit ? `/api/emergency/${editingId}` : "/api/emergency";
     const method = isEdit ? "PUT" : "POST";
 
-    const response = await fetch(url, {
+    const response = await adminFetch(url, {
       method: method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(translatedEmerg)
@@ -1658,7 +1655,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       title: "Remove Emergency Line",
       message: "Are you sure you want to permanently delete this critical safety/rescue hotline?",
       onConfirm: async () => {
-        const response = await fetch(`/api/emergency/${id}`, { method: "DELETE" });
+        const response = await adminFetch(`/api/emergency/${id}`, { method: "DELETE" });
         if (response.ok) {
           triggerToast("Critical line removed.");
           fetchEmergency();
@@ -1697,7 +1694,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     const url = isEdit ? `/api/notices/${editingId}` : "/api/notices";
     const method = isEdit ? "PUT" : "POST";
 
-    const response = await fetch(url, {
+    const response = await adminFetch(url, {
       method: method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(translatedNotice)
@@ -1718,7 +1715,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       title: "Delete Notice Announcement",
       message: "Are you sure you want to permanently delete this notice? This action is irreversible.",
       onConfirm: async () => {
-        const response = await fetch(`/api/notices/${id}`, { method: "DELETE" });
+        const response = await adminFetch(`/api/notices/${id}`, { method: "DELETE" });
         if (response.ok) {
           triggerToast("Notice announcement deleted.");
           fetchNotices();
@@ -1738,7 +1735,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     
     let translatedForm = { ...quickBreakingForm };
     if (quickBreakingForm.titleEn && !quickBreakingForm.titleMl) {
-      const mlRes = await fetch("/api/admin/translate", {
+      const mlRes = await adminFetch("/api/admin/translate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: quickBreakingForm.titleEn, targetLang: "ml" })
@@ -1748,7 +1745,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
         translatedForm.titleMl = tr.translatedText;
       }
     } else if (quickBreakingForm.titleMl && !quickBreakingForm.titleEn) {
-      const enRes = await fetch("/api/admin/translate", {
+      const enRes = await adminFetch("/api/admin/translate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: quickBreakingForm.titleMl, targetLang: "en" })
@@ -1771,7 +1768,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       isCard: false
     };
 
-    const res = await fetch("/api/news", {
+    const res = await adminFetch("/api/news", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
@@ -1797,7 +1794,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       isCard: item.isCard !== undefined ? !!item.isCard : true
     };
 
-    const res = await fetch(`/api/news/${item.id}`, {
+    const res = await adminFetch(`/api/news/${item.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
@@ -1818,7 +1815,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
     let translatedForm = { ...quickNoticeForm };
     if (quickNoticeForm.titleEn && !quickNoticeForm.titleMl) {
-      const mlRes = await fetch("/api/admin/translate", {
+      const mlRes = await adminFetch("/api/admin/translate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: quickNoticeForm.titleEn, targetLang: "ml" })
@@ -1828,7 +1825,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
         translatedForm.titleMl = tr.translatedText;
       }
     } else if (quickNoticeForm.titleMl && !quickNoticeForm.titleEn) {
-      const enRes = await fetch("/api/admin/translate", {
+      const enRes = await adminFetch("/api/admin/translate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: quickNoticeForm.titleMl, targetLang: "en" })
@@ -1840,7 +1837,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     }
 
     if (quickNoticeForm.contentEn && !quickNoticeForm.contentMl) {
-      const mlRes = await fetch("/api/admin/translate", {
+      const mlRes = await adminFetch("/api/admin/translate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: quickNoticeForm.contentEn, targetLang: "ml" })
@@ -1850,7 +1847,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
         translatedForm.contentMl = tr.translatedText;
       }
     } else if (quickNoticeForm.contentMl && !quickNoticeForm.contentEn) {
-      const enRes = await fetch("/api/admin/translate", {
+      const enRes = await adminFetch("/api/admin/translate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: quickNoticeForm.contentMl, targetLang: "en" })
@@ -1861,7 +1858,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       }
     }
 
-    const res = await fetch("/api/notices", {
+    const res = await adminFetch("/api/notices", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1903,7 +1900,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       image: item.image || ""
     };
 
-    const res = await fetch(`/api/notices/${item.id}`, {
+    const res = await adminFetch(`/api/notices/${item.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
@@ -1946,7 +1943,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     const url = isEdit ? `/api/lpg/${editingId}` : "/api/lpg";
     const method = isEdit ? "PUT" : "POST";
 
-    const response = await fetch(url, {
+    const response = await adminFetch(url, {
       method: method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(translatedLpg)
@@ -1978,7 +1975,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       title: "Delete LPG Delivery Schedule",
       message: "Are you sure you want to permanently delete this LPG routing schedule? This action is irreversible.",
       onConfirm: async () => {
-        const response = await fetch(`/api/lpg/${id}`, { method: "DELETE" });
+        const response = await adminFetch(`/api/lpg/${id}`, { method: "DELETE" });
         if (response.ok) {
           triggerToast("LPG schedule deleted successfully.");
           fetchLpg();
@@ -2011,19 +2008,19 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             <form className="space-y-6" onSubmit={handleLogin}>
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-slate-350">
-                  Command Username
+                  Administrator Email
                 </label>
                 <div className="mt-1 relative rounded-md shadow-xs">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <KeyRound className="h-4 w-4 text-slate-400" />
                   </div>
                   <input
-                    type="text"
+                    type="email"
                     required
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     className="block w-full pl-10 text-xs py-2.5 bg-slate-800 border border-slate-700 text-white rounded focus:ring-amber-400 focus:border-amber-400 focus:outline-hidden"
-                    placeholder="e.g. admin"
+                    placeholder="admin@example.com"
                   />
                 </div>
               </div>
