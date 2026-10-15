@@ -4,7 +4,7 @@ import { MapPin, Compass, UtensilsCrossed, Hotel, BookOpen, Image as ImageIcon, 
 import { DestinationItem, CultureItem, StayItem, TravelogueItem, PhotoItem, BusRouteItem } from "../types";
 
 interface ExploreAttappadiProps {
-  lang: "en" | "ml";
+  lang: "en" | "ml" | "ta";
   initialTab?: "destinations" | "food" | "stays" | "travelogues" | "photos" | "culture" | "busTimings";
   isAdmin?: boolean;
   hideTabsSelection?: boolean;
@@ -661,11 +661,11 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
           <div className="flex items-center gap-2 mb-1.5">
             <Compass className="w-5 h-5 text-[#c70000] animate-spin" style={{ animationDuration: '6s' }} />
             <span className="text-[10px] bg-[#c70000] text-white font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">
-              {lang === "en" ? "Interactive Travel Desk" : "സഞ്ചാര ഡെസ്ക്"}
+              {lang !== "ml" ? "Interactive Travel Desk" : "സഞ്ചാര ഡെസ്ക്"}
             </span>
           </div>
           <h2 className="font-serif-guardian font-extrabold text-[#052962] text-2xl md:text-4.5xl leading-tight">
-            {lang === "en" ? "Explore Attappadi Valley" : "അട്ടപ്പാടിയെ അറിയാം..."}
+            {lang !== "ml" ? "Explore Attappadi Valley" : "അട്ടപ്പാടിയെ അറിയാം..."}
           </h2>
           <p className="text-xs md:text-sm text-gray-500 mt-2 max-w-3xl leading-relaxed">
             {lang === "en" 
@@ -726,21 +726,21 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                     />
                     <span className="absolute bottom-3 left-3 bg-slate-900/80 text-white font-bold text-[10px] px-2 py-0.5 rounded tracking-wide uppercase flex items-center gap-1">
                       <MapPin className="w-3 h-3 text-[#ffe500]" />
-                      {lang === "en" ? dest.locationEn : dest.locationMl}
+                      {lang !== "ml" ? dest.locationEn : dest.locationMl}
                     </span>
                   </div>
                   <div className="p-4 space-y-2">
                     <h3 className="font-serif-guardian font-extrabold text-[#052962] text-lg md:text-xl">
-                      {lang === "en" ? dest.nameEn : dest.nameMl}
+                      {lang !== "ml" ? dest.nameEn : dest.nameMl}
                     </h3>
                     <p className="text-xs text-gray-500 leading-relaxed font-light">
-                      {lang === "en" ? dest.descriptionEn : dest.descriptionMl}
+                      {lang !== "ml" ? dest.descriptionEn : dest.descriptionMl}
                     </p>
                   </div>
                 </div>
                 <div className="px-4 pb-4 pt-1">
                   <div className="border-t border-gray-100 pt-3 flex flex-wrap gap-1.5">
-                    {safeParseArray(lang === "en" ? dest.highlightsEn : dest.highlightsMl).map((highlight, index) => (
+                    {safeParseArray(lang !== "ml" ? dest.highlightsEn : dest.highlightsMl).map((highlight, index) => (
                       <span key={index} className="text-[10px] bg-slate-100 text-slate-800 font-bold px-2 py-0.5 rounded">
                         ✓ {highlight}
                       </span>
@@ -768,22 +768,22 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                 <div className="md:col-span-8 p-5 flex flex-col justify-between space-y-4">
                   <div className="space-y-2">
                     <span className="text-[9px] bg-red-50 text-red-700 font-extrabold px-2 py-0.5 rounded tracking-wide uppercase border border-red-100">
-                      {cult.type === "food" ? (lang === "en" ? "Gastronomy" : "ഭക്ഷണപാരമ്പര്യം") : (lang === "en" ? "Arts & Heritage" : "കലയും സംസ്‌കാരവും")}
+                      {cult.type === "food" ? (lang !== "ml" ? "Gastronomy" : "ഭക്ഷണപാരമ്പര്യം") : (lang !== "ml" ? "Arts & Heritage" : "കലയും സംസ്‌കാരവും")}
                     </span>
                     <h3 className="font-serif-guardian font-extrabold text-slate-900 text-lg md:text-xl pt-1">
-                      {lang === "en" ? cult.titleEn : cult.titleMl}
+                      {lang !== "ml" ? cult.titleEn : cult.titleMl}
                     </h3>
                     <h5 className="text-[11px] text-gray-400 font-semibold uppercase tracking-wider">
-                      {lang === "en" ? cult.subtitleEn : cult.subtitleMl}
+                      {lang !== "ml" ? cult.subtitleEn : cult.subtitleMl}
                     </h5>
                     <p className="text-xs text-slate-600 leading-relaxed font-light">
-                      {lang === "en" ? cult.descEn : cult.descMl}
+                      {lang !== "ml" ? cult.descEn : cult.descMl}
                     </p>
                   </div>
                   <div className="bg-[#052962]/5 border-l-4 border-[#052962] p-2.5 rounded-r">
                     <p className="text-[11px] font-bold text-[#052962] flex items-center gap-1">
                       <UtensilsCrossed className="w-3.5 h-3.5 shrink-0" />
-                      {lang === "en" ? cult.elementEn : cult.elementMl}
+                      {lang !== "ml" ? cult.elementEn : cult.elementMl}
                     </p>
                   </div>
                 </div>
@@ -811,16 +811,16 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                       referrerPolicy="no-referrer"
                     />
                     <div className="absolute top-2 right-2 bg-green-700 text-white font-extrabold text-[9px] px-2 py-0.5 rounded tracking-wide uppercase shadow">
-                      {lang === "en" ? stay.typeEn : stay.typeMl}
+                      {lang !== "ml" ? stay.typeEn : stay.typeMl}
                     </div>
                   </div>
                   <div className="p-4 space-y-2">
                     <span className="text-[10px] text-gray-500 font-medium flex items-center gap-1">
                       <MapPin className="w-3 h-3 text-red-500 shrink-0" />
-                      {lang === "en" ? stay.locationEn : stay.locationMl}
+                      {lang !== "ml" ? stay.locationEn : stay.locationMl}
                     </span>
                     <h4 className="font-serif-guardian font-bold text-gray-800 text-sm md:text-base leading-snug">
-                      {lang === "en" ? stay.nameEn : stay.nameMl}
+                      {lang !== "ml" ? stay.nameEn : stay.nameMl}
                     </h4>
                     <ul className="space-y-1 pt-1.5">
                       {(() => {
@@ -829,7 +829,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                         return featsEn.map((feat, fIdx) => (
                           <li key={fIdx} className="text-[10px] text-gray-400 flex items-center gap-1">
                             <span className="text-emerald-600 font-black">✔</span>
-                            {lang === "en" ? feat : (featsMl[fIdx] || feat)}
+                            {lang !== "ml" ? feat : (featsMl[fIdx] || feat)}
                           </li>
                         ));
                       })()}
@@ -837,8 +837,8 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                   </div>
                 </div>
                 <div className="p-4 border-t border-gray-100 bg-slate-50 flex items-center justify-between">
-                  <span className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">{lang === "en" ? "Rate Estimate" : "നിരക്ക്"}</span>
-                  <span className="text-xs font-black text-[#c70000]">{lang === "en" ? stay.priceEn : stay.priceMl}</span>
+                  <span className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">{lang !== "ml" ? "Rate Estimate" : "നിരക്ക്"}</span>
+                  <span className="text-xs font-black text-[#c70000]">{lang !== "ml" ? stay.priceEn : stay.priceMl}</span>
                 </div>
               </motion.div>
             ))}
@@ -858,22 +858,22 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                 <div className="flex justify-between items-start gap-2">
                   <div className="space-y-0.5">
                     <span className="text-[9px] font-bold text-[#c70000] uppercase tracking-wider bg-red-50 border border-red-100 px-1.5 py-0.5 rounded inline-block">
-                      {lang === "en" ? "Bilingual Narrative" : "യാത്രാക്കുറിപ്പ്"}
+                      {lang !== "ml" ? "Bilingual Narrative" : "യാത്രാക്കുറിപ്പ്"}
                     </span>
                     <h3 className="font-serif-guardian font-extrabold text-gray-900 text-lg md:text-xl">
-                      {lang === "en" ? tr.titleEn : tr.titleMl}
+                      {lang !== "ml" ? tr.titleEn : tr.titleMl}
                     </h3>
                   </div>
                   <span className="text-[10px] whitespace-nowrap text-gray-400 font-mono bg-gray-100 px-2 py-0.5 rounded">
-                    {lang === "en" ? tr.readTimeEn : tr.readTimeMl}
+                    {lang !== "ml" ? tr.readTimeEn : tr.readTimeMl}
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 leading-relaxed font-light italic">
-                  "{lang === "en" ? tr.snippetEn : tr.snippetMl}"
+                  "{lang !== "ml" ? tr.snippetEn : tr.snippetMl}"
                 </p>
                 <div className="flex justify-between items-center pt-2 border-t border-gray-100 text-[10px] text-gray-400">
                   <span>
-                    By <strong className="text-gray-600">{lang === "en" ? tr.authorEn : tr.authorMl}</strong>
+                    By <strong className="text-gray-600">{lang !== "ml" ? tr.authorEn : tr.authorMl}</strong>
                   </span>
                   <span>Published: {tr.date}</span>
                 </div>
@@ -900,8 +900,8 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2.5">
                     <div className="text-white text-[10px] space-y-0.5 truncate">
-                      <p className="font-bold truncate">{lang === "en" ? ph.titleEn : ph.titleMl}</p>
-                      <p className="text-slate-300 text-[8px] truncate">{lang === "en" ? "Click to expand" : "വലുതാക്കി കാണാൻ ക്ലിക്ക് ചെയ്യുക"}</p>
+                      <p className="font-bold truncate">{lang !== "ml" ? ph.titleEn : ph.titleMl}</p>
+                      <p className="text-slate-300 text-[8px] truncate">{lang !== "ml" ? "Click to expand" : "വലുതാക്കി കാണാൻ ക്ലിക്ക് ചെയ്യുക"}</p>
                     </div>
                   </div>
                 </div>
@@ -952,13 +952,13 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                     {/* Bottom overlay text detail */}
                     <div className="w-full text-center text-white mt-4 space-y-1 px-4">
                       <span className="text-[9px] bg-amber-500 text-slate-950 font-black px-2 py-0.5 rounded uppercase tracking-wider inline-block">
-                        {lang === "en" ? `Photo ${selectedPhotoIndex + 1} of ${photosList.length}` : `ചിത്രം ${selectedPhotoIndex + 1} / ${photosList.length}`}
+                        {lang !== "ml" ? `Photo ${selectedPhotoIndex + 1} of ${photosList.length}` : `ചിത്രം ${selectedPhotoIndex + 1} / ${photosList.length}`}
                       </span>
                       <h4 className="font-serif-guardian font-extrabold text-base md:text-xl text-[#ffe500]">
-                        {lang === "en" ? photosList[selectedPhotoIndex].titleEn : photosList[selectedPhotoIndex].titleMl}
+                        {lang !== "ml" ? photosList[selectedPhotoIndex].titleEn : photosList[selectedPhotoIndex].titleMl}
                       </h4>
                       <p className="text-xs text-slate-300 font-light max-w-lg mx-auto">
-                        {lang === "en" ? photosList[selectedPhotoIndex].descEn : photosList[selectedPhotoIndex].descMl}
+                        {lang !== "ml" ? photosList[selectedPhotoIndex].descEn : photosList[selectedPhotoIndex].descMl}
                       </p>
                     </div>
 
