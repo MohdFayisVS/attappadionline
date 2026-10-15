@@ -11,7 +11,7 @@ function adminDb() {
       credential: json ? cert(JSON.parse(json)) : applicationDefault()
     });
   }
-  return getFirestore();
+  return getFirestore(process.env.FIREBASE_DATABASE_ID || "(default)");
 }
 
 export function getServerFirestore() {
