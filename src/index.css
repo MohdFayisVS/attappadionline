@@ -208,3 +208,18 @@ body {
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .ao-news-card:hover { transform: translateY(-3px); }
 }
+
+/* Compact, responsive publication masthead */
+.ao-header-wordmark { text-wrap: balance; }
+.ao-header-core { position: relative; }
+.ao-header-shortcuts > button { min-height: 38px; }
+.ao-header-menu-toggle { min-height: 44px; }
+@media (max-width: 639px) {
+  .ao-header-utility { font-size: 11px; }
+  .ao-header-shortcuts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
+  .ao-header-shortcuts > button { justify-content: center; padding: 9px 7px; }
+  .ao-header-wordmark { letter-spacing: -0.055em; }
+}
+@media (min-width: 1024px) {
+  .ao-header-core { gap: 22px; }
+}
