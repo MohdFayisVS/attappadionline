@@ -393,6 +393,47 @@ app.use("/api", (req, res, next) => {
   next();
 });
 
+// Temporary administrator-only read-only Firestore backup.
+// Disabled unless explicitly enabled; do not expose on production until verified.
+app.get("/api/admin/backup", requireAdmin, async (_req, res) => {
+  if (process.env.ENABLE_ADMIN_BACKUP !== "true") {
+    return res.status(404).json({ error: "Backup endpoint disabled" });
+  }
+  try {
+    const { getServerFirestore } = await import("./serverFirestore");
+    const db = getServerFirestore();
+    const documents: Array<{ path: string; data: any }> = [];
+    const counts: Record<string, number> = {};
+    const maxDocs = 20000;
+    async function collect(ref: FirebaseFirestore.CollectionReference) {
+      const snapshot = await ref.get();
+      counts[ref.path] = snapshot.size;
+      for (const snapshotDoc of snapshot.docs) {
+        if (documents.length >= maxDocs) throw new Error("Backup exceeds safe document limit");
+        documents.push({ path: snapshotDoc.ref.path, data: snapshotDoc.data() });
+        for (const sub of await snapshotDoc.ref.listCollections()) await collect(sub);
+      }
+    }
+    for (const col of await db.listCollections()) await collect(col);
+    const payload = {
+      format: "attappadi-firestore-export-v1",
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      databaseId: "(default)",
+      exportedAt: new Date().toISOString(),
+      counts,
+      totalDocuments: documents.length,
+      documents
+    };
+    res.setHeader("Cache-Control", "no-store, private");
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+    res.setHeader("Content-Disposition", 'attachment; filename="attappadi-firestore-backup.json"');
+    return res.status(200).send(JSON.stringify(payload));
+  } catch (error) {
+    console.error("Firestore backup export failed:", error);
+    return res.status(503).json({ error: "Backup export failed. No partial backup returned." });
+  }
+});
+
 // API ENDPOINTS
 
 // 1. Admin Authentication Check
