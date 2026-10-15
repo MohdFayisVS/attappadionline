@@ -569,7 +569,7 @@ export default function App() {
   }
 
   return (
-    <div className={`min-h-screen bg-[#fcfcfb] dark:bg-[#090d16] text-gray-900 dark:text-slate-150 transition-colors duration-300 ${lang === 'ml' ? 'font-anek-malayalam' : 'font-anek-english'}`}>
+    <div lang={tamilMode ? "ta" : lang} className={`min-h-screen bg-[#fcfcfb] dark:bg-[#090d16] text-gray-900 dark:text-slate-150 transition-colors duration-300 ${tamilMode ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
       
       {/* 1. TOP NEWS TICKER (BREAKING) */}
       {breakingPosts.length > 0 && (
