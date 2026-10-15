@@ -84,7 +84,7 @@ const defaultCultures: CultureItem[] = [
     subtitleEn: "Vanya Ragi, Chama, & Bamboo Rice",
     subtitleMl: "റാഗി, ചാമ, മുളയരി കഞ്ഞി",
     image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=800&auto=format&fit=crop&q=80",
-    descEn: "Nutrition in the valley traces back to ancient millets. Standard meals center around nourishing Ragi Porridge (റാഗി കുറുക്ക്), Chama rice, and steaming forest tea mixed with immune-boosting country roots. Native bamboo rice payasam made during winter seasons is an absolute sweet delicacy.",
+    descEn: "Nutrition in the valley traces back to ancient millets. Standard meals center around nourishing Ragi Porridge, Chama rice, and steaming forest tea mixed with immune-boosting country roots. Native bamboo rice payasam made during winter seasons is an absolute sweet delicacy.",
     descMl: "പ്രകൃതിയോടിണങ്ങിയ പരമ്പരാഗത തനിമയാണ് അട്ടപ്പാടിയിലെ ഭക്ഷണരീതിക്ക്. പോഷകഗുണമേറിയ റാഗി കുറുക്ക്, ചാമച്ചോറ്, ഔഷധവേരുകൾ ചേർത്ത കാട്ടുചായ എന്നിവ ഊരുകളിലെ നിത്യഭക്ഷണമാണ്. കൂടാതെ മുളയരി പായസം പ്രത്യേക ഉത്സവങ്ങളിലെ മധുരവിഭവമാണ്.",
     elementEn: "Try: Organic Wild Honey & Bamboo Seed Payasam.",
     elementMl: "രുചിച്ചുനോക്കൂ: ശുദ്ധമായ കാട്ടുതേൻ, മുളയരി പായസം."
