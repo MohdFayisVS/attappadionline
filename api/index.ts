@@ -602,9 +602,6 @@ app.put("/api/adconfig", async (req, res) => {
     }
   };
 
-  database.adConfig = updatedConfig;
-  saveDatabase(database);
-
   if (firestoreDb) {
     const { doc, setDoc } = await import("firebase/firestore/lite");
     try {
@@ -613,9 +610,12 @@ app.put("/api/adconfig", async (req, res) => {
       console.log("[Firestore Direct Write] Saved metadata/adConfig");
     } catch (err) {
       console.error("❌ Firestore direct write failed for metadata/adConfig:", err);
+      return res.status(503).json({ error: "Unable to save advertising configuration" });
     }
   }
 
+  database.adConfig = updatedConfig;
+  saveDatabase(database);
   res.json({ success: true, adConfig: updatedConfig });
 });
 
