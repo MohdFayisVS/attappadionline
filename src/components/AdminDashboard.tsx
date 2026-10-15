@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { 
   NewsPost, EventItem, DirectoryItem, OpinionItem, EmergencyContact, 
   DestinationItem, CultureItem, StayItem, TravelogueItem, PhotoItem, BusRouteItem, BusStopTransit,
-  NoticeItem, LpgDelivery
+  NoticeItem, LpgDelivery, LostAndFoundItem
 } from "../types";
 import SocialCardGenerator from "./SocialCardGenerator";
 import ExploreAttappadi from "./ExploreAttappadi";
