@@ -108,12 +108,9 @@ export default function App() {
   };
   
   // Language control
-  const [lang, setLang] = useState<"en" | "ml">("ml");
-  const [tamilMode, setTamilMode] = useState(false);
-  const selectLanguage = (next: "en" | "ml" | "ta") => {
-    setTamilMode(next === "ta");
-    setLang(next === "ml" ? "ml" : "en");
-  };
+  const [lang, setLang] = useState<"en" | "ml" | "ta">("ml");
+  const tamilMode = lang === "ta";
+  const selectLanguage = (next: "en" | "ml" | "ta") => setLang(next);
   
   // Quick Access Deep Link States
   const [exploreTab, setExploreTab] = useState<"destinations" | "food" | "stays" | "travelogues" | "photos" | "culture" | "busTimings">("destinations");
@@ -902,7 +899,7 @@ export default function App() {
       {/* 3. HERO SLIDES SHOWCASE */}
       {sliderPosts.length > 0 && searchQuery.trim().length === 0 && activeSection === "news" && (
         <section id="slider-hero" className="max-w-7xl mx-auto p-4 md:px-8 mt-4">
-          <div lang={tamilMode ? "ta" : lang} className="ao-featured-hero relative bg-slate-900 rounded-2xl overflow-hidden min-h-[380px] sm:min-h-[420px] md:min-h-[460px] shadow-lg border border-slate-200/20 flex flex-col justify-end">
+          <div lang={lang} className="ao-featured-hero relative bg-slate-900 rounded-2xl overflow-hidden min-h-[380px] sm:min-h-[420px] md:min-h-[460px] shadow-lg border border-slate-200/20 flex flex-col justify-end">
             
             {/* Slide Image */}
             <div className="absolute inset-0">
@@ -982,7 +979,7 @@ export default function App() {
       )}
 
       {/* 4. MAIN THREE-COLUMN LAYOUT CONTEXT */}
-      <main lang={tamilMode ? "ta" : lang} id="main-content" className="max-w-7xl mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 min-w-0">
+      <main lang={lang} id="main-content" className="max-w-7xl mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 min-w-0">
         
         {/* LEFT COLUMN: Main News Feed or Search Results (Col spans 8 or 12) */}
         <section className={`${activeSection === "news" ? "lg:col-span-8" : "lg:col-span-12"} space-y-4`}>
@@ -1232,7 +1229,7 @@ export default function App() {
 
               <LatestNews 
                 news={news}
-                lang={tamilMode ? "ta" : lang}
+                lang={lang}
                 activeRegion={activeRegion}
                 onRegionChange={(reg) => {
                   setActiveRegion(reg);
@@ -1685,7 +1682,7 @@ export default function App() {
             )}
 
             <motion.div 
-              id="news-read-modal" lang={tamilMode ? "ta" : lang}
+              id="news-read-modal" lang={lang}
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
@@ -1771,14 +1768,14 @@ export default function App() {
                       <div className="flex bg-slate-100 border border-slate-200/50 p-1 rounded-md text-xs font-bold items-center shrink-0 self-start sm:self-auto select-none">
                         <button
                           type="button"
-                          onClick={() => setLang("ml")}
+                          onClick={() => selectLanguage("ml")}
                           className={`px-3 py-1 rounded transition cursor-pointer ${lang === "ml" ? "bg-[#052962] text-white shadow-xs" : "text-gray-600 hover:text-[#052962]"}`}
                         >
                           മലയാളം
                         </button>
                         <button
                           type="button"
-                          onClick={() => setLang("en")}
+                          onClick={() => selectLanguage("en")}
                           className={`px-3 py-1 rounded transition cursor-pointer ${lang === "en" ? "bg-[#052962] text-white shadow-xs" : "text-gray-600 hover:text-[#052962]"}`}
                         >
                           English
