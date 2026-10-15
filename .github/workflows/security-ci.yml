@@ -14,6 +14,15 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci
+      - name: Evaluate compatible dependency fixes
+        run: npm audit fix --dry-run --json > dependency-fix-preview.json || true
+      - name: Upload compatible fix preview
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-fix-preview
+          path: dependency-fix-preview.json
+          retention-days: 7
       - run: npm run lint
       - run: npm run test:security
       - run: npm run build
