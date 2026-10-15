@@ -510,14 +510,35 @@ app.get("/api/news", async (req, res) => {
   res.json(data);
 });
 
+// Tamil editorial translation is generated server-side; never expose the API key.
+async function translateEditorialToTamil(text: string): Promise<string | undefined> {
+  if (!text?.trim() || !process.env.GEMINI_API_KEY) return undefined;
+  try {
+    const { GoogleGenAI } = await import("@google/genai");
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: "Translate this Attappadi local-news text into fluent, accurate Tamil. Preserve proper nouns, figures, names and factual meaning. Return only the Tamil translation, without explanations:\\n" + text.slice(0, 18000)
+    });
+    const translated = response.text?.trim();
+    return translated && /[\u0B80-\u0BFF]/.test(translated) ? translated : undefined;
+  } catch (error) {
+    console.warn("Tamil translation unavailable:", error instanceof Error ? error.message : "unknown error");
+    return undefined;
+  }
+}
+
 app.post("/api/news", async (req, res) => {
-  const { titleEn, titleMl, contentEn, contentMl, category, regions, image, isSlide, isCard } = req.body;
+  const { titleEn, titleMl, titleTa, contentEn, contentMl, contentTa, category, regions, image, isSlide, isCard } = req.body;
   if (!titleEn || !titleMl || !contentEn || !contentMl || !category) {
     return res.status(400).json({ error: "Missing required fields for news publishing" });
   }
 
+  const [generatedTitleTa, generatedContentTa] = await Promise.all([titleTa ? Promise.resolve(titleTa) : translateEditorialToTamil(titleEn), contentTa ? Promise.resolve(contentTa) : translateEditorialToTamil(contentEn)]);
   const newPost = {
     id: "news_" + Date.now().toString(),
+    ...(generatedTitleTa ? { titleTa: generatedTitleTa } : {}),
+    ...(generatedContentTa ? { contentTa: generatedContentTa } : {}),
     titleEn,
     titleMl,
     contentEn,
@@ -554,8 +575,10 @@ app.put("/api/news/:id", async (req, res) => {
       ...newsList[itemIndex],
       titleEn: titleEn !== undefined ? titleEn : newsList[itemIndex].titleEn,
       titleMl: titleMl !== undefined ? titleMl : newsList[itemIndex].titleMl,
+      titleTa: titleTa !== undefined ? titleTa : (titleEn !== undefined ? await translateEditorialToTamil(titleEn) : newsList[itemIndex].titleTa),
       contentEn: contentEn !== undefined ? contentEn : newsList[itemIndex].contentEn,
       contentMl: contentMl !== undefined ? contentMl : newsList[itemIndex].contentMl,
+      contentTa: contentTa !== undefined ? contentTa : (contentEn !== undefined ? await translateEditorialToTamil(contentEn) : newsList[itemIndex].contentTa),
       category: category !== undefined ? category : newsList[itemIndex].category,
       regions: regions !== undefined ? regions : newsList[itemIndex].regions,
       image: image !== undefined ? image : newsList[itemIndex].image,
