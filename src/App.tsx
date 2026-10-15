@@ -1750,12 +1750,12 @@ export default function App() {
                     <div className="space-y-4 border-b pb-4 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                       <div className="space-y-1">
                         <h3 className={`font-serif-guardian leading-tight text-xl md:text-2xl ${lang === "ml" ? "font-anek-malayalam text-[#c70000] font-black" : "text-[#052962] font-black"}`}>
-                          {lang === "en" ? selectedArticle.titleEn : selectedArticle.titleMl}
+                          {tamilMode ? (selectedArticle.titleTa || selectedArticle.titleEn) : lang === "en" ? selectedArticle.titleEn : selectedArticle.titleMl}
                         </h3>
-                        {lang === "ml" && selectedArticle.titleEn && (
+                        {lang === "ml" && !tamilMode && selectedArticle.titleEn && (
                           <p className="text-[11px] text-gray-400 font-medium font-sans">English: {selectedArticle.titleEn}</p>
                         )}
-                        {lang === "en" && selectedArticle.titleMl && (
+                        {lang === "en" && !tamilMode && selectedArticle.titleMl && (
                           <p className="text-[11px] text-gray-400 font-medium font-anek-malayalam">മലയാളം: {selectedArticle.titleMl}</p>
                         )}
                         {/* Swipe indicator badge hint */}
@@ -1818,7 +1818,7 @@ export default function App() {
                         </button>
                       </div>
                       <ShareButtons 
-                        title={lang === "en" ? selectedArticle.titleEn : selectedArticle.titleMl}
+                        title={tamilMode ? (selectedArticle.titleTa || selectedArticle.titleEn) : lang === "en" ? selectedArticle.titleEn : selectedArticle.titleMl}
                         url={`${window.location.origin}/#article-${selectedArticle.id}`}
                         layout="row"
                       />
@@ -1826,12 +1826,16 @@ export default function App() {
 
                     {/* Single narrative text depending on language selection */}
                     <div className="text-sm text-gray-800 leading-relaxed text-justify min-h-[160px]">
-                      {lang === "en" ? (
+                      {tamilMode ? (
+                        <div className="space-y-4 font-anek-tamil animate-fade-in">
+                          <p className="whitespace-pre-line text-sm text-gray-800 leading-relaxed">{selectedArticle.contentTa || selectedArticle.contentEn}</p>
+                        </div>
+                      ) : lang === "en" ? (
                         <div className="space-y-4 animate-fade-in">
                           <span className="inline-block text-[10px] font-black text-[#052962] bg-blue-50 px-2 py-0.5 rounded uppercase tracking-wider border border-blue-100/50 font-sans">
                             English Dispatch
                           </span>
-                          <p className="whitespace-pre-line text-sm text-gray-800 font-sans tracking-wide leading-relaxed">{selectedArticle.contentEn}</p>
+                          <p className="whitespace-pre-line text-sm text-gray-800 font-anek-english tracking-wide leading-relaxed">{selectedArticle.contentEn}</p>
                         </div>
                       ) : (
                         <div className="space-y-4 font-anek-malayalam animate-fade-in">
