@@ -494,8 +494,10 @@ app.use("/api", (req, res, next) => {
   const isAdmin = path.startsWith("/admin/");
   const isDiagnostic = path.startsWith("/debug");
   const isMutation = ["POST", "PUT", "PATCH", "DELETE"].includes(req.method);
+  // Only article view counters and new lost/found reports are public writes.
+  // Resolution and deletion require administrator authorization until ownership verification is redesigned.
   const publicMutation = req.method === "POST" && (
-    /^\\/news\\/[^/]+\\/view$/.test(path) || path === "/lostfound" || /^\\/lostfound\\/resolve\\/[^/]+$/.test(path)
+    /^\/news\/[^/]+\/view$/.test(path) || path === "/lostfound"
   );
   if (isAdmin || isDiagnostic || (isMutation && !publicMutation)) return requireAdmin(req, res, next);
   next();
@@ -991,7 +993,7 @@ app.post("/api/lostfound/resolve/:id", async (req, res) => {
   const normInput = contactNumber.replace(/\D/g, "");
   const normContact = item.contactNumber.replace(/\D/g, "");
 
-  if (normInput !== normContact && !contactNumber.includes("admin")) {
+  if (normInput !== normContact) {
     return res.status(403).json({ error: "Verification contact number does not match" });
   }
 
