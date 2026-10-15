@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { applicationDefault, getApps, initializeApp } from "firebase-admin/app";
+import { applicationDefault, cert, getApps, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 
 /**
@@ -21,7 +21,15 @@ export async function requireAdmin(req: Request, res: Response, next: NextFuncti
     return;
   }
   try {
-    if (!getApps().length) initializeApp({ credential: applicationDefault(), projectId });
+    if (!getApps().length) {
+      // On Vercel, use an encrypted server-only JSON credential if configured.
+      // Otherwise use ADC (e.g. Workload Identity Federation).
+      const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+      const credential = serviceAccountJson
+        ? cert(JSON.parse(serviceAccountJson))
+        : applicationDefault();
+      initializeApp({ credential, projectId });
+    }
     const token = await getAuth().verifyIdToken(match[1], true);
     if (!allowedUids.has(token.uid)) {
       res.status(403).json({ error: "Administrator permission required" });
