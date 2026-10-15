@@ -902,13 +902,13 @@ export default function App() {
       {/* 3. HERO SLIDES SHOWCASE */}
       {sliderPosts.length > 0 && searchQuery.trim().length === 0 && activeSection === "news" && (
         <section id="slider-hero" className="max-w-7xl mx-auto p-4 md:px-8 mt-4">
-          <div className="ao-featured-hero relative bg-slate-900 rounded-2xl overflow-hidden min-h-[380px] sm:min-h-[420px] md:min-h-[460px] shadow-lg border border-slate-200/20 flex flex-col justify-end">
+          <div lang={tamilMode ? "ta" : lang} className="ao-featured-hero relative bg-slate-900 rounded-2xl overflow-hidden min-h-[380px] sm:min-h-[420px] md:min-h-[460px] shadow-lg border border-slate-200/20 flex flex-col justify-end">
             
             {/* Slide Image */}
             <div className="absolute inset-0">
               <img 
                 src={sliderPosts[currSliderIdx].image} 
-                alt={tamilMode ? (sliderPosts[currSliderIdx].titleTa || sliderPosts[currSliderIdx].titleEn) : true ? sliderPosts[currSliderIdx].titleEn : sliderPosts[currSliderIdx].titleMl} 
+                alt={tamilMode ? (sliderPosts[currSliderIdx].titleTa || sliderPosts[currSliderIdx].titleEn) : lang === "en" ? sliderPosts[currSliderIdx].titleEn : sliderPosts[currSliderIdx].titleMl} 
                 className="w-full h-full object-cover opacity-75 transition-transform duration-700"
                 referrerPolicy="no-referrer"
               />
@@ -953,7 +953,7 @@ export default function App() {
               </h2>
 
               <p className="text-sm md:text-base text-slate-100 line-clamp-2 leading-relaxed max-w-2xl font-medium">
-                {tamilMode ? (sliderPosts[currSliderIdx].contentTa || sliderPosts[currSliderIdx].contentEn) : true ? sliderPosts[currSliderIdx].contentEn : sliderPosts[currSliderIdx].contentMl}
+                {tamilMode ? (sliderPosts[currSliderIdx].contentTa || sliderPosts[currSliderIdx].contentEn) : lang === "en" ? sliderPosts[currSliderIdx].contentEn : sliderPosts[currSliderIdx].contentMl}
               </p>
 
               <button
