@@ -547,6 +547,37 @@ app.post("/api/admin/news/backfill-tamil", async (req, res) => {
   res.json({ scanned: pending.length, updated, failedIds: errors, remainingEstimate: Math.max(0, news.filter((item: any) => !item.titleTa || !item.contentTa).length - updated) });
 });
 
+// Admin-only migration for Tamil content in all editorial collections.
+// Small batches prevent translation quota spikes and allow editorial review.
+const TAMIL_COLLECTIONS = ["news", "events", "directory", "emergency", "opinions", "notices", "lpgDeliveries", "autos", "destinations", "cultures", "stays", "travelogues", "photos", "busRoutes", "routes", "lostFound"] as const;
+app.post("/api/admin/content/backfill-tamil", async (req, res) => {
+  const collectionName = String(req.body?.collection || "");
+  if (!TAMIL_COLLECTIONS.includes(collectionName as typeof TAMIL_COLLECTIONS[number])) return res.status(400).json({ error: "Unsupported collection" });
+  const limit = Math.min(Math.max(Number(req.body?.limit) || 2, 1), 5);
+  const entries = await getCollectionData(collectionName);
+  const pending = entries.filter((item: any) => Object.keys(item).some(k => k.endsWith("En") && item[k] && !item[k.slice(0, -2) + "Ta"])).slice(0, limit);
+  let updated = 0;
+  const failures: string[] = [];
+  for (const item of pending) {
+    const patch: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(item)) {
+      if (!key.endsWith("En") || !value || item[key.slice(0, -2) + "Ta"]) continue;
+      const target = key.slice(0, -2) + "Ta";
+      if (typeof value === "string") {
+        const translation = await translateEditorialToTamil(value);
+        if (translation) patch[target] = translation;
+      } else if (Array.isArray(value) && value.every(v => typeof v === "string")) {
+        const results = await Promise.all(value.map(v => translateEditorialToTamil(v)));
+        if (results.every(Boolean)) patch[target] = results;
+      }
+    }
+    if (!Object.keys(patch).length) { failures.push(item.id); continue; }
+    try { await writeItemToFirestore(collectionName, item.id, { ...item, ...patch }); updated++; }
+    catch { failures.push(item.id); }
+  }
+  res.json({ collection: collectionName, scanned: pending.length, updated, failedIds: failures, remainingEstimate: Math.max(0, entries.filter((item: any) => Object.keys(item).some(k => k.endsWith("En") && item[k] && !item[k.slice(0, -2) + "Ta"])).length - updated) });
+});
+
 app.post("/api/news", async (req, res) => {
   const { titleEn, titleMl, titleTa, contentEn, contentMl, contentTa, category, regions, image, isSlide, isCard } = req.body;
   if (!titleEn || !titleMl || !contentEn || !contentMl || !category) {
