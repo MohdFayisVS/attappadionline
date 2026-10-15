@@ -34,37 +34,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Queue of pending Firestore write promises. We block the HTTP response in Serverless environments
-// until these write promises are settled, preventing Vercel from freezing/killing the execution thread prematurely.
-let pendingWrites: Promise<any>[] = [];
-
-app.use((req, res, next) => {
-  const originalJson = res.json;
-  const originalSend = res.send;
-
-  const awaitPendingWritesAndRespond = async (respondFn: Function, ...args: any[]) => {
-    if (pendingWrites.length > 0) {
-      console.log(`⏳ Awaiting ${pendingWrites.length} pending Firestore writes before finishing response...`);
-      const currentWrites = [...pendingWrites];
-      pendingWrites = [];
-      await Promise.all(currentWrites);
-    }
-    respondFn.apply(res, args);
-  };
-
-  res.json = function(...args: any[]) {
-    awaitPendingWritesAndRespond(originalJson, ...args);
-    return res;
-  };
-
-  res.send = function(...args: any[]) {
-    awaitPendingWritesAndRespond(originalSend, ...args);
-    return res;
-  };
-
-  next();
-});
-
 // Lazy Firestore database loader helper for Serverless Environments
 let isDbInitialized = false;
 let dbInitPromise: Promise<void> | null = null;
@@ -416,11 +385,11 @@ async function writeItemToFirestore(colName: string, id: string, item: any): Pro
     const cleanItem = { ...item };
     delete cleanItem.id;
     const writePromise = setDoc(doc(firestoreDb, colName, id), cleanItem);
-    pendingWrites.push(writePromise);
     await writePromise;
     console.log(`[Firestore Direct Write] Saved [${colName}] / [${id}]`);
   } catch (err) {
     console.error(`❌ Firestore direct write failed for [${colName}] / [${id}]:`, err);
+    throw err;
   }
 }
 
@@ -430,11 +399,11 @@ async function deleteItemFromFirestore(colName: string, id: string): Promise<voi
   const { doc, deleteDoc } = await import("firebase/firestore/lite");
   try {
     const deletePromise = deleteDoc(doc(firestoreDb, colName, id));
-    pendingWrites.push(deletePromise);
     await deletePromise;
     console.log(`[Firestore Direct Delete] Deleted [${colName}] / [${id}]`);
   } catch (err) {
     console.error(`❌ Firestore direct delete failed for [${colName}] / [${id}]:`, err);
+    throw err;
   }
 }
 
@@ -640,8 +609,7 @@ app.put("/api/adconfig", async (req, res) => {
     const { doc, setDoc } = await import("firebase/firestore/lite");
     try {
       const writePromise = setDoc(doc(firestoreDb, "metadata", "adConfig"), updatedConfig);
-      pendingWrites.push(writePromise);
-      await writePromise;
+        await writePromise;
       console.log("[Firestore Direct Write] Saved metadata/adConfig");
     } catch (err) {
       console.error("❌ Firestore direct write failed for metadata/adConfig:", err);
