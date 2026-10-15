@@ -1353,14 +1353,14 @@ export default function DirectoryWidget({
                         onClick={() => setLfType("lost")}
                         className={`flex-1 py-1.5 rounded font-black text-center border transition cursor-pointer ${lfType === "lost" ? "bg-rose-600 text-white border-rose-600" : "bg-white text-rose-600 border-rose-200 hover:bg-rose-50"}`}
                       >
-                        {lang === "en" ? "LOST (നഷ്ടപ്പെട്ടു)" : "നഷ്ടപ്പെട്ടു"}
+                        {lang === "en" ? "LOST" : "നഷ്ടപ്പെട്ടു"}
                       </button>
                       <button
                         type="button"
                         onClick={() => setLfType("found")}
                         className={`flex-1 py-1.5 rounded font-black text-center border transition cursor-pointer ${lfType === "found" ? "bg-emerald-600 text-white border-emerald-600" : "bg-white text-emerald-600 border-emerald-200 hover:bg-emerald-50"}`}
                       >
-                        {lang === "en" ? "FOUND (ലഭിച്ചു)" : "ലഭിച്ചു"}
+                        {lang === "en" ? "FOUND" : "ലഭിച്ചു"}
                       </button>
                     </div>
                   </div>
