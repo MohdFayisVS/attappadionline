@@ -14,7 +14,7 @@ import {
 import { NoticeItem } from "../types";
 import { motion, AnimatePresence } from "motion/react";
 
-export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "ml"; onDownloadCard?: (not: NoticeItem) => void }) {
+export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "ml" | "ta"; onDownloadCard?: (not: NoticeItem) => void }) {
   const [notices, setNotices] = useState<NoticeItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedNotice, setSelectedNotice] = useState<NoticeItem | null>(null);
@@ -63,7 +63,7 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 p-4 text-center rounded-2xl shadow-xs">
         <span className="animate-spin text-[#052962] dark:text-yellow-400 rounded-full h-4.5 w-4.5 border-2 border-current border-t-transparent inline-block mr-2"></span>
         <span className="text-xs text-slate-400 dark:text-slate-500 font-bold font-anek-malayalam">
-          {lang === "en" ? "Loading Notices..." : "അറിയിപ്പുകൾ വരുന്നു..."}
+          {lang !== "ml" ? "Loading Notices..." : "അറിയിപ്പുകൾ വരുന്നു..."}
         </span>
       </div>
     );
@@ -78,7 +78,7 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
             <Megaphone className="w-3.5 h-3.5" />
           </span>
           <h3 className="text-xs font-black tracking-wider text-[#052962] dark:text-[#38bdf8] uppercase">
-            {lang === "en" ? "NOTICES & ALERTS" : "അറിയിപ്പുകൾ"}
+            {lang !== "ml" ? "NOTICES & ALERTS" : "അറിയിപ്പുകൾ"}
           </h3>
         </div>
 
@@ -97,7 +97,7 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
         {notices.length === 0 ? (
           <div className="py-6 text-center border border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
             <p className="text-xs text-slate-400 dark:text-slate-550 font-medium">
-              {lang === "en" ? "No active notices or alerts." : "അറിയിപ്പുകൾ ഒന്നും നിലവിലില്ല."}
+              {lang !== "ml" ? "No active notices or alerts." : "അറിയിപ്പുകൾ ഒന്നും നിലവിലില്ല."}
             </p>
           </div>
         ) : (
@@ -122,7 +122,7 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
                         ? "bg-amber-100 text-amber-805 dark:bg-amber-950/40 dark:text-amber-300" 
                         : "bg-blue-105 text-[#052962] dark:bg-blue-950/45 dark:text-[#38bdf8]"
                   }`}>
-                    {lang === "en" ? not.type : not.type === "caution" ? "ജാഗ്രത" : not.type === "attention" ? "ശ്രദ്ധിക്കുക" : "നോട്ടീസ്"}
+                    {lang !== "ml" ? not.type : not.type === "caution" ? "ജാഗ്രത" : not.type === "attention" ? "ശ്രദ്ധിക്കുക" : "നോട്ടീസ്"}
                   </span>
 
                   <span className="text-[8px] text-slate-400 dark:text-slate-500 font-bold font-mono">
@@ -141,11 +141,11 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
                   )}
                   <div className="flex-1 min-w-0">
                     <h4 className="text-xs font-black text-slate-800 dark:text-slate-200 leading-snug line-clamp-1">
-                      {lang === "en" ? not.titleEn : not.titleMl}
+                      {lang !== "ml" ? not.titleEn : not.titleMl}
                     </h4>
 
                     <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-normal line-clamp-2">
-                      {lang === "en" ? not.contentEn : not.contentMl}
+                      {lang !== "ml" ? not.contentEn : not.contentMl}
                     </p>
                   </div>
                 </div>
@@ -160,7 +160,7 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
                       onDownloadCard(not);
                     }}
                     className="p-1 cursor-pointer bg-slate-100 hover:bg-[#ffe500] hover:text-slate-900 dark:bg-slate-800 dark:hover:bg-yellow-450 dark:hover:text-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg transition flex items-center justify-center"
-                    title={lang === "en" ? "Generate Graphic Card" : "ഷെയർ കാർഡ്"}
+                    title={lang !== "ml" ? "Generate Graphic Card" : "ഷെയർ കാർഡ്"}
                   >
                     <IdCard className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                   </button>
@@ -174,9 +174,9 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
 
       {/* Info strip */}
       <div className="flex items-center gap-1.5 text-[9px] text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-800 pt-2 font-bold justify-between">
-        <span>{lang === "en" ? "CLICK CARDS FOR FULL DETAILS" : "വിശദമായി വായിക്കാൻ കാർഡിൽ തൊടുക"}</span>
+        <span>{lang !== "ml" ? "CLICK CARDS FOR FULL DETAILS" : "വിശദമായി വായിക്കാൻ കാർഡിൽ തൊടുക"}</span>
         <span>•</span>
-        <span className="text-[#052962] dark:text-[#38bdf8] font-black">{notices.length} {lang === "en" ? "Live Notes" : "അറിയിപ്പുകൾ"}</span>
+        <span className="text-[#052962] dark:text-[#38bdf8] font-black">{notices.length} {lang !== "ml" ? "Live Notes" : "അറിയിപ്പുകൾ"}</span>
       </div>
 
       {/* Detailed Modal Overlay */}
@@ -199,7 +199,7 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-emerald-100 shrink-0" />
                   <h4 className="text-sm font-black uppercase tracking-wider">
-                    {lang === "en" ? "OFFICIAL NOTIFICATION" : "പഞ്ചായത്ത് ഔദ്യോഗിക അറിയിപ്പ്"}
+                    {lang !== "ml" ? "OFFICIAL NOTIFICATION" : "പഞ്ചായത്ത് ഔദ്യോഗിക അറിയിപ്പ്"}
                   </h4>
                 </div>
                 <button
@@ -234,10 +234,10 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
 
                 <div className="space-y-1.5 text-left bg-white dark:bg-slate-900">
                   <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 leading-snug">
-                    {lang === "en" ? selectedNotice.titleEn : selectedNotice.titleMl}
+                    {lang !== "ml" ? selectedNotice.titleEn : selectedNotice.titleMl}
                   </h3>
                   <p className="text-xs text-slate-650 dark:text-slate-300 leading-relaxed font-semibold whitespace-pre-wrap pt-2 border-t border-slate-50 dark:border-slate-800">
-                    {lang === "en" ? selectedNotice.contentEn : selectedNotice.contentMl}
+                    {lang !== "ml" ? selectedNotice.contentEn : selectedNotice.contentMl}
                   </p>
                 </div>
 
@@ -261,14 +261,14 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
                       }}
                       className="px-3.5 py-2 bg-[#ffe500] hover:bg-[#e6ce00] text-slate-950 rounded-xl text-xs font-black cursor-pointer transition flex items-center gap-1.5 shadow-xs"
                     >
-                      <IdCard className="w-4 h-4 text-slate-950 shrink-0" /> {lang === "en" ? "Share Card" : "ഷെയർ കാർഡ്"}
+                      <IdCard className="w-4 h-4 text-slate-950 shrink-0" /> {lang !== "ml" ? "Share Card" : "ഷെയർ കാർഡ്"}
                     </button>
                   )}
                   <button
                     onClick={() => setSelectedNotice(null)}
                     className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-800 dark:text-slate-200 rounded-xl text-xs font-black cursor-pointer transition"
                   >
-                    {lang === "en" ? "Close" : "വായിച്ചു ബോധ്യപ്പെട്ടു"}
+                    {lang !== "ml" ? "Close" : "വായിച്ചു ബോധ്യപ്പെട്ടു"}
                   </button>
                 </div>
               </div>
