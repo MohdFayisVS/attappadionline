@@ -569,7 +569,7 @@ export default function App() {
   }
 
   return (
-    <div lang={tamilMode ? "ta" : lang} className={`min-h-screen bg-[#fcfcfb] dark:bg-[#090d16] text-gray-900 dark:text-slate-150 transition-colors duration-300 ${tamilMode ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
+    <div lang="en" className="min-h-screen bg-[#fcfcfb] dark:bg-[#090d16] text-gray-900 dark:text-slate-150 transition-colors duration-300 font-anek-english">
       
       {/* 1. TOP NEWS TICKER (BREAKING) */}
       {breakingPosts.length > 0 && (
@@ -637,14 +637,14 @@ export default function App() {
           <div className="flex gap-4 text-xs font-semibold items-center select-none text-slate-300">
             <button 
               onClick={() => selectLanguage("ml")} 
-              className={`hover:text-[#ffe500] transition cursor-pointer ${lang === 'ml' && !tamilMode ? 'text-[#ffe500] font-bold' : ''}`}
+              className={`hover:text-[#ffe500] transition cursor-pointer ${lang === "ml" && !tamilMode ? 'text-[#ffe500] font-bold' : ''}`}
             >
               മലയാളം
             </button>
             <span className="opacity-40">|</span>
             <button 
               onClick={() => selectLanguage("en")} 
-              className={`hover:text-[#ffe500] transition cursor-pointer ${lang === 'en' && !tamilMode ? 'text-[#ffe500] font-bold' : ''}`}
+              className={`hover:text-[#ffe500] transition cursor-pointer ${lang === "en" && !tamilMode ? 'text-[#ffe500] font-bold' : ''}`}
             >
               English
             </button>
@@ -654,17 +654,17 @@ export default function App() {
             <button
               onClick={toggleTheme}
               className="flex items-center gap-1.5 hover:text-[#ffe500] transition cursor-pointer text-slate-300 bg-white/5 active:bg-white/10 py-1 px-2 rounded-md hover:scale-102"
-              title={theme === "light" ? (lang === 'en' ? "Switch to Dark Mode" : "ഡാർക്ക് മോഡിലേക്ക് മാറ്റുക") : (lang === 'en' ? "Switch to Light Mode" : "ലൈറ്റ് മോഡിലേക്ക് മാറ്റുക")}
+              title={theme === "light" ? (true ? "Switch to Dark Mode" : "ഡാർക്ക് മോഡിലേക്ക് മാറ്റുക") : (true ? "Switch to Light Mode" : "ലൈറ്റ് മോഡിലേക്ക് മാറ്റുക")}
             >
               {theme === "light" ? (
                 <>
                   <Moon className="w-3.5 h-3.5 text-yellow-100" />
-                  <span>{lang === "en" ? "Dark Theme" : "ഡാർക്ക്"}</span>
+                  <span>{true ? "Dark Theme" : "ഡാർക്ക്"}</span>
                 </>
               ) : (
                 <>
                   <Sun className="w-3.5 h-3.5 text-[#ffe500]" />
-                  <span>{lang === "en" ? "Light Theme" : "ലൈറ്റ്"}</span>
+                  <span>{true ? "Light Theme" : "ലൈറ്റ്"}</span>
                 </>
               )}
             </button>
@@ -677,8 +677,8 @@ export default function App() {
             <div className="ao-edition-calendar flex-none w-full md:w-[172px] border border-slate-300 bg-white rounded-sm overflow-hidden shadow-sm" aria-label="Date and India local time">
               <time dateTime={currentTime.toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit" })} className="flex flex-row md:flex-col items-center justify-center gap-2 md:gap-0 px-3 py-2 md:py-3 text-[#052962]">
                 <span className="font-serif-guardian font-black text-4xl md:text-5xl leading-none tabular-nums">{currentTime.toLocaleDateString("en-GB", { day: "2-digit", timeZone: "Asia/Kolkata" })}</span>
-                <span className="font-serif-guardian font-bold text-base md:text-lg leading-tight">{currentTime.toLocaleDateString(tamilMode ? "ta-IN" : lang === "ml" ? "ml-IN" : "en-GB", { month: "long", year: "numeric", timeZone: "Asia/Kolkata" })}</span>
-                <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">{currentTime.toLocaleDateString(tamilMode ? "ta-IN" : lang === "ml" ? "ml-IN" : "en-GB", { weekday: "long", timeZone: "Asia/Kolkata" })}</span>
+                <span className="font-serif-guardian font-bold text-base md:text-lg leading-tight">{currentTime.toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "Asia/Kolkata" })}</span>
+                <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">{currentTime.toLocaleDateString("en-GB", { weekday: "long", timeZone: "Asia/Kolkata" })}</span>
               </time>
               <div className="ao-calendar-clock flex items-center justify-center gap-2 border-t border-slate-200 bg-slate-50 px-2 py-2 text-[#052962]">
                 <Clock className="w-4 h-4 text-[#c70000]" aria-hidden="true" />
@@ -706,40 +706,40 @@ export default function App() {
               <button
                 onClick={() => setSelectedAppService("busTimings")}
                 className="group flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/10 hover:bg-amber-400 hover:text-[#052962] text-slate-100 transition duration-150 text-[11px] font-bold font-sans border border-white/5 active:scale-95 cursor-pointer"
-                title={lang === "en" ? "Bus Timings Tracker" : "ബസ് സമയവിവരങ്ങൾ"}
+                title={true ? "Bus Timings Tracker" : "ബസ് സമയവിവരങ്ങൾ"}
               >
                 <Bus className="w-3.5 h-3.5 text-amber-400 group-hover:text-[#052962] transition duration-150" />
-                <span>{lang === "en" ? "Bus Timings" : "ബസ് സമയം"}</span>
+                <span>{true ? "Bus Timings" : "ബസ് സമയം"}</span>
               </button>
 
               {/* AUTO SHORTCUT */}
               <button
                 onClick={() => setSelectedAppService("autorikshaw")}
                 className="group flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/10 hover:bg-emerald-500 hover:text-white text-slate-100 transition duration-150 text-[11px] font-bold font-sans border border-white/5 active:scale-95 cursor-pointer"
-                title={lang === "en" ? "Hire Regional Auto & Taxis" : "ഓട്ടോ ടാക്സി വിളിപ്പടം"}
+                title={true ? "Hire Regional Auto & Taxis" : "ഓട്ടോ ടാക്സി വിളിപ്പടം"}
               >
                 <Car className="w-3.5 h-3.5 text-emerald-400 group-hover:text-white transition duration-150" />
-                <span>{lang === "en" ? "Auto Taxi" : "ഓട്ടോ ടാക്സി"}</span>
+                <span>{true ? "Auto Taxi" : "ഓട്ടോ ടാക്സി"}</span>
               </button>
 
               {/* TRAVEL & FOOD SHORTCUT */}
               <button
                 onClick={() => setSelectedAppService("travelFood")}
                 className="group flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/10 hover:bg-cyan-500 hover:text-white text-slate-100 transition duration-150 text-[11px] font-bold font-sans border border-white/5 active:scale-95 cursor-pointer"
-                title={lang === "en" ? "Explore Spot & Local Food" : "വിനോദസഞ്ചാര കേന്ദ്രങ്ങളും ഭക്ഷണശാലകളും"}
+                title={true ? "Explore Spot & Local Food" : "വിനോദസഞ്ചാര കേന്ദ്രങ്ങളും ഭക്ഷണശാലകളും"}
               >
                 <Utensils className="w-3.5 h-3.5 text-cyan-400 group-hover:text-white transition duration-150" />
-                <span>{lang === "en" ? "Travel & Food" : "യാത്ര & ഭക്ഷണം"}</span>
+                <span>{true ? "Travel & Food" : "യാത്ര & ഭക്ഷണം"}</span>
               </button>
 
               {/* LOCAL SHOPPING SHORTCUT */}
               <button
                 onClick={() => setSelectedAppService("shopping")}
                 className="group flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/10 hover:bg-fuchsia-500 hover:text-white text-slate-100 transition duration-150 text-[11px] font-bold font-sans border border-white/5 active:scale-95 cursor-pointer"
-                title={lang === "en" ? "Shop & Order Online across Attappadi" : "പ്രാദേശിക വ്യാപാരശാലകളിൽ വാട്സാപ്പ് ഓർഡർ"}
+                title={true ? "Shop & Order Online across Attappadi" : "പ്രാദേശിക വ്യാപാരശാലകളിൽ വാട്സാപ്പ് ഓർഡർ"}
               >
                 <ShoppingBag className="w-3.5 h-3.5 text-fuchsia-400 group-hover:text-white transition duration-150" />
-                <span>{lang === "en" ? "Local Shopping" : "വ്യാപാരശാലകൾ"}</span>
+                <span>{true ? "Local Shopping" : "വ്യാപാരശാലകൾ"}</span>
               </button>
 
             </div>
@@ -757,10 +757,10 @@ export default function App() {
 
           <button type="button" className="ao-header-menu-toggle lg:hidden flex items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-sm font-bold hover:bg-white/20" onClick={() => setMobileHeaderExpanded(v => !v)} aria-expanded={mobileHeaderExpanded} aria-controls="ao-header-navigation">
             {mobileHeaderExpanded ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-            {lang === "en" ? (mobileHeaderExpanded ? "Close navigation" : "Browse sections") : (mobileHeaderExpanded ? "മെനു അടയ്ക്കുക" : "വിഭാഗങ്ങൾ")}
+            {true ? (mobileHeaderExpanded ? "Close navigation" : "Browse sections") : (mobileHeaderExpanded ? "മെനു അടയ്ക്കുക" : "വിഭാഗങ്ങൾ")}
           </button>
 
-          {tamilMode && <p lang="ta" role="status" className="text-center text-xs text-amber-100/90">தமிழ் மொழிபெயர்ப்பு இல்லாத செய்திகளுக்கு ஆங்கில உள்ளடக்கம் காட்டப்படும்.</p>}
+
 
           {/* Row 2: Search Bar & Persistent Navigation Menu */}
           <div id="ao-header-navigation" className={`${mobileHeaderExpanded ? "flex" : "hidden"} lg:flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4 lg:gap-6 pt-2`}>
@@ -780,7 +780,7 @@ export default function App() {
                     setActiveSection("news");
                   }
                 }}
-                placeholder={lang === "en" ? "Search news, events, local directory..." : "വാർത്തകൾ, പരിപാടികൾ, ഡയറക്ടറി ഇവിടെ തിരയാം..."}
+                placeholder={true ? "Search news, events, local directory..." : "വാർത്തകൾ, പരിപാടികൾ, ഡയറക്ടറി ഇവിടെ തിരയാം..."}
                 className="w-full bg-white/10 hover:bg-white/15 focus:bg-white text-white focus:text-[#052962] placeholder-slate-300 focus:placeholder-slate-500 pl-10 pr-10 py-2 sm:py-2.5 rounded border border-white/20 focus:border-white focus:outline-none focus:ring-2 focus:ring-[#ffe500] text-xs sm:text-sm font-semibold transition shadow-inner"
               />
               {searchQuery && (
@@ -890,7 +890,7 @@ export default function App() {
                   onClick={() => handleRegionClick(reg.key)}
                   className={`hover:underline cursor-pointer transition uppercase text-[10px] ${activeSection === "news" && activeRegion === reg.key ? "text-[#052962] font-black underline" : "text-gray-700 font-semibold"}`}
                 >
-                  {lang === "en" ? reg.en : reg.ml}
+                  {reg.en}
                 </button>
               ))}
             </div>
@@ -908,7 +908,7 @@ export default function App() {
             <div className="absolute inset-0">
               <img 
                 src={sliderPosts[currSliderIdx].image} 
-                alt={tamilMode ? (sliderPosts[currSliderIdx].titleTa || sliderPosts[currSliderIdx].titleEn) : lang === "en" ? sliderPosts[currSliderIdx].titleEn : sliderPosts[currSliderIdx].titleMl} 
+                alt={tamilMode ? (sliderPosts[currSliderIdx].titleTa || sliderPosts[currSliderIdx].titleEn) : true ? sliderPosts[currSliderIdx].titleEn : sliderPosts[currSliderIdx].titleMl} 
                 className="w-full h-full object-cover opacity-75 transition-transform duration-700"
                 referrerPolicy="no-referrer"
               />
@@ -919,14 +919,14 @@ export default function App() {
             <div className="absolute top-4 right-4 flex gap-2 z-10">
               <button
                 onClick={() => setCurrSliderIdx(prev => (prev - 1 + sliderPosts.length) % sliderPosts.length)}
-                aria-label={lang === "en" ? "Previous featured story" : "മുൻ വാർത്ത"}
+                aria-label={true ? "Previous featured story" : "മുൻ വാർത്ത"}
                 className="p-3 bg-slate-950/80 hover:bg-[#ffe500] text-white hover:text-slate-950 rounded-full transition cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setCurrSliderIdx(prev => (prev + 1) % sliderPosts.length)}
-                aria-label={lang === "en" ? "Next featured story" : "അടുത്ത വാർത്ത"}
+                aria-label={true ? "Next featured story" : "അടുത്ത വാർത്ത"}
                 className="p-3 bg-slate-950/80 hover:bg-[#ffe500] text-white hover:text-slate-950 rounded-full transition cursor-pointer"
               >
                 <ChevronRight className="w-4 h-4" />
@@ -937,7 +937,7 @@ export default function App() {
             <div className="relative p-5 pb-14 sm:p-8 sm:pb-14 md:p-12 md:pb-14 text-white max-w-4xl space-y-4">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="bg-[#ffe500] text-[#052962] font-extrabold text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-sm">
-                  {lang === "en" ? "FEATURED REPORT" : "പ്രത്യേക റിപ്പോർട്ട്"}
+                  {true ? "FEATURED REPORT" : "പ്രത്യേക റിപ്പോർട്ട്"}
                 </span>
                 
                 {(sliderPosts[currSliderIdx].regions || []).map(r => (
@@ -949,18 +949,18 @@ export default function App() {
               </div>
 
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif-guardian font-extrabold text-white leading-tight tracking-tight">
-                {lang === "en" ? sliderPosts[currSliderIdx].titleEn : sliderPosts[currSliderIdx].titleMl}
+                {true ? sliderPosts[currSliderIdx].titleEn : sliderPosts[currSliderIdx].titleMl}
               </h2>
 
               <p className="text-sm md:text-base text-slate-100 line-clamp-2 leading-relaxed max-w-2xl font-medium">
-                {tamilMode ? (sliderPosts[currSliderIdx].contentTa || sliderPosts[currSliderIdx].contentEn) : lang === "en" ? sliderPosts[currSliderIdx].contentEn : sliderPosts[currSliderIdx].contentMl}
+                {tamilMode ? (sliderPosts[currSliderIdx].contentTa || sliderPosts[currSliderIdx].contentEn) : true ? sliderPosts[currSliderIdx].contentEn : sliderPosts[currSliderIdx].contentMl}
               </p>
 
               <button
                 onClick={() => handleArticleClick(sliderPosts[currSliderIdx])}
                 className="mt-2 inline-flex min-h-11 items-center gap-2 rounded-lg bg-[#ffe500] px-5 py-2 text-sm font-extrabold text-[#052962] hover:bg-white focus-visible:outline-offset-4 transition"
               >
-                {lang === "en" ? "Read full article" : "വാർത്ത പൂർണ്ണമായി വായിക്കാം"} ➜
+                {true ? "Read full article" : "വാർത്ത പൂർണ്ണമായി വായിക്കാം"} ➜
               </button>
             </div>
 
@@ -970,7 +970,7 @@ export default function App() {
                 <button
                   key={i}
                   onClick={() => setCurrSliderIdx(i)}
-                  aria-label={`${lang === "en" ? "Show featured story" : "വാർത്ത കാണിക്കുക"} ${i + 1}`}
+                  aria-label={`${true ? "Show featured story" : "വാർത്ത കാണിക്കുക"} ${i + 1}`}
                   aria-current={i === currSliderIdx ? "true" : undefined}
                   className={`w-8 h-8 flex items-center justify-center rounded-full cursor-pointer transition ${i === currSliderIdx ? "bg-[#ffe500] text-[#052962]" : "bg-white/20 text-white hover:bg-white/40"}`}
                 ><span className="text-xs font-bold">{i + 1}</span></button>
@@ -982,7 +982,7 @@ export default function App() {
       )}
 
       {/* 4. MAIN THREE-COLUMN LAYOUT CONTEXT */}
-      <main id="main-content" className="max-w-7xl mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 min-w-0">
+      <main lang={tamilMode ? "ta" : lang} id="main-content" className="max-w-7xl mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 min-w-0">
         
         {/* LEFT COLUMN: Main News Feed or Search Results (Col spans 8 or 12) */}
         <section className={`${activeSection === "news" ? "lg:col-span-8" : "lg:col-span-12"} space-y-4`}>
@@ -1685,7 +1685,7 @@ export default function App() {
             )}
 
             <motion.div 
-              id="news-read-modal"
+              id="news-read-modal" lang={tamilMode ? "ta" : lang}
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
