@@ -109,6 +109,11 @@ export default function App() {
   
   // Language control
   const [lang, setLang] = useState<"en" | "ml">("ml");
+  const [tamilMode, setTamilMode] = useState(false);
+  const selectLanguage = (next: "en" | "ml" | "ta") => {
+    setTamilMode(next === "ta");
+    setLang(next === "ml" ? "ml" : "en");
+  };
   
   // Quick Access Deep Link States
   const [exploreTab, setExploreTab] = useState<"destinations" | "food" | "stays" | "travelogues" | "photos" | "culture" | "busTimings">("destinations");
@@ -638,18 +643,20 @@ export default function App() {
           </div>
           <div className="flex gap-4 text-xs font-semibold items-center select-none text-slate-300">
             <button 
-              onClick={() => setLang("ml")} 
-              className={`hover:text-[#ffe500] transition cursor-pointer ${lang === 'ml' ? 'text-[#ffe500] font-bold' : ''}`}
+              onClick={() => selectLanguage("ml")} 
+              className={`hover:text-[#ffe500] transition cursor-pointer ${lang === 'ml' && !tamilMode ? 'text-[#ffe500] font-bold' : ''}`}
             >
               മലയാളം
             </button>
             <span className="opacity-40">|</span>
             <button 
-              onClick={() => setLang("en")} 
-              className={`hover:text-[#ffe500] transition cursor-pointer ${lang === 'en' ? 'text-[#ffe500] font-bold' : ''}`}
+              onClick={() => selectLanguage("en")} 
+              className={`hover:text-[#ffe500] transition cursor-pointer ${lang === 'en' && !tamilMode ? 'text-[#ffe500] font-bold' : ''}`}
             >
               English
             </button>
+            <span className="opacity-40">|</span>
+            <button onClick={() => selectLanguage("ta")} aria-pressed={tamilMode} className={`hover:text-[#ffe500] transition cursor-pointer ${tamilMode ? "text-[#ffe500] font-bold" : ""}`} lang="ta">தமிழ்</button>
             <span className="opacity-40">|</span>
             <button
               onClick={toggleTheme}
@@ -762,6 +769,8 @@ export default function App() {
             {mobileHeaderExpanded ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             {lang === "en" ? (mobileHeaderExpanded ? "Close navigation" : "Browse sections") : (mobileHeaderExpanded ? "മെനു അടയ്ക്കുക" : "വിഭാഗങ്ങൾ")}
           </button>
+
+          {tamilMode && <p lang="ta" role="status" className="text-center text-xs text-amber-100/90">தமிழ் மொழிபெயர்ப்பு இல்லாத செய்திகளுக்கு ஆங்கில உள்ளடக்கம் காட்டப்படும்.</p>}
 
           {/* Row 2: Search Bar & Persistent Navigation Menu */}
           <div id="ao-header-navigation" className={`${mobileHeaderExpanded ? "flex" : "hidden"} lg:flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4 lg:gap-6 pt-2`}>
@@ -909,7 +918,7 @@ export default function App() {
             <div className="absolute inset-0">
               <img 
                 src={sliderPosts[currSliderIdx].image} 
-                alt={lang === "en" ? sliderPosts[currSliderIdx].titleEn : sliderPosts[currSliderIdx].titleMl} 
+                alt={tamilMode ? (sliderPosts[currSliderIdx].titleTa || sliderPosts[currSliderIdx].titleEn) : lang === "en" ? sliderPosts[currSliderIdx].titleEn : sliderPosts[currSliderIdx].titleMl} 
                 className="w-full h-full object-cover opacity-75 transition-transform duration-700"
                 referrerPolicy="no-referrer"
               />
@@ -954,7 +963,7 @@ export default function App() {
               </h2>
 
               <p className="text-sm md:text-base text-slate-100 line-clamp-2 leading-relaxed max-w-2xl font-medium">
-                {lang === "en" ? sliderPosts[currSliderIdx].contentEn : sliderPosts[currSliderIdx].contentMl}
+                {tamilMode ? (sliderPosts[currSliderIdx].contentTa || sliderPosts[currSliderIdx].contentEn) : lang === "en" ? sliderPosts[currSliderIdx].contentEn : sliderPosts[currSliderIdx].contentMl}
               </p>
 
               <button
@@ -1233,7 +1242,7 @@ export default function App() {
 
               <LatestNews 
                 news={news}
-                lang={lang}
+                lang={tamilMode ? "ta" : lang}
                 activeRegion={activeRegion}
                 onRegionChange={(reg) => {
                   setActiveRegion(reg);
