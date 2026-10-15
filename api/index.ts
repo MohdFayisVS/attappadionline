@@ -2,10 +2,9 @@ import express from "express";
 import path from "path";
 import fs from "fs";
 import dotenv from "dotenv";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { requireAdmin } from "./middleware/requireAdmin";
+import { requiresAdmin } from "./middleware/routePolicy";
+const __dirname = process.cwd();
 
 // Firebase is imported dynamically inside database operations to optimize serverless cold starts
 
@@ -13,6 +12,20 @@ const __dirname = path.dirname(__filename);
 dotenv.config();
 
 const app = express();
+
+// Express 4 does not automatically forward rejected async handlers to error middleware.
+// Wrap route registration so failures reach the centralized API error handler.
+for (const method of ["get", "post", "put", "patch", "delete", "all"] as const) {
+  const original = app[method].bind(app);
+  (app as any)[method] = (route: string, ...handlers: any[]) => original(route, ...handlers.map((handler: any) =>
+    typeof handler === "function"
+      ? (req: express.Request, res: express.Response, next: express.NextFunction) => {
+          try { Promise.resolve(handler(req, res, next)).catch(next); } catch (error) { next(error); }
+        }
+      : handler
+  ));
+}
+
 const PORT = 3000;
 
 // URL Rewrite Middleware for Vercel Serverless routing compat
@@ -29,37 +42,6 @@ app.use((req, res, next) => {
   if (process.env.VERCEL && req.url && !req.url.startsWith("/api")) {
     req.url = "/api" + req.url;
   }
-  next();
-});
-
-// Queue of pending Firestore write promises. We block the HTTP response in Serverless environments
-// until these write promises are settled, preventing Vercel from freezing/killing the execution thread prematurely.
-let pendingWrites: Promise<any>[] = [];
-
-app.use((req, res, next) => {
-  const originalJson = res.json;
-  const originalSend = res.send;
-
-  const awaitPendingWritesAndRespond = async (respondFn: Function, ...args: any[]) => {
-    if (pendingWrites.length > 0) {
-      console.log(`⏳ Awaiting ${pendingWrites.length} pending Firestore writes before finishing response...`);
-      const currentWrites = [...pendingWrites];
-      pendingWrites = [];
-      await Promise.all(currentWrites);
-    }
-    respondFn.apply(res, args);
-  };
-
-  res.json = function(...args: any[]) {
-    awaitPendingWritesAndRespond(originalJson, ...args);
-    return res;
-  };
-
-  res.send = function(...args: any[]) {
-    awaitPendingWritesAndRespond(originalSend, ...args);
-    return res;
-  };
-
   next();
 });
 
@@ -244,45 +226,12 @@ async function initFirestoreDatabase() {
   const fallbackLocalDb = loadDatabase();
 
   if (!firestoreDb) {
-    let config: any = null;
-
-    if (process.env.FIREBASE_CONFIG_JSON) {
-      try {
-        config = JSON.parse(process.env.FIREBASE_CONFIG_JSON);
-        console.log("🔥 Loaded Firebase configuration from FIREBASE_CONFIG_JSON env variable.");
-      } catch (err) {
-        console.error("❌ Failed to parse FIREBASE_CONFIG_JSON env variable:", err);
-      }
-    } else if (process.env.FIREBASE_PROJECT_ID) {
-      config = {
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        appId: process.env.FIREBASE_APP_ID,
-        apiKey: process.env.FIREBASE_API_KEY,
-        authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-        storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-        messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-        firestoreDatabaseId: process.env.FIREBASE_DATABASE_ID || "(default)"
-      };
-      console.log("🔥 Loaded Firebase configuration from individual env variables.");
-    } else if (fs.existsSync(CONFIG_PATH)) {
-      try {
-        config = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf-8"));
-        console.log("🔥 Loaded Firebase configuration from firebase-applet-config.json file.");
-      } catch (err) {
-        console.error("❌ Failed to parse config file:", err);
-      }
-    }
-
-    if (config) {
-      try {
-        const { initializeApp, getApps } = await import("firebase/app");
-        const { getFirestore } = await import("firebase/firestore/lite");
-        const firebaseApp = getApps().length === 0 ? initializeApp(config) : getApps()[0];
-        firestoreDb = getFirestore(firebaseApp, config.firestoreDatabaseId || "(default)");
-        console.log("🔥 Firebase App & Firestore Client initialized successfully. Database ID:", config.firestoreDatabaseId || "(default)");
-      } catch (error) {
-        console.error("❌ Failed to initialize Firebase from config:", error);
-      }
+    try {
+      const { getServerFirestore } = await import("./serverFirestore");
+      firestoreDb = getServerFirestore();
+      console.log("Firebase Admin Firestore initialized");
+    } catch (error) {
+      console.error("Firebase Admin Firestore initialization failed:", error);
     }
   }
 
@@ -292,7 +241,7 @@ async function initFirestoreDatabase() {
     return;
   }
 
-  const { collection, getDocs, doc, setDoc, getDoc } = await import("firebase/firestore/lite");
+  const { collection, getDocs, doc, setDoc, getDoc } = await import("./serverFirestore");
 
   console.log("⚡ Fetching and synchronizing Firestore data...");
   const collections = [
@@ -350,7 +299,7 @@ async function initFirestoreDatabase() {
   // Load adConfig from metadata collection
   try {
     const configSnap = await getDoc(doc(firestoreDb, "metadata", "adConfig"));
-    if (configSnap.exists()) {
+    if (configSnap.exists) {
       database.adConfig = configSnap.data();
       console.log("✅ Loaded adConfig from metadata/adConfig");
     } else {
@@ -371,56 +320,7 @@ async function initFirestoreDatabase() {
     console.error("Backup writing failed:", err);
   }
 
-  try {
-    await purgeLegacySampleData();
-  } catch (e) {
-    console.error("❌ Failed to purge legacy sample data:", e);
-  }
-}
-
-async function purgeLegacySampleData() {
-  if (!firestoreDb) return;
-  const { doc, deleteDoc } = await import("firebase/firestore/lite");
-  
-  console.log("🧹 Running legacy sample data purge in Firestore (parallel)...");
-  
-  const LEGACY_SAMPLE_IDS: { [col: string]: string[] } = {
-    news: ["news_test_1782150571028", "1", "2", "3", "4", "5", "6", "7"],
-    opinions: ["o1", "o2"],
-    events: ["e1", "e2", "e3"],
-    directory: ["d1", "d2", "d3", "d4", "d5", "d6"],
-    emergency: ["em1", "em2", "em3", "em4"],
-    destinations: ["dest_1", "dest_2", "dest_3", "dest_4"],
-    cultures: ["cult_1", "cult_2"],
-    stays: ["stay_1", "stay_2", "stay_3"],
-    travelogues: ["trav_1", "trav_2"],
-    photos: ["photo_1", "photo_2", "photo_3", "photo_4", "photo_5", "photo_6"],
-    busRoutes: ["bus_1", "bus_2", "bus_3", "bus_4", "bus_5"],
-    routes: ["route_1", "route_2", "route_3", "route_4", "route_5"],
-    notices: ["not_test_1782150571028", "not_1", "not_2", "not_3"],
-    lpgDeliveries: ["lpg_1"],
-    autos: ["auto_1", "auto_2", "auto_3", "auto_4", "auto_5"]
-  };
-
-  const deletePromises: Promise<void>[] = [];
-  for (const colName of Object.keys(LEGACY_SAMPLE_IDS)) {
-    const ids = LEGACY_SAMPLE_IDS[colName];
-    for (const docId of ids) {
-      const docRef = doc(firestoreDb, colName, docId);
-      const promise = deleteDoc(docRef).then(() => {
-        // Remove from memory immediately if loaded
-        if (Array.isArray(database[colName])) {
-          database[colName] = database[colName].filter((item: any) => item.id !== docId);
-        }
-      }).catch((err) => {
-        console.error(`[Firestore Purge] Failed to delete [${colName}] / [${docId}]:`, err);
-      });
-      deletePromises.push(promise);
-    }
-  }
-
-  await Promise.all(deletePromises);
-  console.log("🧹 Parallel purge of legacy sample documents complete.");
+  // No destructive data cleanup is permitted during API initialization.
 }
 
 // Helper to save database safely
@@ -439,7 +339,7 @@ async function getCollectionData(colName: string): Promise<any[]> {
   if (!firestoreDb) {
     return database[colName] || [];
   }
-  const { collection, getDocs } = await import("firebase/firestore/lite");
+  const { collection, getDocs } = await import("./serverFirestore");
   try {
     const qSnap = await getDocs(collection(firestoreDb, colName));
     const items: any[] = [];
@@ -457,48 +357,94 @@ async function getCollectionData(colName: string): Promise<any[]> {
 
 // Real-time Firestore helper: Save or update a single document directly in firestore
 async function writeItemToFirestore(colName: string, id: string, item: any): Promise<void> {
-  if (!firestoreDb) return;
-  const { doc, setDoc } = await import("firebase/firestore/lite");
+  if (!firestoreDb) throw new Error("Firestore unavailable: refusing to acknowledge an unpersisted mutation.");
+  const { doc, setDoc } = await import("./serverFirestore");
   try {
     const cleanItem = { ...item };
     delete cleanItem.id;
     const writePromise = setDoc(doc(firestoreDb, colName, id), cleanItem);
-    pendingWrites.push(writePromise);
     await writePromise;
     console.log(`[Firestore Direct Write] Saved [${colName}] / [${id}]`);
   } catch (err) {
     console.error(`❌ Firestore direct write failed for [${colName}] / [${id}]:`, err);
+    throw err;
   }
 }
 
 // Real-time Firestore helper: Delete a single document directly in firestore
 async function deleteItemFromFirestore(colName: string, id: string): Promise<void> {
-  if (!firestoreDb) return;
-  const { doc, deleteDoc } = await import("firebase/firestore/lite");
+  if (!firestoreDb) throw new Error("Firestore unavailable: refusing to acknowledge an unpersisted mutation.");
+  const { doc, deleteDoc } = await import("./serverFirestore");
   try {
     const deletePromise = deleteDoc(doc(firestoreDb, colName, id));
-    pendingWrites.push(deletePromise);
     await deletePromise;
     console.log(`[Firestore Direct Delete] Deleted [${colName}] / [${id}]`);
   } catch (err) {
     console.error(`❌ Firestore direct delete failed for [${colName}] / [${id}]:`, err);
+    throw err;
   }
 }
+
+// Privileged routes: fail closed before any admin read or content mutation.
+// Public interactions (article view counters and lost/found submission)
+// remain accessible; they require separate abuse-prevention controls.
+app.use("/api", (req, res, next) => {
+  if (requiresAdmin(req.method, req.path)) return requireAdmin(req, res, next);
+  next();
+});
+
+// Temporary administrator-only read-only Firestore backup.
+// Disabled unless explicitly enabled; do not expose on production until verified.
+app.get("/api/admin/backup", requireAdmin, async (_req, res) => {
+  if (process.env.ENABLE_ADMIN_BACKUP !== "true") {
+    return res.status(404).json({ error: "Backup endpoint disabled" });
+  }
+  try {
+    const { getServerFirestore } = await import("./serverFirestore");
+    const db = getServerFirestore();
+    const documents: Array<{ path: string; data: any }> = [];
+    const counts: Record<string, number> = {};
+    const maxDocs = 20000;
+    async function collect(ref: FirebaseFirestore.CollectionReference) {
+      const snapshot = await ref.get();
+      counts[ref.path] = snapshot.size;
+      for (const snapshotDoc of snapshot.docs) {
+        if (documents.length >= maxDocs) throw new Error("Backup exceeds safe document limit");
+        documents.push({ path: snapshotDoc.ref.path, data: snapshotDoc.data() });
+        for (const sub of await snapshotDoc.ref.listCollections()) await collect(sub);
+      }
+    }
+    for (const col of await db.listCollections()) await collect(col);
+    const payload = {
+      format: "attappadi-firestore-export-v1",
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      databaseId: process.env.FIREBASE_DATABASE_ID || "(default)",
+      exportedAt: new Date().toISOString(),
+      counts,
+      totalDocuments: documents.length,
+      documents
+    };
+    res.setHeader("Cache-Control", "no-store, private");
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+    res.setHeader("Content-Disposition", 'attachment; filename="attappadi-firestore-backup.json"');
+    return res.status(200).send(JSON.stringify(payload));
+  } catch (error) {
+    console.error("Firestore backup export failed:", error);
+    return res.status(503).json({ error: "Backup export failed. No partial backup returned." });
+  }
+});
 
 // API ENDPOINTS
 
 // 1. Admin Authentication Check
-app.post("/api/admin/login", (req, res) => {
-  const { username, password } = req.body;
-  if (username === "admin" && password === "attappadi@online") {
-    res.json({ success: true, token: "attappadi-sec-2026-auth-token" });
-  } else {
-    res.status(401).json({ success: false, error: "Incorrect credentials. Try 'admin' and 'attappadi@online'" });
-  }
+// Legacy password authentication is retired. Clients must use Firebase Auth ID tokens.
+app.post("/api/admin/login", (_req, res) => {
+  res.status(410).json({ error: "Legacy login disabled. Use Firebase Authentication." });
 });
 
 // 1b. Database Diagnostic Endpoint
 app.get("/api/admin/db-diagnostic", async (req, res) => {
+  const { collection, getDocs } = await import("./serverFirestore");
   let isUsingFirestore = !!firestoreDb;
   let status = "disconnected";
   let errorMessage = null;
@@ -585,9 +531,14 @@ app.post("/api/news", async (req, res) => {
     isCard: !!isCard
   };
 
+  try {
+    await writeItemToFirestore("news", newPost.id, newPost);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.news = [newPost, ...(database.news || [])];
   saveDatabase(database);
-  await writeItemToFirestore("news", newPost.id, newPost);
   res.status(201).json(newPost);
 });
 
@@ -612,9 +563,13 @@ app.put("/api/news/:id", async (req, res) => {
       isCard: isCard !== undefined ? !!isCard : newsList[itemIndex].isCard
     };
 
+    try {
+      await writeItemToFirestore("news", id, updatedPost);
+    } catch {
+      return res.status(503).json({ error: "Unable to persist news update" });
+    }
     database.news = (database.news || []).map((item: any) => item.id === id ? updatedPost : item);
     saveDatabase(database);
-    await writeItemToFirestore("news", id, updatedPost);
     res.json({ success: true, id });
   } else {
     res.status(404).json({ error: "News item not found" });
@@ -623,9 +578,13 @@ app.put("/api/news/:id", async (req, res) => {
 
 app.delete("/api/news/:id", async (req, res) => {
   const { id } = req.params;
+  try {
+    await deleteItemFromFirestore("news", id);
+  } catch {
+    return res.status(503).json({ error: "Unable to delete news item" });
+  }
   database.news = (database.news || []).filter((item: any) => item.id !== id);
   saveDatabase(database);
-  await deleteItemFromFirestore("news", id);
   res.json({ success: true, id });
 });
 
@@ -633,10 +592,10 @@ app.get("/api/adconfig", async (req, res) => {
   if (!firestoreDb) {
     return res.json(database.adConfig || defaultAdConfig);
   }
-  const { doc, getDoc } = await import("firebase/firestore/lite");
+  const { doc, getDoc } = await import("./serverFirestore");
   try {
     const configSnap = await getDoc(doc(firestoreDb, "metadata", "adConfig"));
-    if (configSnap.exists()) {
+    if (configSnap.exists) {
       database.adConfig = configSnap.data();
       return res.json(database.adConfig);
     }
@@ -676,21 +635,20 @@ app.put("/api/adconfig", async (req, res) => {
     }
   };
 
-  database.adConfig = updatedConfig;
-  saveDatabase(database);
-
   if (firestoreDb) {
-    const { doc, setDoc } = await import("firebase/firestore/lite");
+    const { doc, setDoc } = await import("./serverFirestore");
     try {
       const writePromise = setDoc(doc(firestoreDb, "metadata", "adConfig"), updatedConfig);
-      pendingWrites.push(writePromise);
-      await writePromise;
+        await writePromise;
       console.log("[Firestore Direct Write] Saved metadata/adConfig");
     } catch (err) {
       console.error("❌ Firestore direct write failed for metadata/adConfig:", err);
+      return res.status(503).json({ error: "Unable to save advertising configuration" });
     }
   }
 
+  database.adConfig = updatedConfig;
+  saveDatabase(database);
   res.json({ success: true, adConfig: updatedConfig });
 });
 
@@ -703,9 +661,14 @@ app.post("/api/news/:id/view", async (req, res) => {
       ...newsList[itemIndex],
       views: (newsList[itemIndex].views || 0) + 1
     };
+    try {
+      await writeItemToFirestore("news", id, updatedPost);
+    } catch (error) {
+      console.error("Firestore mutation failed:", error);
+      return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+    }
     database.news = (database.news || []).map((item: any) => item.id === id ? updatedPost : item);
     saveDatabase(database);
-    await writeItemToFirestore("news", id, updatedPost);
     res.json({ success: true });
   } else {
     res.status(404).json({ error: "News not found" });
@@ -735,9 +698,14 @@ app.post("/api/opinions", async (req, res) => {
     approved: approved !== undefined ? !!approved : false
   };
 
+  try {
+    await writeItemToFirestore("opinions", newOpinion.id, newOpinion);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.opinions = [newOpinion, ...(database.opinions || [])];
   saveDatabase(database);
-  await writeItemToFirestore("opinions", newOpinion.id, newOpinion);
   res.status(201).json(newOpinion);
 });
 
@@ -759,9 +727,14 @@ app.put("/api/opinions/:id", async (req, res) => {
       approved: approved !== undefined ? !!approved : opinionsList[itemIndex].approved
     };
 
+    try {
+      await writeItemToFirestore("opinions", id, updatedOpinion);
+    } catch (error) {
+      console.error("Firestore mutation failed:", error);
+      return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+    }
     database.opinions = (database.opinions || []).map((op: any) => op.id === id ? updatedOpinion : op);
     saveDatabase(database);
-    await writeItemToFirestore("opinions", id, updatedOpinion);
     res.json({ success: true, id });
   } else {
     res.status(404).json({ error: "Opinion not found" });
@@ -774,9 +747,14 @@ app.post("/api/opinions/approve/:id", async (req, res) => {
   const itemIndex = opinionsList.findIndex((op: any) => op.id === id);
   if (itemIndex !== -1) {
     const updatedOpinion = { ...opinionsList[itemIndex], approved: true };
+    try {
+      await writeItemToFirestore("opinions", id, updatedOpinion);
+    } catch (error) {
+      console.error("Firestore mutation failed:", error);
+      return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+    }
     database.opinions = (database.opinions || []).map((op: any) => op.id === id ? updatedOpinion : op);
     saveDatabase(database);
-    await writeItemToFirestore("opinions", id, updatedOpinion);
     res.json({ success: true });
   } else {
     res.status(404).json({ error: "Opinion not found" });
@@ -785,9 +763,14 @@ app.post("/api/opinions/approve/:id", async (req, res) => {
 
 app.post("/api/opinions/delete/:id", async (req, res) => {
   const { id } = req.params;
+  try {
+    await deleteItemFromFirestore("opinions", id);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.opinions = (database.opinions || []).filter((op: any) => op.id !== id);
   saveDatabase(database);
-  await deleteItemFromFirestore("opinions", id);
   res.json({ success: true });
 });
 
@@ -815,9 +798,14 @@ app.post("/api/events", async (req, res) => {
     descriptionMl: descriptionMl || ""
   };
 
+  try {
+    await writeItemToFirestore("events", newEvent.id, newEvent);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.events = [newEvent, ...(database.events || [])];
   saveDatabase(database);
-  await writeItemToFirestore("events", newEvent.id, newEvent);
   res.status(201).json(newEvent);
 });
 
@@ -841,9 +829,14 @@ app.put("/api/events/:id", async (req, res) => {
       descriptionMl: descriptionMl !== undefined ? descriptionMl : eventsList[itemIndex].descriptionMl
     };
 
+    try {
+      await writeItemToFirestore("events", id, updatedEvent);
+    } catch (error) {
+      console.error("Firestore mutation failed:", error);
+      return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+    }
     database.events = (database.events || []).map((ev: any) => ev.id === id ? updatedEvent : ev);
     saveDatabase(database);
-    await writeItemToFirestore("events", id, updatedEvent);
     res.json({ success: true, id });
   } else {
     res.status(404).json({ error: "Event not found" });
@@ -852,9 +845,14 @@ app.put("/api/events/:id", async (req, res) => {
 
 app.delete("/api/events/:id", async (req, res) => {
   const { id } = req.params;
+  try {
+    await deleteItemFromFirestore("events", id);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.events = (database.events || []).filter((ev: any) => ev.id !== id);
   saveDatabase(database);
-  await deleteItemFromFirestore("events", id);
   res.json({ success: true, id });
 });
 
@@ -880,9 +878,14 @@ app.post("/api/directory", async (req, res) => {
     locationMl: locationMl || "അട്ടപ്പാടി"
   };
 
+  try {
+    await writeItemToFirestore("directory", newListing.id, newListing);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.directory = [...(database.directory || []), newListing];
   saveDatabase(database);
-  await writeItemToFirestore("directory", newListing.id, newListing);
   res.status(201).json(newListing);
 });
 
@@ -904,9 +907,14 @@ app.put("/api/directory/:id", async (req, res) => {
       locationMl: locationMl !== undefined ? locationMl : directoryList[itemIndex].locationMl
     };
 
+    try {
+      await writeItemToFirestore("directory", id, updatedListing);
+    } catch (error) {
+      console.error("Firestore mutation failed:", error);
+      return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+    }
     database.directory = (database.directory || []).map((item: any) => item.id === id ? updatedListing : item);
     saveDatabase(database);
-    await writeItemToFirestore("directory", id, updatedListing);
     res.json({ success: true, id });
   } else {
     res.status(404).json({ error: "Directory entry not found" });
@@ -915,9 +923,14 @@ app.put("/api/directory/:id", async (req, res) => {
 
 app.delete("/api/directory/:id", async (req, res) => {
   const { id } = req.params;
+  try {
+    await deleteItemFromFirestore("directory", id);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.directory = (database.directory || []).filter((item: any) => item.id !== id);
   saveDatabase(database);
-  await deleteItemFromFirestore("directory", id);
   res.json({ success: true, id });
 });
 
@@ -955,9 +968,14 @@ app.post("/api/lostfound", async (req, res) => {
     status: "active"
   };
 
+  try {
+    await writeItemToFirestore("lostFound", newItem.id, newItem);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.lostFound = [...(database.lostFound || []), newItem];
   saveDatabase(database);
-  await writeItemToFirestore("lostFound", newItem.id, newItem);
   res.status(201).json(newItem);
 });
 
@@ -979,21 +997,31 @@ app.post("/api/lostfound/resolve/:id", async (req, res) => {
   const normInput = contactNumber.replace(/\D/g, "");
   const normContact = item.contactNumber.replace(/\D/g, "");
 
-  if (normInput !== normContact && !contactNumber.includes("admin")) {
+  if (normInput !== normContact) {
     return res.status(403).json({ error: "Verification contact number does not match" });
   }
 
+  try {
+    await deleteItemFromFirestore("lostFound", id);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.lostFound = (database.lostFound || []).filter((i: any) => i.id !== id);
   saveDatabase(database);
-  await deleteItemFromFirestore("lostFound", id);
   res.json({ success: true, message: "Report resolved and removed successfully", id });
 });
 
 app.delete("/api/lostfound/:id", async (req, res) => {
   const { id } = req.params;
+  try {
+    await deleteItemFromFirestore("lostFound", id);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.lostFound = (database.lostFound || []).filter((i: any) => i.id !== id);
   saveDatabase(database);
-  await deleteItemFromFirestore("lostFound", id);
   res.json({ success: true, id });
 });
 
@@ -1017,9 +1045,14 @@ app.post("/api/emergency", async (req, res) => {
     type
   };
 
+  try {
+    await writeItemToFirestore("emergency", newEmerg.id, newEmerg);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.emergency = [...(database.emergency || []), newEmerg];
   saveDatabase(database);
-  await writeItemToFirestore("emergency", newEmerg.id, newEmerg);
   res.status(201).json(newEmerg);
 });
 
@@ -1039,9 +1072,14 @@ app.put("/api/emergency/:id", async (req, res) => {
       type: type !== undefined ? type : emergencyList[itemIndex].type
     };
 
+    try {
+      await writeItemToFirestore("emergency", id, updatedEmerg);
+    } catch (error) {
+      console.error("Firestore mutation failed:", error);
+      return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+    }
     database.emergency = (database.emergency || []).map((em: any) => em.id === id ? updatedEmerg : em);
     saveDatabase(database);
-    await writeItemToFirestore("emergency", id, updatedEmerg);
     res.json({ success: true, id });
   } else {
     res.status(404).json({ error: "Emergency contact not found" });
@@ -1050,9 +1088,14 @@ app.put("/api/emergency/:id", async (req, res) => {
 
 app.delete("/api/emergency/:id", async (req, res) => {
   const { id } = req.params;
+  try {
+    await deleteItemFromFirestore("emergency", id);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.emergency = (database.emergency || []).filter((em: any) => em.id !== id);
   saveDatabase(database);
-  await deleteItemFromFirestore("emergency", id);
   res.json({ success: true, id });
 });
 
@@ -1081,9 +1124,14 @@ app.post("/api/notices", async (req, res) => {
     image: image || ""
   };
 
+  try {
+    await writeItemToFirestore("notices", newNotice.id, newNotice);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.notices = [...(database.notices || []), newNotice];
   saveDatabase(database);
-  await writeItemToFirestore("notices", newNotice.id, newNotice);
   res.status(201).json(newNotice);
 });
 
@@ -1112,9 +1160,14 @@ app.put("/api/notices/:id", async (req, res) => {
       image: image !== undefined ? image : noticesList[itemIndex].image
     };
 
+    try {
+      await writeItemToFirestore("notices", id, updatedNotice);
+    } catch (error) {
+      console.error("Firestore mutation failed:", error);
+      return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+    }
     database.notices = (database.notices || []).map((not: any) => not.id === id ? updatedNotice : not);
     saveDatabase(database);
-    await writeItemToFirestore("notices", id, updatedNotice);
     res.json({ success: true, id });
   } else {
     res.status(404).json({ error: "Notice not found" });
@@ -1123,9 +1176,14 @@ app.put("/api/notices/:id", async (req, res) => {
 
 app.delete("/api/notices/:id", async (req, res) => {
   const { id } = req.params;
+  try {
+    await deleteItemFromFirestore("notices", id);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.notices = (database.notices || []).filter((not: any) => not.id !== id);
   saveDatabase(database);
-  await deleteItemFromFirestore("notices", id);
   res.json({ success: true, id });
 });
 
@@ -1155,9 +1213,14 @@ app.post("/api/lpg", async (req, res) => {
     notesMl: notesMl || ""
   };
 
+  try {
+    await writeItemToFirestore("lpgDeliveries", newLpg.id, newLpg);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.lpgDeliveries = [...(database.lpgDeliveries || []), newLpg];
   saveDatabase(database);
-  await writeItemToFirestore("lpgDeliveries", newLpg.id, newLpg);
   res.status(201).json(newLpg);
 });
 
@@ -1183,9 +1246,14 @@ app.put("/api/lpg/:id", async (req, res) => {
       notesMl: notesMl !== undefined ? notesMl : lpgList[itemIndex].notesMl
     };
 
+    try {
+      await writeItemToFirestore("lpgDeliveries", id, updatedLpg);
+    } catch (error) {
+      console.error("Firestore mutation failed:", error);
+      return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+    }
     database.lpgDeliveries = (database.lpgDeliveries || []).map((lpg: any) => lpg.id === id ? updatedLpg : lpg);
     saveDatabase(database);
-    await writeItemToFirestore("lpgDeliveries", id, updatedLpg);
     res.json({ success: true, id });
   } else {
     res.status(404).json({ error: "LPG delivery schedule not found" });
@@ -1194,9 +1262,14 @@ app.put("/api/lpg/:id", async (req, res) => {
 
 app.delete("/api/lpg/:id", async (req, res) => {
   const { id } = req.params;
+  try {
+    await deleteItemFromFirestore("lpgDeliveries", id);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.lpgDeliveries = (database.lpgDeliveries || []).filter((lpg: any) => lpg.id !== id);
   saveDatabase(database);
-  await deleteItemFromFirestore("lpgDeliveries", id);
   res.json({ success: true, id });
 });
 
@@ -1224,9 +1297,14 @@ app.post("/api/autos", async (req, res) => {
     registeredDate: new Date().toISOString().split("T")[0]
   };
 
+  try {
+    await writeItemToFirestore("autos", newAuto.id, newAuto);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.autos = [...(database.autos || []), newAuto];
   saveDatabase(database);
-  await writeItemToFirestore("autos", newAuto.id, newAuto);
   res.status(201).json(newAuto);
 });
 
@@ -1249,9 +1327,14 @@ app.put("/api/autos/:id", async (req, res) => {
       isAvailable: isAvailable !== undefined ? Boolean(isAvailable) : autosList[itemIndex].isAvailable
     };
 
+    try {
+      await writeItemToFirestore("autos", id, updatedAuto);
+    } catch (error) {
+      console.error("Firestore mutation failed:", error);
+      return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+    }
     database.autos = (database.autos || []).map((aut: any) => aut.id === id ? updatedAuto : aut);
     saveDatabase(database);
-    await writeItemToFirestore("autos", id, updatedAuto);
     res.json({ success: true, id });
   } else {
     res.status(404).json({ error: "Autorikshaw entry not found" });
@@ -1260,9 +1343,14 @@ app.put("/api/autos/:id", async (req, res) => {
 
 app.delete("/api/autos/:id", async (req, res) => {
   const { id } = req.params;
+  try {
+    await deleteItemFromFirestore("autos", id);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.autos = (database.autos || []).filter((aut: any) => aut.id !== id);
   saveDatabase(database);
-  await deleteItemFromFirestore("autos", id);
   res.json({ success: true, id });
 });
 
@@ -1275,9 +1363,14 @@ app.get("/api/destinations", async (req, res) => {
 });
 app.post("/api/destinations", async (req, res) => {
   const item = { id: "dest_" + Date.now().toString(), ...req.body };
+  try {
+    await writeItemToFirestore("destinations", item.id, item);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.destinations = [...(database.destinations || []), item];
   saveDatabase(database);
-  await writeItemToFirestore("destinations", item.id, item);
   res.status(201).json(item);
 });
 app.put("/api/destinations/:id", async (req, res) => {
@@ -1285,16 +1378,26 @@ app.put("/api/destinations/:id", async (req, res) => {
   const list = await getCollectionData("destinations");
   const current = list.find((x: any) => x.id === id) || {};
   const updatedItem = { ...current, ...req.body, id };
+  try {
+    await writeItemToFirestore("destinations", id, updatedItem);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.destinations = (database.destinations || []).map((x: any) => x.id === id ? updatedItem : x);
   saveDatabase(database);
-  await writeItemToFirestore("destinations", id, updatedItem);
   res.json({ success: true, id });
 });
 app.delete("/api/destinations/:id", async (req, res) => {
   const { id } = req.params;
+  try {
+    await deleteItemFromFirestore("destinations", id);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.destinations = (database.destinations || []).filter((x: any) => x.id !== id);
   saveDatabase(database);
-  await deleteItemFromFirestore("destinations", id);
   res.json({ success: true, id });
 });
 
@@ -1305,9 +1408,14 @@ app.get("/api/cultures", async (req, res) => {
 });
 app.post("/api/cultures", async (req, res) => {
   const item = { id: "cult_" + Date.now().toString(), ...req.body };
+  try {
+    await writeItemToFirestore("cultures", item.id, item);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.cultures = [...(database.cultures || []), item];
   saveDatabase(database);
-  await writeItemToFirestore("cultures", item.id, item);
   res.status(201).json(item);
 });
 app.put("/api/cultures/:id", async (req, res) => {
@@ -1315,16 +1423,26 @@ app.put("/api/cultures/:id", async (req, res) => {
   const list = await getCollectionData("cultures");
   const current = list.find((x: any) => x.id === id) || {};
   const updatedItem = { ...current, ...req.body, id };
+  try {
+    await writeItemToFirestore("cultures", id, updatedItem);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.cultures = (database.cultures || []).map((x: any) => x.id === id ? updatedItem : x);
   saveDatabase(database);
-  await writeItemToFirestore("cultures", id, updatedItem);
   res.json({ success: true, id });
 });
 app.delete("/api/cultures/:id", async (req, res) => {
   const { id } = req.params;
+  try {
+    await deleteItemFromFirestore("cultures", id);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.cultures = (database.cultures || []).filter((x: any) => x.id !== id);
   saveDatabase(database);
-  await deleteItemFromFirestore("cultures", id);
   res.json({ success: true, id });
 });
 
@@ -1335,9 +1453,14 @@ app.get("/api/stays", async (req, res) => {
 });
 app.post("/api/stays", async (req, res) => {
   const item = { id: "stay_" + Date.now().toString(), ...req.body };
+  try {
+    await writeItemToFirestore("stays", item.id, item);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.stays = [...(database.stays || []), item];
   saveDatabase(database);
-  await writeItemToFirestore("stays", item.id, item);
   res.status(201).json(item);
 });
 app.put("/api/stays/:id", async (req, res) => {
@@ -1345,16 +1468,26 @@ app.put("/api/stays/:id", async (req, res) => {
   const list = await getCollectionData("stays");
   const current = list.find((x: any) => x.id === id) || {};
   const updatedItem = { ...current, ...req.body, id };
+  try {
+    await writeItemToFirestore("stays", id, updatedItem);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.stays = (database.stays || []).map((x: any) => x.id === id ? updatedItem : x);
   saveDatabase(database);
-  await writeItemToFirestore("stays", id, updatedItem);
   res.json({ success: true, id });
 });
 app.delete("/api/stays/:id", async (req, res) => {
   const { id } = req.params;
+  try {
+    await deleteItemFromFirestore("stays", id);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.stays = (database.stays || []).filter((x: any) => x.id !== id);
   saveDatabase(database);
-  await deleteItemFromFirestore("stays", id);
   res.json({ success: true, id });
 });
 
@@ -1365,9 +1498,14 @@ app.get("/api/travelogues", async (req, res) => {
 });
 app.post("/api/travelogues", async (req, res) => {
   const item = { id: "trav_" + Date.now().toString(), ...req.body };
+  try {
+    await writeItemToFirestore("travelogues", item.id, item);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.travelogues = [...(database.travelogues || []), item];
   saveDatabase(database);
-  await writeItemToFirestore("travelogues", item.id, item);
   res.status(201).json(item);
 });
 app.put("/api/travelogues/:id", async (req, res) => {
@@ -1375,16 +1513,26 @@ app.put("/api/travelogues/:id", async (req, res) => {
   const list = await getCollectionData("travelogues");
   const current = list.find((x: any) => x.id === id) || {};
   const updatedItem = { ...current, ...req.body, id };
+  try {
+    await writeItemToFirestore("travelogues", id, updatedItem);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.travelogues = (database.travelogues || []).map((x: any) => x.id === id ? updatedItem : x);
   saveDatabase(database);
-  await writeItemToFirestore("travelogues", id, updatedItem);
   res.json({ success: true, id });
 });
 app.delete("/api/travelogues/:id", async (req, res) => {
   const { id } = req.params;
+  try {
+    await deleteItemFromFirestore("travelogues", id);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.travelogues = (database.travelogues || []).filter((x: any) => x.id !== id);
   saveDatabase(database);
-  await deleteItemFromFirestore("travelogues", id);
   res.json({ success: true, id });
 });
 
@@ -1395,9 +1543,14 @@ app.get("/api/photos", async (req, res) => {
 });
 app.post("/api/photos", async (req, res) => {
   const item = { id: "photo_" + Date.now().toString(), ...req.body };
+  try {
+    await writeItemToFirestore("photos", item.id, item);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.photos = [...(database.photos || []), item];
   saveDatabase(database);
-  await writeItemToFirestore("photos", item.id, item);
   res.status(201).json(item);
 });
 app.put("/api/photos/:id", async (req, res) => {
@@ -1405,16 +1558,26 @@ app.put("/api/photos/:id", async (req, res) => {
   const list = await getCollectionData("photos");
   const current = list.find((x: any) => x.id === id) || {};
   const updatedItem = { ...current, ...req.body, id };
+  try {
+    await writeItemToFirestore("photos", id, updatedItem);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.photos = (database.photos || []).map((x: any) => x.id === id ? updatedItem : x);
   saveDatabase(database);
-  await writeItemToFirestore("photos", id, updatedItem);
   res.json({ success: true, id });
 });
 app.delete("/api/photos/:id", async (req, res) => {
   const { id } = req.params;
+  try {
+    await deleteItemFromFirestore("photos", id);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.photos = (database.photos || []).filter((x: any) => x.id !== id);
   saveDatabase(database);
-  await deleteItemFromFirestore("photos", id);
   res.json({ success: true, id });
 });
 
@@ -1425,9 +1588,14 @@ app.get("/api/busroutes", async (req, res) => {
 });
 app.post("/api/busroutes", async (req, res) => {
   const item = { id: "bus_" + Date.now().toString(), ...req.body };
+  try {
+    await writeItemToFirestore("busRoutes", item.id, item);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.busRoutes = [...(database.busRoutes || []), item];
   saveDatabase(database);
-  await writeItemToFirestore("busRoutes", item.id, item);
   res.status(201).json(item);
 });
 app.put("/api/busroutes/:id", async (req, res) => {
@@ -1435,16 +1603,26 @@ app.put("/api/busroutes/:id", async (req, res) => {
   const list = await getCollectionData("busRoutes");
   const current = list.find((x: any) => x.id === id) || {};
   const updatedItem = { ...current, ...req.body, id };
+  try {
+    await writeItemToFirestore("busRoutes", id, updatedItem);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.busRoutes = (database.busRoutes || []).map((x: any) => x.id === id ? updatedItem : x);
   saveDatabase(database);
-  await writeItemToFirestore("busRoutes", id, updatedItem);
   res.json({ success: true, id });
 });
 app.delete("/api/busroutes/:id", async (req, res) => {
   const { id } = req.params;
+  try {
+    await deleteItemFromFirestore("busRoutes", id);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.busRoutes = (database.busRoutes || []).filter((x: any) => x.id !== id);
   saveDatabase(database);
-  await deleteItemFromFirestore("busRoutes", id);
   res.json({ success: true, id });
 });
 
@@ -1455,16 +1633,26 @@ app.get("/api/routes", async (req, res) => {
 });
 app.post("/api/routes", async (req, res) => {
   const item = { id: "route_" + Date.now().toString(), ...req.body };
+  try {
+    await writeItemToFirestore("routes", item.id, item);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.routes = [...(database.routes || []), item];
   saveDatabase(database);
-  await writeItemToFirestore("routes", item.id, item);
   res.status(201).json(item);
 });
 app.delete("/api/routes/:id", async (req, res) => {
   const { id } = req.params;
+  try {
+    await deleteItemFromFirestore("routes", id);
+  } catch (error) {
+    console.error("Firestore mutation failed:", error);
+    return res.status(503).json({ error: "Database operation failed; no changes were saved." });
+  }
   database.routes = (database.routes || []).filter((x: any) => x.id !== id);
   saveDatabase(database);
-  await deleteItemFromFirestore("routes", id);
   res.json({ success: true, id });
 });
 
@@ -1647,7 +1835,7 @@ app.all("/api/debug-route-details", (req, res) => {
       initialized: !!firestoreDb,
       configPath: CONFIG_PATH,
       configExists: fs.existsSync(CONFIG_PATH),
-      hasPendingWrites: pendingWrites.length
+      hasPendingWrites: false
     },
     databaseSummary: {
       newsCount: (database.news || []).length,
@@ -1662,6 +1850,12 @@ app.all("/api/debug-route-details", (req, res) => {
       lostFoundCount: (database.lostFound || []).length
     }
   });
+});
+
+// Centralized error handling for rejected async route operations.
+app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  console.error("API request failed:", err);
+  if (!res.headersSent) res.status(503).json({ error: "The operation could not be completed. Please retry later." });
 });
 
 // Setup dev server with Vite OR static server in production

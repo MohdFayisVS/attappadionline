@@ -6,3 +6,8 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Local Firestore exports and service-account credentials
+private-backups/
+*service-account*.json
+*service_account*.json

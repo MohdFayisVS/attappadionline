@@ -1,0 +1,35 @@
+name: Security and build checks
+on:
+  pull_request:
+  push:
+    branches:
+      - security/phase1-admin-auth-draft
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Evaluate compatible dependency fixes
+        run: npm audit fix --dry-run --json > dependency-fix-preview.json || true
+      - name: Upload compatible fix preview
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-fix-preview
+          path: dependency-fix-preview.json
+          retention-days: 7
+      - run: npm run lint
+      - run: npm run test:security
+      - run: npm run build
+      - name: Dependency audit (production)
+        run: npm audit --omit=dev --audit-level=high
+      - name: Dependency audit report (all packages)
+        if: always()
+        run: npm audit --audit-level=moderate || true
