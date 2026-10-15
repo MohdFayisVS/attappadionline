@@ -316,3 +316,35 @@ header [lang="ta"] { font-family: "Anek Tamil", sans-serif; }
 #news-read-modal[lang="en"] .ao-editorial-text {
   font-family: "Anek Latin", sans-serif;
 }
+
+/*
+ * Editorial typography: language-aware overrides must win over legacy
+ * font-serif-guardian / font-sans utilities and sidebar/card overrides.
+ * Interface controls remain Anek Latin, as required by the English UI.
+ */
+:is(#main-content, #news-read-modal, .ao-featured-hero)[lang="ml"] :is(h1,h2,h3,h4,h5,h6,p,blockquote,article,figcaption,li,dt,dd),
+:is(#main-content, #news-read-modal, .ao-featured-hero)[lang="ml"] .font-serif-guardian,
+:is(#main-content, #news-read-modal, .ao-featured-hero)[lang="ml"] .font-anek-malayalam {
+  font-family: "Anek Malayalam", sans-serif;
+}
+:is(#main-content, #news-read-modal, .ao-featured-hero)[lang="ta"] :is(h1,h2,h3,h4,h5,h6,p,blockquote,article,figcaption,li,dt,dd),
+:is(#main-content, #news-read-modal, .ao-featured-hero)[lang="ta"] .font-serif-guardian {
+  font-family: "Anek Tamil", sans-serif;
+}
+:is(#main-content, #news-read-modal, .ao-featured-hero)[lang="en"] :is(h1,h2,h3,h4,h5,h6,p,blockquote,article,figcaption,li,dt,dd),
+:is(#main-content, #news-read-modal, .ao-featured-hero)[lang="en"] .font-serif-guardian {
+  font-family: "Anek Latin", sans-serif;
+}
+/* Text-bearing nested spans in editorial blocks should inherit the language font. */
+:is(#main-content, #news-read-modal, .ao-featured-hero)[lang="ml"] :is(h1,h2,h3,h4,h5,h6,p,blockquote,article,figcaption,li,dt,dd) :is(span,strong,em,a),
+:is(#main-content, #news-read-modal, .ao-featured-hero)[lang="ml"] .ao-news-card :is(span,strong,em) {
+  font-family: "Anek Malayalam", sans-serif;
+}
+:is(#main-content, #news-read-modal, .ao-featured-hero)[lang="ta"] :is(h1,h2,h3,h4,h5,h6,p,blockquote,article,figcaption,li,dt,dd) :is(span,strong,em,a) {
+  font-family: "Anek Tamil", sans-serif;
+}
+/* Buttons, form fields and navigation remain English UI typography. */
+:is(#main-content, #news-read-modal, .ao-featured-hero) :is(button,input,textarea,select),
+:is(#main-content, #news-read-modal, .ao-featured-hero) :is(button,input,textarea,select) * {
+  font-family: "Anek Latin", sans-serif;
+}
