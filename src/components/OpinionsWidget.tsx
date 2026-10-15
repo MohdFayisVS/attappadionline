@@ -84,17 +84,17 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" }) {
         {/* OPINION COLUMNS FEED */}
         <div className="bg-white border-t-2 border-[#052962] rounded-lg shadow p-5 space-y-4">
           <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">
-            {lang === "en" ? "EDITORIAL & OUTLOOKS" : "അഭിപ്രായങ്ങളും തുറന്ന ചർച്ചകളും"}
+            EDITORIAL & OUTLOOKS
           </h3>
           <h4 className="font-serif-guardian text-base font-extrabold text-[#052962] flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-amber-600 shrink-0" />
-            {lang === "en" ? "Attappadi Citizen Voices" : "പൊതുജനാഭിപ്രായങ്ങൾ"}
+            Attappadi Citizen Voices
           </h4>
 
           <div className="space-y-4 max-h-[460px] overflow-y-auto pr-1">
             {opinions.length === 0 ? (
               <div className="p-8 text-center text-xs text-gray-400">
-                {lang === "en" ? "No editorial columns approved yet." : "കോളങ്ങൾ ഒന്നും ഇതുവരെ ചേർത്തിട്ടില്ല."}
+                No editorial columns approved yet.
               </div>
             ) : (
               opinions.map((op) => (
@@ -117,11 +117,11 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" }) {
                   </div>
 
                   <h5 className="font-serif-guardian font-bold text-sm text-[#052962] leading-snug">
-                    {lang === "en" ? op.titleEn : op.titleMl}
+                    {lang === "ml" ? (op.titleMl || op.titleEn) : op.titleEn}
                   </h5>
 
                   <p className="text-xs text-gray-600 leading-relaxed italic border-l-2 border-amber-300 pl-3">
-                    "{lang === "en" ? op.contentEn : op.contentMl}"
+                    "{lang === "ml" ? (op.contentMl || op.contentEn) : op.contentEn}"
                   </p>
                 </div>
               ))
@@ -134,18 +134,14 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" }) {
           <div>
             <h3 className="text-amber-300 text-xs font-bold uppercase tracking-wider mb-1 flex items-center gap-1.5">
               <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
-              {lang === "en" ? "OPINION SUBMISSION" : "വായനക്കാരുടെ അഭിപ്രായം"}
+              OPINION SUBMISSION
             </h3>
             <h4 className="font-serif-guardian text-base font-extrabold mb-4 leading-tight">
-              {lang === "en" 
-                ? "Have an outlook on Attappadi's local reforms?" 
-                : "അഭിപ്രായങ്ങൾ എഴുതി അയക്കുക"}
+              Have an outlook on Attappadi's local reforms?
             </h4>
             
             <p className="text-xs text-slate-200 leading-relaxed mb-6">
-              {lang === "en"
-                ? "Submit organic farming queries, forest reserve suggestions, health challenges, or local infrastructure outlooks. Core editorials will be verified by the admin board before going live."
-                : "അട്ടപ്പാടിയുടെ വികസനത്തെയും പരിസ്ഥിതി പ്രശ്നങ്ങളെയും കുറിച്ച് നിങ്ങളുടെ ലേഖനങ്ങൾ ഇവിടെ സമർപ്പിക്കുക. പരിശോധനയ്ക്ക് ശേഷം പ്രസിദ്ധീകരിക്കുന്നതായിരിക്കും."}
+              Submit your views on local development, the environment, farming, healthcare or infrastructure. Submissions are reviewed before publication.
             </p>
 
             {submitSuccess && (
@@ -155,9 +151,7 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" }) {
                   <span className="font-bold">Opinion Submitted Successfully!</span>
                 </div>
                 <p className="text-[11px] text-emerald-700 font-medium">
-                  {lang === "en"
-                    ? "Our editorial desk has queued your column for moderation review. Thank you for contributing to Attappadi's local journalism."
-                    : "നിങ്ങളുടെ ലേഖനം അയച്ചിട്ടുണ്ട്. അനുമതി ലഭിക്കുന്നതോടെ സൈറ്റിൽ കാണാം. നന്ദി!"}
+                  Our editorial desk has queued your column for moderation review. Thank you for contributing to Attappadi's local journalism.
                 </p>
               </div>
             )}
@@ -166,7 +160,7 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" }) {
               <div>
                 <input 
                   type="text"
-                  placeholder={lang === "en" ? "Your Full Name & Designation (e.g. Chami, farmer)" : "നിങ്ങളുടെ പേര് (NAME)"}
+                  placeholder="Your Full Name & Designation"
                   value={authorName}
                   onChange={(e) => setAuthorName(e.target.value)}
                   className="w-full bg-white border border-slate-300 rounded px-3 py-2 text-xs focus:ring-1 focus:ring-amber-300 focus:outline-none"
@@ -177,7 +171,7 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" }) {
               <div>
                 <input 
                   type="text"
-                  placeholder={lang === "en" ? "Topic / Headline of Opinion" : "അഭിപ്രായ വിഷയം (SUBJECT)"}
+                  placeholder="Topic / Headline of Opinion"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   className="w-full bg-white border border-slate-300 rounded px-3 py-2 text-xs focus:ring-1 focus:ring-amber-300 focus:outline-none"
@@ -188,7 +182,7 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" }) {
               <div>
                 <textarea 
                   rows={4}
-                  placeholder={lang === "en" ? "Write your opinion column here in Malayalam or English..." : "ലേഖനം ഇവിടെ എഴുതുക..."}
+                  placeholder="Write your opinion here..."
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   className="w-full bg-white border border-slate-300 rounded px-3 py-2 text-xs focus:ring-1 focus:ring-amber-300 focus:outline-none leading-relaxed"
@@ -206,7 +200,7 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" }) {
                 ) : (
                   <Send className="w-4 h-4" />
                 )}
-                Submit for Moderation (അയക്കുക)
+                Submit for Moderation
               </button>
             </form>
           </div>
