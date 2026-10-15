@@ -3,6 +3,7 @@ import path from "path";
 import fs from "fs";
 import dotenv from "dotenv";
 import { requireAdmin } from "./middleware/requireAdmin";
+import { requiresAdmin } from "./middleware/routePolicy";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -490,16 +491,7 @@ async function deleteItemFromFirestore(colName: string, id: string): Promise<voi
 // Public interactions (article view counters and lost/found submission/resolution)
 // remain accessible; they require separate abuse-prevention controls.
 app.use("/api", (req, res, next) => {
-  const path = req.path;
-  const isAdmin = path.startsWith("/admin/");
-  const isDiagnostic = path.startsWith("/debug");
-  const isMutation = ["POST", "PUT", "PATCH", "DELETE"].includes(req.method);
-  // Only article view counters and new lost/found reports are public writes.
-  // Resolution and deletion require administrator authorization until ownership verification is redesigned.
-  const publicMutation = req.method === "POST" && (
-    /^\/news\/[^/]+\/view$/.test(path) || path === "/lostfound"
-  );
-  if (isAdmin || isDiagnostic || (isMutation && !publicMutation)) return requireAdmin(req, res, next);
+  if (requiresAdmin(req.method, req.path)) return requireAdmin(req, res, next);
   next();
 });
 
