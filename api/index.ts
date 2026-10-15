@@ -379,7 +379,7 @@ async function getCollectionData(colName: string): Promise<any[]> {
 
 // Real-time Firestore helper: Save or update a single document directly in firestore
 async function writeItemToFirestore(colName: string, id: string, item: any): Promise<void> {
-  if (!firestoreDb) return;
+  if (!firestoreDb) throw new Error("Firestore unavailable: refusing to acknowledge an unpersisted mutation.");
   const { doc, setDoc } = await import("firebase/firestore/lite");
   try {
     const cleanItem = { ...item };
@@ -395,7 +395,7 @@ async function writeItemToFirestore(colName: string, id: string, item: any): Pro
 
 // Real-time Firestore helper: Delete a single document directly in firestore
 async function deleteItemFromFirestore(colName: string, id: string): Promise<void> {
-  if (!firestoreDb) return;
+  if (!firestoreDb) throw new Error("Firestore unavailable: refusing to acknowledge an unpersisted mutation.");
   const { doc, deleteDoc } = await import("firebase/firestore/lite");
   try {
     const deletePromise = deleteDoc(doc(firestoreDb, colName, id));
@@ -408,7 +408,7 @@ async function deleteItemFromFirestore(colName: string, id: string): Promise<voi
 }
 
 // Privileged routes: fail closed before any admin read or content mutation.
-// Public interactions (article view counters and lost/found submission/resolution)
+// Public interactions (article view counters and lost/found submission)
 // remain accessible; they require separate abuse-prevention controls.
 app.use("/api", (req, res, next) => {
   if (requiresAdmin(req.method, req.path)) return requireAdmin(req, res, next);
