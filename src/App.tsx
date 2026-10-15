@@ -675,10 +675,10 @@ export default function App() {
         <div className="ao-edition-strip bg-[#f8f7f3] text-[#052962] border-b border-slate-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col md:flex-row gap-3 md:gap-5 items-stretch">
             <div className="ao-edition-calendar flex-none w-full md:w-[172px] border border-slate-300 bg-white rounded-sm overflow-hidden shadow-sm" aria-label="Date and India local time">
-              <time dateTime={currentTime.toISOString().slice(0, 10)} className="flex flex-row md:flex-col items-center justify-center gap-2 md:gap-0 px-3 py-2 md:py-3 text-[#052962]">
-                <span className="font-serif-guardian font-black text-4xl md:text-5xl leading-none tabular-nums">{currentTime.toLocaleDateString("en-GB", { day: "2-digit" })}</span>
-                <span className="font-serif-guardian font-bold text-base md:text-lg leading-tight">{currentTime.toLocaleDateString(tamilMode ? "ta-IN" : lang === "ml" ? "ml-IN" : "en-GB", { month: "long", year: "numeric" })}</span>
-                <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">{currentTime.toLocaleDateString(tamilMode ? "ta-IN" : lang === "ml" ? "ml-IN" : "en-GB", { weekday: "long" })}</span>
+              <time dateTime={currentTime.toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit" })} className="flex flex-row md:flex-col items-center justify-center gap-2 md:gap-0 px-3 py-2 md:py-3 text-[#052962]">
+                <span className="font-serif-guardian font-black text-4xl md:text-5xl leading-none tabular-nums">{currentTime.toLocaleDateString("en-GB", { day: "2-digit", timeZone: "Asia/Kolkata" })}</span>
+                <span className="font-serif-guardian font-bold text-base md:text-lg leading-tight">{currentTime.toLocaleDateString(tamilMode ? "ta-IN" : lang === "ml" ? "ml-IN" : "en-GB", { month: "long", year: "numeric", timeZone: "Asia/Kolkata" })}</span>
+                <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">{currentTime.toLocaleDateString(tamilMode ? "ta-IN" : lang === "ml" ? "ml-IN" : "en-GB", { weekday: "long", timeZone: "Asia/Kolkata" })}</span>
               </time>
               <div className="ao-calendar-clock flex items-center justify-center gap-2 border-t border-slate-200 bg-slate-50 px-2 py-2 text-[#052962]">
                 <Clock className="w-4 h-4 text-[#c70000]" aria-hidden="true" />
