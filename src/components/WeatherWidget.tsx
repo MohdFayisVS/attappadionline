@@ -6,7 +6,7 @@ export default function WeatherWidget({
   lang, 
   theme = "light" 
 }: { 
-  lang: "en" | "ml"; 
+  lang: "en" | "ml" | "ta"; 
   theme?: "light" | "dark"; 
 }) {
   const [weather, setWeather] = useState<WeatherData | null>(null);
@@ -60,7 +60,7 @@ export default function WeatherWidget({
       }`}>
         <span className="animate-spin text-[#052962] dark:text-yellow-400 rounded-full h-4.5 w-4.5 border-2 border-current border-t-transparent inline-block mr-2"></span>
         <span className="text-xs text-slate-400 font-bold font-anek-malayalam">
-          {lang === "en" ? "Loading Weather Now..." : "കാലാവസ്ഥ വിവരങ്ങൾ വരുന്നു..."}
+          {lang !== "ml" ? "Loading Weather Now..." : "കാലാവസ്ഥ വിവരങ്ങൾ വരുന്നു..."}
         </span>
       </div>
     );
@@ -87,7 +87,7 @@ export default function WeatherWidget({
           <h3 className={`text-xs font-black tracking-wider uppercase ${
             theme === "dark" ? "text-slate-200" : "text-[#052962]"
           }`}>
-            {lang === "en" ? "WEATHER NOW" : "കാലാവസ്ഥ ഇപ്പോൾ"}
+            {lang !== "ml" ? "WEATHER NOW" : "കാലാവസ്ഥ ഇപ്പോൾ"}
           </h3>
         </div>
         
@@ -120,7 +120,7 @@ export default function WeatherWidget({
             <span className={`text-[8px] font-black uppercase tracking-wider block leading-none ${
               theme === "dark" ? "text-yellow-400" : "text-[#ffe500]"
             }`}>
-              {lang === "en" ? "VALLEY AVG" : "അട്ടപ്പാടി"}
+              {lang !== "ml" ? "VALLEY AVG" : "അട്ടപ്പാടി"}
             </span>
             {/* Display pure visual icon instead of text description */}
             <div className="flex items-center justify-center py-2">
@@ -170,12 +170,12 @@ export default function WeatherWidget({
       <div className={`flex items-center justify-between text-[8px] font-bold border-t pt-2 select-none ${
         theme === "dark" ? "text-slate-500 border-slate-800" : "text-slate-400 border-slate-100"
       }`}>
-        <span>{lang === "en" ? "SWIPE TO BROWSE MICROCLIMATES" : "കൂടുതൽ കാണാൻ വലത്തോട്ട് മാറ്റുക"}</span>
+        <span>{lang !== "ml" ? "SWIPE TO BROWSE MICROCLIMATES" : "കൂടുതൽ കാണാൻ വലത്തോട്ട് മാറ്റുക"}</span>
         <span>•</span>
         <span className="flex items-center gap-0.5">
-          <span>{lang === "en" ? "Wind: " : "കാറ്റ്: "}</span>
+          <span>{lang !== "ml" ? "Wind: " : "കാറ്റ്: "}</span>
           <span className={theme === "dark" ? "text-slate-300" : "text-slate-600"}>
-            {lang === "en" ? weather.breezeEn : weather.breezeMl}
+            {lang !== "ml" ? weather.breezeEn : weather.breezeMl}
           </span>
         </span>
       </div>
