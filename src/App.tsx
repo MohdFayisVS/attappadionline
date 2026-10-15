@@ -632,9 +632,9 @@ export default function App() {
         <a href="#main-content" className="ao-skip-link">Skip to main content</a>
         
         {/* Top bar with real-time stats & language switchers */}
-        <div className="ao-header-utility flex flex-col sm:flex-row justify-between items-center px-4 sm:px-6 py-3 border-b border-blue-900/50 gap-2">
+        <div className="ao-header-utility flex flex-col sm:flex-row justify-between items-center px-4 sm:px-6 py-2 border-b border-blue-900/50 gap-2">
           <div className="flex flex-wrap justify-center sm:justify-start items-center gap-4 text-xs font-semibold uppercase tracking-wider text-slate-200">
-            <time dateTime={currentTime.toISOString().slice(0, 10)} className="ao-newspaper-date font-serif-guardian text-base sm:text-lg md:text-xl font-bold normal-case tracking-normal text-white leading-tight">{currentTime.toLocaleDateString(lang === "ml" ? "ml-IN" : "en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</time>
+            
             <span className="text-[#ffe500] font-bold inline-flex items-center gap-1"><MapPin className="w-3 h-3" /> Agali, Attappadi</span>
             <span className="flex items-center gap-1.5 bg-black/25 px-2.5 py-0.5 rounded text-[11px] font-mono font-bold tracking-tight text-white border border-white/5 shadow-inner">
               <Clock className="w-3.5 h-3.5 text-[#ffe500] animate-pulse" />
@@ -678,14 +678,32 @@ export default function App() {
           </div>
         </div>
 
+        {/* Newspaper edition strip: date occupies the left-hand calendar block */}
+        <div className="ao-edition-strip bg-[#f8f7f3] text-[#052962] border-b border-slate-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col md:flex-row gap-3 md:gap-5 items-stretch">
+            <div className="ao-edition-calendar flex-none w-full md:w-[172px] border border-slate-300 bg-white rounded-sm overflow-hidden shadow-sm" aria-label="Today's edition date">
+              <div className="bg-[#c70000] text-white text-[10px] uppercase font-extrabold tracking-[.18em] text-center py-1.5">{tamilMode ? "இன்றைய பதிப்பு" : lang === "ml" ? "ഇന്നത്തെ പതിപ്പ്" : "Today's edition"}</div>
+              <time dateTime={currentTime.toISOString().slice(0, 10)} className="flex flex-row md:flex-col items-center justify-center gap-2 md:gap-0 px-3 py-2 md:py-3 text-[#052962]">
+                <span className="font-serif-guardian font-black text-4xl md:text-5xl leading-none tabular-nums">{currentTime.toLocaleDateString("en-GB", { day: "2-digit" })}</span>
+                <span className="font-serif-guardian font-bold text-base md:text-lg leading-tight">{currentTime.toLocaleDateString(tamilMode ? "ta-IN" : lang === "ml" ? "ml-IN" : "en-GB", { month: "long", year: "numeric" })}</span>
+                <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">{currentTime.toLocaleDateString(tamilMode ? "ta-IN" : lang === "ml" ? "ml-IN" : "en-GB", { weekday: "long" })}</span>
+              </time>
+            </div>
+            <div className="ao-edition-promos flex-1 min-w-0 grid grid-cols-1 md:grid-cols-2 gap-3">
+              {renderAdBox(adConfig?.leftAd || { titleEn: "Enquire for Ads", titleMl: "പരസ്യങ്ങൾക്ക് ബന്ധപ്പെടുക", subtitleEn: "Enquire Now", subtitleMl: "പരസ്യങ്ങൾ നൽകാൻ", contact: "+91 9447471224", actionType: "share", image: "" })}
+              {renderAdBox(adConfig?.rightAd || { titleEn: "Contact Support", titleMl: "പരസ്യങ്ങൾക്ക് വിളിക്കുക", subtitleEn: "Attappadi Ads", subtitleMl: "പരസ്യങ്ങൾ നൽകാൻ", contact: "+91 9447471224", actionType: "phone", image: "" })}
+            </div>
+          </div>
+        </div>
+
         {/* Brand Core Title, Search & Horizontal Navigation Wrapper with Custom Ads */}
-        <div className="ao-header-core max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 border-b border-white/10 flex flex-col gap-4 sm:gap-6">
+        <div className="ao-header-core max-w-7xl mx-auto px-4 sm:px-6 py-5 sm:py-8 border-b border-white/10 flex flex-col gap-4 sm:gap-6">
           
           {/* Row 1: Brand Identity Headline Row (Centered and prominent) */}
-          <div className="flex flex-col items-center justify-center text-center">
+          <div className="ao-masthead-row flex flex-col lg:flex-row-reverse items-center justify-between gap-4 lg:gap-8 text-center lg:text-right">
             
             {/* Inline Compact App Launcher Strip */}
-            <div className="ao-header-shortcuts flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-3 sm:mb-4 select-none">
+            <div className="ao-header-shortcuts flex flex-wrap items-center justify-center lg:justify-start gap-2 sm:gap-3 mb-1 select-none">
               
               {/* BUS SHORTCUT */}
               <button
@@ -729,40 +747,15 @@ export default function App() {
 
             </div>
 
-            <div className="text-center flex-1 min-w-0 py-2">
+            <div className="ao-masthead-brand text-center lg:text-right min-w-0 py-2">
               <h1 
                 onClick={() => { setActiveSection("news"); setActiveRegion("all"); setSearchQuery(""); }}
-                className="ao-header-wordmark text-[clamp(2rem,8vw,4.5rem)] font-serif-guardian font-black tracking-tighter italic cursor-pointer transition select-none hover:opacity-95 leading-tight"
+                className="ao-header-wordmark text-[clamp(2.5rem,6vw,5.6rem)] font-serif-guardian font-black tracking-tighter italic cursor-pointer transition select-none hover:opacity-95 leading-tight"
               >
                 Attappadi<span className="text-[#ffe500]">Online</span>
               </h1>
               <p className="text-[10px] sm:text-xs text-slate-300 mt-1.5 font-semibold uppercase tracking-[0.15em] sm:tracking-widest font-sans">ALL AROUND THE ATTAPPADI HILLS</p>
             </div>
-          </div>
-
-          {/* New Responsive Side-by-Side Long Banner Ad Columns */}
-          <div className="ao-header-ads grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 w-full">
-            {/* LEFT AD BOX */}
-            {renderAdBox(adConfig?.leftAd || {
-              titleEn: "Enquire for Ads",
-              titleMl: "പരസ്യങ്ങൾക്ക് ബന്ധപ്പെടുക",
-              subtitleEn: "Enquire Now",
-              subtitleMl: "പരസ്യങ്ങൾ നൽകാൻ",
-              contact: "+91 9447471224",
-              actionType: "share",
-              image: ""
-            })}
-
-            {/* RIGHT AD BOX */}
-            {renderAdBox(adConfig?.rightAd || {
-              titleEn: "Contact Support",
-              titleMl: "പരസ്യങ്ങൾക്ക് വിളിക്കുക",
-              subtitleEn: "Attappadi Ads",
-              subtitleMl: "പരസ്യങ്ങൾ നൽകാൻ",
-              contact: "+91 9447471224",
-              actionType: "phone",
-              image: ""
-            })}
           </div>
 
           <button type="button" className="ao-header-menu-toggle lg:hidden flex items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-sm font-bold hover:bg-white/20" onClick={() => setMobileHeaderExpanded(v => !v)} aria-expanded={mobileHeaderExpanded} aria-controls="ao-header-navigation">
