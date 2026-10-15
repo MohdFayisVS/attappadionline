@@ -16,3 +16,13 @@ The application's local db.json snapshot is a best-effort cache, **not** a durab
 - No backup or export has been configured by this repository-only change.
 - No production credentials or database operations were used.
 - Keep deployment blocked until authentication and persistence failure behavior are tested.
+
+## Release gate (15 October 2026)
+
+- Independent CI validation passed for the patched dependency lockfile (run 38698400761).
+- **BLOCKER:** `firestore.rules` currently allows unauthenticated `read, write: if true` for multiple content collections. Server-side API authorization does not protect direct Firebase client SDK access. Before publishing hardened rules, inventory all browser Firestore reads and writes, migrate legitimate operations to the authenticated API or narrowly scoped rules, and test in the Firestore Emulator. Do not publish a blanket deny rule without checking production read paths.
+- **BLOCKER:** A real managed Firestore export/backup and tested restore have not been demonstrated.
+- **BLOCKER:** Vercel production project ownership, environment variables (`ADMIN_UIDS`, Firebase credentials), deployment linkage, and rollback method are unverified. Repository `vercel.json` alone does not prove deployment access.
+- **BLOCKER:** Production Firebase administrator sign-in, authorized and unauthorized API requests, and non-destructive public submission flows have not been exercised against the production environment.
+
+Keep PR #1 unmerged and do not deploy until the blockers are resolved. Do not use real public submissions or modify production content merely to satisfy test coverage.
