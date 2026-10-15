@@ -17,3 +17,8 @@ jobs:
       - run: npm run lint
       - run: npm run test:security
       - run: npm run build
+      - name: Dependency audit (production)
+        run: npm audit --omit=dev --audit-level=high
+      - name: Dependency audit report (all packages)
+        if: always()
+        run: npm audit --audit-level=moderate || true
