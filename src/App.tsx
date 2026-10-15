@@ -897,38 +897,40 @@ export default function App() {
       {/* 3. HERO SLIDES SHOWCASE */}
       {sliderPosts.length > 0 && searchQuery.trim().length === 0 && activeSection === "news" && (
         <section id="slider-hero" className="max-w-7xl mx-auto p-4 md:px-8 mt-4">
-          <div className="relative bg-slate-900 rounded-xl overflow-hidden aspect-[16/8] md:aspect-[16/6] shadow-md border border-gray-100 flex flex-col justify-end">
+          <div className="ao-featured-hero relative bg-slate-900 rounded-2xl overflow-hidden min-h-[380px] sm:min-h-[420px] md:min-h-[460px] shadow-lg border border-slate-200/20 flex flex-col justify-end">
             
             {/* Slide Image */}
             <div className="absolute inset-0">
               <img 
                 src={sliderPosts[currSliderIdx].image} 
-                alt="Slider background" 
-                className="w-full h-full object-cover opacity-70 transition-all duration-1000 transform scale-102"
+                alt={lang === "en" ? sliderPosts[currSliderIdx].titleEn : sliderPosts[currSliderIdx].titleMl} 
+                className="w-full h-full object-cover opacity-75 transition-transform duration-700"
                 referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent"></div>
             </div>
 
             {/* Slider Navigation arrows */}
-            <div className="absolute top-4 right-4 flex gap-1.5 z-10">
+            <div className="absolute top-4 right-4 flex gap-2 z-10">
               <button
                 onClick={() => setCurrSliderIdx(prev => (prev - 1 + sliderPosts.length) % sliderPosts.length)}
-                className="p-1.5 bg-slate-950/80 hover:bg-[#ffe500] text-white hover:text-slate-950 rounded-full transition cursor-pointer"
+                aria-label={lang === "en" ? "Previous featured story" : "മുൻ വാർത്ത"}
+                className="p-3 bg-slate-950/80 hover:bg-[#ffe500] text-white hover:text-slate-950 rounded-full transition cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setCurrSliderIdx(prev => (prev + 1) % sliderPosts.length)}
-                className="p-1.5 bg-slate-950/80 hover:bg-[#ffe500] text-white hover:text-slate-950 rounded-full transition cursor-pointer"
+                aria-label={lang === "en" ? "Next featured story" : "അടുത്ത വാർത്ത"}
+                className="p-3 bg-slate-950/80 hover:bg-[#ffe500] text-white hover:text-slate-950 rounded-full transition cursor-pointer"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
 
             {/* Slider Details text bubble */}
-            <div className="relative p-6 md:p-10 text-white max-w-4xl space-y-3">
-              <div className="flex items-center gap-2">
+            <div className="relative p-5 pb-14 sm:p-8 sm:pb-14 md:p-12 md:pb-14 text-white max-w-4xl space-y-4">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="bg-[#ffe500] text-[#052962] font-extrabold text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-sm">
                   {lang === "en" ? "FEATURED REPORT" : "പ്രത്യേക റിപ്പോർട്ട്"}
                 </span>
@@ -941,30 +943,32 @@ export default function App() {
                 ))}
               </div>
 
-              <h2 className="text-lg md:text-3xl font-serif-guardian font-extrabold text-[#ffe500] leading-tight select-none">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif-guardian font-extrabold text-white leading-tight tracking-tight">
                 {lang === "en" ? sliderPosts[currSliderIdx].titleEn : sliderPosts[currSliderIdx].titleMl}
               </h2>
 
-              <p className="text-xs md:text-sm text-gray-200 line-clamp-2 md:leading-relaxed max-w-2xl font-light">
+              <p className="text-sm md:text-base text-slate-100 line-clamp-2 leading-relaxed max-w-2xl font-medium">
                 {lang === "en" ? sliderPosts[currSliderIdx].contentEn : sliderPosts[currSliderIdx].contentMl}
               </p>
 
               <button
                 onClick={() => handleArticleClick(sliderPosts[currSliderIdx])}
-                className="mt-2 text-xs font-bold text-amber-300 hover:text-amber-200 flex items-center gap-1 transition"
+                className="mt-2 inline-flex min-h-11 items-center gap-2 rounded-lg bg-[#ffe500] px-5 py-2 text-sm font-extrabold text-[#052962] hover:bg-white focus-visible:outline-offset-4 transition"
               >
                 {lang === "en" ? "Read full article" : "വാർത്ത പൂർണ്ണമായി വായിക്കാം"} ➜
               </button>
             </div>
 
             {/* Dots Pointer indicator */}
-            <div className="absolute bottom-4 left-6 flex gap-1.5">
+            <div className="absolute bottom-3 left-4 sm:left-8 flex gap-1 z-10">
               {sliderPosts.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setCurrSliderIdx(i)}
-                  className={`w-2 h-2 rounded-full cursor-pointer transition ${i === currSliderIdx ? "bg-[#ffe500]" : "bg-white/40"}`}
-                ></button>
+                  aria-label={`${lang === "en" ? "Show featured story" : "വാർത്ത കാണിക്കുക"} ${i + 1}`}
+                  aria-current={i === currSliderIdx ? "true" : undefined}
+                  className={`w-8 h-8 flex items-center justify-center rounded-full cursor-pointer transition ${i === currSliderIdx ? "bg-[#ffe500] text-[#052962]" : "bg-white/20 text-white hover:bg-white/40"}`}
+                ><span className="text-xs font-bold">{i + 1}</span></button>
               ))}
             </div>
 
