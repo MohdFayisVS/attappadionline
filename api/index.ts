@@ -528,6 +528,25 @@ async function translateEditorialToTamil(text: string): Promise<string | undefin
   }
 }
 
+// Admin-only, bounded migration for articles published before Tamil support.
+app.post("/api/admin/news/backfill-tamil", async (req, res) => {
+  const limit = Math.min(Math.max(Number(req.body?.limit) || 5, 1), 10);
+  const news = await getCollectionData("news");
+  const pending = news.filter((item: any) => !item.titleTa || !item.contentTa).slice(0, limit);
+  let updated = 0;
+  const errors: string[] = [];
+  for (const item of pending) {
+    const titleTa = item.titleTa || await translateEditorialToTamil(item.titleEn || item.titleMl);
+    const contentTa = item.contentTa || await translateEditorialToTamil(item.contentEn || item.contentMl);
+    if (!titleTa || !contentTa) { errors.push(item.id); continue; }
+    try {
+      await writeItemToFirestore("news", item.id, { ...item, titleTa, contentTa });
+      updated++;
+    } catch { errors.push(item.id); }
+  }
+  res.json({ scanned: pending.length, updated, failedIds: errors, remainingEstimate: Math.max(0, news.filter((item: any) => !item.titleTa || !item.contentTa).length - updated) });
+});
+
 app.post("/api/news", async (req, res) => {
   const { titleEn, titleMl, titleTa, contentEn, contentMl, contentTa, category, regions, image, isSlide, isCard } = req.body;
   if (!titleEn || !titleMl || !contentEn || !contentMl || !category) {
