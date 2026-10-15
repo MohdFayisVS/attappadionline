@@ -1531,12 +1531,12 @@ export default function App() {
             <>
               <div id="latest-news-section" className="border-b border-[#052962] pb-2 mb-4 flex justify-between items-center bg-slate-50 p-2.5 rounded border border-gray-100">
                 <h3 className="font-serif-guardian font-black text-[#052962] text-lg uppercase tracking-tight">
-                  {lang === "en" ? "Valley News Dispatch" : "പ്രധാന വാർത്തകൾ"}
+                  Valley News Dispatch
                 </h3>
                 
                 {activeRegion !== "all" && (
                   <span className="text-xs font-bold text-[#052962] bg-sky-50 px-2.5 py-1 rounded border border-sky-100 uppercase">
-                    🏷️ {lang === "en" ? `Filtered by ${activeRegion}` : `${activeRegion} മേഖല`}
+                    🏷️ {`Filtered by ${activeRegion}`}
                   </span>
                 )}
               </div>
