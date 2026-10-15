@@ -1056,10 +1056,10 @@ export default function App() {
                               <span className="text-[9px] text-gray-400 font-bold">{new Date(item.publishedAt).toLocaleDateString()}</span>
                             </div>
                             <h5 className="font-serif-guardian font-extrabold text-sm text-[#052962] group-hover:text-[#c70000] leading-snug transition-colors line-clamp-1">
-                              {lang === "en" ? item.titleEn : item.titleMl}
+                              {lang === "ml" ? item.titleMl : lang === "ta" ? (item.titleTa || item.titleEn) : item.titleEn}
                             </h5>
                             <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed">
-                              {lang === "en" ? item.contentEn : item.contentMl}
+                              {lang === "ml" ? item.contentMl : lang === "ta" ? (item.contentTa || item.contentEn) : item.contentEn}
                             </p>
                           </div>
                         </div>
@@ -1086,10 +1086,10 @@ export default function App() {
                               Event ({ev.date})
                             </span>
                             <h5 className="font-bold text-sm text-gray-800 leading-snug">
-                              {lang === "en" ? ev.titleEn : ev.titleMl}
+                              {lang === "ml" ? ev.titleMl : lang === "ta" ? (ev.titleTa || ev.titleEn) : ev.titleEn}
                             </h5>
                             <p className="text-xs text-gray-500 line-clamp-1 italic">
-                              {lang === "en" ? ev.descriptionEn : ev.descriptionMl}
+                              {lang === "ml" ? ev.descriptionMl : lang === "ta" ? (ev.descriptionTa || ev.descriptionEn) : ev.descriptionEn}
                             </p>
                             <div className="flex gap-x-4 gap-y-1 text-[10px] text-gray-400">
                               <span className="flex items-center gap-1">
@@ -1098,14 +1098,14 @@ export default function App() {
                               </span>
                               <span className="flex items-center gap-1">
                                 <MapPin className="w-3 h-3 text-red-500" />
-                                {lang === "en" ? ev.locationEn : ev.locationMl}
+                                {lang === "ml" ? ev.locationMl : lang === "ta" ? (ev.locationTa || ev.locationEn) : ev.locationEn}
                               </span>
                             </div>
                           </div>
                           {/* Event Share trigger */}
                           <div className="shrink-0 self-end sm:self-center">
                             <ShareButtons 
-                              title={lang === "en" ? ev.titleEn : ev.titleMl}
+                              title={lang === "ml" ? ev.titleMl : lang === "ta" ? (ev.titleTa || ev.titleEn) : ev.titleEn}
                               url={`${window.location.origin}/#event-${ev.id}`}
                               layout="bubble"
                             />
@@ -1134,11 +1134,11 @@ export default function App() {
                               {item.category}
                             </span>
                             <h5 className="font-bold text-xs text-gray-800 truncate mt-1">
-                              {lang === "en" ? item.nameEn : item.nameMl}
+                              {lang === "ml" ? item.nameMl : lang === "ta" ? (item.nameTa || item.nameEn) : item.nameEn}
                             </h5>
                             <p className="text-[10px] text-gray-400 truncate mt-1 flex items-center gap-1">
                               <MapPin className="w-3 h-3 text-red-500 shrink-0" />
-                              {lang === "en" ? item.locationEn : item.locationMl}
+                              {lang === "ml" ? item.locationMl : lang === "ta" ? (item.locationTa || item.locationEn) : item.locationEn}
                             </p>
                           </div>
                           <a 
@@ -1342,10 +1342,10 @@ export default function App() {
                     </div>
                     <div className="p-4 space-y-1 text-slate-800">
                       <h4 className="font-serif-guardian font-extrabold text-sm text-[#052962] leading-tight group-hover:text-red-700 transition duration-200">
-                        {lang === "en" ? vid.titleEn : vid.titleMl}
+                        {lang === "ml" ? vid.titleMl : lang === "ta" ? (vid.titleTa || vid.titleEn) : vid.titleEn}
                       </h4>
                       <p className="text-[11px] text-gray-500 font-light leading-relaxed">
-                        {lang === "en" ? vid.descEn : vid.descMl}
+                        {lang === "ml" ? vid.descMl : lang === "ta" ? (vid.descTa || vid.descEn) : vid.descEn}
                       </p>
                     </div>
                   </div>
@@ -1400,7 +1400,7 @@ export default function App() {
                       </span>
                     </div>
                     <h3 className="font-serif-guardian font-extrabold text-[#052962] text-base leading-snug">
-                      {lang === "en" ? col.titleEn : col.titleMl}
+                      {lang === "ml" ? col.titleMl : lang === "ta" ? (col.titleTa || col.titleEn) : col.titleEn}
                     </h3>
                     <div className="flex items-center gap-2">
                       <div className="w-6 h-6 rounded-full bg-[#052962] text-yellow-300 flex items-center justify-center font-bold text-[10px] shrink-0">
@@ -1408,15 +1408,15 @@ export default function App() {
                       </div>
                       <div>
                         <p className="text-[10px] font-bold text-gray-800 leading-none">
-                          {lang === "en" ? col.authorEn : col.authorMl}
+                          {lang === "ml" ? col.authorMl : lang === "ta" ? (col.authorTa || col.authorEn) : col.authorEn}
                         </p>
                         <p className="text-[8px] text-gray-400">
-                          {lang === "en" ? col.roleEn : col.roleMl}
+                          {lang === "ml" ? col.roleMl : lang === "ta" ? (col.roleTa || col.roleEn) : col.roleEn}
                         </p>
                       </div>
                     </div>
                     <p className="text-xs text-slate-600 bg-slate-50 border-l-2 border-[#052962] p-2.5 rounded-r select-none italic leading-relaxed">
-                      "{lang === "en" ? col.excerptEn : col.excerptMl}"
+                      "{lang === "ml" ? col.excerptMl : lang === "ta" ? (col.excerptTa || col.excerptEn) : col.excerptEn}"
                     </p>
                   </article>
                 ))}
@@ -1598,7 +1598,7 @@ export default function App() {
                         />
                         <div className="flex-1 min-w-0">
                           <h5 className="font-black text-xs text-slate-800 leading-tight line-clamp-2 group-hover:text-[#005689] transition">
-                            {lang === "en" ? item.titleEn : item.titleMl}
+                            {lang === "ml" ? item.titleMl : lang === "ta" ? (item.titleTa || item.titleEn) : item.titleEn}
                           </h5>
                           <span className="text-[9px] text-gray-400 font-medium">
                             {new Date(item.publishedAt).toLocaleDateString()}
@@ -1747,7 +1747,7 @@ export default function App() {
                     <div className="space-y-4 border-b pb-4 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                       <div className="space-y-1">
                         <h3 className={`font-serif-guardian leading-tight text-xl md:text-2xl ${lang === "ml" ? "font-anek-malayalam text-[#c70000] font-black" : "text-[#052962] font-black"}`}>
-                          {tamilMode ? (selectedArticle.titleTa || selectedArticle.titleEn) : lang === "en" ? selectedArticle.titleEn : selectedArticle.titleMl}
+                          {tamilMode ? (selectedArticle.titleTa || selectedArticle.titleEn) : lang === "ml" ? selectedArticle.titleMl : lang === "ta" ? (selectedArticle.titleTa || selectedArticle.titleEn) : selectedArticle.titleEn}
                         </h3>
                         {lang === "ml" && !tamilMode && selectedArticle.titleEn && (
                           <p className="text-[11px] text-gray-400 font-medium font-sans">English: {selectedArticle.titleEn}</p>
@@ -1815,7 +1815,7 @@ export default function App() {
                         </button>
                       </div>
                       <ShareButtons 
-                        title={tamilMode ? (selectedArticle.titleTa || selectedArticle.titleEn) : lang === "en" ? selectedArticle.titleEn : selectedArticle.titleMl}
+                        title={tamilMode ? (selectedArticle.titleTa || selectedArticle.titleEn) : lang === "ml" ? selectedArticle.titleMl : lang === "ta" ? (selectedArticle.titleTa || selectedArticle.titleEn) : selectedArticle.titleEn}
                         url={`${window.location.origin}/#article-${selectedArticle.id}`}
                         layout="row"
                       />
@@ -1874,7 +1874,7 @@ export default function App() {
                             <div className="min-w-0 flex-1 leading-snug">
                               <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-0.5">« PREVIOUS DISPATCH</span>
                               <span className="text-xs font-bold text-gray-800 line-clamp-1 group-hover:text-[#c70000] transition">
-                                {lang === "en" ? prevArticle.titleEn : prevArticle.titleMl}
+                                {lang === "ml" ? prevArticle.titleMl : lang === "ta" ? (prevArticle.titleTa || prevArticle.titleEn) : prevArticle.titleEn}
                               </span>
                             </div>
                           </button>
@@ -1894,7 +1894,7 @@ export default function App() {
                             <div className="min-w-0 flex-1 leading-snug text-right">
                               <span className="text-[9px] font-black text-[#052962] uppercase tracking-widest block mb-0.5">NEXT DISPATCH »</span>
                               <span className="text-xs font-bold text-[#052962] line-clamp-1 group-hover:text-amber-600 transition">
-                                {lang === "en" ? nextArticle.titleEn : nextArticle.titleMl}
+                                {lang === "ml" ? nextArticle.titleMl : lang === "ta" ? (nextArticle.titleTa || nextArticle.titleEn) : nextArticle.titleEn}
                               </span>
                             </div>
                             <div className="p-1.5 bg-white border rounded group-hover:bg-[#ffe500] group-hover:border-[#ffe500] transition shrink-0">
@@ -1936,7 +1936,7 @@ export default function App() {
                                       {rel.category}
                                     </span>
                                     <p className="text-xs font-bold text-[#052962] truncate select-none">
-                                      {lang === "en" ? rel.titleEn : rel.titleMl}
+                                      {lang === "ml" ? rel.titleMl : lang === "ta" ? (rel.titleTa || rel.titleEn) : rel.titleEn}
                                     </p>
                                   </div>
                                 </div>
@@ -2134,10 +2134,10 @@ export default function App() {
 
                 <div className="space-y-1.5 text-left bg-white dark:bg-slate-900">
                   <h3 className="text-sm font-black text-slate-950 dark:text-white leading-snug">
-                    {lang === "en" ? selectedAnnouncement.titleEn : selectedAnnouncement.titleMl}
+                    {lang === "ml" ? selectedAnnouncement.titleMl : lang === "ta" ? (selectedAnnouncement.titleTa || selectedAnnouncement.titleEn) : selectedAnnouncement.titleEn}
                   </h3>
                   <p className="text-xs text-slate-650 dark:text-slate-300 leading-relaxed font-semibold whitespace-pre-wrap pt-2 border-t border-slate-50 dark:border-slate-800">
-                    {lang === "en" ? selectedAnnouncement.contentEn : selectedAnnouncement.contentMl}
+                    {lang === "ml" ? selectedAnnouncement.contentMl : lang === "ta" ? (selectedAnnouncement.contentTa || selectedAnnouncement.contentEn) : selectedAnnouncement.contentEn}
                   </p>
                 </div>
 
