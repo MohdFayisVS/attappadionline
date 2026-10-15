@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import fs from "fs";
 import dotenv from "dotenv";
+import { requireAdmin } from "./middleware/requireAdmin";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -485,16 +486,27 @@ async function deleteItemFromFirestore(colName: string, id: string): Promise<voi
   }
 }
 
+// Privileged routes: fail closed before any admin read or content mutation.
+// Public interactions (article view counters and lost/found submission/resolution)
+// remain accessible; they require separate abuse-prevention controls.
+app.use("/api", (req, res, next) => {
+  const path = req.path;
+  const isAdmin = path.startsWith("/admin/");
+  const isDiagnostic = path.startsWith("/debug");
+  const isMutation = ["POST", "PUT", "PATCH", "DELETE"].includes(req.method);
+  const publicMutation = req.method === "POST" && (
+    /^\\/news\\/[^/]+\\/view$/.test(path) || path === "/lostfound" || /^\\/lostfound\\/resolve\\/[^/]+$/.test(path)
+  );
+  if (isAdmin || isDiagnostic || (isMutation && !publicMutation)) return requireAdmin(req, res, next);
+  next();
+});
+
 // API ENDPOINTS
 
 // 1. Admin Authentication Check
-app.post("/api/admin/login", (req, res) => {
-  const { username, password } = req.body;
-  if (username === "admin" && password === "attappadi@online") {
-    res.json({ success: true, token: "attappadi-sec-2026-auth-token" });
-  } else {
-    res.status(401).json({ success: false, error: "Incorrect credentials. Try 'admin' and 'attappadi@online'" });
-  }
+// Legacy password authentication is retired. Clients must use Firebase Auth ID tokens.
+app.post("/api/admin/login", (_req, res) => {
+  res.status(410).json({ error: "Legacy login disabled. Use Firebase Authentication." });
 });
 
 // 1b. Database Diagnostic Endpoint
