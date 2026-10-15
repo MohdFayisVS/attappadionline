@@ -8,12 +8,13 @@ permissions:
   contents: write
 jobs:
   remediate:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/security/phase1-admin-auth-draft' && !startsWith(github.event.head_commit.message, 'chore(deps):')
+    if: github.head_ref == 'security/phase1-admin-auth-draft' || (github.event_name == 'push' && github.ref == 'refs/heads/security/phase1-admin-auth-draft' && !startsWith(github.event.head_commit.message, 'chore(deps):'))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: true
+          ref: security/phase1-admin-auth-draft
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
