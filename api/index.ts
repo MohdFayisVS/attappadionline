@@ -418,7 +418,7 @@ app.get("/api/admin/backup", requireAdmin, async (_req, res) => {
     const payload = {
       format: "attappadi-firestore-export-v1",
       projectId: process.env.FIREBASE_PROJECT_ID,
-      databaseId: "(default)",
+      databaseId: process.env.FIREBASE_DATABASE_ID || "(default)",
       exportedAt: new Date().toISOString(),
       counts,
       totalDocuments: documents.length,
