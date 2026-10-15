@@ -16,6 +16,11 @@ test("async route failures reach Express 4 error middleware", async () => {
     res.status(503).json({ error: err.message });
   });
   const server = app.listen(0, "127.0.0.1");
+  await new Promise<void>((resolve, reject) => {
+    if (server.listening) return resolve();
+    server.once("listening", resolve);
+    server.once("error", reject);
+  });
   try {
     const address = server.address();
     assert.ok(address && typeof address !== "string");
