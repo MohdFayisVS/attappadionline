@@ -29,7 +29,7 @@ export default function LatestNews({
   const [activeCategoryTab, setActiveCategoryTab] = useState<"all" | "breaking" | "latest" | "updates">("all");
 
   const regionNames: { [key: string]: { en: string; ml: string } } = {
-    all: { en: "All Regions (എല്ലാ മേഖലയും)", ml: "എല്ലാ മേഖലകളും" },
+    all: { en: "All Regions", ml: "എല്ലാ മേഖലകളും" },
     agali: { en: "Agali", ml: "അഗളി" },
     mukkali: { en: "Mukkali", ml: "മുക്കാലി" },
     thavalam: { en: "Thavalam", ml: "താവളം" },
@@ -107,7 +107,7 @@ export default function LatestNews({
             </span>
             <input 
               type="text"
-              placeholder={lang === "ta" ? "செய்திகளைத் தேடுங்கள்..." : lang === "en" ? "Search news, places, keywords..." : "വാർത്തകൾ തിരയുക..."}
+              placeholder="Search news, places, keywords..."
               value={newsSearch}
               onChange={(e) => setNewsSearch(e.target.value)}
               className="w-full pl-9 pr-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#052962] dark:focus:ring-blue-500 border-gray-200 dark:border-slate-800 dark:bg-slate-950 dark:text-white"
@@ -118,7 +118,7 @@ export default function LatestNews({
         {/* Region selector pills inside filtering header */}
         <div className="border-t border-gray-100 dark:border-slate-800 pt-3 flex flex-col sm:flex-row items-start sm:items-center gap-2">
           <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mr-2 block">
-            {lang === "ta" ? "பகுதி:" : lang === "en" ? "Region Filter:" : "മേഖല തിരഞ്ഞെടുക്കുക:"}
+            Region Filter:
           </span>
           <div className="ao-region-nav flex w-full min-w-0 gap-2 overflow-x-auto whitespace-nowrap pb-2 sm:pb-1">
           {Object.keys(regionNames).map((key) => (
@@ -127,7 +127,7 @@ export default function LatestNews({
               onClick={() => onRegionChange(key)}
               className={`px-3 py-1 rounded-full text-xs font-semibold uppercase transition cursor-pointer ${activeRegion === key ? "bg-[#ffe500] text-[#052962] border-2 border-[#052962] font-black" : "bg-gray-100 dark:bg-slate-850 text-gray-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 border dark:border-slate-800"}`}
             >
-              {lang === "en" ? regionNames[key].en : regionNames[key].ml}
+              {regionNames[key].en}
             </button>
           ))}
           </div>
@@ -181,7 +181,7 @@ export default function LatestNews({
                         onToggleBookmark(post.id, e);
                       }}
                       className="absolute top-2.5 right-2.5 p-1.5 bg-white/95 hover:bg-white text-slate-700 hover:text-amber-500 rounded-full shadow-md hover:scale-110 transition duration-200 z-10 flex items-center justify-center cursor-pointer border border-slate-100"
-                      title={bookmarks.includes(post.id) ? (lang === "en" ? "Remove Bookmark" : "ബുക്ക്‌മാർക്ക് ഒഴിവാക്കുക") : (lang === "en" ? "Bookmark Article" : "ബുക്ക്‌മാർക്ക് ചെയ്യുക")}
+                      title={bookmarks.includes(post.id) ? ("Remove Bookmark") : ("Bookmark Article")}
                     >
                       <Bookmark className={`w-3.5 h-3.5 ${bookmarks.includes(post.id) ? "fill-amber-500 text-amber-500" : "text-slate-600"}`} />
                     </button>
@@ -205,7 +205,7 @@ export default function LatestNews({
 
                   {/* Headline */}
                   <h4 className="font-serif-guardian font-extrabold text-[#052962] dark:text-slate-100 leading-snug group-hover:text-[#005689] dark:group-hover:text-blue-400 transition-colors text-lg sm:text-xl line-clamp-3">
-                    {lang === "en" ? post.titleEn : post.titleMl}
+                    {newsTitle(post)}
                   </h4>
 
                   {/* Description snippet */}
@@ -238,11 +238,11 @@ export default function LatestNews({
                       className="px-2 py-0.5 bg-amber-500/10 hover:bg-amber-100 text-[#052962] hover:text-amber-800 border border-[#ffe500]/30 rounded text-[10px] font-black uppercase tracking-wider transition flex items-center gap-1 cursor-pointer select-none"
                       title={lang === "en" ? "Card Preview & Download" : "കാർഡ് രൂപത്തിൽ ഡൗൺലോഡ് ചെയ്യുക"}
                     >
-                      <IdCard className="w-3 h-3 text-amber-500 shrink-0" /> {lang === "en" ? "Card" : "കാർഡ്"}
+                      <IdCard className="w-3 h-3 text-amber-500 shrink-0" /> Card
                     </button>
                   )}
                   <span className="text-xs font-bold text-[#052962] group-hover:translate-x-1.5 transition duration-300 flex items-center gap-0.5">
-                    {lang === "en" ? "Read article" : "വാർത്ത വായിക്കുക"} <ChevronRight className="w-3.5 h-3.5" />
+                    Read article <ChevronRight className="w-3.5 h-3.5" />
                   </span>
                 </div>
               </div>
