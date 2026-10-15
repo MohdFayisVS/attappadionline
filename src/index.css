@@ -183,3 +183,18 @@ body {
     transition-duration: .01ms !important;
   }
 }
+
+/* Editorial feature presentation: keep stories readable at all viewport sizes. */
+.ao-featured-hero { isolation: isolate; }
+.ao-featured-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(0deg, rgba(2,8,23,.35), transparent 65%);
+}
+.ao-featured-hero > :not(:first-child) { z-index: 1; }
+@media (max-width: 639px) {
+  .ao-featured-hero { min-height: 410px; }
+  .ao-featured-hero h2 { overflow-wrap: anywhere; }
+}
