@@ -1572,7 +1572,7 @@ app.all("/api/debug-route-details", (req, res) => {
       initialized: !!firestoreDb,
       configPath: CONFIG_PATH,
       configExists: fs.existsSync(CONFIG_PATH),
-      hasPendingWrites: pendingWrites.length
+      hasPendingWrites: false
     },
     databaseSummary: {
       newsCount: (database.news || []).length,
@@ -1587,6 +1587,12 @@ app.all("/api/debug-route-details", (req, res) => {
       lostFoundCount: (database.lostFound || []).length
     }
   });
+});
+
+// Centralized error handling for rejected async route operations.
+app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  console.error("API request failed:", err);
+  if (!res.headersSent) res.status(503).json({ error: "The operation could not be completed. Please retry later." });
 });
 
 // Setup dev server with Vite OR static server in production
