@@ -15,6 +15,20 @@ const __dirname = path.dirname(__filename);
 dotenv.config();
 
 const app = express();
+
+// Express 4 does not automatically forward rejected async handlers to error middleware.
+// Wrap route registration so failures reach the centralized API error handler.
+for (const method of ["get", "post", "put", "patch", "delete", "all"] as const) {
+  const original = app[method].bind(app);
+  (app as any)[method] = (route: string, ...handlers: any[]) => original(route, ...handlers.map((handler: any) =>
+    typeof handler === "function"
+      ? (req: express.Request, res: express.Response, next: express.NextFunction) => {
+          try { Promise.resolve(handler(req, res, next)).catch(next); } catch (error) { next(error); }
+        }
+      : handler
+  ));
+}
+
 const PORT = 3000;
 
 // URL Rewrite Middleware for Vercel Serverless routing compat
