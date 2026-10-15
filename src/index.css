@@ -291,3 +291,28 @@ header [lang="ta"] { font-family: "Anek Tamil", sans-serif; }
 #main-content[lang="ta"] .ao-news-card p { font-family: "Anek Tamil", sans-serif; }
 #main-content[lang="en"] .ao-news-card h4,
 #main-content[lang="en"] .ao-news-card p { font-family: "Anek Latin", sans-serif; }
+
+/* Explicit editorial fonts override display-serif utilities and UI rules.
+   Language is attached only to article surfaces, not navigation or controls. */
+#main-content[lang="ml"] .ao-news-card h4,
+#main-content[lang="ml"] .ao-news-card p,
+#main-content[lang="ml"] .ao-news-card .ao-editorial-text,
+.ao-featured-hero[lang="ml"] h2,
+.ao-featured-hero[lang="ml"] .ao-editorial-text,
+#news-read-modal[lang="ml"] .ao-editorial-text {
+  font-family: "Anek Malayalam", sans-serif;
+}
+#main-content[lang="ta"] .ao-news-card h4,
+#main-content[lang="ta"] .ao-news-card p,
+#main-content[lang="ta"] .ao-news-card .ao-editorial-text,
+.ao-featured-hero[lang="ta"] h2,
+.ao-featured-hero[lang="ta"] .ao-editorial-text,
+#news-read-modal[lang="ta"] .ao-editorial-text {
+  font-family: "Anek Tamil", sans-serif;
+}
+#main-content[lang="en"] .ao-news-card h4,
+#main-content[lang="en"] .ao-news-card p,
+.ao-featured-hero[lang="en"] h2,
+#news-read-modal[lang="en"] .ao-editorial-text {
+  font-family: "Anek Latin", sans-serif;
+}
