@@ -4,7 +4,7 @@ import { NewsPost } from "../types";
 
 interface LatestNewsProps {
   news: NewsPost[];
-  lang: "en" | "ml";
+  lang: "en" | "ml" | "ta";
   activeRegion: string;
   onRegionChange: (region: string) => void;
   onPostSelect: (post: NewsPost) => void;
@@ -24,6 +24,8 @@ export default function LatestNews({
   onToggleBookmark
 }: LatestNewsProps) {
   const [newsSearch, setNewsSearch] = useState("");
+  const newsTitle = (post: NewsPost) => lang === "ta" ? (post.titleTa || post.titleEn) : lang === "ml" ? post.titleMl : post.titleEn;
+  const newsBody = (post: NewsPost) => lang === "ta" ? (post.contentTa || post.contentEn) : lang === "ml" ? post.contentMl : post.contentEn;
   const [activeCategoryTab, setActiveCategoryTab] = useState<"all" | "breaking" | "latest" | "updates">("all");
 
   const regionNames: { [key: string]: { en: string; ml: string } } = {
@@ -56,7 +58,8 @@ export default function LatestNews({
       const q = newsSearch.toLowerCase();
       const matchEn = post.titleEn.toLowerCase().includes(q) || post.contentEn.toLowerCase().includes(q);
       const matchMl = post.titleMl.toLowerCase().includes(q) || post.contentMl.toLowerCase().includes(q);
-      return matchEn || matchMl;
+      const matchTa = (post.titleTa || "").toLowerCase().includes(q) || (post.contentTa || "").toLowerCase().includes(q);
+      return matchEn || matchMl || matchTa;
     }
 
     return true;
@@ -104,7 +107,7 @@ export default function LatestNews({
             </span>
             <input 
               type="text"
-              placeholder={lang === "en" ? "Search news, places, keywords..." : "വാർത്തകൾ തിരയുക..."}
+              placeholder={lang === "ta" ? "செய்திகளைத் தேடுங்கள்..." : lang === "en" ? "Search news, places, keywords..." : "വാർത്തകൾ തിരയുക..."}
               value={newsSearch}
               onChange={(e) => setNewsSearch(e.target.value)}
               className="w-full pl-9 pr-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#052962] dark:focus:ring-blue-500 border-gray-200 dark:border-slate-800 dark:bg-slate-950 dark:text-white"
@@ -115,7 +118,7 @@ export default function LatestNews({
         {/* Region selector pills inside filtering header */}
         <div className="border-t border-gray-100 dark:border-slate-800 pt-3 flex flex-col sm:flex-row items-start sm:items-center gap-2">
           <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mr-2 block">
-            {lang === "en" ? "Region Filter:" : "മേഖല തിരഞ്ഞെടുക്കുക:"}
+            {lang === "ta" ? "பகுதி:" : lang === "en" ? "Region Filter:" : "മേഖല തിരഞ്ഞെടുക്കുക:"}
           </span>
           <div className="ao-region-nav flex w-full min-w-0 gap-2 overflow-x-auto whitespace-nowrap pb-2 sm:pb-1">
           {Object.keys(regionNames).map((key) => (
@@ -150,7 +153,7 @@ export default function LatestNews({
               onClick={() => onPostSelect(post)}
               onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); onPostSelect(post); } }}
               tabIndex={0}
-              aria-label={`${lang === "en" ? "Read article" : "വാർത്ത വായിക്കുക"}: ${lang === "en" ? post.titleEn : post.titleMl}`}
+              aria-label={`${lang === "ta" ? "செய்தியைப் படிக்க" : lang === "en" ? "Read article" : "വാർത്ത വായിക്കുക"}: ${newsTitle(post)}`}
               className="ao-news-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col justify-between group focus-visible:outline-2 focus-visible:outline-offset-2"
             >
               <div>
@@ -159,7 +162,7 @@ export default function LatestNews({
                 <div className="relative aspect-video overflow-hidden bg-slate-100 dark:bg-slate-950">
                   <img 
                     src={post.image} 
-                    alt={post.titleEn} 
+                    alt={newsTitle(post)} 
                     className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async"
                     referrerPolicy="no-referrer"
                   />
@@ -207,7 +210,7 @@ export default function LatestNews({
 
                   {/* Description snippet */}
                   <p className="text-sm text-gray-600 dark:text-slate-400 leading-relaxed line-clamp-3">
-                    {lang === "en" ? post.contentEn : post.contentMl}
+                    {newsBody(post)}
                   </p>
 
                 </div>
