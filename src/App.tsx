@@ -746,7 +746,7 @@ export default function App() {
             </div>
 
             <div className="ao-masthead-brand text-center lg:text-right min-w-0 py-2 flex items-center justify-center lg:justify-end gap-3 sm:gap-5">
-              <img src="/attappadi-mark.svg" alt="Attappadi Online brand mark" className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 object-contain shrink-0" />
+              <img src="/attappadi-mark.svg" alt="Attappadi Online brand mark" className="ao-brand-mark w-[3.75rem] h-[3.75rem] sm:w-[5.25rem] sm:h-[5.25rem] lg:w-[6.5rem] lg:h-[6.5rem] object-contain shrink-0" />
               <div className="min-w-0">
               <h1 
                 onClick={() => { setActiveSection("news"); setActiveRegion("all"); setSearchQuery(""); }}
@@ -894,7 +894,7 @@ export default function App() {
                 lang={tamilMode ? "ta" : lang}
                 onClick={() => handleRegionClick(reg.key)}
                 aria-current={activeSection === "news" && activeRegion === reg.key ? "page" : undefined}
-                className={`shrink-0 rounded px-1.5 py-1 text-xs sm:text-sm leading-relaxed transition-colors hover:text-[#052962] hover:underline ${tamilMode ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english uppercase"} ${activeSection === "news" && activeRegion === reg.key ? "text-[#052962] font-extrabold underline underline-offset-4" : "text-gray-700 font-semibold"}`}
+                className={`ao-region-choice relative shrink-0 rounded-full border px-3.5 py-1.5 text-xs sm:text-sm leading-relaxed transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#052962] ${tamilMode ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english uppercase"} ${activeSection === "news" && activeRegion === reg.key ? "ao-region-choice-active bg-[#052962] border-[#052962] text-white font-extrabold shadow-[0_3px_0_#e2b600,0_5px_12px_rgba(5,41,98,0.18)]" : "border-transparent text-gray-700 font-semibold hover:border-[#052962]/25 hover:bg-white hover:text-[#052962]"}`}
               >
                 {tamilMode ? reg.ta : lang === "ml" ? reg.ml : reg.en}
               </button>
