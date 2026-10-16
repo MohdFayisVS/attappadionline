@@ -600,7 +600,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
         ctx.textBaseline = "top";
 
         // Export as Blob
-        canvas.toBlob((blob) => {
+        await stampBrandMark(ctx, canvas);\n        canvas.toBlob((blob) => {
           resolve(blob);
         }, "image/png");
       } catch (e) {
