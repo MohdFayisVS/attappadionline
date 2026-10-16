@@ -645,7 +645,7 @@ export default function App() {
               onClick={() => selectLanguage("en")} 
               lang="en"
               aria-pressed={lang === "en"}
-              className={`font-anek-latin hover:text-[#ffe500] transition cursor-pointer ${lang === "en" && !tamilMode ? 'text-[#ffe500] font-bold' : ''}`}
+              className={`font-anek-english hover:text-[#ffe500] transition cursor-pointer ${lang === "en" && !tamilMode ? 'text-[#ffe500] font-bold' : ''}`}
             >
               ENGLISH
             </button>
