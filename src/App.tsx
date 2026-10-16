@@ -426,7 +426,7 @@ export default function App() {
       const isInternalAction = ad.actionType === "share";
       
       const imageElement = (
-        <div className="relative w-full h-24 sm:h-28 bg-slate-900 border border-white/10 rounded-lg overflow-hidden group cursor-pointer shadow-xs select-none">
+        <div className="relative w-full h-full min-h-36 md:min-h-44 bg-slate-900 border border-white/10 rounded-lg overflow-hidden group cursor-pointer shadow-xs select-none">
           <img 
             src={ad.image} 
             alt="Advertisement" 
@@ -461,7 +461,7 @@ export default function App() {
           href={href} 
           target={ad.actionType === "website" ? "_blank" : undefined} 
           rel={ad.actionType === "website" ? "noopener noreferrer" : undefined}
-          className="block w-full"
+          className="block w-full h-full"
         >
           {imageElement}
         </a>
@@ -491,7 +491,7 @@ export default function App() {
           contact: ad.contact,
           image: ad.image
         }) : undefined}
-        className="relative flex flex-row items-center justify-between w-full h-20 bg-slate-900/40 border border-white/10 rounded-lg p-3 hover:bg-slate-900/65 hover:border-[#ffe500]/40 transition duration-300 cursor-pointer select-none overflow-hidden group gap-3"
+        className="relative flex flex-row items-center justify-between w-full h-full min-h-36 md:min-h-44 bg-slate-900/40 border border-white/10 rounded-lg p-3 hover:bg-slate-900/65 hover:border-[#ffe500]/40 transition duration-300 cursor-pointer select-none overflow-hidden group gap-3"
       >
         <div className="relative z-10 flex flex-row items-center justify-between h-full w-full gap-3">
           <div className="flex items-center gap-3 min-w-0 text-left">
@@ -542,7 +542,7 @@ export default function App() {
         href={href} 
         target={ad.actionType === "website" ? "_blank" : undefined} 
         rel={ad.actionType === "website" ? "noopener noreferrer" : undefined}
-        className="contents"
+        className="block w-full h-full"
       >
         {boxContent}
       </a>
@@ -683,11 +683,11 @@ export default function App() {
               </time>
               <div className="ao-calendar-clock flex items-center justify-center gap-2 border-t border-slate-200 bg-slate-50 px-2 py-2 text-[#052962]">
                 <Clock className="w-4 h-4 text-[#c70000]" aria-hidden="true" />
-                <span className="font-sans text-sm sm:text-base font-bold tracking-wide tabular-nums">{currentTime.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: true, timeZone: "Asia/Kolkata" })}</span>
+                <span className="font-sans text-sm sm:text-base font-bold tracking-wide tabular-nums">{currentTime.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true, timeZone: "Asia/Kolkata" })}</span>
                 <span className="text-[10px] font-extrabold tracking-widest text-slate-500">IST</span>
               </div>
             </div>
-            <div className="ao-edition-promos flex-1 min-w-0 grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="ao-edition-promos flex-1 min-w-0 grid grid-cols-1 md:grid-cols-2 gap-3 self-stretch">
               {renderAdBox(adConfig?.leftAd || { titleEn: "Enquire for Ads", titleMl: "പരസ്യങ്ങൾക്ക് ബന്ധപ്പെടുക", subtitleEn: "Enquire Now", subtitleMl: "പരസ്യങ്ങൾ നൽകാൻ", contact: "+91 9447471224", actionType: "share", image: "" })}
               {renderAdBox(adConfig?.rightAd || { titleEn: "Contact Support", titleMl: "പരസ്യങ്ങൾക്ക് വിളിക്കുക", subtitleEn: "Attappadi Ads", subtitleMl: "പരസ്യങ്ങൾ നൽകാൻ", contact: "+91 9447471224", actionType: "phone", image: "" })}
             </div>
