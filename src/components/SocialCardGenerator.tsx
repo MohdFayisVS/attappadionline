@@ -220,19 +220,16 @@ export default function SocialCardGenerator({
               </span>
             </div>
 
-            {/* Website Brand Header text-only */}
+            {/* Official brand symbol appears in exported social cards as well as previews. */}
             {logoToggle && (
-              <div 
-                className="font-extrabold italic tracking-tighter shrink-0" 
-                style={{ 
-                  fontSize: "44px", 
-                  color: customTxtPrimary,
-                  letterSpacing: "-2px",
-                  fontFamily: '"Anek Malayalam", sans-serif'
-                }}
-              >
-                Attappadi<span style={{ color: customAccent }}>Online</span>
+              <div className="flex items-center gap-3 shrink-0">
+                <img src="/attappadi-mark.svg" alt="Attappadi Online" crossOrigin="anonymous" className="w-16 h-16 object-contain shrink-0" />
+                <div className="font-extrabold italic tracking-tighter" style={{ fontSize: "40px", color: customTxtPrimary, letterSpacing: "-2px", fontFamily: '"Anek Latin", sans-serif' }}>
+                  Attappadi<span style={{ color: customAccent }}>Online</span>
+                </div>
               </div>
+            )}
+
             )}
           </div>
 
