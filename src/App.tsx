@@ -869,33 +869,34 @@ export default function App() {
         </div>
       </div>
 
-        {/* Third Level sub-regions row strip */}
-        <div className="bg-[#dcdcdc] text-[#121212] px-6 py-2.5 text-[11px] font-bold uppercase border-b border-gray-300">
-          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row gap-2 sm:gap-5 items-start sm:items-center">
-            <span className="text-[#c70000] shrink-0 font-black">Regions:</span>
-            <div className="ao-region-nav flex w-full min-w-0 gap-4 overflow-x-auto whitespace-nowrap pb-1 sm:pb-0">
-              {[
-                { key: "all", en: "All Regions", ml: "എല്ലാ മേഖലയും" },
-                { key: "agali", en: "Agali", ml: "അഗളി" },
-                { key: "mukkali", en: "Mukkali", ml: "മുക്കാലി" },
-                { key: "thavalam", en: "Thavalam", ml: "താവളം" },
-                { key: "kottathara", en: "Kottathara", ml: "കോട്ടത്തറ" },
-                { key: "sholayur", en: "Sholayur", ml: "ഷോളയൂർ" },
-                { key: "pudur", en: "Pudur", ml: "പുതൂർ" },
-                { key: "anaikkatty", en: "Anaikatty", ml: "ആനക്കട്ടി" },
-                { key: "jellippara", en: "Jellippara", ml: "ജെല്ലിപ്പാറ" },
-                { key: "chittur", en: "Chittur", ml: "ചിറ്റൂർ" }
-              ].map(reg => (
-                <button 
-                  key={reg.key}
-                  onClick={() => handleRegionClick(reg.key)}
-                  className={`hover:underline cursor-pointer transition uppercase text-[10px] ${activeSection === "news" && activeRegion === reg.key ? "text-[#052962] font-black underline" : "text-gray-700 font-semibold"}`}
-                >
-                  {reg.en}
-                </button>
-              ))}
-            </div>
-          </div>
+        {/* Language-aware, wrapping region navigation: grows naturally as regions are added. */}
+        <div className="bg-[#dcdcdc] text-[#121212] px-4 sm:px-6 py-3 border-b border-gray-300">
+          <nav aria-label="Regions" className="max-w-7xl mx-auto flex flex-wrap items-center gap-x-4 gap-y-2.5">
+            <span className="text-[#c70000] shrink-0 font-black text-xs sm:text-sm font-anek-english uppercase">Regions:</span>
+            {[
+              { key: "all", en: "All Regions", ml: "എല്ലാ പ്രദേശങ്ങളും", ta: "அனைத்து பகுதிகளும்" },
+              { key: "agali", en: "Agali", ml: "അഗളി", ta: "அகளி" },
+              { key: "mukkali", en: "Mukkali", ml: "മുക്കാലി", ta: "முக்காலி" },
+              { key: "thavalam", en: "Thavalam", ml: "താവളം", ta: "தாவளம்" },
+              { key: "kottathara", en: "Kottathara", ml: "കോട്ടത്തറ", ta: "கோட்டத்தறை" },
+              { key: "sholayur", en: "Sholayur", ml: "ഷോളയൂർ", ta: "சோலையூர்" },
+              { key: "pudur", en: "Pudur", ml: "പുതൂർ", ta: "புதூர்" },
+              { key: "anaikkatty", en: "Anaikatty", ml: "ആനക്കട്ടി", ta: "ஆனைக்கட்டி" },
+              { key: "jellippara", en: "Jellippara", ml: "ജെല്ലിപ്പാറ", ta: "ஜெல்லிப்பாறை" },
+              { key: "chittur", en: "Chittur", ml: "ചിറ്റൂർ", ta: "சித்தூர்" }
+            ].map(reg => (
+              <button
+                type="button"
+                key={reg.key}
+                lang={tamilMode ? "ta" : lang}
+                onClick={() => handleRegionClick(reg.key)}
+                aria-current={activeSection === "news" && activeRegion === reg.key ? "page" : undefined}
+                className={`shrink-0 rounded px-1.5 py-1 text-xs sm:text-sm leading-relaxed transition-colors hover:text-[#052962] hover:underline ${tamilMode ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english uppercase"} ${activeSection === "news" && activeRegion === reg.key ? "text-[#052962] font-extrabold underline underline-offset-4" : "text-gray-700 font-semibold"}`}
+              >
+                {tamilMode ? reg.ta : lang === "ml" ? reg.ml : reg.en}
+              </button>
+            ))}
+          </nav>
         </div>
 
       </header>
