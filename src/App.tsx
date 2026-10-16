@@ -755,6 +755,7 @@ export default function App() {
                 Attappadi<span className="text-[#ffe500]">Online</span>
               </h1>
               <p className="text-[10px] sm:text-xs text-slate-300 mt-1.5 font-semibold uppercase tracking-[0.15em] sm:tracking-widest font-sans">ALL AROUND THE ATTAPPADI HILLS</p>
+              </div>
             </div>
           </div>
 
