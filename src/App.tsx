@@ -745,7 +745,7 @@ export default function App() {
 
             </div>
 
-            <div className="ao-masthead-brand text-center lg:text-right min-w-0 py-2">
+            <div className="ao-masthead-brand text-center lg:text-right min-w-0 py-2 flex items-center justify-center lg:justify-end gap-3 sm:gap-5">\n              <img src="/attappadi-mark.svg" alt="Attappadi Online brand mark" className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 object-contain shrink-0" />\n              <div className="min-w-0">
               <h1 
                 onClick={() => { setActiveSection("news"); setActiveRegion("all"); setSearchQuery(""); }}
                 className="ao-header-wordmark text-[clamp(2.5rem,6vw,5.6rem)] font-serif-guardian font-black tracking-tighter italic cursor-pointer transition select-none hover:opacity-95 leading-tight"
