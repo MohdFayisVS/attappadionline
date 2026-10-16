@@ -426,7 +426,7 @@ export default function App() {
       const isInternalAction = ad.actionType === "share";
       
       const imageElement = (
-        <div className="relative w-full h-24 sm:h-28 bg-slate-900 border border-white/10 rounded-lg overflow-hidden group cursor-pointer shadow-xs select-none">
+        <div className="relative w-full h-full min-h-36 md:min-h-44 bg-slate-900 border border-white/10 rounded-lg overflow-hidden group cursor-pointer shadow-xs select-none">
           <img 
             src={ad.image} 
             alt="Advertisement" 
@@ -461,7 +461,7 @@ export default function App() {
           href={href} 
           target={ad.actionType === "website" ? "_blank" : undefined} 
           rel={ad.actionType === "website" ? "noopener noreferrer" : undefined}
-          className="block w-full"
+          className="block w-full h-full"
         >
           {imageElement}
         </a>
@@ -491,7 +491,7 @@ export default function App() {
           contact: ad.contact,
           image: ad.image
         }) : undefined}
-        className="relative flex flex-row items-center justify-between w-full h-20 bg-slate-900/40 border border-white/10 rounded-lg p-3 hover:bg-slate-900/65 hover:border-[#ffe500]/40 transition duration-300 cursor-pointer select-none overflow-hidden group gap-3"
+        className="relative flex flex-row items-center justify-between w-full h-full min-h-36 md:min-h-44 bg-slate-900/40 border border-white/10 rounded-lg p-3 hover:bg-slate-900/65 hover:border-[#ffe500]/40 transition duration-300 cursor-pointer select-none overflow-hidden group gap-3"
       >
         <div className="relative z-10 flex flex-row items-center justify-between h-full w-full gap-3">
           <div className="flex items-center gap-3 min-w-0 text-left">
@@ -542,7 +542,7 @@ export default function App() {
         href={href} 
         target={ad.actionType === "website" ? "_blank" : undefined} 
         rel={ad.actionType === "website" ? "noopener noreferrer" : undefined}
-        className="contents"
+        className="block w-full h-full"
       >
         {boxContent}
       </a>
@@ -634,19 +634,23 @@ export default function App() {
           <div className="flex gap-4 text-xs font-semibold items-center select-none text-slate-300">
             <button 
               onClick={() => selectLanguage("ml")} 
-              className={`hover:text-[#ffe500] transition cursor-pointer ${lang === "ml" && !tamilMode ? 'text-[#ffe500] font-bold' : ''}`}
+              lang="ml"
+              aria-pressed={lang === "ml"}
+              className={`font-anek-malayalam hover:text-[#ffe500] transition cursor-pointer ${lang === "ml" && !tamilMode ? 'text-[#ffe500] font-bold' : ''}`}
             >
               മലയാളം
             </button>
             <span className="opacity-40">|</span>
             <button 
               onClick={() => selectLanguage("en")} 
-              className={`hover:text-[#ffe500] transition cursor-pointer ${lang === "en" && !tamilMode ? 'text-[#ffe500] font-bold' : ''}`}
+              lang="en"
+              aria-pressed={lang === "en"}
+              className={`font-anek-english hover:text-[#ffe500] transition cursor-pointer ${lang === "en" && !tamilMode ? 'text-[#ffe500] font-bold' : ''}`}
             >
-              English
+              ENGLISH
             </button>
             <span className="opacity-40">|</span>
-            <button onClick={() => selectLanguage("ta")} aria-pressed={tamilMode} className={`hover:text-[#ffe500] transition cursor-pointer ${tamilMode ? "text-[#ffe500] font-bold" : ""}`} lang="ta">தமிழ்</button>
+            <button onClick={() => selectLanguage("ta")} aria-pressed={tamilMode} className={`font-anek-tamil hover:text-[#ffe500] transition cursor-pointer ${tamilMode ? "text-[#ffe500] font-bold" : ""}`} lang="ta">தமிழ்</button>
             <span className="opacity-40">|</span>
             <button
               onClick={toggleTheme}
@@ -679,11 +683,11 @@ export default function App() {
               </time>
               <div className="ao-calendar-clock flex items-center justify-center gap-2 border-t border-slate-200 bg-slate-50 px-2 py-2 text-[#052962]">
                 <Clock className="w-4 h-4 text-[#c70000]" aria-hidden="true" />
-                <span className="font-sans text-sm sm:text-base font-bold tracking-wide tabular-nums">{currentTime.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: true, timeZone: "Asia/Kolkata" })}</span>
+                <span className="font-sans text-sm sm:text-base font-bold tracking-wide tabular-nums">{currentTime.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true, timeZone: "Asia/Kolkata" })}</span>
                 <span className="text-[10px] font-extrabold tracking-widest text-slate-500">IST</span>
               </div>
             </div>
-            <div className="ao-edition-promos flex-1 min-w-0 grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="ao-edition-promos flex-1 min-w-0 grid grid-cols-1 md:grid-cols-2 gap-3 self-stretch">
               {renderAdBox(adConfig?.leftAd || { titleEn: "Enquire for Ads", titleMl: "പരസ്യങ്ങൾക്ക് ബന്ധപ്പെടുക", subtitleEn: "Enquire Now", subtitleMl: "പരസ്യങ്ങൾ നൽകാൻ", contact: "+91 9447471224", actionType: "share", image: "" })}
               {renderAdBox(adConfig?.rightAd || { titleEn: "Contact Support", titleMl: "പരസ്യങ്ങൾക്ക് വിളിക്കുക", subtitleEn: "Attappadi Ads", subtitleMl: "പരസ്യങ്ങൾ നൽകാൻ", contact: "+91 9447471224", actionType: "phone", image: "" })}
             </div>
@@ -741,7 +745,7 @@ export default function App() {
 
             </div>
 
-            <div className="ao-masthead-brand text-center lg:text-right min-w-0 py-2">
+            <div className="ao-masthead-brand text-center lg:text-right min-w-0 py-2 flex items-center justify-center lg:justify-end gap-3 sm:gap-5">\n              <img src="/attappadi-mark.svg" alt="Attappadi Online brand mark" className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 object-contain shrink-0" />\n              <div className="min-w-0">
               <h1 
                 onClick={() => { setActiveSection("news"); setActiveRegion("all"); setSearchQuery(""); }}
                 className="ao-header-wordmark text-[clamp(2.5rem,6vw,5.6rem)] font-serif-guardian font-black tracking-tighter italic cursor-pointer transition select-none hover:opacity-95 leading-tight"
@@ -865,33 +869,34 @@ export default function App() {
         </div>
       </div>
 
-        {/* Third Level sub-regions row strip */}
-        <div className="bg-[#dcdcdc] text-[#121212] px-6 py-2.5 text-[11px] font-bold uppercase border-b border-gray-300">
-          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row gap-2 sm:gap-5 items-start sm:items-center">
-            <span className="text-[#c70000] shrink-0 font-black">Regions:</span>
-            <div className="ao-region-nav flex w-full min-w-0 gap-4 overflow-x-auto whitespace-nowrap pb-1 sm:pb-0">
-              {[
-                { key: "all", en: "All Regions", ml: "എല്ലാ മേഖലയും" },
-                { key: "agali", en: "Agali", ml: "അഗളി" },
-                { key: "mukkali", en: "Mukkali", ml: "മുക്കാലി" },
-                { key: "thavalam", en: "Thavalam", ml: "താവളം" },
-                { key: "kottathara", en: "Kottathara", ml: "കോട്ടത്തറ" },
-                { key: "sholayur", en: "Sholayur", ml: "ഷോളയൂർ" },
-                { key: "pudur", en: "Pudur", ml: "പുതൂർ" },
-                { key: "anaikkatty", en: "Anaikatty", ml: "ആനക്കട്ടി" },
-                { key: "jellippara", en: "Jellippara", ml: "ജെല്ലിപ്പാറ" },
-                { key: "chittur", en: "Chittur", ml: "ചിറ്റൂർ" }
-              ].map(reg => (
-                <button 
-                  key={reg.key}
-                  onClick={() => handleRegionClick(reg.key)}
-                  className={`hover:underline cursor-pointer transition uppercase text-[10px] ${activeSection === "news" && activeRegion === reg.key ? "text-[#052962] font-black underline" : "text-gray-700 font-semibold"}`}
-                >
-                  {reg.en}
-                </button>
-              ))}
-            </div>
-          </div>
+        {/* Language-aware, wrapping region navigation: grows naturally as regions are added. */}
+        <div className="bg-[#dcdcdc] text-[#121212] px-4 sm:px-6 py-3 border-b border-gray-300">
+          <nav aria-label="Regions" className="max-w-7xl mx-auto flex flex-wrap items-center gap-x-4 gap-y-2.5">
+            <span className="text-[#c70000] shrink-0 font-black text-xs sm:text-sm font-anek-english uppercase">Regions:</span>
+            {[
+              { key: "all", en: "All Regions", ml: "എല്ലാ പ്രദേശങ്ങളും", ta: "அனைத்து பகுதிகளும்" },
+              { key: "agali", en: "Agali", ml: "അഗളി", ta: "அகளி" },
+              { key: "mukkali", en: "Mukkali", ml: "മുക്കാലി", ta: "முக்காலி" },
+              { key: "thavalam", en: "Thavalam", ml: "താവളം", ta: "தாவளம்" },
+              { key: "kottathara", en: "Kottathara", ml: "കോട്ടത്തറ", ta: "கோட்டத்தறை" },
+              { key: "sholayur", en: "Sholayur", ml: "ഷോളയൂർ", ta: "சோலையூர்" },
+              { key: "pudur", en: "Pudur", ml: "പുതൂർ", ta: "புதூர்" },
+              { key: "anaikkatty", en: "Anaikatty", ml: "ആനക്കട്ടി", ta: "ஆனைக்கட்டி" },
+              { key: "jellippara", en: "Jellippara", ml: "ജെല്ലിപ്പാറ", ta: "ஜெல்லிப்பாறை" },
+              { key: "chittur", en: "Chittur", ml: "ചിറ്റൂർ", ta: "சித்தூர்" }
+            ].map(reg => (
+              <button
+                type="button"
+                key={reg.key}
+                lang={tamilMode ? "ta" : lang}
+                onClick={() => handleRegionClick(reg.key)}
+                aria-current={activeSection === "news" && activeRegion === reg.key ? "page" : undefined}
+                className={`shrink-0 rounded px-1.5 py-1 text-xs sm:text-sm leading-relaxed transition-colors hover:text-[#052962] hover:underline ${tamilMode ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english uppercase"} ${activeSection === "news" && activeRegion === reg.key ? "text-[#052962] font-extrabold underline underline-offset-4" : "text-gray-700 font-semibold"}`}
+              >
+                {tamilMode ? reg.ta : lang === "ml" ? reg.ml : reg.en}
+              </button>
+            ))}
+          </nav>
         </div>
 
       </header>
