@@ -634,19 +634,23 @@ export default function App() {
           <div className="flex gap-4 text-xs font-semibold items-center select-none text-slate-300">
             <button 
               onClick={() => selectLanguage("ml")} 
-              className={`hover:text-[#ffe500] transition cursor-pointer ${lang === "ml" && !tamilMode ? 'text-[#ffe500] font-bold' : ''}`}
+              lang="ml"
+              aria-pressed={lang === "ml"}
+              className={`font-anek-malayalam hover:text-[#ffe500] transition cursor-pointer ${lang === "ml" && !tamilMode ? 'text-[#ffe500] font-bold' : ''}`}
             >
               മലയാളം
             </button>
             <span className="opacity-40">|</span>
             <button 
               onClick={() => selectLanguage("en")} 
-              className={`hover:text-[#ffe500] transition cursor-pointer ${lang === "en" && !tamilMode ? 'text-[#ffe500] font-bold' : ''}`}
+              lang="en"
+              aria-pressed={lang === "en"}
+              className={`font-anek-latin hover:text-[#ffe500] transition cursor-pointer ${lang === "en" && !tamilMode ? 'text-[#ffe500] font-bold' : ''}`}
             >
-              English
+              ENGLISH
             </button>
             <span className="opacity-40">|</span>
-            <button onClick={() => selectLanguage("ta")} aria-pressed={tamilMode} className={`hover:text-[#ffe500] transition cursor-pointer ${tamilMode ? "text-[#ffe500] font-bold" : ""}`} lang="ta">தமிழ்</button>
+            <button onClick={() => selectLanguage("ta")} aria-pressed={tamilMode} className={`font-anek-tamil hover:text-[#ffe500] transition cursor-pointer ${tamilMode ? "text-[#ffe500] font-bold" : ""}`} lang="ta">தமிழ்</button>
             <span className="opacity-40">|</span>
             <button
               onClick={toggleTheme}
