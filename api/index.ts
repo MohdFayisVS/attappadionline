@@ -2,8 +2,8 @@ import express from "express";
 import path from "path";
 import fs from "fs";
 import dotenv from "dotenv";
-import { requireAdmin } from "./middleware/requireAdmin";
-import { requiresAdmin } from "./middleware/routePolicy";
+import { requireAdmin } from "./middleware/requireAdmin.js";
+import { requiresAdmin } from "./middleware/routePolicy.js";
 const __dirname = process.cwd();
 
 // Firebase is imported dynamically inside database operations to optimize serverless cold starts
@@ -227,7 +227,7 @@ async function initFirestoreDatabase() {
 
   if (!firestoreDb) {
     try {
-      const { getServerFirestore } = await import("./serverFirestore");
+      const { getServerFirestore } = await import("./serverFirestore.js");
       firestoreDb = getServerFirestore();
       console.log("Firebase Admin Firestore initialized");
     } catch (error) {
@@ -241,7 +241,7 @@ async function initFirestoreDatabase() {
     return;
   }
 
-  const { collection, getDocs, doc, setDoc, getDoc } = await import("./serverFirestore");
+  const { collection, getDocs, doc, setDoc, getDoc } = await import("./serverFirestore.js");
 
   console.log("⚡ Fetching and synchronizing Firestore data...");
   const collections = [
@@ -339,7 +339,7 @@ async function getCollectionData(colName: string): Promise<any[]> {
   if (!firestoreDb) {
     return database[colName] || [];
   }
-  const { collection, getDocs } = await import("./serverFirestore");
+  const { collection, getDocs } = await import("./serverFirestore.js");
   try {
     const qSnap = await getDocs(collection(firestoreDb, colName));
     const items: any[] = [];
@@ -358,7 +358,7 @@ async function getCollectionData(colName: string): Promise<any[]> {
 // Real-time Firestore helper: Save or update a single document directly in firestore
 async function writeItemToFirestore(colName: string, id: string, item: any): Promise<void> {
   if (!firestoreDb) throw new Error("Firestore unavailable: refusing to acknowledge an unpersisted mutation.");
-  const { doc, setDoc } = await import("./serverFirestore");
+  const { doc, setDoc } = await import("./serverFirestore.js");
   try {
     const cleanItem = { ...item };
     delete cleanItem.id;
@@ -374,7 +374,7 @@ async function writeItemToFirestore(colName: string, id: string, item: any): Pro
 // Real-time Firestore helper: Delete a single document directly in firestore
 async function deleteItemFromFirestore(colName: string, id: string): Promise<void> {
   if (!firestoreDb) throw new Error("Firestore unavailable: refusing to acknowledge an unpersisted mutation.");
-  const { doc, deleteDoc } = await import("./serverFirestore");
+  const { doc, deleteDoc } = await import("./serverFirestore.js");
   try {
     const deletePromise = deleteDoc(doc(firestoreDb, colName, id));
     await deletePromise;
@@ -400,7 +400,7 @@ app.get("/api/admin/backup", requireAdmin, async (_req, res) => {
     return res.status(404).json({ error: "Backup endpoint disabled" });
   }
   try {
-    const { getServerFirestore } = await import("./serverFirestore");
+    const { getServerFirestore } = await import("./serverFirestore.js");
     const db = getServerFirestore();
     const documents: Array<{ path: string; data: any }> = [];
     const counts: Record<string, number> = {};
@@ -444,7 +444,7 @@ app.post("/api/admin/login", (_req, res) => {
 
 // 1b. Database Diagnostic Endpoint
 app.get("/api/admin/db-diagnostic", async (req, res) => {
-  const { collection, getDocs } = await import("./serverFirestore");
+  const { collection, getDocs } = await import("./serverFirestore.js");
   let isUsingFirestore = !!firestoreDb;
   let status = "disconnected";
   let errorMessage = null;
@@ -665,7 +665,7 @@ app.get("/api/adconfig", async (req, res) => {
   if (!firestoreDb) {
     return res.json(database.adConfig || defaultAdConfig);
   }
-  const { doc, getDoc } = await import("./serverFirestore");
+  const { doc, getDoc } = await import("./serverFirestore.js");
   try {
     const configSnap = await getDoc(doc(firestoreDb, "metadata", "adConfig"));
     if (configSnap.exists) {
@@ -709,7 +709,7 @@ app.put("/api/adconfig", async (req, res) => {
   };
 
   if (firestoreDb) {
-    const { doc, setDoc } = await import("./serverFirestore");
+    const { doc, setDoc } = await import("./serverFirestore.js");
     try {
       const writePromise = setDoc(doc(firestoreDb, "metadata", "adConfig"), updatedConfig);
         await writePromise;
