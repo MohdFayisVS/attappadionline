@@ -103,6 +103,21 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
     setTimeout(() => setCopied(false), 2500);
   };
 
+  // Stamp the same official symbol on both canvas-generated card variants.
+  const stampBrandMark = async (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
+    try {
+      const mark = new Image();
+      mark.src = "/attappadi-mark.svg";
+      await new Promise<void>((resolve, reject) => {
+        mark.onload = () => resolve();
+        mark.onerror = () => reject(new Error("Brand mark unavailable"));
+      });
+      ctx.drawImage(mark, 36, canvas.height - 105, 90, 63);
+    } catch (error) {
+      console.warn("Unable to stamp Attappadi brand mark", error);
+    }
+  };
+
   // 100% ROBUST CANVAS-BASED GRAPHIC GENERATOR (No HTML parser crash risk!)
   const generateCanvasImageBlob = (): Promise<Blob | null> => {
     return new Promise(async (resolve) => {
@@ -438,7 +453,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
           ctx.textBaseline = "top";
 
           // Export as Blob
-          canvas.toBlob((blob) => {
+          await stampBrandMark(ctx, canvas);\n          canvas.toBlob((blob) => {
             resolve(blob);
           }, "image/png");
 
