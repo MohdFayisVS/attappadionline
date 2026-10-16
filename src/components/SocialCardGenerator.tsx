@@ -229,8 +229,6 @@ export default function SocialCardGenerator({
                 </div>
               </div>
             )}
-
-            )}
           </div>
 
           {/* Layout Option B: Bento Split */}
