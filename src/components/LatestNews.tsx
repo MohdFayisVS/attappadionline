@@ -82,19 +82,19 @@ export default function LatestNews({
             </button>
             <button
               onClick={() => setActiveCategoryTab("breaking")}
-              className={`flex-1 md:flex-none px-4 py-1.5 rounded-md transition cursor-pointer ${activeCategoryTab === "breaking" ? "bg-[#c70000] text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
+              className={`min-w-0 px-2 sm:px-3 py-2 rounded-md transition cursor-pointer ${activeCategoryTab === "breaking" ? "bg-[#c70000] text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
             >
               {lang === "ml" ? "ബ്രേക്കിംഗ്" : lang === "ta" ? "முக்கிய செய்திகள்" : "Breaking"}
             </button>
             <button
               onClick={() => setActiveCategoryTab("latest")}
-              className={`flex-1 md:flex-none px-4 py-1.5 rounded-md transition cursor-pointer ${activeCategoryTab === "latest" ? "bg-[#052962]/90 dark:bg-blue-500/90 text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
+              className={`min-w-0 px-2 sm:px-3 py-2 rounded-md transition cursor-pointer ${activeCategoryTab === "latest" ? "bg-[#052962]/90 dark:bg-blue-500/90 text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
             >
               {lang === "ml" ? "പുതിയ വാർത്തകൾ" : lang === "ta" ? "சமீபத்திய செய்திகள்" : "Latest News"}
             </button>
             <button
               onClick={() => setActiveCategoryTab("updates")}
-              className={`flex-1 md:flex-none px-4 py-1.5 rounded-md transition cursor-pointer ${activeCategoryTab === "updates" ? "bg-amber-600 text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
+              className={`min-w-0 px-2 sm:px-3 py-2 rounded-md transition cursor-pointer ${activeCategoryTab === "updates" ? "bg-amber-600 text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
             >
               {lang === "ml" ? "ദൈനംദിന വിവരങ്ങൾ" : lang === "ta" ? "தினசரி செய்திகள்" : "Daily Updates"}
             </button>
