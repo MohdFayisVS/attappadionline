@@ -73,10 +73,10 @@ export default function LatestNews({
         
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           {/* Category Tabs */}
-          <div lang={lang} className="ao-news-tabs ao-localized-content flex bg-slate-50 dark:bg-slate-950 border dark:border-slate-800 rounded-lg p-1 text-xs font-bold uppercase w-full overflow-visible">
+          <div lang={lang} className="ao-news-tabs ao-localized-content grid grid-cols-2 sm:grid-cols-4 bg-slate-50 dark:bg-slate-950 border dark:border-slate-800 rounded-lg p-1 text-xs font-bold uppercase w-full min-w-0 overflow-visible">
             <button
               onClick={() => setActiveCategoryTab("all")}
-              className={`flex-1 md:flex-none px-4 py-1.5 rounded-md transition cursor-pointer ${activeCategoryTab === "all" ? "bg-[#052962] dark:bg-blue-600 text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
+              className={`min-w-0 px-2 sm:px-3 py-2 rounded-md transition cursor-pointer ${activeCategoryTab === "all" ? "bg-[#052962] dark:bg-blue-600 text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
             >
               {lang === "ml" ? "എല്ലാ വിഭാഗങ്ങളും" : lang === "ta" ? "அனைத்து பிரிவுகளும்" : "All Sections"}
             </button>
