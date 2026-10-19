@@ -1535,7 +1535,7 @@ export default function App() {
           ) : (
             <>
               <div id="latest-news-section" className="border-b border-[#052962] pb-2 mb-4 flex justify-between items-center bg-slate-50 p-2.5 rounded border border-gray-100">
-                <h3 className="font-serif-guardian font-black text-[#052962] text-lg uppercase tracking-tight">
+                <h3 lang={lang} className="ao-localized-content font-serif-guardian font-black text-[#052962] text-lg uppercase tracking-tight">
                   {lang === "ml" ? "വാർത്തകൾ" : lang === "ta" ? "செய்திகள்" : "NEWS"}
                 </h3>
                 
@@ -1570,7 +1570,7 @@ export default function App() {
             {/* Bookmarked Stories Sidebar Widget */}
             <div className="bg-white border border-gray-100 rounded-lg shadow-sm p-4 space-y-4">
               <div className="border-b pb-2 flex justify-between items-center">
-                <h4 className="font-serif-guardian font-extrabold text-[#052962] text-sm uppercase tracking-tight flex items-center gap-1.5">
+                <h4 lang="en" className="ao-fixed-ui font-serif-guardian font-extrabold text-[#052962] text-sm uppercase tracking-tight flex items-center gap-1.5">
                   <Bookmark className="w-4 h-4 fill-amber-500 text-amber-500" />
                   Saved News
                 </h4>
@@ -1582,10 +1582,10 @@ export default function App() {
               </div>
               
               {bookmarks.length === 0 ? (
-                <p className="text-[11px] text-gray-400 italic font-medium leading-relaxed">
+                <p lang={lang} className="ao-localized-content text-[11px] text-gray-500 italic font-medium leading-relaxed">
                   {lang === "en" 
                     ? "No bookmarked articles. Click the Bookmark icon on any article to save it for quick access." 
-                    : "വാർത്തകളൊന്നും സൂക്ഷിച്ചിട്ടില്ല. വേഗത്തിൽ വായിക്കാൻ വാർത്തകളിലെ ബുക്ക്‌മാർക്ക് ഐക്കൺ ക്ലിക്ക് ചെയ്യുക."}
+                    : lang === "ta" ? "சேமிக்கப்பட்ட செய்திகள் இல்லை. பின்னர் படிக்க, செய்தியில் உள்ள புக்மார்க் சின்னத்தைத் தேர்ந்தெடுக்கவும்." : "വാർത്തകളൊന്നും സൂക്ഷിച്ചിട്ടില്ല. വേഗത്തിൽ വായിക്കാൻ വാർത്തകളിലെ ബുക്ക്‌മാർക്ക് ഐക്കൺ ക്ലിക്ക് ചെയ്യുക."
                 </p>
               ) : (
                 <div className="space-y-3">
