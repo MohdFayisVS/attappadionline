@@ -73,7 +73,7 @@ export default function LatestNews({
         
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           {/* Category Tabs */}
-          <div className="ao-news-tabs flex bg-slate-50 dark:bg-slate-950 border dark:border-slate-800 rounded-lg p-1 text-xs font-bold uppercase w-full md:w-auto overflow-x-auto">
+          <div lang={lang} className="ao-news-tabs ao-localized-content flex bg-slate-50 dark:bg-slate-950 border dark:border-slate-800 rounded-lg p-1 text-xs font-bold uppercase w-full overflow-visible">
             <button
               onClick={() => setActiveCategoryTab("all")}
               className={`flex-1 md:flex-none px-4 py-1.5 rounded-md transition cursor-pointer ${activeCategoryTab === "all" ? "bg-[#052962] dark:bg-blue-600 text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
@@ -101,7 +101,7 @@ export default function LatestNews({
           </div>
 
           {/* Quick Search */}
-          <div className="relative w-full md:w-80">
+          <div lang={lang} className="ao-localized-content relative w-full md:w-80">
             <span className="absolute left-3 inset-y-0 flex items-center text-gray-400">
               <Search className="w-4 h-4" />
             </span>
@@ -117,10 +117,10 @@ export default function LatestNews({
 
         {/* Region selector pills inside filtering header */}
         <div className="border-t border-gray-100 dark:border-slate-800 pt-3 flex flex-col sm:flex-row items-start sm:items-center gap-2">
-          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mr-2 block">
+          <span lang="en" className="ao-fixed-ui text-[10px] font-bold text-gray-400 uppercase tracking-widest mr-2 block">
             Region Filter:
           </span>
-          <div className="ao-region-nav flex w-full min-w-0 gap-2 overflow-x-auto whitespace-nowrap pb-2 sm:pb-1">
+          <div lang={lang} className="ao-region-nav ao-localized-content flex w-full min-w-0 gap-2 overflow-x-auto whitespace-nowrap pb-2 sm:pb-1">
           {Object.keys(regionNames).map((key) => (
             <button
               key={key}
@@ -140,7 +140,7 @@ export default function LatestNews({
         {filteredPosts.length === 0 ? (
           <div className="col-span-full text-center bg-white dark:bg-slate-900 border dark:border-slate-800 rounded-lg py-12 px-4 shadow-sm text-gray-400">
             <Globe className="w-12 h-12 mx-auto text-gray-300 mb-3 animate-spin duration-3000" />
-            <p className="text-sm">
+            <p lang={lang} className="ao-localized-content text-sm">
               {lang === "ml" ? "അന്വേഷിച്ച മേഖലയിലുള്ള വാർത്തകൾ ലഭ്യമല്ല." : lang === "ta" ? "இந்தத் தேடலுக்குப் பொருந்தும் செய்திகள் இல்லை." : "No articles matched for this search context right now."}
             </p>
           </div>
