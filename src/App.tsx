@@ -989,7 +989,7 @@ export default function App() {
       )}
 
       {/* 4. MAIN THREE-COLUMN LAYOUT CONTEXT */}
-      <main lang={lang} id="main-content" className="max-w-7xl mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 min-w-0">
+      <main lang={lang} id="main-content" className="ao-i18n-page max-w-7xl mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 min-w-0">
         
         {/* LEFT COLUMN: Main News Feed or Search Results (Col spans 8 or 12) */}
         <section className={`${activeSection === "news" ? "lg:col-span-8" : "lg:col-span-12"} space-y-4`}>
@@ -1692,7 +1692,7 @@ export default function App() {
             )}
 
             <motion.div 
-              id="news-read-modal" lang={lang}
+              id="news-read-modal" lang={lang} data-i18n-scope="article"
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
