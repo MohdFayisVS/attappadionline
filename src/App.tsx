@@ -491,34 +491,34 @@ export default function App() {
           contact: ad.contact,
           image: ad.image
         }) : undefined}
-        className="relative flex flex-row items-center justify-between w-full h-full min-h-36 md:min-h-44 bg-slate-900/40 border border-white/10 rounded-lg p-3 hover:bg-slate-900/65 hover:border-[#ffe500]/40 transition duration-300 cursor-pointer select-none overflow-hidden group gap-3"
+        className="relative flex flex-row items-center justify-between w-full h-full min-h-[108px] sm:min-h-[116px] bg-[#102e61] border border-white/20 rounded-xl px-4 py-3 sm:px-5 sm:py-4 shadow-sm hover:bg-[#173a74] hover:border-[#ffe500]/60 transition duration-300 cursor-pointer select-none overflow-hidden group gap-3"
       >
-        <div className="relative z-10 flex flex-row items-center justify-between h-full w-full gap-3">
-          <div className="flex items-center gap-3 min-w-0 text-left">
-            <div className="w-10 h-10 rounded-md bg-[#ffe500]/10 flex items-center justify-center text-[#ffe500] shrink-0 group-hover:scale-110 transition duration-300">
+        <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between h-full w-full gap-3 sm:gap-4">
+          <div className="flex items-center gap-3 min-w-0 w-full text-left">
+            <div className="w-11 h-11 rounded-lg bg-[#ffe500]/15 flex items-center justify-center text-[#ffe500] shrink-0 group-hover:scale-110 transition duration-300">
               {icon}
             </div>
             <div className="min-w-0 flex flex-col">
-              <div className="flex items-center gap-1.5 mb-1">
+              <div className="flex flex-wrap items-center gap-1.5 mb-1">
                 <span className="text-[9px] text-[#ffe500] font-mono tracking-wider uppercase font-bold px-1.5 py-0.5 bg-black/50 rounded shadow whitespace-nowrap">
                   Advertisement
                 </span>
                 {ad.contact && (
-                  <span className="text-[9px] text-slate-300 font-mono tracking-wider uppercase font-semibold px-1.5 py-0.5 bg-white/10 rounded truncate max-w-[120px]">
+                  <span className="text-[10px] text-slate-100 font-mono tracking-wider uppercase font-semibold px-1.5 py-0.5 bg-white/10 rounded max-w-full break-all">
                     {ad.contact}
                   </span>
                 )}
               </div>
-              <span className="text-xs sm:text-sm font-bold text-slate-200 leading-snug truncate">
+              <span className="text-sm sm:text-base font-extrabold text-white leading-snug break-words">
                 {title}
               </span>
-              <span className="text-[10px] text-slate-400 font-sans font-medium leading-tight truncate">
+              <span className="text-xs text-slate-200 font-sans font-medium leading-snug break-words">
                 {subtitle}
               </span>
             </div>
           </div>
           
-          <div className="shrink-0 flex items-center bg-[#ffe500]/10 border border-[#ffe500]/20 group-hover:bg-[#ffe500] group-hover:text-[#052962] px-3 py-1.5 rounded-md text-[10px] sm:text-xs font-serif font-black uppercase tracking-wider text-[#ffe500] transition duration-300">
+          <div className="shrink-0 inline-flex items-center justify-center bg-[#ffe500] border border-[#ffe500] group-hover:bg-white group-hover:border-white px-4 py-2 rounded-lg text-xs sm:text-sm font-bold tracking-normal text-[#052962] shadow-sm transition duration-300">
             {ad.actionType === "phone" ? (lang === "en" ? "CALL NOW" : "വിളിക്കുക") : 
              ad.actionType === "whatsapp" ? (lang === "en" ? "CHAT" : "വാട്സാപ്പ്") : 
              ad.actionType === "website" ? (lang === "en" ? "VISIT" : "വെബ്സൈറ്റ്") : 
