@@ -407,3 +407,19 @@ header [lang="ta"] { font-family: "Anek Tamil", sans-serif; }
   .ao-masthead-brand .ao-brand-mark { max-width: 100%; }
   .ao-header-wordmark { font-size: clamp(1.45rem, 6.8vw, 2.5rem); }
 }
+
+/* Three-language editorial typography: titles always Anek Latin;
+   content inherits the selected language. Mark individual English UI
+   labels with lang="en" and translated fragments with their real lang. */
+.ao-i18n-page[lang="en"] { font-family: "Anek Latin", sans-serif; }
+.ao-i18n-page[lang="ml"] { font-family: "Anek Malayalam", sans-serif; }
+.ao-i18n-page[lang="ta"] { font-family: "Anek Tamil", sans-serif; }
+.ao-i18n-page :is(h1,h2,h3,h4,h5,h6),
+.ao-i18n-page .ao-title,
+.ao-i18n-page [data-i18n-role="title"] {
+  font-family: "Anek Latin", sans-serif !important;
+}
+.ao-i18n-page [lang="en"]:not([data-i18n-role="content"]) { font-family: "Anek Latin", sans-serif; }
+.ao-i18n-page [lang="ml"] { font-family: "Anek Malayalam", sans-serif; }
+.ao-i18n-page [lang="ta"] { font-family: "Anek Tamil", sans-serif; }
+.ao-i18n-page [data-i18n-role="title"] { font-family: "Anek Latin", sans-serif !important; }
