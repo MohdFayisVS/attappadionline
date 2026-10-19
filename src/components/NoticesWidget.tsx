@@ -62,8 +62,8 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
     return (
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 p-4 text-center rounded-2xl shadow-xs">
         <span className="animate-spin text-[#052962] dark:text-yellow-400 rounded-full h-4.5 w-4.5 border-2 border-current border-t-transparent inline-block mr-2"></span>
-        <span className="text-xs text-slate-400 dark:text-slate-500 font-bold font-anek-malayalam">
-          {lang !== "ml" ? "Loading Notices..." : "അറിയിപ്പുകൾ വരുന്നു..."}
+        <span lang={lang} className="ao-localized-content text-xs text-slate-400 dark:text-slate-500 font-bold">
+          {lang === "ta" ? "அறிவிப்புகள் ஏற்றப்படுகின்றன..." : lang === "ml" ? "അറിയിപ്പുകൾ വരുന്നു..." : "Loading Notices..."}
         </span>
       </div>
     );
@@ -77,7 +77,7 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
           <span className="p-1 rounded-lg bg-red-650/10 border border-red-650/20 text-red-650 dark:text-rose-400 animate-pulse">
             <Megaphone className="w-3.5 h-3.5" />
           </span>
-          <h3 className="text-xs font-black tracking-wider text-[#052962] dark:text-[#38bdf8] uppercase">
+          <h3 lang="en" className="ao-fixed-ui text-xs font-black tracking-wider text-[#052962] dark:text-[#38bdf8] uppercase">
             {lang !== "ml" ? "NOTICES & ALERTS" : "അറിയിപ്പുകൾ"}
           </h3>
         </div>
@@ -96,8 +96,8 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
       <div className="space-y-2.5 max-h-[300px] overflow-y-auto pr-1">
         {notices.length === 0 ? (
           <div className="py-6 text-center border border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
-            <p className="text-xs text-slate-400 dark:text-slate-550 font-medium">
-              {lang !== "ml" ? "No active notices or alerts." : "അറിയിപ്പുകൾ ഒന്നും നിലവിലില്ല."}
+            <p lang={lang} className="ao-localized-content text-xs text-slate-500 dark:text-slate-400 font-medium">
+              {lang === "ta" ? "தற்போது அறிவிப்புகள் அல்லது எச்சரிக்கைகள் இல்லை." : lang === "ml" ? "അറിയിപ്പുകൾ ഒന്നും നിലവിലില്ല." : "No active notices or alerts."}
             </p>
           </div>
         ) : (
@@ -176,7 +176,7 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
       <div className="flex items-center gap-1.5 text-[9px] text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-800 pt-2 font-bold justify-between">
         <span>{lang !== "ml" ? "CLICK CARDS FOR FULL DETAILS" : "വിശദമായി വായിക്കാൻ കാർഡിൽ തൊടുക"}</span>
         <span>•</span>
-        <span className="text-[#052962] dark:text-[#38bdf8] font-black">{notices.length} {lang !== "ml" ? "Live Notes" : "അറിയിപ്പുകൾ"}</span>
+        <span className="text-[#052962] dark:text-[#38bdf8] font-black">{notices.length} {lang === "ta" ? "அறிவிப்புகள்" : lang === "ml" ? "അറിയിപ്പുകൾ" : "Live Notes"}</span>
       </div>
 
       {/* Detailed Modal Overlay */}
