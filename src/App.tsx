@@ -1536,7 +1536,7 @@ export default function App() {
             <>
               <div id="latest-news-section" className="border-b border-[#052962] pb-2 mb-4 flex justify-between items-center bg-slate-50 p-2.5 rounded border border-gray-100">
                 <h3 className="font-serif-guardian font-black text-[#052962] text-lg uppercase tracking-tight">
-                  Valley News Dispatch
+                  {lang === "ml" ? "വാർത്തകൾ" : lang === "ta" ? "செய்திகள்" : "NEWS"}
                 </h3>
                 
                 {activeRegion !== "all" && (
@@ -1572,7 +1572,7 @@ export default function App() {
               <div className="border-b pb-2 flex justify-between items-center">
                 <h4 className="font-serif-guardian font-extrabold text-[#052962] text-sm uppercase tracking-tight flex items-center gap-1.5">
                   <Bookmark className="w-4 h-4 fill-amber-500 text-amber-500" />
-                  {lang === "en" ? "Saved Stories" : "സൂക്ഷിച്ച വാർത്തകൾ"}
+                  Saved News
                 </h4>
                 {bookmarks.length > 0 && (
                   <span className="text-[10px] bg-amber-100 text-[#0c2447] font-extrabold px-2 py-0.5 rounded-full font-mono">
