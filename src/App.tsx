@@ -745,16 +745,16 @@ export default function App() {
 
             </div>
 
-            <div className="ao-masthead-brand text-center lg:text-right min-w-0 py-2 flex items-center justify-center lg:justify-end gap-3 sm:gap-5">
-              <img src="/attappadi-mark.svg" alt="Attappadi Online brand mark" className="ao-brand-mark w-[3.75rem] h-[3.75rem] sm:w-[5.25rem] sm:h-[5.25rem] lg:w-[6.5rem] lg:h-[6.5rem] object-contain shrink-0" />
+            <div className="ao-masthead-brand text-center lg:text-right min-w-0 py-3 px-4 sm:px-5 flex items-center justify-center lg:justify-end gap-3 sm:gap-4 rounded-[22px] bg-gradient-to-br from-white via-[#f6f9ff] to-[#e8f0fb] border border-[#d8e4f4] shadow-[0_8px_24px_rgba(0,0,0,0.12)]">
+              <span className="shrink-0 flex items-center justify-center w-[3.75rem] h-[3.75rem] sm:w-[5.25rem] sm:h-[5.25rem] lg:w-[6.5rem] lg:h-[6.5rem] rounded-2xl bg-[#e9f1fd] border border-[#d8e4f4] shadow-sm"><img src="/attappadi-mark.svg" alt="Attappadi Online brand mark" className="ao-brand-mark w-[85%] h-[85%] object-contain" /></span>
               <div className="min-w-0">
               <h1 
                 onClick={() => { setActiveSection("news"); setActiveRegion("all"); setSearchQuery(""); }}
-                className="ao-header-wordmark text-[clamp(2.5rem,6vw,5.6rem)] font-serif-guardian font-black tracking-tighter italic cursor-pointer transition select-none hover:opacity-95 leading-tight"
+                className="ao-header-wordmark text-[#052962] text-[clamp(2.5rem,6vw,5.6rem)] font-serif-guardian font-black tracking-tighter italic cursor-pointer transition select-none hover:opacity-95 leading-tight"
               >
                 Attappadi<span className="text-[#ffe500]">Online</span>
               </h1>
-              <p className="text-[10px] sm:text-xs text-slate-300 mt-1.5 font-semibold uppercase tracking-[0.15em] sm:tracking-widest font-sans">ALL AROUND THE ATTAPPADI HILLS</p>
+              <p className="text-[10px] sm:text-xs text-[#536b8e] mt-1.5 font-semibold uppercase tracking-[0.15em] sm:tracking-widest font-sans">ALL AROUND THE ATTAPPADI HILLS</p>
               </div>
             </div>
           </div>
