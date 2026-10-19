@@ -348,3 +348,40 @@ header [lang="ta"] { font-family: "Anek Tamil", sans-serif; }
 :is(#main-content, #news-read-modal, .ao-featured-hero) :is(button,input,textarea,select) * {
   font-family: "Anek Latin", sans-serif;
 }
+
+/* Language-aware content typography. Fixed English UI labels are marked lang="en".
+   Overrides older blanket Anek Latin rules on buttons, sidebar and heading. */
+#main-content[lang="ta"] [lang="ta"],
+#main-content[lang="ta"] [lang="ta"] *,
+#main-content[lang="ta"] .ao-localized-content,
+#main-content[lang="ta"] .ao-localized-content *,
+#main-content[lang="ta"] #latest-news-section h3 {
+  font-family: "Anek Tamil", sans-serif !important;
+}
+#main-content[lang="ml"] [lang="ml"],
+#main-content[lang="ml"] [lang="ml"] *,
+#main-content[lang="ml"] .ao-localized-content,
+#main-content[lang="ml"] .ao-localized-content *,
+#main-content[lang="ml"] #latest-news-section h3 {
+  font-family: "Anek Malayalam", sans-serif !important;
+}
+#main-content [lang="en"].ao-fixed-ui,
+#main-content [lang="en"].ao-fixed-ui * {
+  font-family: "Anek Latin", sans-serif !important;
+}
+#main-content .ao-news-tabs {
+  width: 100%;
+  min-width: 0;
+  flex-wrap: wrap;
+  overflow: visible;
+  gap: 4px;
+}
+#main-content .ao-news-tabs > button {
+  flex: 1 1 auto;
+  min-width: max-content;
+  white-space: normal;
+  line-height: 1.5;
+  padding: 8px 12px;
+}
+#main-content .ao-region-nav > button { line-height: 1.6; padding-block: 7px; }
+#main-content .ao-localized-content { line-height: 1.65; }
