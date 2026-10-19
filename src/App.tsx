@@ -438,7 +438,8 @@ export default function App() {
     return null;
   };
   const renderAdBox = (ad: any) => {
-    if (!ad) return null;\n    const destination = adDestination(ad);
+    if (!ad) return null;
+    const destination = adDestination(ad);
     
     // If there is an uploaded custom ad image, render it cleanly as a full-bleed clickable banner
     if (ad.image) {
@@ -470,10 +471,7 @@ export default function App() {
         );
       }
 
-      let href = "#";
-      if (ad.actionType === "phone") href = `tel:${ad.contact}`;
-      if (ad.actionType === "whatsapp") href = getWhatsAppLink(ad.contact);
-      if (ad.actionType === "website") href = ad.externalUrl || "#";
+      if (!destination) return imageElement;
 
       return (
         <a 
@@ -551,10 +549,7 @@ export default function App() {
       return boxContent;
     }
 
-    let href = "#";
-    if (ad.actionType === "phone") href = `tel:${ad.contact}`;
-    if (ad.actionType === "whatsapp") href = getWhatsAppLink(ad.contact);
-    if (ad.actionType === "website") href = ad.externalUrl || "https://example.com";
+    if (!destination) return boxContent;
 
     return (
       <a 
