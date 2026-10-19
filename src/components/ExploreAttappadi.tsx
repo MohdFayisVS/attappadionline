@@ -1559,7 +1559,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
 
                     {/* Interactive Layout Editor Control Center */}
                     {isAdmin && isMapEditorOpen && (
-                      <div className="bg-slate-900 text-slate-100 border border-slate-950 rounded-xl p-4 shadow-xl space-y-4 ${busFont} animate-fade-in mt-4 text-left">
+                      <div className={`bg-slate-900 text-slate-100 border border-slate-950 rounded-xl p-4 shadow-xl space-y-4 ${busFont} animate-fade-in mt-4 text-left`}>
                         <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                           <h6 className="text-[11px] font-black uppercase text-amber-500 tracking-wider flex items-center gap-1 font-mono">
                             <Sliders className="w-3.5 h-3.5" /> chart layout tuning
