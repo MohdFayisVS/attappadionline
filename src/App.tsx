@@ -418,8 +418,28 @@ export default function App() {
     return `https://wa.me/${cleanNum}`;
   };
 
+  const adText = (ad: any, field: "title" | "subtitle") => {
+    const suffix = lang === "ta" ? "Ta" : lang === "ml" ? "Ml" : "En";
+    return ad?.[`${field}${suffix}`]?.trim() || ad?.[`${field}En`]?.trim() ||
+      (lang === "ta" ? (field === "title" ? "விளம்பர இடம்" : "விளம்பரங்களுக்கு தொடர்பு கொள்ளவும்") :
+       lang === "ml" ? (field === "title" ? "പരസ്യ ഇടം" : "പരസ്യങ്ങൾക്ക് ബന്ധപ്പെടുക") :
+       (field === "title" ? "Advertisement space" : "Contact us for advertising"));
+  };
+  const adDestination = (ad: any): string | null => {
+    const contact = String(ad?.contact || "").trim();
+    if (ad?.actionType === "phone" && /^[+\\d() .-]{7,24}$/.test(contact)) return `tel:${contact.replace(/[^+\\d]/g, "")}`;
+    if (ad?.actionType === "whatsapp" && contact.replace(/\\D/g, "").length >= 8) return getWhatsAppLink(contact);
+    if (ad?.actionType === "website" && ad?.externalUrl?.trim()) {
+      try {
+        const url = new URL(ad.externalUrl.trim());
+        if (url.protocol === "https:" || url.protocol === "http:") return url.href;
+      } catch { /* No valid URL configured */ }
+    }
+    return null;
+  };
   const renderAdBox = (ad: any) => {
     if (!ad) return null;
+    const destination = adDestination(ad);
     
     // If there is an uploaded custom ad image, render it cleanly as a full-bleed clickable banner
     if (ad.image) {
@@ -451,14 +471,11 @@ export default function App() {
         );
       }
 
-      let href = "#";
-      if (ad.actionType === "phone") href = `tel:${ad.contact}`;
-      if (ad.actionType === "whatsapp") href = getWhatsAppLink(ad.contact);
-      if (ad.actionType === "website") href = ad.externalUrl || "#";
+      if (!destination) return imageElement;
 
       return (
         <a 
-          href={href} 
+          href={destination} 
           target={ad.actionType === "website" ? "_blank" : undefined} 
           rel={ad.actionType === "website" ? "noopener noreferrer" : undefined}
           className="block w-full h-full"
@@ -519,10 +536,10 @@ export default function App() {
           </div>
           
           <div className="shrink-0 flex items-center bg-[#ffe500]/10 border border-[#ffe500]/20 group-hover:bg-[#ffe500] group-hover:text-[#052962] px-3 py-1.5 rounded-md text-[10px] sm:text-xs font-serif font-black uppercase tracking-wider text-[#ffe500] transition duration-300">
-            {ad.actionType === "phone" ? (lang === "en" ? "CALL NOW" : "വിളിക്കുക") : 
-             ad.actionType === "whatsapp" ? (lang === "en" ? "CHAT" : "വാട്സാപ്പ്") : 
-             ad.actionType === "website" ? (lang === "en" ? "VISIT" : "വെബ്സൈറ്റ്") : 
-             (lang === "en" ? "VIEW DETAILS" : "വിശദാംശങ്ങൾ")}
+            {!destination && !isInternalAction ? (lang === "ta" ? "மாதிரி விளம்பரம்" : lang === "ml" ? "മാതൃകാ പരസ്യം" : "SAMPLE AD") :\n            ad.actionType === "phone" ? (lang === "ta" ? "அழைக்கவும்" : lang === "en" ? "CALL NOW" : "വിളിക്കുക") : 
+             ad.actionType === "whatsapp" ? (lang === "ta" ? "வாட்ஸ்அப்" : lang === "en" ? "CHAT" : "വാട്സാപ്പ്") : 
+             ad.actionType === "website" ? (lang === "ta" ? "பார்க்கவும்" : lang === "en" ? "VISIT" : "വെബ്സൈറ്റ്") : 
+             (lang === "ta" ? "விவரங்கள்" : lang === "en" ? "VIEW DETAILS" : "വിശദാംശങ്ങൾ")}
           </div>
         </div>
       </div>
@@ -532,14 +549,11 @@ export default function App() {
       return boxContent;
     }
 
-    let href = "#";
-    if (ad.actionType === "phone") href = `tel:${ad.contact}`;
-    if (ad.actionType === "whatsapp") href = getWhatsAppLink(ad.contact);
-    if (ad.actionType === "website") href = ad.externalUrl || "https://example.com";
+    if (!destination) return boxContent;
 
     return (
       <a 
-        href={href} 
+        href={destination} 
         target={ad.actionType === "website" ? "_blank" : undefined} 
         rel={ad.actionType === "website" ? "noopener noreferrer" : undefined}
         className="block w-full h-full"
@@ -689,7 +703,7 @@ export default function App() {
             </div>
             <div className="ao-edition-promos flex-1 min-w-0 grid grid-cols-1 md:grid-cols-2 gap-3 self-stretch">
               {renderAdBox(adConfig?.leftAd || { titleEn: "Enquire for Ads", titleMl: "പരസ്യങ്ങൾക്ക് ബന്ധപ്പെടുക", subtitleEn: "Enquire Now", subtitleMl: "പരസ്യങ്ങൾ നൽകാൻ", contact: "+91 9447471224", actionType: "share", image: "" })}
-              {renderAdBox(adConfig?.rightAd || { titleEn: "Contact Support", titleMl: "പരസ്യങ്ങൾക്ക് വിളിക്കുക", subtitleEn: "Attappadi Ads", subtitleMl: "പരസ്യങ്ങൾ നൽകാൻ", contact: "+91 9447471224", actionType: "phone", image: "" })}
+              {renderAdBox(adConfig?.rightAd || { titleEn: "Contact Support", titleMl: "പരസ്യങ്ങൾക്ക് വിളിക്കുക", subtitleEn: "Attappadi Ads", subtitleMl: "പരസ്യങ്ങൾ നൽകാൻ", contact: "+91 9447471224", actionType: "share", image: "" })}
             </div>
           </div>
         </div>
