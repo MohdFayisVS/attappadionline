@@ -78,7 +78,7 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
             <Megaphone className="w-3.5 h-3.5" />
           </span>
           <h3 lang="en" className="ao-fixed-ui text-xs font-black tracking-wider text-[#052962] dark:text-[#38bdf8] uppercase">
-            {lang !== "ml" ? "NOTICES & ALERTS" : "അറിയിപ്പുകൾ"}
+            NOTICES & ALERTS
           </h3>
         </div>
 
@@ -173,8 +173,8 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
       </div>
 
       {/* Info strip */}
-      <div className="flex items-center gap-1.5 text-[9px] text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-800 pt-2 font-bold justify-between">
-        <span>{lang !== "ml" ? "CLICK CARDS FOR FULL DETAILS" : "വിശദമായി വായിക്കാൻ കാർഡിൽ തൊടുക"}</span>
+      <div lang={lang} className="ao-localized-content flex flex-wrap items-center gap-1.5 text-[10px] leading-relaxed text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-2 font-bold justify-between">
+        <span>{lang === "ta" ? "விவரங்களுக்கு அறிவிப்பைத் தேர்ந்தெடுக்கவும்" : lang === "ml" ? "വിശദമായി വായിക്കാൻ കാർഡിൽ തൊടുക" : "CLICK CARDS FOR FULL DETAILS"}</span>
         <span>•</span>
         <span className="text-[#052962] dark:text-[#38bdf8] font-black">{notices.length} {lang === "ta" ? "அறிவிப்புகள்" : lang === "ml" ? "അറിയിപ്പുകൾ" : "Live Notes"}</span>
       </div>
