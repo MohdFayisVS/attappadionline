@@ -535,6 +535,8 @@ const DEFAULT_MAP_LINES = [
 ];
 
 export default function ExploreAttappadi({ lang, initialTab = "destinations", isAdmin = false, hideTabsSelection = false }: ExploreAttappadiProps) {
+  const [busMapView, setBusMapView] = useState<"chart" | "google">("chart");
+  const busFont = lang === "ml" ? "font-anek-malayalam" : lang === "ta" ? "font-anek-tamil" : "font-anek-english";
   const safeParseArray = (val: any): string[] => {
     if (Array.isArray(val)) return val;
     if (typeof val === "string") return val.split(",").map(x => x.trim()).filter(Boolean);
@@ -1172,17 +1174,17 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
           // Mapped dynamically from top-level mapLines state
 
           return (
-            <div className="space-y-6 animate-fade-in font-anek-malayalam">
+            <div lang={lang} className={`space-y-6 animate-fade-in ${busFont}`}>
               
               {/* Disclaimer and Help Desk Box */}
               <div className="bg-[#052962]/5 border-l-4 border-[#052962] p-4 rounded-r-md flex gap-3 text-xs text-[#052962]" style={{ contentVisibility: 'auto' }}>
                 <Info className="w-5 h-5 text-[#052962] shrink-0 mt-0.5" />
-                <div className="space-y-1 font-anek-malayalam">
+                <div className={`space-y-1 ${busFont}`}>
                   <p className="font-extrabold text-[13px] text-[#052962]">
-                    യാത്രക്കാരുടെ വിവരത്തിന് (Attappadi Transit Help):
+                    {lang === "ml" ? "യാത്രക്കാർക്കുള്ള വിവരം:" : lang === "ta" ? "பயணிகளுக்கான தகவல்:" : "Passenger information:"}
                   </p>
                   <p className="text-[11px] text-slate-700 leading-relaxed font-semibold">
-                    ചുരം റോഡിലെ മൂടൽമഞ്ഞ്, കനത്ത മഴ, വനമേഖലയിലെ സമയനിയന്ത്രണങ്ങൾ എന്നിവ കാരണം സമയക്രമങ്ങളിൽ നേരിയ വ്യത്യാസങ്ങൾ വന്നേക്കാം. പ്രധാന ജംഗ്ഷൻ കേന്ദ്രങ്ങളിലെ കൃത്യവിവരങ്ങൾക്ക് ലഭ്യമായ കെ.എസ്.ആർ.ടി.സി ഹെൽപ്പ് നമ്പറിൽ ബന്ധപ്പെടുക. (അഗളി ബസ് സ്റ്റേഷൻ ഫോൺ: <span className="font-bold underline text-[#052962]">04924-254400</span>)
+                    {lang === "ml" ? "മൂടൽമഞ്ഞ്, മഴ, വനമേഖലയിലെ നിയന്ത്രണങ്ങൾ എന്നിവ കാരണം ബസ് സമയങ്ങളിൽ മാറ്റമുണ്ടാകാം." : lang === "ta" ? "மூடுபனி, மழை மற்றும் வனப்பகுதி கட்டுப்பாடுகள் காரணமாக பேருந்து நேரங்கள் மாறலாம்." : "Bus timings may change due to fog, heavy rain and forest-area restrictions."} {lang === "ml" ? "അഗളി ബസ് സ്റ്റേഷൻ:" : lang === "ta" ? "அகளி பேருந்து நிலையம்:" : "Agali bus station:"} <span className="font-bold text-[#052962]">04924-254400</span>
                   </p>
                 </div>
               </div>
@@ -1190,14 +1192,14 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
               {/* Navigation Style Sub Menu */}
               <div className="flex border-b border-slate-200">
                 {[
-                  { key: "stop", label: "സ്റ്റേഷൻ ബോർഡ് (Hub Board)", icon: <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" /> },
-                  { key: "directions", label: "ഗൂഗിൾ മാപ്പ് റൂട്ടിംഗ് (Directions Finder)", icon: <Compass className="w-3.5 h-3.5 text-sky-600 shrink-0" /> },
-                  { key: "assist", label: "വിനോദസഞ്ചാര കേന്ദ്രങ്ങൾ (Nearest Stops)", icon: <Info className="w-3.5 h-3.5 text-teal-500 shrink-0" /> }
+                  { key: "stop", label: "Hub Board", icon: <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" /> },
+                  { key: "directions", label: "Directions Finder", icon: <Compass className="w-3.5 h-3.5 text-sky-600 shrink-0" /> },
+                  { key: "assist", label: "Nearest Stops", icon: <Info className="w-3.5 h-3.5 text-teal-500 shrink-0" /> }
                 ].map((m) => (
                   <button
                     key={m.key}
                     onClick={() => setBusTimingMode(m.key as any)}
-                    className={`flex-1 py-3 text-center text-xs font-black transition duration-200 cursor-pointer border-b-2 font-anek-malayalam flex items-center justify-center gap-1.5 ${
+                    className={`flex-1 py-3 text-center text-xs font-black transition duration-200 cursor-pointer border-b-2 font-anek-english flex items-center justify-center gap-1.5 ${
                       busTimingMode === m.key
                         ? "border-[#052962] text-[#052962] bg-[#052962]/5"
                         : "border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50"
@@ -1210,7 +1212,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
               </div>
 
               {/* Master Responsive Layout split into sidebar panel & Vector Map */}
-              <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start font-anek-malayalam">
+              <div className={`grid grid-cols-1 xl:grid-cols-12 gap-6 items-start ${busFont}`}>
                 
                 {/* Visual Map widget - Highlight of modern responsive interface */}
                 <div className="xl:col-span-5 order-first xl:order-last space-y-4">
@@ -1222,8 +1224,8 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                         <span className="text-[9px] uppercase font-bold tracking-widest text-slate-400 block font-anek-malayalam">
                           INTERACTIVE GEOGRAPHIC MAP
                         </span>
-                        <h5 className="font-extrabold text-[#052962] text-xs font-anek-malayalam">
-                          അട്ടപ്പാടി വാലി ബസ് നെറ്റ്‌വർക്ക് ചാർട്ട്
+                        <h5 className="font-extrabold text-[#052962] text-xs font-anek-english">
+                          BUS CHART
                         </h5>
                       </div>
                       <span className="text-[10px] bg-slate-900 text-[#ffe500] font-bold px-2 py-0.5 rounded shadow-xs">
@@ -1231,6 +1233,11 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                       </span>
                     </div>
 
+                      <div className="mt-3 flex gap-2" role="group" aria-label="Map view">
+                        <button type="button" onClick={() => setBusMapView("chart")} className={`px-3 py-1.5 rounded-md text-xs font-bold ${busMapView === "chart" ? "bg-[#052962] text-white" : "bg-white text-[#052962]"}`}>BUS CHART</button>
+                        <button type="button" onClick={() => setBusMapView("google")} className={`px-3 py-1.5 rounded-md text-xs font-bold ${busMapView === "google" ? "bg-[#052962] text-white" : "bg-white text-[#052962]"}`}>GOOGLE MAPS</button>
+                      </div>
+                      {busMapView === "google" ? <div className="mt-3"><iframe title="Attappadi area on Google Maps" src="https://maps.google.com/maps?q=Agali%2C%20Attappadi%2C%20Kerala&t=m&z=11&output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="w-full aspect-[4/3] rounded-lg border border-slate-200" /><p className="text-xs text-slate-600 mt-2">{lang === "ml" ? "ഇത് പ്രദേശത്തിന്റെ ഭൂപടമാണ്; തത്സമയ ബസ് ട്രാക്കിങ്ങോ സ്ഥിരീകരിച്ച ബസ് റൂട്ടുകളോ അല്ല." : lang === "ta" ? "இது பகுதி வரைபடம் மட்டுமே; நேரடி பேருந்து கண்காணிப்போ சரிபார்க்கப்பட்ட பேருந்து வழித்தடங்களோ அல்ல." : "Area map only; not live bus tracking or verified bus routes."}</p></div> : <>
                       {/* SVG Canvas Map */}
                       <div className="relative aspect-[4/3] w-full mt-3 bg-white/40 rounded-lg overflow-hidden border border-slate-200 shadow-inner">
                         
@@ -1523,13 +1530,14 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                       </div>
                     </div>
 
+                    </>}
                     {/* Quick navigation assist block */}
                     <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-1 text-xs text-left">
                       <span className="font-extrabold text-slate-800 flex items-center gap-1">
-                        <Compass className="w-3.5 h-3.5 text-sky-600 shrink-0" /> ഗൂഗിൾ റോഡ് മാപ്പ് വിവരം:
+                        <Compass className="w-3.5 h-3.5 text-sky-600 shrink-0" /> {lang === "ml" ? "റോഡ് മാപ്പ് വിവരം:" : lang === "ta" ? "சாலை வரைபடத் தகவல்:" : "Road map information:"}
                       </span>
                       <p className="text-[11px] text-slate-500 leading-normal font-semibold">
-                        അട്ടപ്പാടി ചുരം റോഡ് (SH-136) മണ്ണാർക്കാട് തുടങ്ങി മുക്കാലി (സൈലന്റ് വാലി ജംഗ്ഷൻ) - അഗളി - ആനക്കട്ടി ചുരത്തിലേക്ക് പ്രവേശിക്കുന്നു. അഗളിയിൽ നിന്നും കോയമ്പത്തൂർ റോഡും മറ്റൊന്ന് പുതൂർ വഴി മുത്തു മുള്ളി അതിർത്തിയിലേക്കും പോകുന്നു.
+                        {lang === "ml" ? "SH-136 മണ്ണാർക്കാട്, മുക്കാലി, അഗളി, ആനക്കട്ടി എന്നിവയെ ബന്ധിപ്പിക്കുന്നു." : lang === "ta" ? "SH-136 மன்னார்க்காடு, முக்காலி, அகளி மற்றும் ஆனைக்கட்டியை இணைக்கிறது." : "SH-136 connects Mannarkkad, Mukkali, Agali and Anaikatty."}
                       </p>
                     </div>
 
