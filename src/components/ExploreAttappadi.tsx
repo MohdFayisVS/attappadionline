@@ -534,6 +534,24 @@ const DEFAULT_MAP_LINES = [
   { from: "COIMBATORE", to: "METTUPALAYAM" }
 ];
 
+const TAMIL_BUS_STOPS: Record<string, string> = {
+  KOZHIKODE: "கோழிக்கோடு", MANJERI: "மஞ்சேரி", GURUVAYUR: "குருவாயூர்",
+  THRISSUR: "திருச்சூர்", KOTTAYAM: "கோட்டயம்", KATTAPPANA: "கட்டப்பனை",
+  SHORNUR: "ஷொர்ணூர்", CHERPULASSERY: "செர்ப்புளச்சேரி",
+  PERINTHALMANNA: "பெரிந்தல்மண்ணா", PALAKKAD: "பாலக்காடு",
+  MANNARKKAD: "மன்னார்க்காடு", MUKKALI: "முக்காலி", THAVALAM: "தாவளம்",
+  GOOLIKKADAVU: "கூலிக்கடவு", AGALI: "அகளி", JELLIPPARA: "ஜெல்லிப்பாறை",
+  PALOOR: "பாலூர்", PUDUR: "புதூர்", CHITTUR: "சித்தூர்",
+  MULLI: "முள்ளி", SHOLAYUR: "சோலையூர்", ANAIKKATTY: "ஆனைக்கட்டி",
+  METTUPALAYAM: "மேட்டுப்பாளையம்", COIMBATORE: "கோயம்புத்தூர்"
+};
+const tamilBusName = (name: string) => {
+  const key = name.trim().toUpperCase().replace(/[\s-]+/g, "");
+  return TAMIL_BUS_STOPS[key] || name.split(/(\s*[-–]\s*)/).map(part =>
+    TAMIL_BUS_STOPS[part.trim().toUpperCase().replace(/\s+/g, "")] || part
+  ).join("");
+};
+
 export default function ExploreAttappadi({ lang, initialTab = "destinations", isAdmin = false, hideTabsSelection = false }: ExploreAttappadiProps) {
   const [busMapView, setBusMapView] = useState<"chart" | "google">("chart");
   const busFont = lang === "ml" ? "font-anek-malayalam" : lang === "ta" ? "font-anek-tamil" : "font-anek-english";
@@ -1498,7 +1516,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                 fill={isEditorSelected ? "#b45309" : isSelectedNode ? "#052962" : "#334155"}
                                 className="select-none"
                               >
-                                {lang === "ml" ? node.nameMl : lang === "ta" ? (((node as any).nameTa) || node.nameEn) : node.nameEn}
+                                {lang === "ml" ? node.nameMl : lang === "ta" ? (((node as any).nameTa) || tamilBusName(node.nameEn)) : node.nameEn}
                               </text>
 
                               {/* Direct coordinates tags in Editor mode */}
@@ -2009,7 +2027,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                   : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
                               }`}
                             >
-                              {lang === "ml" ? st.ml : lang === "ta" ? (st as any).ta || st.en : st.en}
+                              {lang === "ml" ? st.ml : lang === "ta" ? tamilBusName(st.en) : st.en}
                             </button>
                           ))}
                         </div>
@@ -2019,9 +2037,9 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                       <div className="space-y-3">
                         <div className="flex items-center justify-between border-b pb-2 pt-2 border-slate-100">
                           <h5 className="font-bold text-[#052962] text-xs leading-none flex items-center gap-1">
-                            <span>🕒 Departures from:</span>
+                            <span>🕒 {lang === "ml" ? "പുറപ്പെടുന്ന സ്ഥലം:" : lang === "ta" ? "புறப்படும் இடம்:" : "Departures from:"}</span>
                             <span className="bg-amber-100 text-amber-950 px-2 py-0.5 rounded text-[11px] font-black font-anek-malayalam">
-                              {currentMapStopEntity.ml} ( {currentMapStopEntity.en} )
+                              {lang === "ml" ? currentMapStopEntity.ml : lang === "ta" ? tamilBusName(currentMapStopEntity.en) : currentMapStopEntity.en}
                             </span>
                           </h5>
                           <span className="text-[10.5px] font-black text-slate-400">
@@ -2051,7 +2069,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                   <div className="flex items-center justify-between flex-wrap gap-2">
                                     <div className="space-y-0.5">
                                       <h6 className="font-extrabold text-slate-800 text-[14px] leading-tight">
-                                        {lang === "ml" ? item.routeMl : lang === "ta" ? (((item as any).routeTa) || item.routeEn) : item.routeEn}
+                                        {lang === "ml" ? item.routeMl : lang === "ta" ? (((item as any).routeTa) || tamilBusName(item.routeEn)) : item.routeEn}
                                       </h6>
                                       <p className="text-[11px] text-slate-400 font-extrabold uppercase tracking-wide">
                                         {lang === "ml" ? item.busTypeMl : lang === "ta" ? (((item as any).busTypeTa) || item.busTypeEn) : item.busTypeEn}
@@ -2066,7 +2084,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                     <div className="text-[11px]">
                                       <span className="text-slate-400 font-bold block text-[9px] uppercase leading-none">DESTINATION TIMING</span>
                                       <span className="font-extrabold text-[#052962]">
-                                        Heading directly to: <strong className="text-red-700">{lang === "ml" ? item.headingToMl : lang === "ta" ? (((item as any).headingToTa) || item.headingToEn) : item.headingToEn.toUpperCase()}</strong>
+                                        {lang === "ml" ? "പോകുന്ന സ്ഥലം:" : lang === "ta" ? "செல்லும் இடம்:" : "Heading directly to:"} <strong className="text-red-700">{lang === "ml" ? item.headingToMl : lang === "ta" ? (((item as any).headingToTa) || tamilBusName(item.headingToEn)) : item.headingToEn.toUpperCase()}</strong>
                                       </span>
                                     </div>
                                     <div className="text-right">
@@ -2084,7 +2102,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                       return (
                                         <div key={sIdx} className="flex items-center gap-1 shrink-0 last:mr-0 mr-1.5">
                                           <span className={`px-1.5 py-0.5 rounded text-[9px] ${isSelf ? "bg-[#052962] text-white font-black" : "bg-slate-200 text-slate-600 font-medium"}`}>
-                                            {stopItem.time} {lang === "ml" ? stopItem.typeMl : lang === "ta" ? (((stopItem as any).typeTa) || stopItem.typeEn) : stopItem.typeEn.toUpperCase()}
+                                            {stopItem.time} {lang === "ml" ? stopItem.typeMl : lang === "ta" ? (((stopItem as any).typeTa) || tamilBusName(stopItem.typeEn)) : stopItem.typeEn.toUpperCase()}
                                           </span>
                                           {sIdx < item.fullList.length - 1 && <span className="text-slate-300">→</span>}
                                         </div>
@@ -2098,8 +2116,8 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                         ) : (
                           <div className="py-12 text-center space-y-2 border border-dashed border-slate-200 rounded-lg">
                             <Bus className="w-8 h-8 text-slate-300 mx-auto animate-bounce" />
-                            <p className="text-xs text-slate-400 font-medium font-anek-malayalam">
-                              ഈ സ്റ്റേഷനിൽ പ്രധാന സമയ സർവീസുകളൊന്നും നിശ്ചയിച്ചിട്ടില്ല. മറ്റൊരു സ്റ്റേഷൻ നോക്കൂ.
+                            <p className="text-xs text-slate-400 font-medium">
+                              {lang === "ml" ? "ഈ സ്റ്റേഷനിൽ പ്രധാന സമയ സർവീസുകളൊന്നും നിശ്ചയിച്ചിട്ടില്ല. മറ്റൊരു സ്റ്റേഷൻ നോക്കൂ." : lang === "ta" ? "இந்த நிறுத்தத்திற்கு தற்போது பேருந்து நேரங்கள் இல்லை. வேறு நிறுத்தத்தைத் தேர்ந்தெடுக்கவும்." : "No schedules available for this station. Try another station."}
                             </p>
                           </div>
                         )}
