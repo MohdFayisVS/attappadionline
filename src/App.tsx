@@ -2218,15 +2218,15 @@ export default function App() {
                     {selectedAppService === "shopping" && "🛍️"}
                   </span>
                   <div>
-                    <h3 className="font-serif-guardian font-extrabold text-slate-900 dark:text-white text-base">
-                      {selectedAppService === "busTimings" && (lang === "en" ? "KSRTC & Private Bus Timings" : "കെ.എസ്.ആർ.ടി.സി & പ്രൈവറ്റ് ബസ് സമയവിവരങ്ങൾ")}
+                    <h3 className={selectedAppService === "busTimings" ? "font-anek-english font-extrabold text-slate-900 dark:text-white text-base" : "font-serif-guardian font-extrabold text-slate-900 dark:text-white text-base"}>
+                      {selectedAppService === "busTimings" && "BUS TIMINGS"}
                       {selectedAppService === "autorikshaw" && (lang === "en" ? "AUTO TAXI" : "പ്രാദേശിക ഓട്ടോ & ടാക്സി വിളിപ്പടം")}
                       {selectedAppService === "travelFood" && (lang === "en" ? "Explore Valley Food & Culture" : "പ്രാദേശിക ഭക്ഷണശാലകളും സംസ്കാരവും")}
                       {selectedAppService === "shopping" && (lang === "en" ? "SHOPPING" : "വ്യാപാരശാലകളും വാട്സാപ്പ് ഓർഡർ പോർട്ടലും")}
                     </h3>
-                    <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest font-sans mt-0.5">
+                    {selectedAppService !== "busTimings" && <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest font-sans mt-0.5">
                       {lang === "en" ? "ATTAPPADI ONLINE DIGITAL SERVICES" : "അട്ടപ്പാടി ഓൺലൈൻ ഡിജിറ്റൽ സേവനങ്ങൾ"}
-                    </p>
+                    </p>}
                   </div>
                 </div>
 
@@ -2258,14 +2258,14 @@ export default function App() {
 
               {/* Modal footer back confirmation bar */}
               <div className="px-5 py-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-900/50 text-[10px] text-slate-400">
-                <span>
+                {selectedAppService !== "busTimings" && <span>
                   {lang === "en" ? "💡 Powered by Attappadi Community Directory" : "💡 അട്ടപ്പാടി കമ്മ്യൂണിറ്റി ഡയറക്ടറിയുടെ സഹകരണത്തോടെ"}
-                </span>
+                </span>}
                 <button
                   onClick={() => setSelectedAppService(null)}
                   className="px-4 py-1.5 bg-slate-900 dark:bg-white text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-slate-100 rounded-lg text-xs font-black transition cursor-pointer"
                 >
-                  {lang === "en" ? "Done" : "പൂർത്തിയായി"}
+                  {selectedAppService === "busTimings" ? "CLOSE" : lang === "en" ? "Done" : "പൂർത്തിയായി"}
                 </button>
               </div>
 
