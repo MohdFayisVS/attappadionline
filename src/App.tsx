@@ -2219,14 +2219,14 @@ export default function App() {
                   </span>
                   <div>
                     <h3 className="font-serif-guardian font-extrabold text-slate-900 dark:text-white text-base">
-                      {selectedAppService === "busTimings" && (lang === "en" ? "KSRTC & Private Bus Timings" : "കെ.എസ്.ആർ.ടി.സി & പ്രൈവറ്റ് ബസ് സമയവിവരങ്ങൾ")}
+                      {selectedAppService === "busTimings" && "BUS TIMINGS"}
                       {selectedAppService === "autorikshaw" && (lang === "en" ? "AUTO TAXI" : "പ്രാദേശിക ഓട്ടോ & ടാക്സി വിളിപ്പടം")}
                       {selectedAppService === "travelFood" && (lang === "en" ? "Explore Valley Food & Culture" : "പ്രാദേശിക ഭക്ഷണശാലകളും സംസ്കാരവും")}
                       {selectedAppService === "shopping" && (lang === "en" ? "SHOPPING" : "വ്യാപാരശാലകളും വാട്സാപ്പ് ഓർഡർ പോർട്ടലും")}
                     </h3>
-                    <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest font-sans mt-0.5">
+                    {selectedAppService !== "busTimings" && <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest font-sans mt-0.5">
                       {lang === "en" ? "ATTAPPADI ONLINE DIGITAL SERVICES" : "അട്ടപ്പാടി ഓൺലൈൻ ഡിജിറ്റൽ സേവനങ്ങൾ"}
-                    </p>
+                    </p>}
                   </div>
                 </div>
 
