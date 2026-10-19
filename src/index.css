@@ -348,3 +348,25 @@ header [lang="ta"] { font-family: "Anek Tamil", sans-serif; }
 :is(#main-content, #news-read-modal, .ao-featured-hero) :is(button,input,textarea,select) * {
   font-family: "Anek Latin", sans-serif;
 }
+
+/* Header masthead: brand and shortcut actions must never overlap. */
+.ao-masthead-row { width: 100%; min-width: 0; }
+.ao-masthead-brand { flex: 0 1 auto; max-width: 100%; box-sizing: border-box; }
+.ao-masthead-brand > div { min-width: 0; }
+.ao-header-wordmark { white-space: nowrap; font-size: clamp(2rem, 4.4vw, 4.5rem); }
+.ao-header-shortcuts { flex: 0 0 auto; min-width: 0; max-width: 100%; }
+@media (min-width: 1280px) {
+  .ao-masthead-brand { flex: 0 1 68%; max-width: 68%; }
+  .ao-header-shortcuts { flex: 0 1 32%; max-width: 32%; }
+  .ao-header-shortcuts > button { white-space: nowrap; }
+  .ao-header-wordmark { font-size: clamp(2.3rem, 4vw, 4rem); }
+}
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .ao-masthead-brand { max-width: 100%; }
+  .ao-header-shortcuts { max-width: 100%; }
+}
+@media (max-width: 639px) {
+  .ao-masthead-brand { padding: 12px; gap: 8px; }
+  .ao-masthead-brand .ao-brand-mark { max-width: 100%; }
+  .ao-header-wordmark { font-size: clamp(1.45rem, 6.8vw, 2.5rem); }
+}
