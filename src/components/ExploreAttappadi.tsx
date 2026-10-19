@@ -1221,16 +1221,14 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                     {/* Header Map indicators */}
                     <div className="flex items-center justify-between pb-3 border-b border-slate-200 bg-white/70 backdrop-blur-xs p-2.5 rounded-lg">
                       <div>
-                        <span className="text-[9px] uppercase font-bold tracking-widest text-slate-400 block font-anek-malayalam">
+                        <span className="text-[9px] uppercase font-bold tracking-widest text-slate-400 block font-anek-english">
                           INTERACTIVE GEOGRAPHIC MAP
                         </span>
                         <h5 className="font-extrabold text-[#052962] text-xs font-anek-english">
                           BUS CHART
                         </h5>
                       </div>
-                      <span className="text-[10px] bg-slate-900 text-[#ffe500] font-bold px-2 py-0.5 rounded shadow-xs">
-                        LIVE HUD
-                      </span>
+
                     </div>
 
                       <div className="mt-3 flex gap-2" role="group" aria-label="Map view">
@@ -1498,7 +1496,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                 fontSize="2.2"
                                 fontWeight="bold"
                                 fill={isEditorSelected ? "#b45309" : isSelectedNode ? "#052962" : "#334155"}
-                                className="font-anek-malayalam select-none"
+                                className="select-none"
                               >
                                 {lang === "ml" ? node.nameMl : lang === "ta" ? (((node as any).nameTa) || node.nameEn) : node.nameEn}
                               </text>
@@ -1561,7 +1559,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
 
                     {/* Interactive Layout Editor Control Center */}
                     {isAdmin && isMapEditorOpen && (
-                      <div className="bg-slate-900 text-slate-100 border border-slate-950 rounded-xl p-4 shadow-xl space-y-4 font-anek-malayalam animate-fade-in mt-4 text-left">
+                      <div className="bg-slate-900 text-slate-100 border border-slate-950 rounded-xl p-4 shadow-xl space-y-4 ${busFont} animate-fade-in mt-4 text-left">
                         <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                           <h6 className="text-[11px] font-black uppercase text-amber-500 tracking-wider flex items-center gap-1 font-mono">
                             <Sliders className="w-3.5 h-3.5" /> chart layout tuning
@@ -1991,27 +1989,27 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                           HUB STATION SELECTOR
                         </span>
                         <h4 className="font-black text-[#052962] text-xl leading-snug">
-                          സ്റ്റേഷൻ പ്രകാരമുള്ള സമയവിവരങ്ങൾ
+                          {lang === "ml" ? "സ്റ്റേഷൻ പ്രകാരമുള്ള സമയവിവരങ്ങൾ" : lang === "ta" ? "நிறுத்த வாரியான பேருந்து நேரங்கள்" : "Station departure schedules"}
                         </h4>
                       </div>
 
                       {/* Selector grid or list */}
                       <div className="space-y-3">
                         <label className="block text-xs font-bold text-slate-500 mb-1">
-                          താഴെ നൽകിയതിൽ നിന്നും സ്റ്റേഷൻ തിരഞ്ഞെടുക്കുക:
+                          {lang === "ml" ? "താഴെ നൽകിയതിൽ നിന്നും സ്റ്റേഷൻ തിരഞ്ഞെടുക്കുക:" : lang === "ta" ? "கீழே உள்ள நிறுத்தங்களில் ஒன்றைத் தேர்ந்தெடுக்கவும்:" : "Select a station below:"}
                         </label>
                         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-1.5 select-none">
                           {stopChoices.map((st) => (
                             <button
                               key={st.id}
                               onClick={() => setSelectedMapStop(st.id)}
-                              className={`p-2 rounded-lg text-xs font-black transition text-center font-anek-malayalam cursor-pointer border ${
+                              className={`p-2 rounded-lg text-xs font-black transition text-center cursor-pointer border ${
                                 selectedMapStop === st.id
                                   ? "bg-[#052962] text-white border-[#052962] shadow-xs"
                                   : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
                               }`}
                             >
-                              {lang === "ml" ? st.ml : st.en}
+                              {lang === "ml" ? st.ml : lang === "ta" ? (st as any).ta || st.en : st.en}
                             </button>
                           ))}
                         </div>
@@ -2027,7 +2025,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                             </span>
                           </h5>
                           <span className="text-[10.5px] font-black text-slate-400">
-                            {stopDepartures.length} ട്രിപ്പുകൾ കണ്ടെത്തി
+                            {stopDepartures.length} {lang === "ml" ? "ട്രിപ്പുകൾ കണ്ടെത്തി" : lang === "ta" ? "பயணங்கள் கிடைத்தன" : "trips found"}
                           </span>
                         </div>
 
@@ -2118,8 +2116,8 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                         <span className="text-[10px] bg-[#052962]/5 text-[#052962] font-black px-2 py-0.5 rounded tracking-wide uppercase font-anek-malayalam">
                           TRANSIT ROUTING
                         </span>
-                        <h4 className="font-black text-[#052962] text-xl leading-snug font-anek-malayalam">
-                          കണക്റ്റിങ് സർവീസ് റൂട്ട് കണ്ടെത്തുക
+                        <h4 className="font-black text-[#052962] text-xl leading-snug">
+                          {lang === "ml" ? "കണക്റ്റിങ് സർവീസ് റൂട്ട് കണ്ടെത്തുക" : lang === "ta" ? "இணைப்புப் பேருந்து வழித்தடத்தைக் கண்டறியவும்" : "Find connecting bus routes"}
                         </h4>
                       </div>
 
@@ -2127,7 +2125,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
                         <div className="space-y-1">
                           <label className="text-xs font-extrabold text-slate-500 block">
-                            ആരംഭിക്കുന്ന സ്റ്റേഷൻ (Starting Hub):
+                            {lang === "ml" ? "ആരംഭിക്കുന്ന സ്റ്റേഷൻ:" : lang === "ta" ? "புறப்படும் நிறுத்தம்:" : "Starting station:"}
                           </label>
                           <select
                             value={navSource}
