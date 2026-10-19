@@ -1585,7 +1585,7 @@ export default function App() {
                 <p lang={lang} className="ao-localized-content text-[11px] text-gray-500 italic font-medium leading-relaxed">
                   {lang === "en" 
                     ? "No bookmarked articles. Click the Bookmark icon on any article to save it for quick access." 
-                    : lang === "ta" ? "சேமிக்கப்பட்ட செய்திகள் இல்லை. பின்னர் படிக்க, செய்தியில் உள்ள புக்மார்க் சின்னத்தைத் தேர்ந்தெடுக்கவும்." : "വാർത്തകളൊന്നും സൂക്ഷിച്ചിട്ടില്ല. വേഗത്തിൽ വായിക്കാൻ വാർത്തകളിലെ ബുക്ക്‌മാർക്ക് ഐക്കൺ ക്ലിക്ക് ചെയ്യുക."
+                    : lang === "ta" ? "சேமிக்கப்பட்ட செய்திகள் இல்லை. பின்னர் படிக்க, செய்தியில் உள்ள புக்மார்க் சின்னத்தைத் தேர்ந்தெடுக்கவும்." : "വാർത്തകളൊന്നും സൂക്ഷിച്ചിട്ടില്ല. വേഗത്തിൽ വായിക്കാൻ വാർത്തകളിലെ ബുക്ക്‌മാർക്ക് ഐക്കൺ ക്ലിക്ക് ചെയ്യുക."}
                 </p>
               ) : (
                 <div className="space-y-3">
