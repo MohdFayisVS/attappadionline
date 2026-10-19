@@ -418,12 +418,13 @@ export default function App() {
     return `https://wa.me/${cleanNum}`;
   };
 
-  const renderAdBox = (ad: any) => {
+  const renderAdBox = (ad: any, configured = false) => {
     if (!ad) return null;
+    const activeAction = configured && ((ad.actionType === "phone" || ad.actionType === "whatsapp") ? Boolean(ad.contact?.trim()) : ad.actionType === "website" ? Boolean(ad.externalUrl?.trim()) : ad.actionType === "share");
     
     // If there is an uploaded custom ad image, render it cleanly as a full-bleed clickable banner
     if (ad.image) {
-      const isInternalAction = ad.actionType === "share";
+      const isInternalAction = activeAction && ad.actionType === "share";
       
       const imageElement = (
         <div className="relative w-full h-full min-h-36 md:min-h-44 bg-slate-900 border border-white/10 rounded-lg overflow-hidden group cursor-pointer shadow-xs select-none">
@@ -451,6 +452,7 @@ export default function App() {
         );
       }
 
+      if (!activeAction) return imageElement;
       let href = "#";
       if (ad.actionType === "phone") href = `tel:${ad.contact}`;
       if (ad.actionType === "whatsapp") href = getWhatsAppLink(ad.contact);
@@ -481,7 +483,7 @@ export default function App() {
     );
     if (ad.actionType === "website") icon = <Globe className="w-4 h-4 flex-shrink-0" />;
 
-    const isInternalAction = ad.actionType === "share";
+    const isInternalAction = activeAction && ad.actionType === "share";
 
     const boxContent = (
       <div 
@@ -491,7 +493,7 @@ export default function App() {
           contact: ad.contact,
           image: ad.image
         }) : undefined}
-        className="relative flex flex-row items-center justify-between w-full h-full min-h-[108px] sm:min-h-[116px] bg-[#102e61] border border-white/20 rounded-xl px-4 py-3 sm:px-5 sm:py-4 shadow-sm hover:bg-[#173a74] hover:border-[#ffe500]/60 transition duration-300 cursor-pointer select-none overflow-hidden group gap-3"
+        className="relative flex flex-row items-center justify-between w-full h-full min-h-[108px] sm:min-h-[116px] bg-[#102e61] border border-white/20 rounded-xl px-4 py-3 sm:px-5 sm:py-4 shadow-sm hover:bg-[#173a74] hover:border-[#ffe500]/60 transition duration-300 select-none overflow-hidden group gap-3"
       >
         <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between h-full w-full gap-3 sm:gap-4">
           <div className="flex items-center gap-3 min-w-0 w-full text-left">
@@ -528,14 +530,14 @@ export default function App() {
       </div>
     );
 
-    if (isInternalAction) {
+    if (!activeAction || isInternalAction) {
       return boxContent;
     }
 
     let href = "#";
     if (ad.actionType === "phone") href = `tel:${ad.contact}`;
     if (ad.actionType === "whatsapp") href = getWhatsAppLink(ad.contact);
-    if (ad.actionType === "website") href = ad.externalUrl || "https://example.com";
+    if (ad.actionType === "website") href = ad.externalUrl;
 
     return (
       <a 
@@ -688,8 +690,8 @@ export default function App() {
               </div>
             </div>
             <div className="ao-edition-promos flex-1 min-w-0 grid grid-cols-1 md:grid-cols-2 gap-3 self-stretch">
-              {renderAdBox(adConfig?.leftAd || { titleEn: "Enquire for Ads", titleMl: "പരസ്യങ്ങൾക്ക് ബന്ധപ്പെടുക", subtitleEn: "Enquire Now", subtitleMl: "പരസ്യങ്ങൾ നൽകാൻ", contact: "+91 9447471224", actionType: "share", image: "" })}
-              {renderAdBox(adConfig?.rightAd || { titleEn: "Contact Support", titleMl: "പരസ്യങ്ങൾക്ക് വിളിക്കുക", subtitleEn: "Attappadi Ads", subtitleMl: "പരസ്യങ്ങൾ നൽകാൻ", contact: "+91 9447471224", actionType: "phone", image: "" })}
+              {renderAdBox(adConfig?.leftAd || { titleEn: "Your Advertisement Here", titleMl: "നിങ്ങളുടെ പരസ്യം ഇവിടെ", subtitleEn: "Sample advertisement • Contact details coming soon", subtitleMl: "മാതൃകാ പരസ്യം • ബന്ധപ്പെടാനുള്ള വിവരങ്ങൾ ഉടൻ", contact: "", actionType: "share", image: "" }, Boolean(adConfig?.leftAd))}
+              {renderAdBox(adConfig?.rightAd || { titleEn: "Contact Information", titleMl: "ബന്ധപ്പെടാനുള്ള വിവരങ്ങൾ", subtitleEn: "Sample contact • Number to be configured", subtitleMl: "മാതൃകാ വിവരം • നമ്പർ ഉടൻ ചേർക്കും", contact: "", actionType: "phone", image: "" }, Boolean(adConfig?.rightAd))}
             </div>
           </div>
         </div>
