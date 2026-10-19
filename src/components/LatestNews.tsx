@@ -28,17 +28,17 @@ export default function LatestNews({
   const newsBody = (post: NewsPost) => lang === "ta" ? (post.contentTa || post.contentEn) : lang === "ml" ? post.contentMl : post.contentEn;
   const [activeCategoryTab, setActiveCategoryTab] = useState<"all" | "breaking" | "latest" | "updates">("all");
 
-  const regionNames: { [key: string]: { en: string; ml: string } } = {
-    all: { en: "All Regions", ml: "എല്ലാ മേഖലകളും" },
-    agali: { en: "Agali", ml: "അഗളി" },
-    mukkali: { en: "Mukkali", ml: "മുക്കാലി" },
-    thavalam: { en: "Thavalam", ml: "താവളം" },
-    kottathara: { en: "Kottathara", ml: "കോട്ടത്തറ" },
-    sholayur: { en: "Sholayur", ml: "ഷോളയൂർ" },
-    pudur: { en: "Pudur", ml: "പുതൂർ" },
-    anaikkatty: { en: "Anaikatty", ml: "ആനക്കട്ടി" },
-    jellippara: { en: "Jellippara", ml: "ജെല്ലിപ്പാറ" },
-    chittur: { en: "Chittur", ml: "ചിറ്റൂർ" }
+  const regionNames: { [key: string]: { en: string; ml: string; ta: string } } = {
+    all: { en: "All Regions", ml: "എല്ലാ മേഖലകളും", ta: "அனைத்து பகுதிகளும்" },
+    agali: { en: "Agali", ml: "അഗളി", ta: "அகளி" },
+    mukkali: { en: "Mukkali", ml: "മുക്കാലി", ta: "முக்காலி" },
+    thavalam: { en: "Thavalam", ml: "താവളം", ta: "தாவளம்" },
+    kottathara: { en: "Kottathara", ml: "കോട്ടത്തറ", ta: "கோட்டத்தறை" },
+    sholayur: { en: "Sholayur", ml: "ഷോളയൂർ", ta: "சோலையூர்" },
+    pudur: { en: "Pudur", ml: "പുതൂർ", ta: "புதூர்" },
+    anaikkatty: { en: "Anaikatty", ml: "ആനക്കട്ടി", ta: "ஆனைக்கட்டி" },
+    jellippara: { en: "Jellippara", ml: "ജെല്ലിപ്പാറ", ta: "ஜெல்லிப்பாறை" },
+    chittur: { en: "Chittur", ml: "ചിറ്റൂർ", ta: "சித்தூர்" }
   };
 
   // Filter posts based on region dropdown, searching input, and category tabs
@@ -78,25 +78,25 @@ export default function LatestNews({
               onClick={() => setActiveCategoryTab("all")}
               className={`flex-1 md:flex-none px-4 py-1.5 rounded-md transition cursor-pointer ${activeCategoryTab === "all" ? "bg-[#052962] dark:bg-blue-600 text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
             >
-              All Sections
+              {lang === "ml" ? "എല്ലാ വിഭാഗങ്ങളും" : lang === "ta" ? "அனைத்து பிரிவுகளும்" : "All Sections"}
             </button>
             <button
               onClick={() => setActiveCategoryTab("breaking")}
               className={`flex-1 md:flex-none px-4 py-1.5 rounded-md transition cursor-pointer ${activeCategoryTab === "breaking" ? "bg-[#c70000] text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
             >
-              Breaking
+              {lang === "ml" ? "ബ്രേക്കിംഗ്" : lang === "ta" ? "முக்கிய செய்திகள்" : "Breaking"}
             </button>
             <button
               onClick={() => setActiveCategoryTab("latest")}
               className={`flex-1 md:flex-none px-4 py-1.5 rounded-md transition cursor-pointer ${activeCategoryTab === "latest" ? "bg-[#052962]/90 dark:bg-blue-500/90 text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
             >
-              Latest News
+              {lang === "ml" ? "പുതിയ വാർത്തകൾ" : lang === "ta" ? "சமீபத்திய செய்திகள்" : "Latest News"}
             </button>
             <button
               onClick={() => setActiveCategoryTab("updates")}
               className={`flex-1 md:flex-none px-4 py-1.5 rounded-md transition cursor-pointer ${activeCategoryTab === "updates" ? "bg-amber-600 text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
             >
-              Daily Updates
+              {lang === "ml" ? "ദൈനംദിന വിവരങ്ങൾ" : lang === "ta" ? "தினசரி செய்திகள்" : "Daily Updates"}
             </button>
           </div>
 
@@ -107,7 +107,7 @@ export default function LatestNews({
             </span>
             <input 
               type="text"
-              placeholder="Search news, places, keywords..."
+              placeholder={lang === "ml" ? "വാർത്തകൾ, സ്ഥലങ്ങൾ, വാക്കുകൾ തിരയുക..." : lang === "ta" ? "செய்திகள், இடங்கள், சொற்களைத் தேடுங்கள்..." : "Search news, places, keywords..."}
               value={newsSearch}
               onChange={(e) => setNewsSearch(e.target.value)}
               className="w-full pl-9 pr-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#052962] dark:focus:ring-blue-500 border-gray-200 dark:border-slate-800 dark:bg-slate-950 dark:text-white"
@@ -127,7 +127,7 @@ export default function LatestNews({
               onClick={() => onRegionChange(key)}
               className={`px-3 py-1 rounded-full text-xs font-semibold uppercase transition cursor-pointer ${activeRegion === key ? "bg-[#ffe500] text-[#052962] border-2 border-[#052962] font-black" : "bg-gray-100 dark:bg-slate-850 text-gray-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 border dark:border-slate-800"}`}
             >
-              {regionNames[key].en}
+              {regionNames[key][lang]}
             </button>
           ))}
           </div>
@@ -141,9 +141,7 @@ export default function LatestNews({
           <div className="col-span-full text-center bg-white dark:bg-slate-900 border dark:border-slate-800 rounded-lg py-12 px-4 shadow-sm text-gray-400">
             <Globe className="w-12 h-12 mx-auto text-gray-300 mb-3 animate-spin duration-3000" />
             <p className="text-sm">
-              {lang === "en" 
-                ? "No articles matched for this search context right now." 
-                : "അന്വേഷിച്ച മേഖലയിലുള്ള വാർത്തകൾ ലഭ്യമല്ല."}
+              {lang === "ml" ? "അന്വേഷിച്ച മേഖലയിലുള്ള വാർത്തകൾ ലഭ്യമല്ല." : lang === "ta" ? "இந்தத் தேடலுக்குப் பொருந்தும் செய்திகள் இல்லை." : "No articles matched for this search context right now."}
             </p>
           </div>
         ) : (
