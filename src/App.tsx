@@ -700,10 +700,10 @@ export default function App() {
         <div className="ao-header-core max-w-7xl mx-auto px-4 sm:px-6 py-5 sm:py-8 border-b border-white/10 flex flex-col gap-4 sm:gap-6">
           
           {/* Row 1: Brand Identity Headline Row (Centered and prominent) */}
-          <div className="ao-masthead-row flex flex-col lg:flex-row-reverse items-center justify-between gap-4 lg:gap-8 text-center lg:text-right">
+          <div className="ao-masthead-row flex flex-col xl:flex-row items-center justify-center xl:justify-between gap-5 xl:gap-6 text-center xl:text-left">
             
             {/* Inline Compact App Launcher Strip */}
-            <div className="ao-header-shortcuts flex flex-wrap items-center justify-center lg:justify-start gap-2 sm:gap-3 mb-1 select-none">
+            <div className="ao-header-shortcuts flex flex-wrap items-center justify-center xl:justify-end gap-2 sm:gap-3 select-none">
               
               {/* BUS SHORTCUT */}
               <button
@@ -747,12 +747,12 @@ export default function App() {
 
             </div>
 
-            <div className="ao-masthead-brand text-center lg:text-right min-w-0 py-3 px-4 sm:px-5 flex items-center justify-center lg:justify-end gap-3 sm:gap-4 rounded-[22px] bg-gradient-to-br from-white via-[#f6f9ff] to-[#e8f0fb] border border-[#d8e4f4] shadow-[0_8px_24px_rgba(0,0,0,0.12)]">
+            <div className="ao-masthead-brand text-center xl:text-right min-w-0 py-3 px-4 sm:px-5 flex items-center justify-center xl:justify-start gap-3 sm:gap-4 rounded-[22px] bg-gradient-to-br from-white via-[#f6f9ff] to-[#e8f0fb] border border-[#d8e4f4] shadow-[0_8px_24px_rgba(0,0,0,0.12)]">
               <span className="shrink-0 flex items-center justify-center w-[3.75rem] h-[3.75rem] sm:w-[5.25rem] sm:h-[5.25rem] lg:w-[6.5rem] lg:h-[6.5rem] rounded-2xl bg-[#e9f1fd] border border-[#d8e4f4] shadow-sm"><img src="/attappadi-mark.svg" alt="Attappadi Online brand mark" className="ao-brand-mark w-[85%] h-[85%] object-contain" /></span>
               <div className="min-w-0">
               <h1 
                 onClick={() => { setActiveSection("news"); setActiveRegion("all"); setSearchQuery(""); }}
-                className="ao-header-wordmark text-[#052962] text-[clamp(2.5rem,6vw,5.6rem)] font-serif-guardian font-black tracking-tighter italic cursor-pointer transition select-none hover:opacity-95 leading-tight"
+                className="ao-header-wordmark text-[#052962] text-[clamp(2.1rem,4.4vw,4.5rem)] font-serif-guardian font-black tracking-tighter italic cursor-pointer transition select-none hover:opacity-95 leading-tight"
               >
                 Attappadi<span className="text-[#ffe500]">Online</span>
               </h1>
