@@ -59,8 +59,8 @@ export default function WeatherWidget({
           : "bg-white border-slate-200 text-slate-800"
       }`}>
         <span className="animate-spin text-[#052962] dark:text-yellow-400 rounded-full h-4.5 w-4.5 border-2 border-current border-t-transparent inline-block mr-2"></span>
-        <span className="text-xs text-slate-400 font-bold font-anek-malayalam">
-          {lang !== "ml" ? "Loading Weather Now..." : "കാലാവസ്ഥ വിവരങ്ങൾ വരുന്നു..."}
+        <span lang={lang} className="ao-localized-content text-xs text-slate-400 font-bold">
+          {lang === "ta" ? "வானிலை தகவல்கள் ஏற்றப்படுகின்றன..." : lang === "ml" ? "കാലാവസ്ഥ വിവരങ്ങൾ വരുന്നു..." : "Loading Weather Now..."}
         </span>
       </div>
     );

@@ -73,41 +73,41 @@ export default function LatestNews({
         
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           {/* Category Tabs */}
-          <div className="ao-news-tabs flex bg-slate-50 dark:bg-slate-950 border dark:border-slate-800 rounded-lg p-1 text-xs font-bold uppercase w-full md:w-auto overflow-x-auto">
+          <div lang="en" className="ao-news-tabs ao-fixed-ui grid grid-cols-2 sm:grid-cols-4 bg-slate-50 dark:bg-slate-950 border dark:border-slate-800 rounded-lg p-1 text-xs font-bold uppercase w-full min-w-0 overflow-visible">
             <button
               onClick={() => setActiveCategoryTab("all")}
-              className={`flex-1 md:flex-none px-4 py-1.5 rounded-md transition cursor-pointer ${activeCategoryTab === "all" ? "bg-[#052962] dark:bg-blue-600 text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
+              className={`min-w-0 px-2 sm:px-3 py-2 rounded-md transition cursor-pointer ${activeCategoryTab === "all" ? "bg-[#052962] dark:bg-blue-600 text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
             >
-              {lang === "ml" ? "എല്ലാ വിഭാഗങ്ങളും" : lang === "ta" ? "அனைத்து பிரிவுகளும்" : "All Sections"}
+              All Sections
             </button>
             <button
               onClick={() => setActiveCategoryTab("breaking")}
-              className={`flex-1 md:flex-none px-4 py-1.5 rounded-md transition cursor-pointer ${activeCategoryTab === "breaking" ? "bg-[#c70000] text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
+              className={`min-w-0 px-2 sm:px-3 py-2 rounded-md transition cursor-pointer ${activeCategoryTab === "breaking" ? "bg-[#c70000] text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
             >
-              {lang === "ml" ? "ബ്രേക്കിംഗ്" : lang === "ta" ? "முக்கிய செய்திகள்" : "Breaking"}
+              Breaking
             </button>
             <button
               onClick={() => setActiveCategoryTab("latest")}
-              className={`flex-1 md:flex-none px-4 py-1.5 rounded-md transition cursor-pointer ${activeCategoryTab === "latest" ? "bg-[#052962]/90 dark:bg-blue-500/90 text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
+              className={`min-w-0 px-2 sm:px-3 py-2 rounded-md transition cursor-pointer ${activeCategoryTab === "latest" ? "bg-[#052962]/90 dark:bg-blue-500/90 text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
             >
-              {lang === "ml" ? "പുതിയ വാർത്തകൾ" : lang === "ta" ? "சமீபத்திய செய்திகள்" : "Latest News"}
+              Latest News
             </button>
             <button
               onClick={() => setActiveCategoryTab("updates")}
-              className={`flex-1 md:flex-none px-4 py-1.5 rounded-md transition cursor-pointer ${activeCategoryTab === "updates" ? "bg-amber-600 text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
+              className={`min-w-0 px-2 sm:px-3 py-2 rounded-md transition cursor-pointer ${activeCategoryTab === "updates" ? "bg-amber-600 text-white shadow-xs" : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-850"}`}
             >
-              {lang === "ml" ? "ദൈനംദിന വിവരങ്ങൾ" : lang === "ta" ? "தினசரி செய்திகள்" : "Daily Updates"}
+              Daily Updates
             </button>
           </div>
 
           {/* Quick Search */}
-          <div className="relative w-full md:w-80">
+          <div lang="en" className="ao-fixed-ui relative w-full md:w-80">
             <span className="absolute left-3 inset-y-0 flex items-center text-gray-400">
               <Search className="w-4 h-4" />
             </span>
             <input 
               type="text"
-              placeholder={lang === "ml" ? "വാർത്തകൾ, സ്ഥലങ്ങൾ, വാക്കുകൾ തിരയുക..." : lang === "ta" ? "செய்திகள், இடங்கள், சொற்களைத் தேடுங்கள்..." : "Search news, places, keywords..."}
+              placeholder="Search news, places, keywords..."
               value={newsSearch}
               onChange={(e) => setNewsSearch(e.target.value)}
               className="w-full pl-9 pr-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#052962] dark:focus:ring-blue-500 border-gray-200 dark:border-slate-800 dark:bg-slate-950 dark:text-white"
@@ -117,17 +117,17 @@ export default function LatestNews({
 
         {/* Region selector pills inside filtering header */}
         <div className="border-t border-gray-100 dark:border-slate-800 pt-3 flex flex-col sm:flex-row items-start sm:items-center gap-2">
-          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mr-2 block">
+          <span lang="en" className="ao-fixed-ui text-[10px] font-bold text-gray-400 uppercase tracking-widest mr-2 block">
             Region Filter:
           </span>
-          <div className="ao-region-nav flex w-full min-w-0 gap-2 overflow-x-auto whitespace-nowrap pb-2 sm:pb-1">
+          <div lang="en" className="ao-region-nav ao-fixed-ui flex w-full min-w-0 gap-2 overflow-x-auto whitespace-nowrap pb-2 sm:pb-1">
           {Object.keys(regionNames).map((key) => (
             <button
               key={key}
               onClick={() => onRegionChange(key)}
               className={`px-3 py-1 rounded-full text-xs font-semibold uppercase transition cursor-pointer ${activeRegion === key ? "bg-[#ffe500] text-[#052962] border-2 border-[#052962] font-black" : "bg-gray-100 dark:bg-slate-850 text-gray-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 border dark:border-slate-800"}`}
             >
-              {regionNames[key][lang]}
+              {regionNames[key].en}
             </button>
           ))}
           </div>
@@ -140,7 +140,7 @@ export default function LatestNews({
         {filteredPosts.length === 0 ? (
           <div className="col-span-full text-center bg-white dark:bg-slate-900 border dark:border-slate-800 rounded-lg py-12 px-4 shadow-sm text-gray-400">
             <Globe className="w-12 h-12 mx-auto text-gray-300 mb-3 animate-spin duration-3000" />
-            <p className="text-sm">
+            <p lang={lang} className="ao-localized-content text-sm">
               {lang === "ml" ? "അന്വേഷിച്ച മേഖലയിലുള്ള വാർത്തകൾ ലഭ്യമല്ല." : lang === "ta" ? "இந்தத் தேடலுக்குப் பொருந்தும் செய்திகள் இல்லை." : "No articles matched for this search context right now."}
             </p>
           </div>
