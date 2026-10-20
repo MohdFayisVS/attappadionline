@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import BusStopOSMMap from "./BusStopOSMMap";
 import { motion, AnimatePresence } from "motion/react";
 import { MapPin, Compass, UtensilsCrossed, Hotel, BookOpen, Image as ImageIcon, X, ChevronLeft, ChevronRight, Share2, Volume2, Bus, Clock, Search, Info, Sliders, Plus, Trash, Link, RotateCcw, Copy, Check, Move } from "lucide-react";
 import { DestinationItem, CultureItem, StayItem, TravelogueItem, PhotoItem, BusRouteItem } from "../types";
@@ -1208,6 +1209,8 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                   </button>
                 ))}
               </div>
+
+              <BusStopOSMMap stops={stopChoices} selectedStop={selectedMapStop} onSelectStop={(id) => { setSelectedMapStop(id); setBusTimingMode("stop"); }} lang={lang} />
 
               {/* Master Responsive Layout split into sidebar panel & Vector Map */}
               <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start font-anek-malayalam">
