@@ -1003,11 +1003,18 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
           };
 
           // Define all unique stops for dropdown choices mapped dynamically from state
-          const stopChoices = mapNodes.map(node => ({
-            id: node.id,
-            en: node.nameEn,
-            ml: node.nameMl
-          }));
+          const stopChoices = [
+            ...mapNodes.map(node => ({ id: node.id, en: node.nameEn, ml: node.nameMl })),
+            ...busRoutesList.flatMap(route => route.list).filter(stop =>
+              !mapNodes.some(node => normalizeStopName(node.id) === normalizeStopName(stop.typeEn))
+            ).filter((stop, index, all) =>
+              all.findIndex(item => normalizeStopName(item.typeEn) === normalizeStopName(stop.typeEn)) === index
+            ).map(stop => ({
+              id: normalizeStopName(stop.typeEn),
+              en: stop.typeEn,
+              ml: stop.typeMl
+            }))
+          ];
 
           // Sightseeing hotspots and their corresponding transit stops
           interface AssistHotspot {
@@ -1216,7 +1223,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
               <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start font-anek-malayalam">
                 
                 {/* Visual Map widget - Highlight of modern responsive interface */}
-                <div className="xl:col-span-5 order-first xl:order-last space-y-4">
+                <div className={isAdmin ? "xl:col-span-5 order-first xl:order-last space-y-4" : "hidden"}>
                   <div className="bg-[#eef2ef] border border-slate-300 rounded-xl p-4 shadow-sm relative overflow-hidden select-none">
                     
                     {/* Header Map indicators */}
@@ -1973,7 +1980,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                 </div>
 
                 {/* Left Controls & dynamic schedulers lists */}
-                <div className="xl:col-span-7 space-y-5">
+                <div className={isAdmin ? "xl:col-span-7 space-y-5" : "xl:col-span-12 space-y-5"}>
                   
                   {/* Mode 1: HUB STATION DEPARTURE SCHEDULES */}
                   {busTimingMode === "stop" && (

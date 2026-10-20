@@ -1,137 +1,172 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 type Stop = { id: string; en: string; ml: string };
-type Props = {
-  stops: Stop[];
-  selectedStop: string;
-  onSelectStop: (id: string) => void;
-  lang: "en" | "ml" | "ta";
+type Props = { stops: Stop[]; selectedStop: string; onSelectStop: (id: string) => void; lang: "en" | "ml" | "ta" };
+type Position = { lat: number; lon: number; kind: "station" | "stop" | "place"; name: string };
+type Layer = { clearLayers: () => void; addTo: (map: MapInstance) => Layer };
+type Marker = { addTo: (layer: Layer) => Marker; on: (event: string, callback: () => void) => Marker; bindTooltip: (text: string, options?: Record<string, unknown>) => Marker };
+type MapInstance = { setView: (point: [number, number], zoom: number) => MapInstance; remove: () => void; invalidateSize: () => void; fitBounds: (bounds: [number, number][], options?: Record<string, unknown>) => void };
+type Leaflet = {
+  map: (element: HTMLElement) => MapInstance;
+  layerGroup: () => Layer;
+  tileLayer: (url: string, options: Record<string, unknown>) => { addTo: (map: MapInstance) => void };
+  circleMarker: (point: [number, number], options: Record<string, unknown>) => Marker;
 };
-type Coordinate = { lat: number; lon: number };
-type LeafletMap = {
-  setView: (coords: [number, number], zoom: number) => LeafletMap;
-  remove: () => void;
-  invalidateSize: () => void;
-};
-type MarkerLayer = { clearLayers: () => void };
-type LeafletApi = {
-  map: (element: HTMLElement) => LeafletMap;
-  layerGroup: () => MarkerLayer & { addTo: (map: LeafletMap) => MarkerLayer };
-  tileLayer: (url: string, options: Record<string, unknown>) => { addTo: (map: LeafletMap) => void };
-  circleMarker: (coords: [number, number], options: Record<string, unknown>) => {
-    addTo: (layer: MarkerLayer) => { on: (event: string, handler: () => void) => void };
-  };
-};
-declare global { interface Window { L?: LeafletApi } }
+declare global { interface Window { L?: Leaflet } }
+type OsmElement = { lat?: number; lon?: number; center?: { lat: number; lon: number }; tags?: Record<string, string> };
+const CACHE_KEY = "attappadi_osm_verified_stops_v2";
+const CACHE_AGE = 7 * 24 * 60 * 60 * 1000;
+const bounds = [9.3, 75.5, 11.8, 77.6];
+const label = (lang: Props["lang"], en: string, ml: string, ta: string) => lang === "ml" ? ml : lang === "ta" ? ta : en;
 
-const coordinatesKey = "attappadi_osm_stop_coordinates_v1";
-const loadLeaflet = async (): Promise<LeafletApi> => {
-  if (window.L) return window.L;
+function cleanName(value: string): string {
+  return value.toUpperCase().replace(/[^A-Z]/g, "").replace(/ANAIKATTY|ANAIKKATI|ANAIKATI/g, "ANAIKKATTY").replace(/MANNARKAD/g, "MANNARKKAD");
+}
+function stopAliases(stop: Stop): string[] {
+  const variants: Record<string, string[]> = {
+    ANAIKKATTY: ["Anaikatti", "Anaikatty", "Anaikkatty", "Anaikatti Border"],
+    MULLI: ["Mulli", "Mulli Checkpost"],
+    GOOLIKKADAVU: ["Goolikadavu", "Goolikkadavu", "Gulikadavu"],
+    SHORNUR: ["Shoranur", "Shornur"],
+    CHERPULASSERY: ["Cherpulassery", "Cherppulassery"],
+    THAVALAM: ["Thavalam", "Thavalam Junction"],
+    JELLIPPARA: ["Jellippara", "Jellipara"]
+  };
+  return [stop.en, ...(variants[stop.id] || [])];
+}
+function loadLibrary(): Promise<Leaflet> {
+  if (window.L) return Promise.resolve(window.L);
   if (!document.querySelector('link[data-attappadi-leaflet]')) {
     const css = document.createElement("link");
-    css.rel = "stylesheet";
-    css.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-    css.dataset.attappadiLeaflet = "true";
-    document.head.appendChild(css);
+    css.rel = "stylesheet"; css.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+    css.dataset.attappadiLeaflet = "true"; document.head.appendChild(css);
   }
-  if (!document.querySelector('script[data-attappadi-leaflet]')) {
-    const script = document.createElement("script");
-    script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
-    script.dataset.attappadiLeaflet = "true";
-    document.head.appendChild(script);
-  }
-  const script = document.querySelector('script[data-attappadi-leaflet]') as HTMLScriptElement;
-  if (!window.L) await new Promise<void>((resolve, reject) => {
-    script.addEventListener("load", () => resolve(), { once: true });
-    script.addEventListener("error", () => reject(new Error("Map library unavailable")), { once: true });
+  return new Promise((resolve, reject) => {
+    let script = document.querySelector('script[data-attappadi-leaflet]') as HTMLScriptElement | null;
+    if (!script) {
+      script = document.createElement("script");
+      script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+      script.dataset.attappadiLeaflet = "true";
+      document.head.appendChild(script);
+    }
+    const timer = window.setTimeout(() => reject(new Error("Map library timed out")), 15000);
+    const done = () => { window.clearTimeout(timer); if (window.L) resolve(window.L); else reject(new Error("Map library unavailable")); };
+    script.addEventListener("load", done, { once: true });
+    script.addEventListener("error", () => { window.clearTimeout(timer); reject(new Error("Map library unavailable")); }, { once: true });
+    if (window.L) done();
   });
-  if (!window.L) throw new Error("Map library unavailable");
-  return window.L;
-};
+}
+function loadCache(): Record<string, Position> {
+  try {
+    const stored = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
+    if (stored && Date.now() - stored.savedAt < CACHE_AGE && stored.positions) return stored.positions;
+  } catch { /* ignore corrupt cache */ }
+  return {};
+}
+async function lookupStops(stops: Stop[], signal: AbortSignal): Promise<Record<string, Position>> {
+  // One grouped Overpass query for real OSM bus stops, stations and populated places.
+  // We do not invent coordinates or substitute arbitrary points on a drawn diagram.
+  const names = [...new Set(stops.flatMap(stopAliases))];
+  const pattern = names.map(name => name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
+  const query = `[out:json][timeout:35];(nwr["name"~"^(${pattern})$",i]["highway"="bus_stop"](${bounds.join(",")});nwr["name"~"^(${pattern})$",i]["amenity"="bus_station"](${bounds.join(",")});nwr["name"~"^(${pattern})$",i]["place"](${bounds.join(",")}););out center;`;
+  const response = await fetch("https://overpass.kumi.systems/api/interpreter", {
+    method: "POST", body: new URLSearchParams({ data: query }), signal
+  });
+  if (!response.ok) throw new Error("OpenStreetMap location lookup unavailable");
+  const data: { elements?: OsmElement[] } = await response.json();
+  const found: Record<string, Position> = {};
+  for (const stop of stops) {
+    const aliases = new Set(stopAliases(stop).map(cleanName));
+    const candidates = (data.elements || []).filter(item => item.tags?.name && aliases.has(cleanName(item.tags.name)));
+    // Prefer actual station objects over town centers. No guessed location for unresolved stops.
+    const ranked = candidates.map(item => {
+      const lat = item.lat ?? item.center?.lat;
+      const lon = item.lon ?? item.center?.lon;
+      const station = item.tags?.amenity === "bus_station";
+      const busStop = item.tags?.highway === "bus_stop";
+      const score = station ? 3 : busStop ? 2 : 1;
+      return { lat, lon, score, name: item.tags?.name || stop.en };
+    }).filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lon)).sort((a, b) => b.score - a.score);
+    if (ranked.length) {
+      const match = ranked[0];
+      found[stop.id] = { lat: match.lat!, lon: match.lon!, kind: match.score === 3 ? "station" : match.score === 2 ? "stop" : "place", name: match.name };
+    }
+  }
+  return found;
+}
 
 export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang }: Props) {
-  const element = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<LeafletMap | null>(null);
-  const markersRef = useRef<MarkerLayer | null>(null);
-  const [coordinates, setCoordinates] = useState<Record<string, Coordinate>>(() => {
-    try { return JSON.parse(localStorage.getItem(coordinatesKey) || "{}"); } catch { return {}; }
-  });
-  const [status, setStatus] = useState("");
-  const [busy, setBusy] = useState(false);
+  const container = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<MapInstance | null>(null);
+  const layerRef = useRef<Layer | null>(null);
+  const onSelectRef = useRef(onSelectStop);
+  onSelectRef.current = onSelectStop;
   const [ready, setReady] = useState(false);
+  const [positions, setPositions] = useState<Record<string, Position>>(loadCache);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const available = useMemo(() => stops.filter(s => positions[s.id]), [stops, positions]);
 
   useEffect(() => {
-    let active = true;
-    loadLeaflet().then(L => {
-      if (!active || !element.current) return;
-      const map = L.map(element.current).setView([11.06, 76.55], 10);
+    let mounted = true;
+    loadLibrary().then(L => {
+      if (!mounted || !container.current) return;
+      const map = L.map(container.current).setView([11.05, 76.58], 10);
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; OpenStreetMap contributors',
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>',
         maxZoom: 19
       }).addTo(map);
       mapRef.current = map;
-      markersRef.current = L.layerGroup().addTo(map);
+      layerRef.current = L.layerGroup().addTo(map);
       setReady(true);
-      setTimeout(() => map.invalidateSize(), 100);
-    }).catch(() => { if (active) setStatus("Unable to load OpenStreetMap."); });
-    return () => { active = false; mapRef.current?.remove(); mapRef.current = null; markersRef.current = null; };
+      window.setTimeout(() => map.invalidateSize(), 150);
+    }).catch(() => { if (mounted) setError("Unable to load map tiles."); });
+    return () => { mounted = false; mapRef.current?.remove(); mapRef.current = null; layerRef.current = null; };
   }, []);
 
+  const ids = stops.map(s => s.id).join(",");
   useEffect(() => {
-    if (!ready || !mapRef.current || !window.L) return;
-    const map = mapRef.current;
-    const markerLayer = markersRef.current;
-    if (!markerLayer) return;
-    markerLayer.clearLayers();
-    stops.forEach(stop => {
-      const pos = coordinates[stop.id];
-      if (!pos || !Number.isFinite(pos.lat) || !Number.isFinite(pos.lon)) return;
-      window.L!.circleMarker([pos.lat, pos.lon], {
-        radius: stop.id === selectedStop ? 10 : 6,
-        color: stop.id === selectedStop ? "#052962" : "#d97706",
-        fillColor: stop.id === selectedStop ? "#ffe500" : "#fff",
-        fillOpacity: 1,
-        weight: 3
-      }).addTo(markerLayer).on("click", () => onSelectStop(stop.id));
+    if (!stops.length) return;
+    const controller = new AbortController();
+    let mounted = true;
+    setLoading(true);
+    lookupStops(stops, controller.signal).then(found => {
+      if (!mounted) return;
+      const merged = { ...loadCache(), ...found };
+      setPositions(merged);
+      localStorage.setItem(CACHE_KEY, JSON.stringify({ savedAt: Date.now(), positions: merged }));
+      if (!Object.keys(found).length) setError("No matching bus stops were found in OpenStreetMap.");
+    }).catch(e => {
+      if (mounted && e.name !== "AbortError") setError("Map locations could not be refreshed. Try again later.");
+    }).finally(() => { if (mounted) setLoading(false); });
+    return () => { mounted = false; controller.abort(); };
+  }, [ids]);
+
+  useEffect(() => {
+    if (!ready || !window.L || !layerRef.current || !mapRef.current) return;
+    const layer = layerRef.current;
+    layer.clearLayers();
+    available.forEach(stop => {
+      const point = positions[stop.id];
+      const selected = stop.id === selectedStop;
+      window.L!.circleMarker([point.lat, point.lon], {
+        radius: selected ? 10 : 7, weight: 3,
+        color: selected ? "#052962" : "#d97706",
+        fillColor: selected ? "#ffe500" : "#ffffff",
+        fillOpacity: 1
+      }).addTo(layer).bindTooltip(stop.en + (point.kind === "place" ? " (town center)" : ""), { direction: "top" })
+        .on("click", () => onSelectRef.current(stop.id));
     });
-    const selected = coordinates[selectedStop];
-    if (selected) map.setView([selected.lat, selected.lon], 12);
-  }, [ready, coordinates, stops, selectedStop, onSelectStop]);
+    const selected = positions[selectedStop];
+    if (selected) mapRef.current.setView([selected.lat, selected.lon], 12);
+    else if (available.length) mapRef.current.fitBounds(available.map(s => [positions[s.id].lat, positions[s.id].lon]), { padding: [24, 24], maxZoom: 11 });
+  }, [ready, positions, selectedStop, available]);
 
-  const locateStop = async () => {
-    const stop = stops.find(s => s.id === selectedStop);
-    if (!stop || busy) return;
-    setBusy(true);
-    setStatus("");
-    try {
-      // User-triggered request only: never bulk geocode against the public Nominatim service.
-      const query = encodeURIComponent(stop.en + ", Kerala, India");
-      const response = await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" + query);
-      if (!response.ok) throw new Error("Location search failed");
-      const results: Array<{ lat: string; lon: string }> = await response.json();
-      if (!results.length) throw new Error("Stop not found. Coordinates need manual verification.");
-      const point = { lat: Number(results[0].lat), lon: Number(results[0].lon) };
-      if (!Number.isFinite(point.lat) || !Number.isFinite(point.lon)) throw new Error("Invalid coordinates");
-      const updated = { ...coordinates, [stop.id]: point };
-      setCoordinates(updated);
-      localStorage.setItem(coordinatesKey, JSON.stringify(updated));
-      setStatus("Approximate location found. Verify the marker before using it.");
-    } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Unable to locate stop.");
-    } finally { setBusy(false); }
-  };
-
-  return (
-    <section className="space-y-2" aria-label="OpenStreetMap bus stops">
-      <div ref={element} className="h-[320px] sm:h-[420px] w-full rounded-lg border border-slate-200" />
-      <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-        <span>{lang === "ml" ? "സ്റ്റോപ്പ് തിരഞ്ഞെടുത്ത് സമയക്രമം കാണുക" : lang === "ta" ? "நிறுத்தத்தைத் தேர்ந்தெடுத்து நேர அட்டவணையைப் பார்க்கவும்" : "Select a stop marker to view its timetable"}</span>
-        {!coordinates[selectedStop] && <button type="button" disabled={busy} onClick={locateStop} className="rounded bg-[#052962] px-3 py-2 text-white disabled:opacity-50">
-          {busy ? "Locating..." : "Find selected stop on map"}
-        </button>}
-      </div>
-      {status && <p role="status" className="text-xs text-slate-600">{status}</p>}
-      <p className="text-[10px] text-slate-500">© OpenStreetMap contributors. Stop locations are approximate until verified; timetable times are scheduled, not live GPS.</p>
-    </section>
-  );
+  return <section className="space-y-2" aria-label="OpenStreetMap bus stops">
+    <div ref={container} className="h-[360px] sm:h-[460px] w-full rounded-lg border border-slate-200" />
+    <p className="text-xs font-semibold">{label(lang, "Tap a station dot to see its bus timetable", "ബസ് സമയക്രമം കാണാൻ മാപ്പിലെ സ്റ്റേഷൻ അടയാളം തിരഞ്ഞെടുക്കുക", "பேருந்து நேர அட்டவணையைக் காண வரைபடத்தில் நிறுத்தத்தைத் தேர்ந்தெடுக்கவும்")}</p>
+    <p className="text-xs text-slate-600" role="status">{loading ? "Locating stops from OpenStreetMap..." : `${available.length} of ${stops.length} places mapped`}</p>
+    {error && <p className="text-xs text-amber-700" role="alert">{error}</p>}
+    <p className="text-[10px] text-slate-500">© OpenStreetMap contributors. Dots use OSM bus stops or stations where available; town-center markers are labeled and may not be the exact boarding point. Timetables are scheduled, not live GPS.</p>
+  </section>;
 }
