@@ -1217,7 +1217,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                 ))}
               </div>
 
-              <BusStopOSMMap stops={stopChoices} selectedStop={selectedMapStop} onSelectStop={(id) => { setSelectedMapStop(id); setBusTimingMode("stop"); }} lang={lang} />
+              <BusStopOSMMap stops={stopChoices} selectedStop={selectedMapStop} onSelectStop={(id) => { setSelectedMapStop(id); setBusTimingMode("stop"); window.setTimeout(() => document.getElementById("attappadi-station-board")?.scrollIntoView({ behavior: "smooth", block: "start" }), 120); }} lang={lang} />
 
               {/* Master Responsive Layout split into sidebar panel & Vector Map */}
               <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start font-anek-malayalam">
