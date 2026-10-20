@@ -1272,6 +1272,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                           }}
                         />
                       ) : (
+                      <>
                       {/* SVG Canvas Map */}
                       <div className="relative aspect-[4/3] w-full mt-3 bg-white/40 rounded-lg overflow-hidden border border-slate-200 shadow-inner">
                         
@@ -1563,7 +1564,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                         സ്റ്റേഷനിൽ ക്ലിക്ക് ചെയ്ത് departures ലഭിക്കാം
                       </div>
                     </div>
-
+                      </>
                     )}
                     {/* Quick navigation assist block */}
                     <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-1 text-xs text-left">
