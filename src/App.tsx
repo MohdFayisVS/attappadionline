@@ -989,7 +989,7 @@ export default function App() {
       )}
 
       {/* 4. MAIN THREE-COLUMN LAYOUT CONTEXT */}
-      <main lang={lang} id="main-content" className="max-w-7xl mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 min-w-0">
+      <main lang={lang} id="main-content" className="ao-i18n-page max-w-7xl mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 min-w-0">
         
         {/* LEFT COLUMN: Main News Feed or Search Results (Col spans 8 or 12) */}
         <section className={`${activeSection === "news" ? "lg:col-span-8" : "lg:col-span-12"} space-y-4`}>
@@ -1692,7 +1692,7 @@ export default function App() {
             )}
 
             <motion.div 
-              id="news-read-modal" lang={lang}
+              id="news-read-modal" lang={lang} data-i18n-scope="article"
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
@@ -2218,15 +2218,15 @@ export default function App() {
                     {selectedAppService === "shopping" && "🛍️"}
                   </span>
                   <div>
-                    <h3 className="font-serif-guardian font-extrabold text-slate-900 dark:text-white text-base">
-                      {selectedAppService === "busTimings" && (lang === "en" ? "KSRTC & Private Bus Timings" : "കെ.എസ്.ആർ.ടി.സി & പ്രൈവറ്റ് ബസ് സമയവിവരങ്ങൾ")}
+                    <h3 className={selectedAppService === "busTimings" ? "font-anek-english font-extrabold text-slate-900 dark:text-white text-base" : "font-serif-guardian font-extrabold text-slate-900 dark:text-white text-base"}>
+                      {selectedAppService === "busTimings" && "BUS TIMINGS"}
                       {selectedAppService === "autorikshaw" && (lang === "en" ? "AUTO TAXI" : "പ്രാദേശിക ഓട്ടോ & ടാക്സി വിളിപ്പടം")}
                       {selectedAppService === "travelFood" && (lang === "en" ? "Explore Valley Food & Culture" : "പ്രാദേശിക ഭക്ഷണശാലകളും സംസ്കാരവും")}
                       {selectedAppService === "shopping" && (lang === "en" ? "SHOPPING" : "വ്യാപാരശാലകളും വാട്സാപ്പ് ഓർഡർ പോർട്ടലും")}
                     </h3>
-                    <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest font-sans mt-0.5">
+                    {selectedAppService !== "busTimings" && <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest font-sans mt-0.5">
                       {lang === "en" ? "ATTAPPADI ONLINE DIGITAL SERVICES" : "അട്ടപ്പാടി ഓൺലൈൻ ഡിജിറ്റൽ സേവനങ്ങൾ"}
-                    </p>
+                    </p>}
                   </div>
                 </div>
 
@@ -2258,14 +2258,14 @@ export default function App() {
 
               {/* Modal footer back confirmation bar */}
               <div className="px-5 py-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-900/50 text-[10px] text-slate-400">
-                <span>
+                {selectedAppService !== "busTimings" && <span>
                   {lang === "en" ? "💡 Powered by Attappadi Community Directory" : "💡 അട്ടപ്പാടി കമ്മ്യൂണിറ്റി ഡയറക്ടറിയുടെ സഹകരണത്തോടെ"}
-                </span>
+                </span>}
                 <button
                   onClick={() => setSelectedAppService(null)}
                   className="px-4 py-1.5 bg-slate-900 dark:bg-white text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-slate-100 rounded-lg text-xs font-black transition cursor-pointer"
                 >
-                  {lang === "en" ? "Done" : "പൂർത്തിയായി"}
+                  {selectedAppService === "busTimings" ? "CLOSE" : lang === "en" ? "Done" : "പൂർത്തിയായി"}
                 </button>
               </div>
 

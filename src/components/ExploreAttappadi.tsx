@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import BusStopsOsmMap from "./BusStopsOsmMap";
 import { motion, AnimatePresence } from "motion/react";
 import { MapPin, Compass, UtensilsCrossed, Hotel, BookOpen, Image as ImageIcon, X, ChevronLeft, ChevronRight, Share2, Volume2, Bus, Clock, Search, Info, Sliders, Plus, Trash, Link, RotateCcw, Copy, Check, Move } from "lucide-react";
 import { DestinationItem, CultureItem, StayItem, TravelogueItem, PhotoItem, BusRouteItem } from "../types";
@@ -534,7 +535,37 @@ const DEFAULT_MAP_LINES = [
   { from: "COIMBATORE", to: "METTUPALAYAM" }
 ];
 
+const TAMIL_BUS_STOPS: Record<string, string> = {
+  KOZHIKODE: "கோழிக்கோடு", MANJERI: "மஞ்சேரி", GURUVAYUR: "குருவாயூர்",
+  THRISSUR: "திருச்சூர்", KOTTAYAM: "கோட்டயம்", KATTAPPANA: "கட்டப்பனை",
+  SHORNUR: "ஷொர்ணூர்", CHERPULASSERY: "செர்ப்புளச்சேரி",
+  PERINTHALMANNA: "பெரிந்தல்மண்ணா", PALAKKAD: "பாலக்காடு",
+  MANNARKKAD: "மன்னார்க்காடு", MUKKALI: "முக்காலி", THAVALAM: "தாவளம்",
+  GOOLIKKADAVU: "கூலிக்கடவு", AGALI: "அகளி", JELLIPPARA: "ஜெல்லிப்பாறை",
+  PALOOR: "பாலூர்", PUDUR: "புதூர்", CHITTUR: "சித்தூர்",
+  MULLI: "முள்ளி", SHOLAYUR: "சோலையூர்", ANAIKKATTY: "ஆனைக்கட்டி",
+  METTUPALAYAM: "மேட்டுப்பாளையம்", COIMBATORE: "கோயம்புத்தூர்"
+};
+const tamilBusName = (name: string) => {
+  const key = name.trim().toUpperCase().replace(/[\s-]+/g, "");
+  return TAMIL_BUS_STOPS[key] || name.split(/(\s*[-–]\s*)/).map(part =>
+    TAMIL_BUS_STOPS[part.trim().toUpperCase().replace(/\s+/g, "")] || part
+  ).join("");
+};
+
+const cleanBusRouteLabel = (value: string) => value
+  .replace(/\s*[-–]\s*(?:Morning|Noon|Evening) Trip(?=\))/gi, "")
+  .replace(/\s*[-–]\s*Night Stay(?=\))/gi, "")
+  .replace(/\s*\((?:Morning|Noon|Evening) Trip|Night Stay\)/gi, "")
+  .replace(/\s*[-–]\s*(?:രാവിലത്തെ|ഉച്ചയ്ക്കുള്ള|വൈകിട്ടുള്ള) ട്രിപ്പ്(?=\))/g, "")
+  .replace(/\s*[-–]\s*രാത്രി താമസം(?=\))/g, "");
+const localizedBusRoute = (en: string, ml: string, language: "en" | "ml" | "ta") =>
+  cleanBusRouteLabel(language === "ml" ? ml : language === "ta" ? tamilBusName(en) : en);
+const localizedBusType = (en: string, ml: string, language: "en" | "ml" | "ta") =>
+  language === "ml" ? ml : language === "ta" ? en.replace(/Fast Passenger/gi, "விரைவு பயணிகள் சேவை").replace(/Ordinary(?: Service)?/gi, "சாதாரண சேவை").replace(/Swift/gi, "ஸ்விஃப்ட்") : en;
 export default function ExploreAttappadi({ lang, initialTab = "destinations", isAdmin = false, hideTabsSelection = false }: ExploreAttappadiProps) {
+
+  const busFont = lang === "ml" ? "font-anek-malayalam" : lang === "ta" ? "font-anek-tamil" : "font-anek-english";
   const safeParseArray = (val: any): string[] => {
     if (Array.isArray(val)) return val;
     if (typeof val === "string") return val.split(",").map(x => x.trim()).filter(Boolean);
@@ -1172,17 +1203,17 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
           // Mapped dynamically from top-level mapLines state
 
           return (
-            <div className="space-y-6 animate-fade-in font-anek-malayalam">
+            <div lang={lang} className={`space-y-6 animate-fade-in ${busFont}`}>
               
               {/* Disclaimer and Help Desk Box */}
               <div className="bg-[#052962]/5 border-l-4 border-[#052962] p-4 rounded-r-md flex gap-3 text-xs text-[#052962]" style={{ contentVisibility: 'auto' }}>
                 <Info className="w-5 h-5 text-[#052962] shrink-0 mt-0.5" />
-                <div className="space-y-1 font-anek-malayalam">
+                <div className={`space-y-1 ${busFont}`}>
                   <p className="font-extrabold text-[13px] text-[#052962]">
-                    യാത്രക്കാരുടെ വിവരത്തിന് (Attappadi Transit Help):
+                    {lang === "ml" ? "യാത്രക്കാർക്കുള്ള വിവരം:" : lang === "ta" ? "பயணிகளுக்கான தகவல்:" : "Passenger information:"}
                   </p>
                   <p className="text-[11px] text-slate-700 leading-relaxed font-semibold">
-                    ചുരം റോഡിലെ മൂടൽമഞ്ഞ്, കനത്ത മഴ, വനമേഖലയിലെ സമയനിയന്ത്രണങ്ങൾ എന്നിവ കാരണം സമയക്രമങ്ങളിൽ നേരിയ വ്യത്യാസങ്ങൾ വന്നേക്കാം. പ്രധാന ജംഗ്ഷൻ കേന്ദ്രങ്ങളിലെ കൃത്യവിവരങ്ങൾക്ക് ലഭ്യമായ കെ.എസ്.ആർ.ടി.സി ഹെൽപ്പ് നമ്പറിൽ ബന്ധപ്പെടുക. (അഗളി ബസ് സ്റ്റേഷൻ ഫോൺ: <span className="font-bold underline text-[#052962]">04924-254400</span>)
+                    {lang === "ml" ? "മൂടൽമഞ്ഞ്, മഴ, വനമേഖലയിലെ നിയന്ത്രണങ്ങൾ എന്നിവ കാരണം ബസ് സമയങ്ങളിൽ മാറ്റമുണ്ടാകാം." : lang === "ta" ? "மூடுபனி, மழை மற்றும் வனப்பகுதி கட்டுப்பாடுகள் காரணமாக பேருந்து நேரங்கள் மாறலாம்." : "Bus timings may change due to fog, heavy rain and forest-area restrictions."} {lang === "ml" ? "അഗളി ബസ് സ്റ്റേഷൻ:" : lang === "ta" ? "அகளி பேருந்து நிலையம்:" : "Agali bus station:"} <span className="font-bold text-[#052962]">04924-254400</span>
                   </p>
                 </div>
               </div>
@@ -1190,14 +1221,14 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
               {/* Navigation Style Sub Menu */}
               <div className="flex border-b border-slate-200">
                 {[
-                  { key: "stop", label: "സ്റ്റേഷൻ ബോർഡ് (Hub Board)", icon: <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" /> },
-                  { key: "directions", label: "ഗൂഗിൾ മാപ്പ് റൂട്ടിംഗ് (Directions Finder)", icon: <Compass className="w-3.5 h-3.5 text-sky-600 shrink-0" /> },
-                  { key: "assist", label: "വിനോദസഞ്ചാര കേന്ദ്രങ്ങൾ (Nearest Stops)", icon: <Info className="w-3.5 h-3.5 text-teal-500 shrink-0" /> }
+                  { key: "stop", label: "Hub Board", icon: <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" /> },
+                  { key: "directions", label: "Directions Finder", icon: <Compass className="w-3.5 h-3.5 text-sky-600 shrink-0" /> },
+                  { key: "assist", label: "Nearest Stops", icon: <Info className="w-3.5 h-3.5 text-teal-500 shrink-0" /> }
                 ].map((m) => (
                   <button
                     key={m.key}
                     onClick={() => setBusTimingMode(m.key as any)}
-                    className={`flex-1 py-3 text-center text-xs font-black transition duration-200 cursor-pointer border-b-2 font-anek-malayalam flex items-center justify-center gap-1.5 ${
+                    className={`flex-1 py-3 text-center text-xs font-black transition duration-200 cursor-pointer border-b-2 font-anek-english flex items-center justify-center gap-1.5 ${
                       busTimingMode === m.key
                         ? "border-[#052962] text-[#052962] bg-[#052962]/5"
                         : "border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50"
@@ -1210,7 +1241,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
               </div>
 
               {/* Master Responsive Layout split into sidebar panel & Vector Map */}
-              <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start font-anek-malayalam">
+              <div className={`grid grid-cols-1 xl:grid-cols-12 gap-6 items-start ${busFont}`}>
                 
                 {/* Visual Map widget - Highlight of modern responsive interface */}
                 <div className="xl:col-span-5 order-first xl:order-last space-y-4">
@@ -1219,18 +1250,29 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                     {/* Header Map indicators */}
                     <div className="flex items-center justify-between pb-3 border-b border-slate-200 bg-white/70 backdrop-blur-xs p-2.5 rounded-lg">
                       <div>
-                        <span className="text-[9px] uppercase font-bold tracking-widest text-slate-400 block font-anek-malayalam">
+                        <span className="text-[9px] uppercase font-bold tracking-widest text-slate-400 block font-anek-english">
                           INTERACTIVE GEOGRAPHIC MAP
                         </span>
-                        <h5 className="font-extrabold text-[#052962] text-xs font-anek-malayalam">
-                          അട്ടപ്പാടി വാലി ബസ് നെറ്റ്‌വർക്ക് ചാർട്ട്
+                        <h5 className="font-extrabold text-[#052962] text-xs font-anek-english">
+                          BUS CHART
                         </h5>
                       </div>
-                      <span className="text-[10px] bg-slate-900 text-[#ffe500] font-bold px-2 py-0.5 rounded shadow-xs">
-                        LIVE HUD
-                      </span>
+
                     </div>
 
+                      {!isMapEditorOpen ? (
+                        <BusStopsOsmMap
+                          stops={mapNodes}
+                          selected={selectedMapStop}
+                          lang={lang}
+                          tamilName={tamilBusName}
+                          onSelect={(id) => {
+                            setSelectedMapStop(id);
+                            setBusTimingMode("stop");
+                          }}
+                        />
+                      ) : (
+                      <>
                       {/* SVG Canvas Map */}
                       <div className="relative aspect-[4/3] w-full mt-3 bg-white/40 rounded-lg overflow-hidden border border-slate-200 shadow-inner">
                         
@@ -1491,9 +1533,9 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                 fontSize="2.2"
                                 fontWeight="bold"
                                 fill={isEditorSelected ? "#b45309" : isSelectedNode ? "#052962" : "#334155"}
-                                className="font-anek-malayalam select-none"
+                                className="select-none"
                               >
-                                {lang === "ml" ? node.nameMl : lang === "ta" ? (((node as any).nameTa) || node.nameEn) : node.nameEn}
+                                {lang === "ml" ? node.nameMl : lang === "ta" ? (((node as any).nameTa) || tamilBusName(node.nameEn)) : node.nameEn}
                               </text>
 
                               {/* Direct coordinates tags in Editor mode */}
@@ -1522,14 +1564,15 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                         സ്റ്റേഷനിൽ ക്ലിക്ക് ചെയ്ത് departures ലഭിക്കാം
                       </div>
                     </div>
-
+                      </>
+                    )}
                     {/* Quick navigation assist block */}
                     <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-1 text-xs text-left">
                       <span className="font-extrabold text-slate-800 flex items-center gap-1">
-                        <Compass className="w-3.5 h-3.5 text-sky-600 shrink-0" /> ഗൂഗിൾ റോഡ് മാപ്പ് വിവരം:
+                        <Compass className="w-3.5 h-3.5 text-sky-600 shrink-0" /> {lang === "ml" ? "റോഡ് മാപ്പ് വിവരം:" : lang === "ta" ? "சாலை வரைபடத் தகவல்:" : "Road map information:"}
                       </span>
                       <p className="text-[11px] text-slate-500 leading-normal font-semibold">
-                        അട്ടപ്പാടി ചുരം റോഡ് (SH-136) മണ്ണാർക്കാട് തുടങ്ങി മുക്കാലി (സൈലന്റ് വാലി ജംഗ്ഷൻ) - അഗളി - ആനക്കട്ടി ചുരത്തിലേക്ക് പ്രവേശിക്കുന്നു. അഗളിയിൽ നിന്നും കോയമ്പത്തൂർ റോഡും മറ്റൊന്ന് പുതൂർ വഴി മുത്തു മുള്ളി അതിർത്തിയിലേക്കും പോകുന്നു.
+                        {lang === "ml" ? "SH-136 മണ്ണാർക്കാട്, മുക്കാലി, അഗളി, ആനക്കട്ടി എന്നിവയെ ബന്ധിപ്പിക്കുന്നു." : lang === "ta" ? "SH-136 மன்னார்க்காடு, முக்காலி, அகளி மற்றும் ஆனைக்கட்டியை இணைக்கிறது." : "SH-136 connects Mannarkkad, Mukkali, Agali and Anaikatty."}
                       </p>
                     </div>
 
@@ -1553,7 +1596,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
 
                     {/* Interactive Layout Editor Control Center */}
                     {isAdmin && isMapEditorOpen && (
-                      <div className="bg-slate-900 text-slate-100 border border-slate-950 rounded-xl p-4 shadow-xl space-y-4 font-anek-malayalam animate-fade-in mt-4 text-left">
+                      <div className={`bg-slate-900 text-slate-100 border border-slate-950 rounded-xl p-4 shadow-xl space-y-4 ${busFont} animate-fade-in mt-4 text-left`}>
                         <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                           <h6 className="text-[11px] font-black uppercase text-amber-500 tracking-wider flex items-center gap-1 font-mono">
                             <Sliders className="w-3.5 h-3.5" /> chart layout tuning
@@ -1983,27 +2026,27 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                           HUB STATION SELECTOR
                         </span>
                         <h4 className="font-black text-[#052962] text-xl leading-snug">
-                          സ്റ്റേഷൻ പ്രകാരമുള്ള സമയവിവരങ്ങൾ
+                          {lang === "ml" ? "സ്റ്റേഷൻ പ്രകാരമുള്ള സമയവിവരങ്ങൾ" : lang === "ta" ? "நிறுத்த வாரியான பேருந்து நேரங்கள்" : "Station departure schedules"}
                         </h4>
                       </div>
 
                       {/* Selector grid or list */}
                       <div className="space-y-3">
                         <label className="block text-xs font-bold text-slate-500 mb-1">
-                          താഴെ നൽകിയതിൽ നിന്നും സ്റ്റേഷൻ തിരഞ്ഞെടുക്കുക:
+                          {lang === "ml" ? "താഴെ നൽകിയതിൽ നിന്നും സ്റ്റേഷൻ തിരഞ്ഞെടുക്കുക:" : lang === "ta" ? "கீழே உள்ள நிறுத்தங்களில் ஒன்றைத் தேர்ந்தெடுக்கவும்:" : "Select a station below:"}
                         </label>
                         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-1.5 select-none">
                           {stopChoices.map((st) => (
                             <button
                               key={st.id}
                               onClick={() => setSelectedMapStop(st.id)}
-                              className={`p-2 rounded-lg text-xs font-black transition text-center font-anek-malayalam cursor-pointer border ${
+                              className={`p-2 rounded-lg text-xs font-black transition text-center cursor-pointer border ${
                                 selectedMapStop === st.id
                                   ? "bg-[#052962] text-white border-[#052962] shadow-xs"
                                   : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
                               }`}
                             >
-                              {lang === "ml" ? st.ml : st.en}
+                              {lang === "ml" ? st.ml : lang === "ta" ? tamilBusName(st.en) : st.en}
                             </button>
                           ))}
                         </div>
@@ -2013,13 +2056,13 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                       <div className="space-y-3">
                         <div className="flex items-center justify-between border-b pb-2 pt-2 border-slate-100">
                           <h5 className="font-bold text-[#052962] text-xs leading-none flex items-center gap-1">
-                            <span>🕒 Departures from:</span>
+                            <span>🕒 {lang === "ml" ? "പുറപ്പെടുന്ന സ്ഥലം:" : lang === "ta" ? "புறப்படும் இடம்:" : "Departures from:"}</span>
                             <span className="bg-amber-100 text-amber-950 px-2 py-0.5 rounded text-[11px] font-black font-anek-malayalam">
-                              {currentMapStopEntity.ml} ( {currentMapStopEntity.en} )
+                              {lang === "ml" ? currentMapStopEntity.ml : lang === "ta" ? tamilBusName(currentMapStopEntity.en) : currentMapStopEntity.en}
                             </span>
                           </h5>
                           <span className="text-[10.5px] font-black text-slate-400">
-                            {stopDepartures.length} ട്രിപ്പുകൾ കണ്ടെത്തി
+                            {stopDepartures.length} {lang === "ml" ? "ട്രിപ്പുകൾ കണ്ടെത്തി" : lang === "ta" ? "பயணங்கள் கிடைத்தன" : "trips found"}
                           </span>
                         </div>
 
@@ -2044,11 +2087,11 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                 >
                                   <div className="flex items-center justify-between flex-wrap gap-2">
                                     <div className="space-y-0.5">
-                                      <h6 className="font-extrabold text-slate-800 text-[14px] leading-tight">
-                                        {lang === "ml" ? item.routeMl : lang === "ta" ? (((item as any).routeTa) || item.routeEn) : item.routeEn}
+                                      <h6 className={`font-extrabold text-slate-800 text-[14px] leading-tight ${busFont}`}>
+                                        {localizedBusRoute(item.routeEn, item.routeMl, lang)}
                                       </h6>
                                       <p className="text-[11px] text-slate-400 font-extrabold uppercase tracking-wide">
-                                        {lang === "ml" ? item.busTypeMl : lang === "ta" ? (((item as any).busTypeTa) || item.busTypeEn) : item.busTypeEn}
+                                        {localizedBusType(item.busTypeEn, item.busTypeMl, lang)}
                                       </p>
                                     </div>
                                     <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-md border uppercase ${badgeClass}`}>
@@ -2060,7 +2103,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                     <div className="text-[11px]">
                                       <span className="text-slate-400 font-bold block text-[9px] uppercase leading-none">DESTINATION TIMING</span>
                                       <span className="font-extrabold text-[#052962]">
-                                        Heading directly to: <strong className="text-red-700">{lang === "ml" ? item.headingToMl : lang === "ta" ? (((item as any).headingToTa) || item.headingToEn) : item.headingToEn.toUpperCase()}</strong>
+                                        {lang === "ml" ? "പോകുന്ന സ്ഥലം:" : lang === "ta" ? "செல்லும் இடம்:" : "Heading directly to:"} <strong className="text-red-700">{lang === "ml" ? item.headingToMl : lang === "ta" ? (((item as any).headingToTa) || tamilBusName(item.headingToEn)) : item.headingToEn.toUpperCase()}</strong>
                                       </span>
                                     </div>
                                     <div className="text-right">
@@ -2072,13 +2115,13 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                   </div>
 
                                   {/* Line stops sequence map timeline snippet */}
-                                  <div className="flex items-center gap-1 py-1 overflow-x-auto text-[9.5px] font-bold text-slate-400 font-anek-malayalam whitespace-nowrap">
+                                  <div className="flex items-center gap-1 py-1 overflow-x-auto text-[9.5px] font-bold text-slate-400 ${busFont} whitespace-nowrap">
                                     {item.fullList.map((stopItem, sIdx) => {
                                       const isSelf = normalizeStopName(stopItem.typeEn) === normalizeStopName(selectedMapStop);
                                       return (
                                         <div key={sIdx} className="flex items-center gap-1 shrink-0 last:mr-0 mr-1.5">
                                           <span className={`px-1.5 py-0.5 rounded text-[9px] ${isSelf ? "bg-[#052962] text-white font-black" : "bg-slate-200 text-slate-600 font-medium"}`}>
-                                            {stopItem.time} {lang === "ml" ? stopItem.typeMl : lang === "ta" ? (((stopItem as any).typeTa) || stopItem.typeEn) : stopItem.typeEn.toUpperCase()}
+                                            {stopItem.time} {lang === "ml" ? stopItem.typeMl : lang === "ta" ? (((stopItem as any).typeTa) || tamilBusName(stopItem.typeEn)) : stopItem.typeEn.toUpperCase()}
                                           </span>
                                           {sIdx < item.fullList.length - 1 && <span className="text-slate-300">→</span>}
                                         </div>
@@ -2092,8 +2135,8 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                         ) : (
                           <div className="py-12 text-center space-y-2 border border-dashed border-slate-200 rounded-lg">
                             <Bus className="w-8 h-8 text-slate-300 mx-auto animate-bounce" />
-                            <p className="text-xs text-slate-400 font-medium font-anek-malayalam">
-                              ഈ സ്റ്റേഷനിൽ പ്രധാന സമയ സർവീസുകളൊന്നും നിശ്ചയിച്ചിട്ടില്ല. മറ്റൊരു സ്റ്റേഷൻ നോക്കൂ.
+                            <p className="text-xs text-slate-400 font-medium">
+                              {lang === "ml" ? "ഈ സ്റ്റേഷനിൽ പ്രധാന സമയ സർവീസുകളൊന്നും നിശ്ചയിച്ചിട്ടില്ല. മറ്റൊരു സ്റ്റേഷൻ നോക്കൂ." : lang === "ta" ? "இந்த நிறுத்தத்திற்கு தற்போது பேருந்து நேரங்கள் இல்லை. வேறு நிறுத்தத்தைத் தேர்ந்தெடுக்கவும்." : "No schedules available for this station. Try another station."}
                             </p>
                           </div>
                         )}
@@ -2110,8 +2153,8 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                         <span className="text-[10px] bg-[#052962]/5 text-[#052962] font-black px-2 py-0.5 rounded tracking-wide uppercase font-anek-malayalam">
                           TRANSIT ROUTING
                         </span>
-                        <h4 className="font-black text-[#052962] text-xl leading-snug font-anek-malayalam">
-                          കണക്റ്റിങ് സർവീസ് റൂട്ട് കണ്ടെത്തുക
+                        <h4 className="font-black text-[#052962] text-xl leading-snug">
+                          {lang === "ml" ? "കണക്റ്റിങ് സർവീസ് റൂട്ട് കണ്ടെത്തുക" : lang === "ta" ? "இணைப்புப் பேருந்து வழித்தடத்தைக் கண்டறியவும்" : "Find connecting bus routes"}
                         </h4>
                       </div>
 
@@ -2119,7 +2162,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
                         <div className="space-y-1">
                           <label className="text-xs font-extrabold text-slate-500 block">
-                            ആരംഭിക്കുന്ന സ്റ്റേഷൻ (Starting Hub):
+                            {lang === "ml" ? "ആരംഭിക്കുന്ന സ്റ്റേഷൻ:" : lang === "ta" ? "புறப்படும் நிறுத்தம்:" : "Starting station:"}
                           </label>
                           <select
                             value={navSource}
@@ -2185,10 +2228,10 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                   <div className="flex items-center justify-between flex-wrap gap-2">
                                     <div>
                                       <h6 className="font-extrabold text-slate-800 text-[13.5px]">
-                                        {lang === "ml" ? item.routeMl : lang === "ta" ? (((item as any).routeTa) || item.routeEn) : item.routeEn}
+                                        {localizedBusRoute(item.routeEn, item.routeMl, lang)}
                                       </h6>
                                       <p className="text-[10.5px] text-slate-400 font-bold uppercase">
-                                        {lang === "ml" ? item.busTypeMl : lang === "ta" ? (((item as any).busTypeTa) || item.busTypeEn) : item.busTypeEn}
+                                        {localizedBusType(item.busTypeEn, item.busTypeMl, lang)}
                                       </p>
                                     </div>
                                     <span className={`text-[9.5px] font-extrabold px-2 py-0.5 rounded-md border ${badgeClass}`}>
@@ -2218,7 +2261,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                   </div>
 
                                   {/* Stops Timeline path */}
-                                  <div className="flex items-center gap-1 overflow-x-auto text-[9px] font-bold text-slate-400 font-anek-malayalam whitespace-nowrap pt-1">
+                                  <div className="flex items-center gap-1 overflow-x-auto text-[9px] font-bold text-slate-400 ${busFont} whitespace-nowrap pt-1">
                                     {item.fullList.map((stopItem, sIdx) => {
                                       const isSrc = normalizeStopName(stopItem.typeEn) === normalizeStopName(navSource);
                                       const isDst = normalizeStopName(stopItem.typeEn) === normalizeStopName(navDest);
@@ -2340,8 +2383,8 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                   <span className="text-[8px] bg-slate-900 text-white px-1.5 py-0.2 rounded font-extrabold">
                                     {item.typeLabel === "PRIVATE" && item.privateBusName ? item.privateBusName : item.typeLabel}
                                   </span>
-                                  <h6 className="font-extrabold text-slate-800 pt-0.5">{lang === "ml" ? item.routeMl : lang === "ta" ? (((item as any).routeTa) || item.routeEn) : item.routeEn}</h6>
-                                  <p className="text-[9.5px] text-slate-400 font-bold">{lang === "ml" ? item.busTypeMl : lang === "ta" ? (((item as any).busTypeTa) || item.busTypeEn) : item.busTypeEn}</p>
+                                  <h6 className={`font-extrabold text-slate-800 pt-0.5 ${busFont}`}>{localizedBusRoute(item.routeEn, item.routeMl, lang)}</h6>
+                                  <p className="text-[9.5px] text-slate-400 font-bold">{localizedBusType(item.busTypeEn, item.busTypeMl, lang)}</p>
                                 </div>
                                 <div className="text-right">
                                   <span className="text-[10px] font-bold text-slate-400 block uppercase font-sans">ARRIVING TIME</span>
