@@ -145,8 +145,9 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang 
     lookupStops(stops, controller.signal).then(found => {
       if (!mounted) return;
       const merged = { ...KNOWN_PLACES, ...loadCache(), ...found };
-      setPositions(merged);
-      localStorage.setItem(CACHE_KEY, JSON.stringify({ savedAt: Date.now(), positions: merged }));
+      positionsRef.current = { ...positionsRef.current, ...merged };
+      setPositions(positionsRef.current);
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify({ savedAt: Date.now(), positions: positionsRef.current })); } catch { /* unavailable */ }
       if (!Object.keys(found).length) setError("Some places are not mapped in OSM; checking place names individually.");
     }).catch(e => {
       if (mounted && e.name !== "AbortError") setError("Map locations could not be refreshed. Try again later.");
@@ -156,9 +157,12 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang 
     const delay = (ms: number) => new Promise<void>(resolve => window.setTimeout(resolve, ms));
     const fallback = async () => {
       await delay(1500);
+      // Restrict public geocoder use; full coverage needs a curated, shared stop-coordinate dataset.
+      let attempts = 0;
       for (const stop of stopListRef.current) {
         if (controller.signal.aborted) break;
         if (positionsRef.current[stop.id]) continue;
+        if (++attempts > 4) break;
         try {
           const query = encodeURIComponent(stop.en + ", Kerala, India");
           const url = "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=in&viewbox=75.5,11.8,77.6,9.3&bounded=1&q=" + query;
