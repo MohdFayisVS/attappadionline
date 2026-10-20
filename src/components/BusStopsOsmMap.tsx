@@ -80,7 +80,7 @@ export default function BusStopsOsmMap({ stops, selected, lang, tamilName, onSel
   useEffect(() => {
     const controller = new AbortController();
     // One OSM query for mapped settlements, rather than 24 requests to Nominatim.
-    const names = Object.values(OSM_NAMES).flat().map(s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
+    const names = Object.values(OSM_NAMES).flat().join("|");
     const query = `[out:json][timeout:20];(node["place"~"village|town|city|hamlet|suburb"]["name"~"^(${names})$",i](9.2,75.1,11.8,77.7);way["place"~"village|town|city|hamlet|suburb"]["name"~"^(${names})$",i](9.2,75.1,11.8,77.7););out center;`;
     fetch("https://overpass.kumi.systems/api/interpreter", {
       method: "POST", body: new URLSearchParams({ data: query }), signal: controller.signal
