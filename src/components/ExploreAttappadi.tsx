@@ -1003,11 +1003,18 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
           };
 
           // Define all unique stops for dropdown choices mapped dynamically from state
-          const stopChoices = mapNodes.map(node => ({
-            id: node.id,
-            en: node.nameEn,
-            ml: node.nameMl
-          }));
+          const stopChoices = [
+            ...mapNodes.map(node => ({ id: node.id, en: node.nameEn, ml: node.nameMl })),
+            ...busRoutesList.flatMap(route => route.list).filter(stop =>
+              !mapNodes.some(node => normalizeStopName(node.id) === normalizeStopName(stop.typeEn))
+            ).filter((stop, index, all) =>
+              all.findIndex(item => normalizeStopName(item.typeEn) === normalizeStopName(stop.typeEn)) === index
+            ).map(stop => ({
+              id: normalizeStopName(stop.typeEn),
+              en: stop.typeEn,
+              ml: stop.typeMl
+            }))
+          ];
 
           // Sightseeing hotspots and their corresponding transit stops
           interface AssistHotspot {
