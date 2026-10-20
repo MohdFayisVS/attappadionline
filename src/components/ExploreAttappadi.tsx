@@ -1190,9 +1190,9 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
               {/* Navigation Style Sub Menu */}
               <div className="flex border-b border-slate-200">
                 {[
-                  { key: "stop", label: "സ്റ്റേഷൻ ബോർഡ് (Hub Board)", icon: <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" /> },
-                  { key: "directions", label: "ഗൂഗിൾ മാപ്പ് റൂട്ടിംഗ് (Directions Finder)", icon: <Compass className="w-3.5 h-3.5 text-sky-600 shrink-0" /> },
-                  { key: "assist", label: "വിനോദസഞ്ചാര കേന്ദ്രങ്ങൾ (Nearest Stops)", icon: <Info className="w-3.5 h-3.5 text-teal-500 shrink-0" /> }
+                  { key: "stop", label: "Station Board", icon: <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" /> },
+                  { key: "directions", label: "Directions Finder", icon: <Compass className="w-3.5 h-3.5 text-sky-600 shrink-0" /> },
+                  { key: "assist", label: "Nearest Stops", icon: <Info className="w-3.5 h-3.5 text-teal-500 shrink-0" /> }
                 ].map((m) => (
                   <button
                     key={m.key}
@@ -1223,12 +1223,10 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                           INTERACTIVE GEOGRAPHIC MAP
                         </span>
                         <h5 className="font-extrabold text-[#052962] text-xs font-anek-malayalam">
-                          അട്ടപ്പാടി വാലി ബസ് നെറ്റ്‌വർക്ക് ചാർട്ട്
+                          Attappadi Bus Network
                         </h5>
                       </div>
-                      <span className="text-[10px] bg-slate-900 text-[#ffe500] font-bold px-2 py-0.5 rounded shadow-xs">
-                        LIVE HUD
-                      </span>
+                      
                     </div>
 
                       {/* SVG Canvas Map */}
