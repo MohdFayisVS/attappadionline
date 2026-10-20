@@ -5,7 +5,7 @@ type Props = { stops: Stop[]; selectedStop: string; onSelectStop: (id: string) =
 type Position = { lat: number; lon: number; kind: "station" | "stop" | "place"; name: string };
 type Layer = { clearLayers: () => void; addTo: (map: MapInstance) => Layer };
 type Marker = { addTo: (layer: Layer) => Marker; on: (event: string, callback: () => void) => Marker; bindTooltip: (text: string, options?: Record<string, unknown>) => Marker };
-type MapInstance = { setView: (point: [number, number], zoom: number) => MapInstance; remove: () => void; invalidateSize: () => void; fitBounds: (bounds: [number, number][], options?: Record<string, unknown>) => void };
+type MapInstance = { scrollWheelZoom: { enable: () => void }; dragging: { enable: () => void }; setView: (point: [number, number], zoom: number) => MapInstance; remove: () => void; invalidateSize: () => void; fitBounds: (bounds: [number, number][], options?: Record<string, unknown>) => void };
 type Leaflet = {
   map: (element: HTMLElement) => MapInstance;
   layerGroup: () => Layer;
@@ -122,6 +122,8 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang 
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>',
         maxZoom: 19
       }).addTo(map);
+      map.scrollWheelZoom.enable();
+      map.dragging.enable();
       mapRef.current = map;
       layerRef.current = L.layerGroup().addTo(map);
       setReady(true);
@@ -131,6 +133,10 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang 
   }, []);
 
   const ids = stops.map(s => s.id).join(",");
+  const stopListRef = useRef(stops);
+  stopListRef.current = stops;
+  const positionsRef = useRef(positions);
+  positionsRef.current = positions;
   useEffect(() => {
     if (!stops.length) return;
     const controller = new AbortController();
@@ -141,10 +147,41 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang 
       const merged = { ...KNOWN_PLACES, ...loadCache(), ...found };
       setPositions(merged);
       localStorage.setItem(CACHE_KEY, JSON.stringify({ savedAt: Date.now(), positions: merged }));
-      if (!Object.keys(found).length) setError("No matching bus stops were found in OpenStreetMap.");
+      if (!Object.keys(found).length) setError("Some places are not mapped in OSM; checking place names individually.");
     }).catch(e => {
       if (mounted && e.name !== "AbortError") setError("Map locations could not be refreshed. Try again later.");
     }).finally(() => { if (mounted) setLoading(false); });
+    // Nominatim fallback: a single queued request per second, with a strict regional bounding box.
+    // Only resolves stops that are still missing; every accepted location is labeled a locality.
+    const delay = (ms: number) => new Promise<void>(resolve => window.setTimeout(resolve, ms));
+    const fallback = async () => {
+      await delay(1500);
+      for (const stop of stopListRef.current) {
+        if (controller.signal.aborted) break;
+        if (positionsRef.current[stop.id]) continue;
+        try {
+          const query = encodeURIComponent(stop.en + ", Kerala, India");
+          const url = "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=in&viewbox=75.5,11.8,77.6,9.3&bounded=1&q=" + query;
+          const response = await fetch(url, { signal: controller.signal });
+          if (response.ok) {
+            const items: Array<{ lat: string; lon: string; display_name: string }> = await response.json();
+            const item = items[0];
+            if (item) {
+              const lat = Number(item.lat), lon = Number(item.lon);
+              if (lat >= bounds[0] && lat <= bounds[2] && lon >= bounds[1] && lon <= bounds[3]) {
+                const entry: Position = { lat, lon, kind: "place", name: item.display_name };
+                positionsRef.current = { ...positionsRef.current, [stop.id]: entry };
+                if (mounted) setPositions(positionsRef.current);
+                try { localStorage.setItem(CACHE_KEY, JSON.stringify({ savedAt: Date.now(), positions: positionsRef.current })); } catch { /* storage unavailable */ }
+              }
+            }
+          }
+        } catch (e) { if (controller.signal.aborted) break; }
+        await delay(1100);
+      }
+      if (mounted) setLoading(false);
+    };
+    void fallback();
     return () => { mounted = false; controller.abort(); };
   }, [ids]);
 
