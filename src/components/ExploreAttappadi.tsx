@@ -552,6 +552,16 @@ const tamilBusName = (name: string) => {
   ).join("");
 };
 
+const cleanBusRouteLabel = (value: string) => value
+  .replace(/\s*[-–]\s*(?:Morning|Noon|Evening) Trip(?=\))/gi, "")
+  .replace(/\s*[-–]\s*Night Stay(?=\))/gi, "")
+  .replace(/\s*\((?:Morning|Noon|Evening) Trip|Night Stay\)/gi, "")
+  .replace(/\s*[-–]\s*(?:രാവിലത്തെ|ഉച്ചയ്ക്കുള്ള|വൈകിട്ടുള്ള) ട്രിപ്പ്(?=\))/g, "")
+  .replace(/\s*[-–]\s*രാത്രി താമസം(?=\))/g, "");
+const localizedBusRoute = (en: string, ml: string, language: "en" | "ml" | "ta") =>
+  cleanBusRouteLabel(language === "ml" ? ml : language === "ta" ? tamilBusName(en) : en);
+const localizedBusType = (en: string, ml: string, language: "en" | "ml" | "ta") =>
+  language === "ml" ? ml : language === "ta" ? en.replace(/Fast Passenger/gi, "விரைவு பயணிகள் சேவை").replace(/Ordinary(?: Service)?/gi, "சாதாரண சேவை").replace(/Swift/gi, "ஸ்விஃப்ட்") : en;
 export default function ExploreAttappadi({ lang, initialTab = "destinations", isAdmin = false, hideTabsSelection = false }: ExploreAttappadiProps) {
   const [busMapView, setBusMapView] = useState<"chart" | "google">("chart");
   const busFont = lang === "ml" ? "font-anek-malayalam" : lang === "ta" ? "font-anek-tamil" : "font-anek-english";
@@ -2068,11 +2078,11 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                 >
                                   <div className="flex items-center justify-between flex-wrap gap-2">
                                     <div className="space-y-0.5">
-                                      <h6 className="font-extrabold text-slate-800 text-[14px] leading-tight">
-                                        {lang === "ml" ? item.routeMl : lang === "ta" ? (((item as any).routeTa) || tamilBusName(item.routeEn)) : item.routeEn}
+                                      <h6 className={`font-extrabold text-slate-800 text-[14px] leading-tight ${busFont}`}>
+                                        {localizedBusRoute(item.routeEn, item.routeMl, lang)}
                                       </h6>
                                       <p className="text-[11px] text-slate-400 font-extrabold uppercase tracking-wide">
-                                        {lang === "ml" ? item.busTypeMl : lang === "ta" ? (((item as any).busTypeTa) || item.busTypeEn) : item.busTypeEn}
+                                        {localizedBusType(item.busTypeEn, item.busTypeMl, lang)}
                                       </p>
                                     </div>
                                     <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-md border uppercase ${badgeClass}`}>
@@ -2096,7 +2106,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                   </div>
 
                                   {/* Line stops sequence map timeline snippet */}
-                                  <div className="flex items-center gap-1 py-1 overflow-x-auto text-[9.5px] font-bold text-slate-400 font-anek-malayalam whitespace-nowrap">
+                                  <div className="flex items-center gap-1 py-1 overflow-x-auto text-[9.5px] font-bold text-slate-400 ${busFont} whitespace-nowrap">
                                     {item.fullList.map((stopItem, sIdx) => {
                                       const isSelf = normalizeStopName(stopItem.typeEn) === normalizeStopName(selectedMapStop);
                                       return (
@@ -2209,10 +2219,10 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                   <div className="flex items-center justify-between flex-wrap gap-2">
                                     <div>
                                       <h6 className="font-extrabold text-slate-800 text-[13.5px]">
-                                        {lang === "ml" ? item.routeMl : lang === "ta" ? (((item as any).routeTa) || item.routeEn) : item.routeEn}
+                                        {localizedBusRoute(item.routeEn, item.routeMl, lang)}
                                       </h6>
                                       <p className="text-[10.5px] text-slate-400 font-bold uppercase">
-                                        {lang === "ml" ? item.busTypeMl : lang === "ta" ? (((item as any).busTypeTa) || item.busTypeEn) : item.busTypeEn}
+                                        {localizedBusType(item.busTypeEn, item.busTypeMl, lang)}
                                       </p>
                                     </div>
                                     <span className={`text-[9.5px] font-extrabold px-2 py-0.5 rounded-md border ${badgeClass}`}>
@@ -2242,7 +2252,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                   </div>
 
                                   {/* Stops Timeline path */}
-                                  <div className="flex items-center gap-1 overflow-x-auto text-[9px] font-bold text-slate-400 font-anek-malayalam whitespace-nowrap pt-1">
+                                  <div className="flex items-center gap-1 overflow-x-auto text-[9px] font-bold text-slate-400 ${busFont} whitespace-nowrap pt-1">
                                     {item.fullList.map((stopItem, sIdx) => {
                                       const isSrc = normalizeStopName(stopItem.typeEn) === normalizeStopName(navSource);
                                       const isDst = normalizeStopName(stopItem.typeEn) === normalizeStopName(navDest);
@@ -2364,8 +2374,8 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                   <span className="text-[8px] bg-slate-900 text-white px-1.5 py-0.2 rounded font-extrabold">
                                     {item.typeLabel === "PRIVATE" && item.privateBusName ? item.privateBusName : item.typeLabel}
                                   </span>
-                                  <h6 className="font-extrabold text-slate-800 pt-0.5">{lang === "ml" ? item.routeMl : lang === "ta" ? (((item as any).routeTa) || item.routeEn) : item.routeEn}</h6>
-                                  <p className="text-[9.5px] text-slate-400 font-bold">{lang === "ml" ? item.busTypeMl : lang === "ta" ? (((item as any).busTypeTa) || item.busTypeEn) : item.busTypeEn}</p>
+                                  <h6 className={`font-extrabold text-slate-800 pt-0.5 ${busFont}`}>{localizedBusRoute(item.routeEn, item.routeMl, lang)}</h6>
+                                  <p className="text-[9.5px] text-slate-400 font-bold">{localizedBusType(item.busTypeEn, item.busTypeMl, lang)}</p>
                                 </div>
                                 <div className="text-right">
                                   <span className="text-[10px] font-bold text-slate-400 block uppercase font-sans">ARRIVING TIME</span>
