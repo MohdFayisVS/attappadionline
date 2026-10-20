@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import BusStopsOsmMap from "./BusStopsOsmMap";
 import { motion, AnimatePresence } from "motion/react";
 import { MapPin, Compass, UtensilsCrossed, Hotel, BookOpen, Image as ImageIcon, X, ChevronLeft, ChevronRight, Share2, Volume2, Bus, Clock, Search, Info, Sliders, Plus, Trash, Link, RotateCcw, Copy, Check, Move } from "lucide-react";
 import { DestinationItem, CultureItem, StayItem, TravelogueItem, PhotoItem, BusRouteItem } from "../types";
@@ -563,7 +564,7 @@ const localizedBusRoute = (en: string, ml: string, language: "en" | "ml" | "ta")
 const localizedBusType = (en: string, ml: string, language: "en" | "ml" | "ta") =>
   language === "ml" ? ml : language === "ta" ? en.replace(/Fast Passenger/gi, "விரைவு பயணிகள் சேவை").replace(/Ordinary(?: Service)?/gi, "சாதாரண சேவை").replace(/Swift/gi, "ஸ்விஃப்ட்") : en;
 export default function ExploreAttappadi({ lang, initialTab = "destinations", isAdmin = false, hideTabsSelection = false }: ExploreAttappadiProps) {
-  const [busMapView, setBusMapView] = useState<"chart" | "google">("chart");
+
   const busFont = lang === "ml" ? "font-anek-malayalam" : lang === "ta" ? "font-anek-tamil" : "font-anek-english";
   const safeParseArray = (val: any): string[] => {
     if (Array.isArray(val)) return val;
@@ -1259,11 +1260,18 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
 
                     </div>
 
-                      <div className="mt-3 flex gap-2" role="group" aria-label="Map view">
-                        <button type="button" onClick={() => setBusMapView("chart")} className={`px-3 py-1.5 rounded-md text-xs font-bold ${busMapView === "chart" ? "bg-[#052962] text-white" : "bg-white text-[#052962]"}`}>BUS CHART</button>
-                        <button type="button" onClick={() => setBusMapView("google")} className={`px-3 py-1.5 rounded-md text-xs font-bold ${busMapView === "google" ? "bg-[#052962] text-white" : "bg-white text-[#052962]"}`}>GOOGLE MAPS</button>
-                      </div>
-                      {busMapView === "google" ? <div className="mt-3"><iframe title="Attappadi area on Google Maps" src="https://maps.google.com/maps?q=Agali%2C%20Attappadi%2C%20Kerala&t=m&z=11&output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="w-full aspect-[4/3] rounded-lg border border-slate-200" /><p className="text-xs text-slate-600 mt-2">{lang === "ml" ? "ഇത് പ്രദേശത്തിന്റെ ഭൂപടമാണ്; തത്സമയ ബസ് ട്രാക്കിങ്ങോ സ്ഥിരീകരിച്ച ബസ് റൂട്ടുകളോ അല്ല." : lang === "ta" ? "இது பகுதி வரைபடம் மட்டுமே; நேரடி பேருந்து கண்காணிப்போ சரிபார்க்கப்பட்ட பேருந்து வழித்தடங்களோ அல்ல." : "Area map only; not live bus tracking or verified bus routes."}</p></div> : <>
+                      {!isMapEditorOpen ? (
+                        <BusStopsOsmMap
+                          stops={mapNodes}
+                          selected={selectedMapStop}
+                          lang={lang}
+                          tamilName={tamilBusName}
+                          onSelect={(id) => {
+                            setSelectedMapStop(id);
+                            setBusTimingMode("stop");
+                          }}
+                        />
+                      ) : (
                       {/* SVG Canvas Map */}
                       <div className="relative aspect-[4/3] w-full mt-3 bg-white/40 rounded-lg overflow-hidden border border-slate-200 shadow-inner">
                         
@@ -1556,7 +1564,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                       </div>
                     </div>
 
-                    </>}
+                    )}
                     {/* Quick navigation assist block */}
                     <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-1 text-xs text-left">
                       <span className="font-extrabold text-slate-800 flex items-center gap-1">
