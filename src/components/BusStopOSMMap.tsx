@@ -13,11 +13,13 @@ type LeafletMap = {
   remove: () => void;
   invalidateSize: () => void;
 };
+type MarkerLayer = { clearLayers: () => void };
 type LeafletApi = {
   map: (element: HTMLElement) => LeafletMap;
+  layerGroup: () => MarkerLayer & { addTo: (map: LeafletMap) => MarkerLayer };
   tileLayer: (url: string, options: Record<string, unknown>) => { addTo: (map: LeafletMap) => void };
   circleMarker: (coords: [number, number], options: Record<string, unknown>) => {
-    addTo: (map: LeafletMap) => { on: (event: string, handler: () => void) => void };
+    addTo: (layer: MarkerLayer) => { on: (event: string, handler: () => void) => void };
   };
 };
 declare global { interface Window { L?: LeafletApi } }
@@ -50,6 +52,7 @@ const loadLeaflet = async (): Promise<LeafletApi> => {
 export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang }: Props) {
   const element = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LeafletMap | null>(null);
+  const markersRef = useRef<MarkerLayer | null>(null);
   const [coordinates, setCoordinates] = useState<Record<string, Coordinate>>(() => {
     try { return JSON.parse(localStorage.getItem(coordinatesKey) || "{}"); } catch { return {}; }
   });
@@ -67,16 +70,19 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang 
         maxZoom: 19
       }).addTo(map);
       mapRef.current = map;
+      markersRef.current = L.layerGroup().addTo(map);
       setReady(true);
       setTimeout(() => map.invalidateSize(), 100);
     }).catch(() => { if (active) setStatus("Unable to load OpenStreetMap."); });
-    return () => { active = false; mapRef.current?.remove(); mapRef.current = null; };
+    return () => { active = false; mapRef.current?.remove(); mapRef.current = null; markersRef.current = null; };
   }, []);
 
   useEffect(() => {
     if (!ready || !mapRef.current || !window.L) return;
-    // Recreate the map when markers change to avoid stale event handlers.
     const map = mapRef.current;
+    const markerLayer = markersRef.current;
+    if (!markerLayer) return;
+    markerLayer.clearLayers();
     stops.forEach(stop => {
       const pos = coordinates[stop.id];
       if (!pos || !Number.isFinite(pos.lat) || !Number.isFinite(pos.lon)) return;
@@ -86,7 +92,7 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang 
         fillColor: stop.id === selectedStop ? "#ffe500" : "#fff",
         fillOpacity: 1,
         weight: 3
-      }).addTo(map).on("click", () => onSelectStop(stop.id));
+      }).addTo(markerLayer).on("click", () => onSelectStop(stop.id));
     });
     const selected = coordinates[selectedStop];
     if (selected) map.setView([selected.lat, selected.lon], 12);
