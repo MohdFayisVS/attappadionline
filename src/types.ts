@@ -3,11 +3,9 @@ export interface NewsPost {
   titleEn: string;
   titleTa?: string;
   titleMl: string;
-  titleTa?: string;
   contentEn: string;
   contentTa?: string;
   contentMl: string;
-  contentTa?: string;
   category: "breaking" | "latest" | "updates";
   regions: string[];
   image: string;

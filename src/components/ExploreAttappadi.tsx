@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import BusStopOSMMap from "./BusStopOSMMap";
 import { motion, AnimatePresence } from "motion/react";
 import { MapPin, Compass, UtensilsCrossed, Hotel, BookOpen, Image as ImageIcon, X, ChevronLeft, ChevronRight, Share2, Volume2, Bus, Clock, Search, Info, Sliders, Plus, Trash, Link, RotateCcw, Copy, Check, Move } from "lucide-react";
 import { DestinationItem, CultureItem, StayItem, TravelogueItem, PhotoItem, BusRouteItem } from "../types";
@@ -1190,9 +1191,9 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
               {/* Navigation Style Sub Menu */}
               <div className="flex border-b border-slate-200">
                 {[
-                  { key: "stop", label: "സ്റ്റേഷൻ ബോർഡ് (Hub Board)", icon: <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" /> },
-                  { key: "directions", label: "ഗൂഗിൾ മാപ്പ് റൂട്ടിംഗ് (Directions Finder)", icon: <Compass className="w-3.5 h-3.5 text-sky-600 shrink-0" /> },
-                  { key: "assist", label: "വിനോദസഞ്ചാര കേന്ദ്രങ്ങൾ (Nearest Stops)", icon: <Info className="w-3.5 h-3.5 text-teal-500 shrink-0" /> }
+                  { key: "stop", label: "Station Board", icon: <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" /> },
+                  { key: "directions", label: "Directions Finder", icon: <Compass className="w-3.5 h-3.5 text-sky-600 shrink-0" /> },
+                  { key: "assist", label: "Nearest Stops", icon: <Info className="w-3.5 h-3.5 text-teal-500 shrink-0" /> }
                 ].map((m) => (
                   <button
                     key={m.key}
@@ -1209,6 +1210,8 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                 ))}
               </div>
 
+              <BusStopOSMMap stops={stopChoices} selectedStop={selectedMapStop} onSelectStop={(id) => { setSelectedMapStop(id); setBusTimingMode("stop"); }} lang={lang} />
+
               {/* Master Responsive Layout split into sidebar panel & Vector Map */}
               <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start font-anek-malayalam">
                 
@@ -1223,12 +1226,10 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                           INTERACTIVE GEOGRAPHIC MAP
                         </span>
                         <h5 className="font-extrabold text-[#052962] text-xs font-anek-malayalam">
-                          അട്ടപ്പാടി വാലി ബസ് നെറ്റ്‌വർക്ക് ചാർട്ട്
+                          Attappadi Bus Network
                         </h5>
                       </div>
-                      <span className="text-[10px] bg-slate-900 text-[#ffe500] font-bold px-2 py-0.5 rounded shadow-xs">
-                        LIVE HUD
-                      </span>
+                      
                     </div>
 
                       {/* SVG Canvas Map */}
