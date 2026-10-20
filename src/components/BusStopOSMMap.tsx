@@ -14,6 +14,12 @@ type Leaflet = {
 };
 declare global { interface Window { L?: Leaflet } }
 type OsmElement = { lat?: number; lon?: number; center?: { lat: number; lon: number }; tags?: Record<string, string> };
+// Grounded OSM locality coordinates. These are *town/village centers*, not verified boarding platforms.
+const KNOWN_PLACES: Record<string, Position> = {
+  AGALI: { lat: 11.10571, lon: 76.65476, kind: "place", name: "Agali village" },
+  SHOLAYUR: { lat: 11.06136, lon: 76.70020, kind: "place", name: "Sholayur village" },
+  MANNARKKAD: { lat: 10.99290, lon: 76.45690, kind: "place", name: "Mannarkkad locality" }
+};
 const CACHE_KEY = "attappadi_osm_verified_stops_v2";
 const CACHE_AGE = 7 * 24 * 60 * 60 * 1000;
 const bounds = [9.3, 75.5, 11.8, 77.6];
@@ -102,7 +108,7 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang 
   const onSelectRef = useRef(onSelectStop);
   onSelectRef.current = onSelectStop;
   const [ready, setReady] = useState(false);
-  const [positions, setPositions] = useState<Record<string, Position>>(loadCache);
+  const [positions, setPositions] = useState<Record<string, Position>>(() => ({ ...KNOWN_PLACES, ...loadCache() }));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const available = useMemo(() => stops.filter(s => positions[s.id]), [stops, positions]);
@@ -132,7 +138,7 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang 
     setLoading(true);
     lookupStops(stops, controller.signal).then(found => {
       if (!mounted) return;
-      const merged = { ...loadCache(), ...found };
+      const merged = { ...KNOWN_PLACES, ...loadCache(), ...found };
       setPositions(merged);
       localStorage.setItem(CACHE_KEY, JSON.stringify({ savedAt: Date.now(), positions: merged }));
       if (!Object.keys(found).length) setError("No matching bus stops were found in OpenStreetMap.");
@@ -165,7 +171,7 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang 
   return <section className="space-y-2" aria-label="OpenStreetMap bus stops">
     <div ref={container} className="h-[360px] sm:h-[460px] w-full rounded-lg border border-slate-200" />
     <p className="text-xs font-semibold">{label(lang, "Tap a station dot to see its bus timetable", "ബസ് സമയക്രമം കാണാൻ മാപ്പിലെ സ്റ്റേഷൻ അടയാളം തിരഞ്ഞെടുക്കുക", "பேருந்து நேர அட்டவணையைக் காண வரைபடத்தில் நிறுத்தத்தைத் தேர்ந்தெடுக்கவும்")}</p>
-    <p className="text-xs text-slate-600" role="status">{loading ? "Locating stops from OpenStreetMap..." : `${available.length} of ${stops.length} places mapped`}</p>
+    <p className="text-xs text-slate-600" role="status">{loading ? "Checking additional OpenStreetMap locations..." : `${available.length} of ${stops.length} places mapped`}</p>
     {error && <p className="text-xs text-amber-700" role="alert">{error}</p>}
     <p className="text-[10px] text-slate-500">© OpenStreetMap contributors. Dots use OSM bus stops or stations where available; town-center markers are labeled and may not be the exact boarding point. Timetables are scheduled, not live GPS.</p>
   </section>;
