@@ -989,8 +989,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       authorName: item.authorName,
       titleEn: item.titleEn,
       titleMl: item.titleMl,
+      titleTa: item.titleTa || "",
       contentEn: item.contentEn,
       contentMl: item.contentMl || "",
+      contentTa: item.contentTa || "",
       approved: item.approved !== undefined ? item.approved : true
     });
     setEditingId(item.id);
@@ -1006,6 +1008,11 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     ]);
     if (!opinionForm.authorName || !translatedOpinion.titleEn || !translatedOpinion.contentEn) {
       alert("Missing required fields for Opinion post.");
+      return;
+    }
+
+    if (!translatedOpinion.titleTa?.trim() || !translatedOpinion.contentTa?.trim()) {
+      alert("Tamil opinion title and content are required.");
       return;
     }
 
@@ -3142,6 +3149,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 )}
 
                 <form onSubmit={handleCreateOpinion} className="space-y-3.5">
+                  <label className="block">Opinion Title (Tamil)<input lang="ta" required value={opinionForm.titleTa} onChange={e => setOpinionForm({...opinionForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  <label className="block">Opinion Content (Tamil)<textarea lang="ta" required rows={5} value={opinionForm.contentTa} onChange={e => setOpinionForm({...opinionForm, contentTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <div>
                     <label className="block text-slate-500 font-bold mb-1">Author Name / Expert credentials</label>
                     <input 
