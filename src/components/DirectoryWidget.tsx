@@ -139,12 +139,15 @@ export default function DirectoryWidget({
   const [lfType, setLfType] = useState<"lost" | "found">("lost");
   const [lfTitleEn, setLfTitleEn] = useState("");
   const [lfTitleMl, setLfTitleMl] = useState("");
+  const [lfTitleTa, setLfTitleTa] = useState("");
   const [lfDescEn, setLfDescEn] = useState("");
   const [lfDescMl, setLfDescMl] = useState("");
+  const [lfDescTa, setLfDescTa] = useState("");
   const [lfReporterName, setLfReporterName] = useState("");
   const [lfContact, setLfContact] = useState("");
   const [lfLocationEn, setLfLocationEn] = useState("Agali");
   const [lfLocationMl, setLfLocationMl] = useState("അഗളി");
+  const [lfLocationTa, setLfLocationTa] = useState("");
   const [lfSubmitting, setLfSubmitting] = useState(false);
 
   // Resolution verification states
@@ -233,12 +236,15 @@ export default function DirectoryWidget({
           type: lfType,
           itemTitleEn: lfTitleEn,
           itemTitleMl: lfTitleMl,
+          itemTitleTa: lfTitleTa,
           descriptionEn: lfDescEn,
           descriptionMl: lfDescMl,
+          descriptionTa: lfDescTa,
           reporterName: lfReporterName,
           contactNumber: lfContact,
           locationEn: lfLocationEn,
-          locationMl: lfLocationMl
+          locationMl: lfLocationMl,
+          locationTa: lfLocationTa
         })
       });
 
@@ -252,8 +258,10 @@ export default function DirectoryWidget({
       // Reset form
       setLfTitleEn("");
       setLfTitleMl("");
+      setLfTitleTa("");
       setLfDescEn("");
       setLfDescMl("");
+      setLfDescTa("");
       setLfReporterName("");
       setLfContact("");
       setLfLocationEn("Agali");
@@ -1394,6 +1402,7 @@ export default function DirectoryWidget({
                       className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white font-anek-malayalam font-semibold"
                     />
                   </div>
+                  <div className="space-y-1"><label className="block text-[11px] font-bold text-slate-700">Item title (Tamil)</label><input lang="ta" value={lfTitleTa} onChange={e => setLfTitleTa(e.target.value)} className="w-full border border-gray-250 p-2 rounded font-anek-tamil" /></div>
 
                   {/* Description En */}
                   <div className="space-y-1">
@@ -1418,6 +1427,7 @@ export default function DirectoryWidget({
                       className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white font-anek-malayalam font-semibold"
                     />
                   </div>
+                  <div className="space-y-1"><label className="block text-[11px] font-bold text-slate-700">Description (Tamil)</label><input lang="ta" value={lfDescTa} onChange={e => setLfDescTa(e.target.value)} className="w-full border border-gray-250 p-2 rounded font-anek-tamil" /></div>
 
                   {/* Location En */}
                   <div className="space-y-1">
@@ -1444,6 +1454,7 @@ export default function DirectoryWidget({
                       className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white font-anek-malayalam font-semibold"
                     />
                   </div>
+                  <div className="space-y-1"><label className="block text-[11px] font-bold text-slate-700">Location (Tamil)</label><input lang="ta" value={lfLocationTa} onChange={e => setLfLocationTa(e.target.value)} className="w-full border border-gray-250 p-2 rounded font-anek-tamil" /></div>
 
                   {/* Reporter Name */}
                   <div className="space-y-1">
