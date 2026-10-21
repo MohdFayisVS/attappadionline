@@ -123,8 +123,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
   // 4. Explore sub-forms
   const [destForm, setDestForm] = useState({
-    nameEn: "", nameMl: "", locationEn: "", locationMl: "", image: "",
-    descriptionEn: "", descriptionMl: "", highlightsEn: "", highlightsMl: ""
+    nameEn: "", nameMl: "", nameTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
+    descriptionEn: "", descriptionMl: "", descriptionTa: "", highlightsEn: "", highlightsMl: "", highlightsTa: ""
   });
   const [cultureForm, setCultureForm] = useState({
     type: "culture", titleEn: "", titleMl: "", subtitleEn: "", subtitleMl: "", image: "",
@@ -1136,11 +1136,15 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setDestForm({
       nameEn: item.nameEn,
       nameMl: item.nameMl,
+      nameTa: item.nameTa || "",
       locationEn: item.locationEn,
       locationMl: item.locationMl,
+      locationTa: item.locationTa || "",
       image: item.image || "",
       descriptionEn: item.descriptionEn || "",
       descriptionMl: item.descriptionMl || "",
+      descriptionTa: item.descriptionTa || "",
+      highlightsTa: Array.isArray(item.highlightsTa) ? item.highlightsTa.join(", ") : (item.highlightsTa || ""),
       highlightsEn: Array.isArray(item.highlightsEn) ? item.highlightsEn.join(", ") : (item.highlightsEn || ""),
       highlightsMl: Array.isArray(item.highlightsMl) ? item.highlightsMl.join(", ") : (item.highlightsMl || "")
     });
