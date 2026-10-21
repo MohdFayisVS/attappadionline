@@ -451,7 +451,7 @@ export default function App() {
         return (
           <div 
             onClick={() => setActiveAdDetail({
-              title: lang === "en" ? "Ad Details" : "പരസ്യ വിവരങ്ങൾ",
+              title: "Ad Details",
               subtitle: "",
               contact: ad.contact,
               image: ad.image
@@ -481,8 +481,8 @@ export default function App() {
     }
     
     // Fallback: If no image is present, render the original text-based callout ad block
-    const title = lang === "ml" ? ad.titleMl || ad.titleEn : ad.titleEn || ad.titleMl;
-    const subtitle = lang === "ml" ? ad.subtitleMl || ad.subtitleEn : ad.subtitleEn || ad.subtitleMl;
+    const title = ad.titleEn || ad.titleMl || ad.titleTa || "";
+    const subtitle = lang === "ta" ? (ad.subtitleTa || ad.subtitleEn || "") : lang === "ml" ? (ad.subtitleMl || ad.subtitleEn || "") : (ad.subtitleEn || ad.subtitleMl || "");
     
     let icon = <Share2 className="w-4 h-4 flex-shrink-0" />;
     if (ad.actionType === "phone") icon = <Phone className="w-4 h-4 flex-shrink-0 animate-pulse" />;
@@ -903,12 +903,12 @@ export default function App() {
               <button
                 type="button"
                 key={reg.key}
-                lang={tamilMode ? "ta" : lang}
+                lang="en"
                 onClick={() => handleRegionClick(reg.key)}
                 aria-current={activeSection === "news" && activeRegion === reg.key ? "page" : undefined}
-                className={`ao-region-choice relative shrink-0 rounded-full border px-3.5 py-1.5 text-xs sm:text-sm leading-relaxed transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#052962] ${tamilMode ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english uppercase"} ${activeSection === "news" && activeRegion === reg.key ? "ao-region-choice-active bg-[#052962] border-[#052962] text-white font-extrabold shadow-[0_3px_0_#e2b600,0_5px_12px_rgba(5,41,98,0.18)]" : "border-transparent text-gray-700 font-semibold hover:border-[#052962]/25 hover:bg-white hover:text-[#052962]"}`}
+                className={`ao-region-choice relative shrink-0 rounded-full border px-3.5 py-1.5 text-xs sm:text-sm leading-relaxed transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#052962] font-anek-english uppercase ${activeSection === "news" && activeRegion === reg.key ? "ao-region-choice-active bg-[#052962] border-[#052962] text-white font-extrabold shadow-[0_3px_0_#e2b600,0_5px_12px_rgba(5,41,98,0.18)]" : "border-transparent text-gray-700 font-semibold hover:border-[#052962]/25 hover:bg-white hover:text-[#052962]"}`}
               >
-                {tamilMode ? reg.ta : lang === "ml" ? reg.ml : reg.en}
+                {reg.en}
               </button>
             ))}
           </nav>
@@ -1548,7 +1548,7 @@ export default function App() {
             <>
               <div id="latest-news-section" className="border-b border-[#052962] pb-2 mb-4 flex justify-between items-center bg-slate-50 p-2.5 rounded border border-gray-100">
                 <h3 lang={lang} className="ao-localized-content font-serif-guardian font-black text-[#052962] text-lg uppercase tracking-tight">
-                  {lang === "ml" ? "വാർത്തകൾ" : lang === "ta" ? "செய்திகள்" : "NEWS"}
+                  NEWS
                 </h3>
                 
                 {activeRegion !== "all" && (
