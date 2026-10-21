@@ -755,18 +755,20 @@ app.get("/api/opinions", async (req, res) => {
 });
 
 app.post("/api/opinions", async (req, res) => {
-  const { authorName, titleEn, titleMl, contentEn, contentMl, approved } = req.body;
-  if (!authorName || !titleEn || !contentEn) {
+  const { authorName, titleEn, titleMl, titleTa, contentEn, contentMl, contentTa, approved } = req.body;
+  if (!authorName || !(titleEn || titleMl || titleTa) || !(contentEn || contentMl || contentTa)) {
     return res.status(400).json({ error: "Missing author name, title, or opinion content." });
   }
 
   const newOpinion = {
     id: "opinion_" + Date.now().toString(),
     authorName,
-    titleEn,
-    titleMl: titleMl || titleEn,
-    contentEn,
-    contentMl: contentMl || contentEn,
+    titleEn: titleEn || "",
+    titleMl: titleMl || "",
+    titleTa: titleTa || "",
+    contentEn: contentEn || "",
+    contentMl: contentMl || "",
+    contentTa: contentTa || "",
     createdAt: new Date().toISOString(),
     approved: approved !== undefined ? !!approved : false
   };
@@ -784,7 +786,7 @@ app.post("/api/opinions", async (req, res) => {
 
 app.put("/api/opinions/:id", async (req, res) => {
   const { id } = req.params;
-  const { authorName, titleEn, titleMl, contentEn, contentMl, approved } = req.body;
+  const { authorName, titleEn, titleMl, titleTa, contentEn, contentMl, contentTa, approved } = req.body;
   
   const opinionsList = await getCollectionData("opinions");
   const itemIndex = opinionsList.findIndex((op: any) => op.id === id);
@@ -795,8 +797,10 @@ app.put("/api/opinions/:id", async (req, res) => {
       authorName: authorName !== undefined ? authorName : opinionsList[itemIndex].authorName,
       titleEn: titleEn !== undefined ? titleEn : opinionsList[itemIndex].titleEn,
       titleMl: titleMl !== undefined ? titleMl : opinionsList[itemIndex].titleMl,
+      titleTa: titleTa !== undefined ? titleTa : opinionsList[itemIndex].titleTa,
       contentEn: contentEn !== undefined ? contentEn : opinionsList[itemIndex].contentEn,
       contentMl: contentMl !== undefined ? contentMl : opinionsList[itemIndex].contentMl,
+      contentTa: contentTa !== undefined ? contentTa : opinionsList[itemIndex].contentTa,
       approved: approved !== undefined ? !!approved : opinionsList[itemIndex].approved
     };
 
