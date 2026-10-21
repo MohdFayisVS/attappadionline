@@ -1539,6 +1539,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       alert("Please add at least one schedule transit stop timing on the route list.");
       return;
     }
+    if (busTransitList.some(stop => !stop.typeTa?.trim())) {
+      alert("Every scheduled bus stop needs a Tamil name.");
+      return;
+    }
     const translatedBus = await performAutoTranslationForForm(busForm, setBusForm, [
       { en: "routeEn", ml: "routeMl" },
       { en: "busTypeEn", ml: "busTypeMl" },
