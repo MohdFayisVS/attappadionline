@@ -49,7 +49,7 @@ export default function App() {
   
   // Section Navigation: Supporting all main header sections including bookmarks
   const [activeSection, setActiveSection] = useState<
-    "news" | "latest-updates" | "events" | "photos" | "videos" | "explore" | "column" | "readers-column" | "local-services" | "bookmarks"
+    "news" | "latest-updates" | "events" | "photos" | "videos" | "explore" | "column" | "readers-column" | "local-services" | "bookmarks" | "busTimings" | "autorikshaw" | "shopping" | "travelFood"
   >("news");
 
   // Bookmarking storage state
@@ -132,7 +132,6 @@ export default function App() {
   const [sliderPosts, setSliderPosts] = useState<NewsPost[]>([]);
   const [announcements, setAnnouncements] = useState<NoticeItem[]>([]);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<NoticeItem | null>(null);
-  const [selectedAppService, setSelectedAppService] = useState<"busTimings" | "autorikshaw" | "travelFood" | "shopping" | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Dynamic Advertisement State Hooks
@@ -717,7 +716,7 @@ export default function App() {
               
               {/* BUS SHORTCUT */}
               <button
-                onClick={() => setSelectedAppService("busTimings")}
+                onClick={() => { setActiveSection("busTimings"); setSearchQuery(""); setMobileHeaderExpanded(false); }}
                 className="group flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/10 hover:bg-amber-400 hover:text-[#052962] text-slate-100 transition duration-150 text-[11px] font-bold font-sans border border-white/5 active:scale-95 cursor-pointer"
                 title={true ? "Bus Timings Tracker" : "ബസ് സമയവിവരങ്ങൾ"}
               >
@@ -727,7 +726,7 @@ export default function App() {
 
               {/* AUTO SHORTCUT */}
               <button
-                onClick={() => setSelectedAppService("autorikshaw")}
+                onClick={() => { setActiveSection("autorikshaw"); setSearchQuery(""); setMobileHeaderExpanded(false); }}
                 className="group flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/10 hover:bg-emerald-500 hover:text-white text-slate-100 transition duration-150 text-[11px] font-bold font-sans border border-white/5 active:scale-95 cursor-pointer"
                 title={true ? "Hire Regional Auto & Taxis" : "ഓട്ടോ ടാക്സി വിളിപ്പടം"}
               >
@@ -737,7 +736,7 @@ export default function App() {
 
               {/* TRAVEL & FOOD SHORTCUT */}
               <button
-                onClick={() => setSelectedAppService("travelFood")}
+                onClick={() => { setActiveSection("travelFood"); setSearchQuery(""); setMobileHeaderExpanded(false); }}
                 className="group flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/10 hover:bg-cyan-500 hover:text-white text-slate-100 transition duration-150 text-[11px] font-bold font-sans border border-white/5 active:scale-95 cursor-pointer"
                 title={true ? "Explore Spot & Local Food" : "വിനോദസഞ്ചാര കേന്ദ്രങ്ങളും ഭക്ഷണശാലകളും"}
               >
@@ -747,7 +746,7 @@ export default function App() {
 
               {/* LOCAL SHOPPING SHORTCUT */}
               <button
-                onClick={() => setSelectedAppService("shopping")}
+                onClick={() => { setActiveSection("shopping"); setSearchQuery(""); setMobileHeaderExpanded(false); }}
                 className="group flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/10 hover:bg-fuchsia-500 hover:text-white text-slate-100 transition duration-150 text-[11px] font-bold font-sans border border-white/5 active:scale-95 cursor-pointer"
                 title={true ? "Shop & Order Online across Attappadi" : "പ്രാദേശിക വ്യാപാരശാലകളിൽ വാട്സാപ്പ് ഓർഡർ"}
               >
@@ -1200,6 +1199,14 @@ export default function App() {
               </div>
 
             </div>
+          ) : activeSection === "busTimings" ? (
+            <ExploreAttappadi lang={lang} initialTab="busTimings" hideTabsSelection={true} />
+          ) : activeSection === "travelFood" ? (
+            <ExploreAttappadi lang={lang} initialTab="culture" hideTabsSelection={true} />
+          ) : activeSection === "autorikshaw" ? (
+            <DirectoryWidget lang={lang} onDownloadCard={setShareCardTarget} initialTab="autorikshaw" hideHeaderTabs={true} />
+          ) : activeSection === "shopping" ? (
+            <DirectoryWidget lang={lang} onDownloadCard={setShareCardTarget} initialTab="shopping" hideHeaderTabs={true} />
           ) : activeSection === "explore" ? (
             <ExploreAttappadi lang={lang} initialTab={exploreTab} />
           ) : activeSection === "photos" ? (
@@ -2190,95 +2197,6 @@ export default function App() {
                   </button>
                 </div>
               </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* App Service Pop-up Modal */}
-      <AnimatePresence>
-        {selectedAppService && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            
-            {/* Backdrop blur overlay */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedAppService(null)}
-              className="absolute inset-0 bg-slate-900/80 backdrop-blur-md"
-            />
-
-            {/* Modal Body */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 15 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              transition={{ type: "spring", duration: 0.4 }}
-              className="relative w-full max-w-4xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] z-10 border border-slate-200 dark:border-slate-800 text-slate-700"
-            >
-              
-              {/* Modal sticky top banner header */}
-              <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-900/50">
-                <div className="flex items-center gap-2">
-                  <span className="p-1.5 bg-sky-50 dark:bg-sky-950/40 text-sky-600 rounded-lg text-lg">
-                    {selectedAppService === "busTimings" && "🚌"}
-                    {selectedAppService === "autorikshaw" && "🚖"}
-                    {selectedAppService === "travelFood" && "🍽️"}
-                    {selectedAppService === "shopping" && "🛍️"}
-                  </span>
-                  <div>
-                    <h3 className="font-serif-guardian font-extrabold text-slate-900 dark:text-white text-base">
-                      {selectedAppService === "busTimings" && (lang === "en" ? "KSRTC & Private Bus Timings" : "കെ.എസ്.ആർ.ടി.സി & പ്രൈവറ്റ് ബസ് സമയവിവരങ്ങൾ")}
-                      {selectedAppService === "autorikshaw" && (lang === "en" ? "AUTO TAXI" : "പ്രാദേശിക ഓട്ടോ & ടാക്സി വിളിപ്പടം")}
-                      {selectedAppService === "travelFood" && (lang === "en" ? "Explore Valley Food & Culture" : "പ്രാദേശിക ഭക്ഷണശാലകളും സംസ്കാരവും")}
-                      {selectedAppService === "shopping" && (lang === "en" ? "SHOPPING" : "വ്യാപാരശാലകളും വാട്സാപ്പ് ഓർഡർ പോർട്ടലും")}
-                    </h3>
-                    <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest font-sans mt-0.5">
-                      {lang === "en" ? "ATTAPPADI ONLINE DIGITAL SERVICES" : "അട്ടപ്പാടി ഓൺലൈൻ ഡിജിറ്റൽ സേവനങ്ങൾ"}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Close Button */}
-                <button
-                  onClick={() => setSelectedAppService(null)}
-                  className="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 rounded-full transition cursor-pointer"
-                  title={lang === "en" ? "Close" : "അടയ്ക്കുക"}
-                >
-                  <X className="w-5 h-5 font-bold" />
-                </button>
-              </div>
-
-              {/* Scrollable Modal Content */}
-              <div className="flex-1 overflow-y-auto p-5 sm:p-6 bg-slate-50/10 dark:bg-slate-950/10">
-                {selectedAppService === "busTimings" && (
-                  <ExploreAttappadi lang={lang} initialTab="busTimings" hideTabsSelection={true} />
-                )}
-                {selectedAppService === "travelFood" && (
-                  <ExploreAttappadi lang={lang} initialTab="culture" hideTabsSelection={true} />
-                )}
-                {selectedAppService === "autorikshaw" && (
-                  <DirectoryWidget lang={lang} onDownloadCard={setShareCardTarget} initialTab="autorikshaw" hideHeaderTabs={true} />
-                )}
-                {selectedAppService === "shopping" && (
-                  <DirectoryWidget lang={lang} onDownloadCard={setShareCardTarget} initialTab="shopping" hideHeaderTabs={true} />
-                )}
-              </div>
-
-              {/* Modal footer back confirmation bar */}
-              <div className="px-5 py-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-900/50 text-[10px] text-slate-400">
-                <span>
-                  {lang === "en" ? "💡 Powered by Attappadi Community Directory" : "💡 അട്ടപ്പാടി കമ്മ്യൂണിറ്റി ഡയറക്ടറിയുടെ സഹകരണത്തോടെ"}
-                </span>
-                <button
-                  onClick={() => setSelectedAppService(null)}
-                  className="px-4 py-1.5 bg-slate-900 dark:bg-white text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-slate-100 rounded-lg text-xs font-black transition cursor-pointer"
-                >
-                  {lang === "en" ? "Done" : "പൂർത്തിയായി"}
-                </button>
-              </div>
-
             </motion.div>
           </div>
         )}
