@@ -1396,6 +1396,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       { en: "readTimeEn", ml: "readTimeMl" }
     ]);
 
+    if (!translatedTravelogue.titleTa?.trim() || !translatedTravelogue.snippetTa?.trim()) {
+      alert("Tamil translation is required before publishing.");
+      return;
+    }
     const isEdit = typeof editingId === "string" && editingType === "travelogues";
     const url = isEdit ? `/api/travelogues/${editingId}` : "/api/travelogues";
     const method = isEdit ? "PUT" : "POST";
@@ -1454,6 +1458,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       { en: "descEn", ml: "descMl" }
     ]);
 
+    if (!translatedPhoto.titleTa?.trim() || !translatedPhoto.descTa?.trim()) {
+      alert("Tamil translation is required before publishing.");
+      return;
+    }
     const isEdit = typeof editingId === "string" && editingType === "photos";
     const url = isEdit ? `/api/photos/${editingId}` : "/api/photos";
     const method = isEdit ? "PUT" : "POST";
