@@ -6103,6 +6103,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             </div>
 
             <form onSubmit={handleSaveAdConfig} className="space-y-8">
+              <fieldset className="border rounded p-3 space-y-2"><legend className="font-semibold">Left advertisement Tamil text</legend><label className="block text-sm">Title (Tamil)<input lang="ta" value={adForm.leftAd.titleTa} onChange={e => setAdForm({...adForm, leftAd: {...adForm.leftAd, titleTa: e.target.value}})} className="w-full border rounded p-2 font-anek-tamil" /></label><label className="block text-sm">Subtitle (Tamil)<input lang="ta" value={adForm.leftAd.subtitleTa} onChange={e => setAdForm({...adForm, leftAd: {...adForm.leftAd, subtitleTa: e.target.value}})} className="w-full border rounded p-2 font-anek-tamil" /></label></fieldset>
+<fieldset className="border rounded p-3 space-y-2"><legend className="font-semibold">Right advertisement Tamil text</legend><label className="block text-sm">Title (Tamil)<input lang="ta" value={adForm.rightAd.titleTa} onChange={e => setAdForm({...adForm, rightAd: {...adForm.rightAd, titleTa: e.target.value}})} className="w-full border rounded p-2 font-anek-tamil" /></label><label className="block text-sm">Subtitle (Tamil)<input lang="ta" value={adForm.rightAd.subtitleTa} onChange={e => setAdForm({...adForm, rightAd: {...adForm.rightAd, subtitleTa: e.target.value}})} className="w-full border rounded p-2 font-anek-tamil" /></label></fieldset>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 
                 {/* 1. LEFT SIDE AD BLOCK */}
