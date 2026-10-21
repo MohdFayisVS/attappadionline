@@ -2374,7 +2374,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </h3>
                   
                   <form onSubmit={handleQuickCreateBreaking} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <label className="block text-xs font-semibold">Headline (Tamil)<input lang="ta" required value={quickBreakingForm.titleTa} onChange={e => setQuickBreakingForm({...quickBreakingForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-slate-500 font-semibold mb-0.5">Breaking Title (English)</label>
                         <input
@@ -2477,7 +2478,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </h3>
 
                   <form onSubmit={handleQuickCreateNotice} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <label className="block text-xs font-semibold">Headline (Tamil)<input lang="ta" required value={quickNoticeForm.titleTa} onChange={e => setQuickNoticeForm({...quickNoticeForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-xs font-semibold">Details (Tamil)<textarea lang="ta" required value={quickNoticeForm.contentTa} onChange={e => setQuickNoticeForm({...quickNoticeForm, contentTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-slate-500 font-semibold mb-0.5">Notice Title (English)</label>
                         <input
