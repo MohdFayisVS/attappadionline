@@ -1396,7 +1396,7 @@ export default function DirectoryWidget({
 
                   {/* Title En */}
                   <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">{lang !== "ml" ? "Item Name / Title (English)*" : "സാധനത്തിന്റെ പേര് (ഇംഗ്ലീഷ്)*"}</label>
+                    <label className="block text-[11px] font-bold text-slate-700">{lang === "ta" ? "பொருளின் பெயர் (ஆங்கிலம்)*" : lang !== "ml" ? "Item Name / Title (English)*" : "സാധനത്തിന്റെ പേര് (ഇംഗ്ലീഷ്)*"}</label>
                     <input
                       type="text"
                       required
@@ -1409,7 +1409,7 @@ export default function DirectoryWidget({
 
                   {/* Title Ml */}
                   <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">{lang !== "ml" ? "Item Name / Title (Malayalam)*" : "സാധനത്തിന്റെ പേര് (മലയാളം)*"}</label>
+                    <label className="block text-[11px] font-bold text-slate-700">{lang === "ta" ? "பொருளின் பெயர் (மலையாளம்)*" : lang !== "ml" ? "Item Name / Title (Malayalam)*" : "സാധനത്തിന്റെ പേര് (മലയാളം)*"}</label>
                     <input
                       type="text"
                       required
@@ -1423,7 +1423,7 @@ export default function DirectoryWidget({
 
                   {/* Description En */}
                   <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">{lang !== "ml" ? "Description (English)" : "വിശദാംശങ്ങൾ (ഇംഗ്ലീഷ്)"}</label>
+                    <label className="block text-[11px] font-bold text-slate-700">{lang === "ta" ? "விவரம் (ஆங்கிலம்)" : lang !== "ml" ? "Description (English)" : "വിശദാംശങ്ങൾ (ഇംഗ്ലീഷ്)"}</label>
                     <textarea
                       rows={2}
                       placeholder="e.g. Lost near Agali stand around 4 PM..."
@@ -1435,7 +1435,7 @@ export default function DirectoryWidget({
 
                   {/* Description Ml */}
                   <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">{lang !== "ml" ? "Description (Malayalam)" : "വിശദാംശങ്ങൾ (മലയാളം)"}</label>
+                    <label className="block text-[11px] font-bold text-slate-700">{lang === "ta" ? "விவரம் (மலையாளம்)" : lang !== "ml" ? "Description (Malayalam)" : "വിശദാംശങ്ങൾ (മലയാളം)"}</label>
                     <textarea
                       rows={2}
                       placeholder="ഉദാ: അഗളി സ്റ്റാൻഡിന് സമീപം വെച്ച് നഷ്ടപ്പെട്ടു..."
@@ -1448,7 +1448,7 @@ export default function DirectoryWidget({
 
                   {/* Location En */}
                   <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">{lang !== "ml" ? "Location / Place (English)*" : "സ്ഥലം (ഇംഗ്ലീഷ്)*"}</label>
+                    <label className="block text-[11px] font-bold text-slate-700">{lang === "ta" ? "இடம் (ஆங்கிலம்)*" : lang !== "ml" ? "Location / Place (English)*" : "സ്ഥലം (ഇംഗ്ലീഷ്)*"}</label>
                     <input
                       type="text"
                       required
@@ -1461,7 +1461,7 @@ export default function DirectoryWidget({
 
                   {/* Location Ml */}
                   <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">{lang !== "ml" ? "Location / Place (Malayalam)*" : "സ്ഥലം (മലയാളം)*"}</label>
+                    <label className="block text-[11px] font-bold text-slate-700">{lang === "ta" ? "இடம் (மலையாளம்)*" : lang !== "ml" ? "Location / Place (Malayalam)*" : "സ്ഥലം (മലയാളം)*"}</label>
                     <input
                       type="text"
                       required
