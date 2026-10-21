@@ -485,7 +485,7 @@ export default function DirectoryWidget({
     const matchesSearch = searchQuery === "" || 
       auto.driverNameEn.toLowerCase().includes(query) ||
       (auto.driverNameMl || "").toLowerCase().includes(query) ||
-      ((auto as AutoTaxi & { driverNameTa?: string }).driverNameTa || "").toLowerCase().includes(query) ||
+      (auto.driverNameTa || "").toLowerCase().includes(query) ||
       auto.autoNumber.toLowerCase().includes(query) ||
       auto.contact.includes(query);
 
