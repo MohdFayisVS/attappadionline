@@ -3284,6 +3284,11 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   <Calendar className="w-5 h-5 text-[#005689]" /> Register/Schedule Event
                 </h3>
                 <form onSubmit={handleCreateEvent} className="space-y-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <label>Event Name (Tamil)<input lang="ta" required value={eventForm.titleTa} onChange={e => setEventForm({...eventForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                    <label>Event Venue (Tamil)<input lang="ta" required value={eventForm.locationTa} onChange={e => setEventForm({...eventForm, locationTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  </div>
+                  <label className="block">Event Description (Tamil)<textarea lang="ta" value={eventForm.descriptionTa} onChange={e => setEventForm({...eventForm, descriptionTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-slate-500 font-bold mb-1">Event Name (En)</label>
