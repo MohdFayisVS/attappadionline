@@ -467,7 +467,10 @@ export default function DirectoryWidget({
     const query = searchQuery.toLowerCase();
     const matchesSearch = 
       item.nameEn.toLowerCase().includes(query) || 
-      item.nameMl.toLowerCase().includes(query) || 
+      (item.nameMl || "").toLowerCase().includes(query) ||
+      (item.nameTa || "").toLowerCase().includes(query) ||
+      (item.locationMl || "").toLowerCase().includes(query) ||
+      (item.locationTa || "").toLowerCase().includes(query) || 
       item.contact.includes(query) || 
       (item.locationEn && item.locationEn.toLowerCase().includes(query));
     
@@ -481,7 +484,8 @@ export default function DirectoryWidget({
     const query = searchQuery.toLowerCase();
     const matchesSearch = searchQuery === "" || 
       auto.driverNameEn.toLowerCase().includes(query) ||
-      auto.driverNameMl.toLowerCase().includes(query) ||
+      (auto.driverNameMl || "").toLowerCase().includes(query) ||
+      ((auto as AutoTaxi & { driverNameTa?: string }).driverNameTa || "").toLowerCase().includes(query) ||
       auto.autoNumber.toLowerCase().includes(query) ||
       auto.contact.includes(query);
 
