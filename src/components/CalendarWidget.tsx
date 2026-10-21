@@ -34,6 +34,15 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+  const eventText = (event: EventItem, field: "title" | "location" | "description") => {
+    const values = lang === "ta"
+      ? [event[`${field}Ta`], event[`${field}En`], event[`${field}Ml`]]
+      : lang === "ml"
+        ? [event[`${field}Ml`], event[`${field}En`], event[`${field}Ta`]]
+        : [event[`${field}En`], event[`${field}Ml`], event[`${field}Ta`]];
+    return values.find(value => typeof value === "string" && value.trim()) || "";
+  };
+
   const fetchEvents = async () => {
     setLoading(true);
     try {
@@ -321,9 +330,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
                     {lang === "ta" ? "நிகழ்வுகள் எதுவும் இல்லை" : lang === "ml" ? "പരിപാടികൾ ഒന്നും നിശ്ചയിച്ചിട്ടില്ല" : "No Events Scheduled"}
                   </p>
                   <p className="text-[10px] leading-tight font-semibold">
-                    {lang === "en"
-                      ? "Choose another highlighted day on the horizontal timeline above."
-                      : "തീയതി ഫിൽട്ടറുകൾ മാറ്റുകയോ മുകളിൽ മറ്റൊരു തീയതി തിരഞ്ഞെടുക്കുകയോ ചെയ്യാം."}
+                    {lang === "ta" ? "மேலுள்ள நாட்காட்டியில் வேறொரு நாளைத் தேர்ந்தெடுக்கவும்." : lang === "ml" ? "തീയതി ഫിൽട്ടറുകൾ മാറ്റുകയോ മുകളിൽ മറ്റൊരു തീയതി തിരഞ്ഞെടുക്കുകയോ ചെയ്യാം." : "Choose another highlighted day on the horizontal timeline above."}
                   </p>
                 </div>
               </motion.div>
@@ -348,7 +355,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
                     {/* Content Section */}
                     <div className="flex-1 min-w-0 space-y-1.5">
                       <h4 className="text-xs font-black text-slate-900 leading-snug line-clamp-2 uppercase">
-                        {lang === "ml" ? ev.titleMl : lang === "ta" ? (ev.titleTa || ev.titleEn) : ev.titleEn}
+                        {eventText(ev, "title")}
                       </h4>
                       
                       {/* Secondary parameters */}
@@ -359,13 +366,13 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
                         </span>
                         <span className="flex items-center gap-0.5 max-w-[145px] truncate text-slate-700">
                           <MapPin className="w-3.5 h-3.5 text-[#052962] shrink-0" />
-                          <span>{lang === "ml" ? ev.locationMl : lang === "ta" ? (ev.locationTa || ev.locationEn) : ev.locationEn}</span>
+                          <span>{eventText(ev, "location")}</span>
                         </span>
                       </div>
 
                       {/* Snippet expand block */}
                       <p className="text-[10.5px] text-slate-500 leading-normal line-clamp-2 italic font-medium pt-1 border-t border-slate-100">
-                        {lang === "ml" ? ev.descriptionMl : lang === "ta" ? (ev.descriptionTa || ev.descriptionEn) : ev.descriptionEn}
+                        {eventText(ev, "description")}
                       </p>
 
                       {/* Sharing triggers */}
@@ -374,14 +381,14 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
                           <button
                             onClick={() => onDownloadCard(ev)}
                             className="px-2.5 py-1 hover:bg-amber-100 text-[#052962] hover:text-amber-800 rounded-md bg-[#ffe500]/15 border border-[#ffe500]/40 text-[9px] font-black uppercase tracking-wider transition duration-200 flex items-center gap-1 cursor-pointer select-none"
-                            title="Generate Shareable Graphic Card"
+                            title={lang === "ta" ? "பகிரக்கூடிய அட்டையை உருவாக்கு" : lang === "ml" ? "പങ്കിടാവുന്ന കാർഡ് തയ്യാറാക്കുക" : "Generate Shareable Graphic Card"}
                           >
                             <IdCard className="w-3.5 h-3.5 text-amber-600 shrink-0" /> {lang === "ta" ? "அட்டையைப் பார்க்க" : lang === "ml" ? "കാർഡ്" : "Card Preview"}
                           </button>
                         )}
                         <ShareButtons 
-                          title={lang === "ml" ? ev.titleMl : lang === "ta" ? (ev.titleTa || ev.titleEn) : ev.titleEn}
-                          summary={lang !== "ml" ? `${ev.locationEn} at ${ev.time}` : `${ev.locationMl}, ${ev.time}`}
+                          title={eventText(ev, "title")}
+                          summary={`${eventText(ev, "location")}${lang === "en" ? " at " : ", "}${ev.time}`}
                           url={`${window.location.origin}/#event-${ev.id}`}
                           layout="bubble"
                         />
@@ -398,9 +405,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
         <div className="bg-[#052962]/5 border border-[#052962]/10 p-2.5 rounded-xl flex items-start gap-2 text-[10.5px] text-slate-600 select-none">
           <Info className="w-3.5 h-3.5 text-[#052962] shrink-0 mt-0.5" />
           <p className="font-semibold leading-relaxed">
-            {lang === "en" 
-              ? "Citizen Events Desk is updated live based on panchayat bulletins." 
-              : "പഞ്ചായത്ത് വിവരങ്ങൾ പ്രകാരം പരിപാടികളുടെ കലണ്ടർ അപ്ഡേറ്റ് ചെയ്യുന്നതാണ്."}
+            {lang === "ta" ? "ஊராட்சி அறிவிப்புகளின் அடிப்படையில் நிகழ்வு நாட்காட்டி புதுப்பிக்கப்படுகிறது." : lang === "ml" ? "പഞ്ചായത്ത് വിവരങ്ങൾ പ്രകാരം പരിപാടികളുടെ കലണ്ടർ അപ്ഡേറ്റ് ചെയ്യുന്നതാണ്." : "Citizen Events Desk is updated live based on panchayat bulletins."}
           </p>
         </div>
       </div>
