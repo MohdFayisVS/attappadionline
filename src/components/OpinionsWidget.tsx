@@ -19,6 +19,15 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" | "ta" }) {
     ta: { invalid: "அனைத்து விவரங்களையும் நிரப்பவும்.", failed: "சமர்ப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.", connection: "இணைப்பு நேரம் முடிந்தது.", loading: "கருத்துகள் ஏற்றப்படுகின்றன...", empty: "அங்கீகரிக்கப்பட்ட கருத்துகள் இதுவரை இல்லை.", heading: "அட்டப்பாடி மக்களின் கருத்துகள்", question: "அட்டப்பாடியின் வளர்ச்சி குறித்து கருத்து உள்ளதா?", intro: "உள்ளூர் வளர்ச்சி, சுற்றுச்சூழல், விவசாயம், சுகாதாரம் மற்றும் உள்கட்டமைப்பு குறித்து உங்கள் கருத்துகளை அனுப்புங்கள். வெளியிடுவதற்கு முன் மதிப்பாய்வு செய்யப்படும்.", success: "கருத்து வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது!", successDetail: "உங்கள் கருத்து மதிப்பாய்வுக்கு அனுப்பப்பட்டுள்ளது. நன்றி.", name: "பெயர் மற்றும் பதவி", topic: "கருத்தின் தலைப்பு", body: "உங்கள் கருத்தை எழுதுங்கள்...", submit: "மதிப்பாய்வுக்கு சமர்ப்பிக்கவும்", policy: "வெறுப்புப் பேச்சைத் தடுக்க அனைத்து கருத்துகளும் மதிப்பாய்வு செய்யப்படும்." }
   }[lang];
 
+  const getOpinionText = (op: OpinionItem, field: "title" | "content") => {
+    const values = lang === "ta"
+      ? [op[`${field}Ta`], op[`${field}En`], op[`${field}Ml`]]
+      : lang === "ml"
+        ? [op[`${field}Ml`], op[`${field}En`], op[`${field}Ta`]]
+        : [op[`${field}En`], op[`${field}Ml`], op[`${field}Ta`]];
+    return values.find(value => typeof value === "string" && value.trim()) || "";
+  };
+
   const fetchOpinions = async () => {
     setLoading(true);
     try {
@@ -86,7 +95,7 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" | "ta" }) {
   }
 
   return (
-    <div className="space-y-6 text-gray-800">
+    <div lang={lang} className={`space-y-6 text-gray-800 ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-latin"}`}>
       
       {/* Dynamic Grid: Opinions list on left, Submit opinion on right (Desktop) */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -127,11 +136,11 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" | "ta" }) {
                   </div>
 
                   <h5 className="font-serif-guardian font-bold text-sm text-[#052962] leading-snug">
-                    {lang === "ml" ? (op.titleMl || op.titleEn) : lang === "ta" ? (op.titleTa || op.titleEn) : op.titleEn}
+                    {getOpinionText(op, "title")}
                   </h5>
 
                   <p className="text-xs text-gray-600 leading-relaxed italic border-l-2 border-amber-300 pl-3">
-                    "{lang === "ml" ? (op.contentMl || op.contentEn) : lang === "ta" ? (op.contentTa || op.contentEn) : op.contentEn}"
+                    "{getOpinionText(op, "content")}"
                   </p>
                 </div>
               ))
