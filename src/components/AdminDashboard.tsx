@@ -1165,7 +1165,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
     const highlightsEnArr = translatedDestForm.highlightsEn.split(",").map(x => x.trim()).filter(Boolean);
     const highlightsMlArr = translatedDestForm.highlightsMl.split(",").map(x => x.trim()).filter(Boolean);
+    const highlightsTaArr = translatedDestForm.highlightsTa.split(",").map(x => x.trim()).filter(Boolean);
     
+    if (!translatedDestForm.nameTa?.trim() || !translatedDestForm.locationTa?.trim() || !translatedDestForm.descriptionTa?.trim()) {
+      alert("Tamil destination name, location and description are required.");
+      return;
+    }
     const isEdit = typeof editingId === "string" && editingType === "destinations";
     const url = isEdit ? `/api/destinations/${editingId}` : "/api/destinations";
     const method = isEdit ? "PUT" : "POST";
@@ -1176,12 +1181,13 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       body: JSON.stringify({
         ...translatedDestForm,
         highlightsEn: highlightsEnArr,
-        highlightsMl: highlightsMlArr
+        highlightsMl: highlightsMlArr,
+        highlightsTa: highlightsTaArr
       })
     });
     if (response.ok) {
       triggerToast(isEdit ? "Tourist destination updated!" : "New Tourist destination added!");
-      setDestForm({ nameEn: "", nameMl: "", locationEn: "", locationMl: "", image: "", descriptionEn: "", descriptionMl: "", highlightsEn: "", highlightsMl: "" });
+      setDestForm({ nameEn: "", nameMl: "", nameTa: "", locationEn: "", locationMl: "", locationTa: "", image: "", descriptionEn: "", descriptionMl: "", descriptionTa: "", highlightsEn: "", highlightsMl: "", highlightsTa: "" });
       setEditingId(null);
       setEditingType(null);
       fetchExploreDestinations();
@@ -3483,6 +3489,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             {exploreSubTab === "destinations" && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <form onSubmit={handleCreateDestination} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5">
+                  <label className="block">Destination Name (Tamil)<input lang="ta" required={true} value={destForm.nameTa} onChange={e => setDestForm({...destForm, nameTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block">Location (Tamil)<input lang="ta" required={true} value={destForm.locationTa} onChange={e => setDestForm({...destForm, locationTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block">Description (Tamil)<textarea lang="ta" required={true} value={destForm.descriptionTa} onChange={e => setDestForm({...destForm, descriptionTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block">Highlights (Tamil, comma separated)<textarea lang="ta" required={false} value={destForm.highlightsTa} onChange={e => setDestForm({...destForm, highlightsTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
                     <PlusCircle className="w-4 h-4 text-[#005689]" /> Add Destination Attraction
                   </h3>
