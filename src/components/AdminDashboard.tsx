@@ -1600,6 +1600,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       { en: "locationEn", ml: "locationMl" }
     ]);
 
+    if (!translatedDir.nameTa?.trim() || !translatedDir.locationTa?.trim()) {
+      alert("Tamil translation fields are required before publishing.");
+      return;
+    }
     const isEdit = typeof editingId === "string" && editingType === "directory";
     const url = isEdit ? `/api/directory/${editingId}` : "/api/directory";
     const method = isEdit ? "PUT" : "POST";
@@ -1655,6 +1659,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       { en: "nameEn", ml: "nameMl" }
     ]);
 
+    if (!translatedEmerg.nameTa?.trim()) {
+      alert("Tamil translation fields are required before publishing.");
+      return;
+    }
     const isEdit = typeof editingId === "string" && editingType === "emergency";
     const url = isEdit ? `/api/emergency/${editingId}` : "/api/emergency";
     const method = isEdit ? "PUT" : "POST";
@@ -1695,8 +1703,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setNoticeForm({
       titleEn: item.titleEn,
       titleMl: item.titleMl,
+      titleTa: item.titleTa || "",
       contentEn: item.contentEn || "",
       contentMl: item.contentMl || "",
+      contentTa: item.contentTa || "",
       type: item.type || "notice",
       severity: item.severity || "medium",
       date: item.date || new Date().toISOString().split("T")[0],
@@ -1715,6 +1725,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       { en: "contentEn", ml: "contentMl" }
     ]);
 
+    if (!translatedNotice.titleTa?.trim() || !translatedNotice.contentTa?.trim()) {
+      alert("Tamil translation fields are required before publishing.");
+      return;
+    }
     const isEdit = typeof editingId === "string" && editingType === "notice";
     const url = isEdit ? `/api/notices/${editingId}` : "/api/notices";
     const method = isEdit ? "PUT" : "POST";
