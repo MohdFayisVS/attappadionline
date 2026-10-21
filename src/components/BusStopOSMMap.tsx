@@ -1,3 +1,4 @@
+import { adminFetch } from "../services/adminAuth";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 type Stop = { id: string; en: string; ml: string };
@@ -116,6 +117,45 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang,
     try { return JSON.parse(localStorage.getItem("attappadi_bus_manual_stops_v1") || "{}"); } catch { return {}; }
   });
   const [customName, setCustomName] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [publishMessage, setPublishMessage] = useState("");
+  const [published, setPublished] = useState<Record<string, { lat: number; lon: number; name: string }>>({});
+  const loadPublished = async () => {
+    const response = await fetch("/api/bus-stop-positions", { cache: "no-store" });
+    if (!response.ok) throw new Error("Published positions unavailable");
+    const rows: Array<{ id: string; lat: number; lon: number; name: string }> = await response.json();
+    const next: typeof published = {};
+    for (const row of rows) if (/^[A-Z0-9_]{2,80}$/.test(row.id) && Number.isFinite(row.lat) && Number.isFinite(row.lon)) {
+      next[row.id] = { lat: row.lat, lon: row.lon, name: row.name };
+    }
+    setPublished(next);
+  };
+  useEffect(() => { void loadPublished().catch(() => setPublishMessage("Published map data is temporarily unavailable.")); }, []);
+  const publishStation = async () => {
+    const id = editingStop;
+    const point = manual[id] || published[id] || positions[id];
+    if (!point) { setPublishMessage("Place this station on the map first."); return; }
+    setSaving(true); setPublishMessage("");
+    try {
+      const response = await adminFetch("/api/bus-stop-positions/" + encodeURIComponent(id), {
+        method: "PUT", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lat: point.lat, lon: point.lon, name: customName.trim() || manual[id]?.name || stops.find(s => s.id === id)?.en || id })
+      });
+      if (!response.ok) throw new Error("Save rejected (" + response.status + ")");
+      await loadPublished();
+      setPublishMessage("Published to Firestore. Visitors can now see this station.");
+    } catch (error) { setPublishMessage("Not published: " + String(error)); }
+    finally { setSaving(false); }
+  };
+  const unpublishStation = async () => {
+    setSaving(true); setPublishMessage("");
+    try {
+      const response = await adminFetch("/api/bus-stop-positions/" + encodeURIComponent(editingStop), { method: "DELETE" });
+      if (!response.ok) throw new Error("Delete rejected (" + response.status + ")");
+      await loadPublished(); setPublishMessage("Published position removed.");
+    } catch (error) { setPublishMessage("Could not remove published position: " + String(error)); }
+    finally { setSaving(false); }
+  };
   const [importText, setImportText] = useState("");
   const manualRef = useRef(manual);
   manualRef.current = manual;
@@ -128,7 +168,7 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang,
     try { localStorage.setItem("attappadi_bus_manual_stops_v1", JSON.stringify(next)); } catch { /* storage unavailable */ }
   };
   const [error, setError] = useState("");
-  const available = useMemo(() => stops.filter(s => manual[s.id] || positions[s.id]), [stops, positions, manual]);
+  const available = useMemo(() => stops.filter(s => (isAdmin && manual[s.id]) || published[s.id] || positions[s.id]), [stops, positions, manual, published, isAdmin]);
 
   useEffect(() => {
     let mounted = true;
@@ -218,7 +258,7 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang,
     const layer = layerRef.current;
     layer.clearLayers();
     available.forEach(stop => {
-      const point = manual[stop.id] || positions[stop.id];
+      const point = (isAdmin && manual[stop.id]) || published[stop.id] || positions[stop.id];
       const selected = stop.id === selectedStop;
       const marker = window.L!.circleMarker([point.lat, point.lon], {
         radius: selected ? 10 : 7, weight: 3,
@@ -231,7 +271,7 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang,
     const selected = positions[selectedStop];
     if (selected) mapRef.current.setView([selected.lat, selected.lon], 12);
     else if (available.length) mapRef.current.fitBounds(available.map(s => [positions[s.id].lat, positions[s.id].lon]), { padding: [24, 24], maxZoom: 11 });
-  }, [ready, positions, selectedStop, available, manual]);
+  }, [ready, positions, selectedStop, available, manual, published, isAdmin]);
 
   return <section className="space-y-2" aria-label="OpenStreetMap bus stops">
     <div ref={container} className="h-[360px] sm:h-[460px] w-full rounded-lg border border-slate-200" />
@@ -245,6 +285,8 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang,
         </select>
         <input aria-label="Station display name" value={customName} onChange={e => setCustomName(e.target.value)} placeholder="Station display name" className="w-full border rounded p-2" />
         <div className="flex flex-wrap gap-2">
+          <button type="button" disabled={saving} className="rounded bg-emerald-800 text-white px-3 py-2 disabled:opacity-50" onClick={() => void publishStation()}>{saving ? "Saving..." : "Publish selected station to website"}</button>
+          <button type="button" disabled={saving || !published[editingStop]} className="rounded border px-3 py-2 disabled:opacity-50" onClick={() => void unpublishStation()}>Unpublish station</button>
           <button type="button" className="rounded bg-blue-800 text-white px-3 py-2" onClick={() => { const old = manual[editingStop] || positions[editingStop]; if (old) saveManual({ ...manual, [editingStop]: { lat: old.lat, lon: old.lon, name: customName.trim() || editingStop } }); }}>Save station name</button>
           <button type="button" className="rounded border px-3 py-2" onClick={() => { const next = { ...manual }; delete next[editingStop]; saveManual(next); }}>Reset manual position</button>
           <button type="button" className="rounded border px-3 py-2" onClick={() => { const blob = new Blob([JSON.stringify(manual, null, 2)], { type: "application/json" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "attappadi-bus-stop-positions.json"; a.click(); URL.revokeObjectURL(url); }}>Export positions JSON</button>
