@@ -1057,12 +1057,15 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setEventForm({
       titleEn: item.titleEn,
       titleMl: item.titleMl,
+      titleTa: item.titleTa || "",
       date: item.date,
       time: item.time || "",
       locationEn: item.locationEn,
       locationMl: item.locationMl,
+      locationTa: item.locationTa || "",
       descriptionEn: item.descriptionEn || "",
-      descriptionMl: item.descriptionMl || ""
+      descriptionMl: item.descriptionMl || "",
+      descriptionTa: item.descriptionTa || ""
     });
     setEditingId(item.id);
     setEditingType("events");
