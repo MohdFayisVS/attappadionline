@@ -128,18 +128,18 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   });
   const [cultureForm, setCultureForm] = useState({
     type: "culture", titleEn: "", titleMl: "", titleTa: "", subtitleEn: "", subtitleMl: "", subtitleTa: "", image: "",
-    descEn: "", descMl: "", descTa: "", elementEn: "", elementMl: ""
+    descEn: "", descMl: "", descTa: "", descTa: "", elementEn: "", elementMl: ""
   });
   const [stayForm, setStayForm] = useState({
     nameEn: "", nameMl: "", nameTa: "", typeEn: "", typeMl: "", typeTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
     priceEn: "", priceMl: "", priceTa: "", featuresEn: "", featuresMl: ""
   });
   const [travelogueForm, setTravelogueForm] = useState({
-    titleEn: "", titleMl: "", titleTa: "", authorEn: "", authorMl: "", date: "", snippetEn: "", snippetMl: "",
-    readTimeEn: "", readTimeMl: ""
+    titleEn: "", titleMl: "", titleTa: "", authorEn: "", authorMl: "", authorTa: "", date: "", snippetEn: "", snippetMl: "", snippetTa: "",
+    readTimeEn: "", readTimeMl: "", readTimeTa: ""
   });
   const [photoForm, setPhotoForm] = useState({
-    url: "", titleEn: "", titleMl: "", titleTa: "", descEn: "", descMl: ""
+    url: "", titleEn: "", titleMl: "", titleTa: "", descEn: "", descMl: "", descTa: ""
   });
 
   // Helper to get standard bus types for selected Authority
@@ -273,18 +273,18 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     setCultureForm({
       type: "culture", titleEn: "", titleMl: "", titleTa: "", subtitleEn: "", subtitleMl: "", subtitleTa: "", image: "",
-      descEn: "", descMl: "", descTa: "", elementEn: "", elementMl: ""
+      descEn: "", descMl: "", descTa: "", descTa: "", elementEn: "", elementMl: ""
     });
     setStayForm({
       nameEn: "", nameMl: "", nameTa: "", typeEn: "", typeMl: "", typeTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
       priceEn: "", priceMl: "", priceTa: "", featuresEn: "", featuresMl: ""
     });
     setTravelogueForm({
-      titleEn: "", titleMl: "", titleTa: "", authorEn: "", authorMl: "", date: "", snippetEn: "", snippetMl: "",
-      readTimeEn: "", readTimeMl: ""
+      titleEn: "", titleMl: "", titleTa: "", authorEn: "", authorMl: "", authorTa: "", date: "", snippetEn: "", snippetMl: "", snippetTa: "",
+      readTimeEn: "", readTimeMl: "", readTimeTa: ""
     });
     setPhotoForm({
-      url: "", titleEn: "", titleMl: "", titleTa: "", descEn: "", descMl: ""
+      url: "", titleEn: "", titleMl: "", titleTa: "", descEn: "", descMl: "", descTa: ""
     });
     setBusForm({
       routeEn: "", routeMl: "", type: "KSRTC", busTypeEn: "", busTypeMl: "",
@@ -1260,7 +1260,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Culture item updated!" : "Culture item added!");
-      setCultureForm({ type: "culture", titleEn: "", titleMl: "", titleTa: "", subtitleEn: "", subtitleMl: "", subtitleTa: "", image: "", descEn: "", descMl: "", descTa: "", elementEn: "", elementMl: "" });
+      setCultureForm({ type: "culture", titleEn: "", titleMl: "", titleTa: "", subtitleEn: "", subtitleMl: "", subtitleTa: "", image: "", descEn: "", descMl: "", descTa: "", descTa: "", elementEn: "", elementMl: "" });
       setEditingId(null);
       setEditingType(null);
       fetchExploreCultures();
@@ -1370,13 +1370,17 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setTravelogueForm({
       titleEn: item.titleEn,
       titleMl: item.titleMl,
+      titleTa: item.titleTa || "",
       authorEn: item.authorEn || "",
       authorMl: item.authorMl || "",
+      authorTa: item.authorTa || "",
       date: item.date || "June 2026",
       snippetEn: item.snippetEn || "",
       snippetMl: item.snippetMl || "",
+      snippetTa: item.snippetTa || "",
       readTimeEn: item.readTimeEn || "5 min read",
-      readTimeMl: item.readTimeMl || "5 മിനുട്ട് വായന"
+      readTimeMl: item.readTimeMl || "5 മിനുട്ട് വായന",
+      readTimeTa: item.readTimeTa || ""
     });
     setEditingId(item.id);
     setEditingType("travelogues");
@@ -1433,8 +1437,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       url: item.url,
       titleEn: item.titleEn,
       titleMl: item.titleMl,
+      titleTa: item.titleTa || "",
       descEn: item.descEn || "",
-      descMl: item.descMl || ""
+      descMl: item.descMl || "",
+      descTa: item.descTa || ""
     });
     setEditingId(item.id);
     setEditingType("photos");
@@ -1459,7 +1465,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Gallery frame updated!" : "Gallery frame registered!");
-      setPhotoForm({ url: "", titleEn: "", titleMl: "", titleTa: "", descEn: "", descMl: "" });
+      setPhotoForm({ url: "", titleEn: "", titleMl: "", titleTa: "", descEn: "", descMl: "", descTa: "" });
       setEditingId(null);
       setEditingType(null);
       fetchExplorePhotos();
