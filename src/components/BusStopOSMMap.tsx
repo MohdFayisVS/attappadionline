@@ -11,7 +11,8 @@ type Leaflet = {
   map: (element: HTMLElement) => MapInstance;
   layerGroup: () => Layer;
   tileLayer: (url: string, options: Record<string, unknown>) => { addTo: (map: MapInstance) => void };
-  circleMarker: (point: [number, number], options: Record<string, unknown>) => Marker;\n  marker: (point: [number, number], options?: Record<string, unknown>) => Marker;
+  circleMarker: (point: [number, number], options: Record<string, unknown>) => Marker;
+  marker: (point: [number, number], options?: Record<string, unknown>) => Marker;
 };
 declare global { interface Window { L?: Leaflet } }
 type OsmElement = { lat?: number; lon?: number; center?: { lat: number; lon: number }; tags?: Record<string, string> };
