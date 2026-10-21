@@ -69,7 +69,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   // Editing/Form states
   // 1. News Form
   const [newsForm, setNewsForm] = useState({
-    titleEn: "", titleMl: "", titleTa: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
+    titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
     category: "latest" as "breaking" | "latest" | "updates", regions: [] as string[],
     image: "", isSlide: false, isCard: true
   });
@@ -113,21 +113,21 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
   // 2. Opinions Form
   const [opinionForm, setOpinionForm] = useState({
-    authorName: "", titleEn: "", titleMl: "", titleTa: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", approved: true
+    authorName: "", titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", approved: true
   });
 
   // 3. Events Form
   const [eventForm, setEventForm] = useState({
-    titleEn: "", titleMl: "", titleTa: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: ""
+    titleEn: "", titleMl: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: ""
   });
 
   // 4. Explore sub-forms
   const [destForm, setDestForm] = useState({
-    nameEn: "", nameMl: "", nameTa: "", nameTa: "", locationEn: "", locationMl: "", locationTa: "", locationTa: "", image: "",
+    nameEn: "", nameMl: "", nameTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
     descriptionEn: "", descriptionMl: "", descriptionTa: "", highlightsEn: "", highlightsMl: "", highlightsTa: ""
   });
   const [cultureForm, setCultureForm] = useState({
-    type: "culture", titleEn: "", titleMl: "", titleTa: "", subtitleEn: "", subtitleMl: "", subtitleTa: "", titleTa: "", image: "",
+    type: "culture", titleEn: "", titleMl: "", titleTa: "", subtitleEn: "", subtitleMl: "", subtitleTa: "", image: "",
     descEn: "", descMl: "", descTa: "", elementEn: "", elementMl: ""
   });
   const [stayForm, setStayForm] = useState({
@@ -185,17 +185,17 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
   // 6. Directory Form
   const [dirForm, setDirForm] = useState({
-    nameEn: "", nameMl: "", nameTa: "", nameTa: "", category: "hospital" as any, contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി", locationTa: "அட்டப்பாடி"
+    nameEn: "", nameMl: "", nameTa: "", category: "hospital" as any, contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി", locationTa: "அட்டப்பாடி"
   });
 
   // 7. Emergency Contact Form
   const [emergForm, setEmergForm] = useState({
-    nameEn: "", nameMl: "", nameTa: "", nameTa: "", number: "", type: "hospital" as any
+    nameEn: "", nameMl: "", nameTa: "", number: "", type: "hospital" as any
   });
 
   // 8. Notices Form
   const [noticeForm, setNoticeForm] = useState({
-    titleEn: "", titleMl: "", titleTa: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
+    titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
     type: "notice",
     severity: "medium",
     date: "",
@@ -224,13 +224,13 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   const [adForm, setAdForm] = useState({
     leftAd: {
       titleEn: "", titleMl: "", titleTa: "",
-      subtitleEn: "", subtitleMl: "", subtitleTa: "", titleTa: "",
+      subtitleEn: "", subtitleMl: "", subtitleTa: "",
       contact: "", actionType: "share" as "phone" | "website" | "whatsapp" | "share",
       externalUrl: "", image: ""
     },
     rightAd: {
       titleEn: "", titleMl: "", titleTa: "",
-      subtitleEn: "", subtitleMl: "", subtitleTa: "", titleTa: "",
+      subtitleEn: "", subtitleMl: "", subtitleTa: "",
       contact: "", actionType: "phone" as "phone" | "website" | "whatsapp" | "share",
       externalUrl: "", image: ""
     }
@@ -258,21 +258,21 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setEditingId(null);
     setEditingType(null);
     setNewsForm({
-      titleEn: "", titleMl: "", titleTa: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
+      titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
       category: "latest", regions: [], image: "", isSlide: false, isCard: true
     });
     setOpinionForm({
-      authorName: "", titleEn: "", titleMl: "", titleTa: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", approved: true
+      authorName: "", titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", approved: true
     });
     setEventForm({
-      titleEn: "", titleMl: "", titleTa: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: ""
+      titleEn: "", titleMl: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: ""
     });
     setDestForm({
       nameEn: "", nameMl: "", nameTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
       descriptionEn: "", descriptionMl: "", highlightsEn: "", highlightsMl: ""
     });
     setCultureForm({
-      type: "culture", titleEn: "", titleMl: "", titleTa: "", subtitleEn: "", subtitleMl: "", subtitleTa: "", titleTa: "", image: "",
+      type: "culture", titleEn: "", titleMl: "", titleTa: "", subtitleEn: "", subtitleMl: "", subtitleTa: "", image: "",
       descEn: "", descMl: "", descTa: "", elementEn: "", elementMl: ""
     });
     setStayForm({
@@ -293,10 +293,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     setBusTransitList([]);
     setDirForm({
-      nameEn: "", nameMl: "", nameTa: "", nameTa: "", category: "hospital", contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി"
+      nameEn: "", nameMl: "", nameTa: "", category: "hospital", contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി"
     });
     setEmergForm({
-      nameEn: "", nameMl: "", nameTa: "", nameTa: "", number: "", type: "hospital"
+      nameEn: "", nameMl: "", nameTa: "", number: "", type: "hospital"
     });
     setLpgForm({
       agencyNameEn: "",
@@ -780,7 +780,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     if (response.ok) {
       triggerToast(isEdit ? "News article updated successfully!" : "News article published successfully! (വാർത്ത പ്രസിദ്ധീകരിച്ചു)");
       setNewsForm({
-        titleEn: "", titleMl: "", titleTa: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
+        titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
         category: "latest", regions: [], image: "", isSlide: false, isCard: true
       });
       setEditingId(null);
@@ -1027,7 +1027,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Opinion column updated successfully." : "Opinion column published successfully.");
-      setOpinionForm({ authorName: "", titleEn: "", titleMl: "", titleTa: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", approved: true });
+      setOpinionForm({ authorName: "", titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", approved: true });
       setEditingId(null);
       setEditingType(null);
       fetchOpinions();
@@ -1108,7 +1108,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Community event updated successfully." : "Community event scheduled successfully.");
-      setEventForm({ titleEn: "", titleMl: "", titleTa: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: "" });
+      setEventForm({ titleEn: "", titleMl: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: "" });
       setEditingId(null);
       setEditingType(null);
       fetchEvents();
@@ -1189,7 +1189,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Tourist destination updated!" : "New Tourist destination added!");
-      setDestForm({ nameEn: "", nameMl: "", nameTa: "", nameTa: "", locationEn: "", locationMl: "", locationTa: "", locationTa: "", image: "", descriptionEn: "", descriptionMl: "", descriptionTa: "", highlightsEn: "", highlightsMl: "", highlightsTa: "" });
+      setDestForm({ nameEn: "", nameMl: "", nameTa: "", locationEn: "", locationMl: "", locationTa: "", image: "", descriptionEn: "", descriptionMl: "", descriptionTa: "", highlightsEn: "", highlightsMl: "", highlightsTa: "" });
       setEditingId(null);
       setEditingType(null);
       fetchExploreDestinations();
@@ -1260,7 +1260,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Culture item updated!" : "Culture item added!");
-      setCultureForm({ type: "culture", titleEn: "", titleMl: "", titleTa: "", subtitleEn: "", subtitleMl: "", subtitleTa: "", titleTa: "", image: "", descEn: "", descMl: "", descTa: "", elementEn: "", elementMl: "" });
+      setCultureForm({ type: "culture", titleEn: "", titleMl: "", titleTa: "", subtitleEn: "", subtitleMl: "", subtitleTa: "", image: "", descEn: "", descMl: "", descTa: "", elementEn: "", elementMl: "" });
       setEditingId(null);
       setEditingType(null);
       fetchExploreCultures();
@@ -1650,7 +1650,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Local business phone listing updated!" : "Local business phone listing saved!");
-      setDirForm({ nameEn: "", nameMl: "", nameTa: "", nameTa: "", category: "hospital", contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി" });
+      setDirForm({ nameEn: "", nameMl: "", nameTa: "", category: "hospital", contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി" });
       setEditingId(null);
       setEditingType(null);
       fetchDirectory();
@@ -1709,7 +1709,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Critical hazard contact updated." : "Critical hazard contact saved.");
-      setEmergForm({ nameEn: "", nameMl: "", nameTa: "", nameTa: "", number: "", type: "hospital" });
+      setEmergForm({ nameEn: "", nameMl: "", nameTa: "", number: "", type: "hospital" });
       setEditingId(null);
       setEditingType(null);
       fetchEmergency();
@@ -1775,7 +1775,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Notice details updated successfully." : "New announcement notice published.");
-      setNoticeForm({ titleEn: "", titleMl: "", titleTa: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", type: "notice", severity: "medium", date: "", active: true, image: "" });
+      setNoticeForm({ titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", type: "notice", severity: "medium", date: "", active: true, image: "" });
       setEditingId(null);
       setEditingType(null);
       fetchNotices();
@@ -5311,7 +5311,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   onClick={() => {
                     setEditingId(null);
                     setEditingType(null);
-                    setNoticeForm({ titleEn: "", titleMl: "", titleTa: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", type: "notice", severity: "medium", date: "", active: true });
+                    setNoticeForm({ titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", type: "notice", severity: "medium", date: "", active: true });
                   }}
                   className="px-3 py-1.5 bg-slate-105 hover:bg-slate-205 text-slate-805 font-bold rounded-lg transition text-[10px] cursor-pointer"
                 >
