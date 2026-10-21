@@ -2029,6 +2029,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       { en: "notesEn", ml: "notesMl" }
     ]);
 
+    if (!translatedLpg.agencyNameTa?.trim() || !translatedLpg.areasTa?.trim() || !translatedLpg.statusTa?.trim()) {
+      alert("Tamil LPG agency, area and delivery status are required.");
+      return;
+    }
     const isEdit = typeof editingId === "string" && editingType === "lpg";
     const url = isEdit ? `/api/lpg/${editingId}` : "/api/lpg";
     const method = isEdit ? "PUT" : "POST";
