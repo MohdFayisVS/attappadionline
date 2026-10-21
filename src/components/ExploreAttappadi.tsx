@@ -682,11 +682,9 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
         <div className="flex flex-wrap gap-2 border-b border-gray-100 pb-4">
           {[
             { key: "destinations", labelEn: "Destinations", icon: <Compass className="w-3.5 h-3.5" /> },
-            { key: "culture", labelEn: "Culture & Food", icon: <UtensilsCrossed className="w-3.5 h-3.5" /> },
             { key: "stays", labelEn: "Nature Stays", icon: <Hotel className="w-3.5 h-3.5" /> },
             { key: "travelogues", labelEn: "Travelogues", icon: <BookOpen className="w-3.5 h-3.5" /> },
-            { key: "photos", labelEn: "Photo Hub", icon: <ImageIcon className="w-3.5 h-3.5" /> },
-            { key: "busTimings", labelEn: "Bus Timings", icon: <Bus className="w-3.5 h-3.5" /> }
+            { key: "photos", labelEn: "Photo Hub", icon: <ImageIcon className="w-3.5 h-3.5" /> }
           ].map((tab) => (
             <button
               key={tab.key}
