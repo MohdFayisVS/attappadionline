@@ -66,7 +66,7 @@ export default function LatestNews({
   });
 
   return (
-    <div className="space-y-6 text-gray-800 dark:text-slate-200">
+    <div lang={lang} className="ao-localized-content space-y-6 text-gray-800 dark:text-slate-200">
       
       {/* Category control bar & search */}
       <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 p-4 rounded-lg shadow-sm space-y-4 animate-fade-in">
@@ -179,7 +179,7 @@ export default function LatestNews({
                         onToggleBookmark(post.id, e);
                       }}
                       className="absolute top-2.5 right-2.5 p-1.5 bg-white/95 hover:bg-white text-slate-700 hover:text-amber-500 rounded-full shadow-md hover:scale-110 transition duration-200 z-10 flex items-center justify-center cursor-pointer border border-slate-100"
-                      title={bookmarks.includes(post.id) ? ("Remove Bookmark") : ("Bookmark Article")}
+                      title={bookmarks.includes(post.id) ? (lang === "ta" ? "சேமித்ததை நீக்கு" : lang === "ml" ? "ബുക്ക്‌മാർക്ക് നീക്കുക" : "Remove Bookmark") : (lang === "ta" ? "செய்தியைச் சேமி" : lang === "ml" ? "വാർത്ത ബുക്ക്‌മാർക്ക് ചെയ്യുക" : "Bookmark Article")}
                     >
                       <Bookmark className={`w-3.5 h-3.5 ${bookmarks.includes(post.id) ? "fill-amber-500 text-amber-500" : "text-slate-600"}`} />
                     </button>
