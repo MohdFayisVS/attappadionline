@@ -173,9 +173,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
   // 5. Bus Timings Form
   const [busForm, setBusForm] = useState({
-    routeEn: "", routeMl: "", type: "KSRTC", busTypeEn: "", busTypeMl: "",
-    runsEn: "Daily Line", runsMl: "എല്ലാ ദിവസവും", frequencyEn: "", frequencyMl: "",
-    timingsEn: "", timingsMl: "", privateBusName: ""
+    routeEn: "", routeMl: "", routeTa: "", type: "KSRTC", busTypeEn: "", busTypeMl: "", busTypeTa: "",
+    runsEn: "Daily Line", runsMl: "എല്ലാ ദിവസവും", runsTa: "தினசரி", frequencyEn: "", frequencyMl: "", frequencyTa: "",
+    timingsEn: "", timingsMl: "", timingsTa: "", privateBusName: ""
   });
   const [busTransitList, setBusTransitList] = useState<BusStopTransit[]>([]);
   const [routeForm, setRouteForm] = useState({ routeEn: "", routeMl: "" });
@@ -287,9 +287,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       url: "", titleEn: "", titleMl: "", titleTa: "", descEn: "", descMl: "", descTa: ""
     });
     setBusForm({
-      routeEn: "", routeMl: "", type: "KSRTC", busTypeEn: "", busTypeMl: "",
-      runsEn: "Daily Line", runsMl: "എല്ലാ ദിവസവും", frequencyEn: "", frequencyMl: "",
-      timingsEn: "", timingsMl: "", privateBusName: ""
+      routeEn: "", routeMl: "", routeTa: "", type: "KSRTC", busTypeEn: "", busTypeMl: "", busTypeTa: "",
+      runsEn: "Daily Line", runsMl: "എല്ലാ ദിവസവും", runsTa: "தினசரி", frequencyEn: "", frequencyMl: "", frequencyTa: "",
+      timingsEn: "", timingsMl: "", timingsTa: "", privateBusName: ""
     });
     setBusTransitList([]);
     setDirForm({
@@ -1502,15 +1502,20 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setBusForm({
       routeEn: item.routeEn,
       routeMl: item.routeMl,
+      routeTa: item.routeTa || "",
       type: item.type || "KSRTC",
       busTypeEn: item.busTypeEn || "",
       busTypeMl: item.busTypeMl || "",
+      busTypeTa: item.busTypeTa || "",
       runsEn: item.runsEn || "Daily Line",
       runsMl: item.runsMl || "എല്ലാ ദിവസവും",
+      runsTa: item.runsTa || "",
       frequencyEn: item.frequencyEn || "",
       frequencyMl: item.frequencyMl || "",
+      frequencyTa: item.frequencyTa || "",
       timingsEn: item.timingsEn || "",
       timingsMl: item.timingsMl || "",
+      timingsTa: item.timingsTa || "",
       privateBusName: item.privateBusName || ""
     });
     setBusTransitList(item.list || []);
@@ -1556,7 +1561,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Trans-valley bus timetable updated!" : "Trans-valley bus timetable registered!");
-      setBusForm({ routeEn: "", routeMl: "", type: "KSRTC", busTypeEn: "", busTypeMl: "", runsEn: "Daily Line", runsMl: "എല്ലാ ദിവസവും", frequencyEn: "", frequencyMl: "", timingsEn: "", timingsMl: "", privateBusName: "" });
+      setBusForm({ routeEn: "", routeMl: "", routeTa: "", type: "KSRTC", busTypeEn: "", busTypeMl: "", busTypeTa: "", runsEn: "Daily Line", runsMl: "എല്ലാ ദിവസവും", runsTa: "தினசரி", frequencyEn: "", frequencyMl: "", frequencyTa: "", timingsEn: "", timingsMl: "", timingsTa: "", privateBusName: "" });
       setBusTransitList([]);
       setEditingId(null);
       setEditingType(null);
@@ -4767,6 +4772,11 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 </div>
 
                 <form onSubmit={handleCreateBusRoute} className="space-y-3">
+                  <label className="block text-sm font-semibold">route (Tamil)<input lang="ta" value={busForm.routeTa} onChange={e => setBusForm({...busForm, routeTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">busType (Tamil)<input lang="ta" value={busForm.busTypeTa} onChange={e => setBusForm({...busForm, busTypeTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">runs (Tamil)<input lang="ta" value={busForm.runsTa} onChange={e => setBusForm({...busForm, runsTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">frequency (Tamil)<input lang="ta" value={busForm.frequencyTa} onChange={e => setBusForm({...busForm, frequencyTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">timings (Tamil)<input lang="ta" value={busForm.timingsTa} onChange={e => setBusForm({...busForm, timingsTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   
                   {/* ROUTE SELECT FROM REGISTRY */}
                   <div className="bg-blue-50/50 p-3 rounded-lg border border-blue-100/50 space-y-2">
