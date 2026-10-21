@@ -180,7 +180,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   const [busTransitList, setBusTransitList] = useState<BusStopTransit[]>([]);
   const [routeForm, setRouteForm] = useState({ routeEn: "", routeMl: "" });
   const [transitInput, setTransitInput] = useState({
-    time: "", typeEn: "", typeMl: "", typeTa: "", viaCodeEn: "", viaCodeMl: ""
+    time: "", typeEn: "", typeMl: "", typeTa: "", viaCodeEn: "", viaCodeMl: "", viaCodeTa: ""
   });
 
   // 6. Directory Form
@@ -1525,12 +1525,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   };
 
   const handleAddTransitStop = () => {
-    if (!transitInput.time || !transitInput.typeEn || !transitInput.typeMl) {
+    if (!transitInput.time || !transitInput.typeEn || !transitInput.typeMl || !transitInput.typeTa) {
       alert("Transit stop requires Time, Service type, and Via stops info.");
       return;
     }
     setBusTransitList(prev => [...prev, { ...transitInput }]);
-    setTransitInput({ time: "", typeEn: "", typeMl: "", typeTa: "", viaCodeEn: "", viaCodeMl: "" });
+    setTransitInput({ time: "", typeEn: "", typeMl: "", typeTa: "", viaCodeEn: "", viaCodeMl: "", viaCodeTa: "" });
   };
 
   const handleCreateBusRoute = async (e: React.FormEvent) => {
@@ -4776,6 +4776,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 </div>
 
                 <form onSubmit={handleCreateBusRoute} className="space-y-3">
+                  <div className="text-xs text-slate-600">Every bus stop must have its Tamil name before it can be added to the schedule.</div>
                   <label className="block text-sm font-semibold">route (Tamil)<input lang="ta" value={busForm.routeTa} onChange={e => setBusForm({...busForm, routeTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
 <label className="block text-sm font-semibold">busType (Tamil)<input lang="ta" value={busForm.busTypeTa} onChange={e => setBusForm({...busForm, busTypeTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
 <label className="block text-sm font-semibold">runs (Tamil)<input lang="ta" value={busForm.runsTa} onChange={e => setBusForm({...busForm, runsTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
@@ -5023,6 +5024,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                           className="w-full border rounded p-1 bg-white" 
                         />
                       </div>
+                      <label className="block text-sm font-semibold">Stop Name (Tamil)<input lang="ta" value={transitInput.typeTa} onChange={e => setTransitInput({...transitInput, typeTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                       <div>
                         <span className="text-[9px] font-bold text-slate-400 block mb-0.5">Stop Name Ml</span>
                         <input 
