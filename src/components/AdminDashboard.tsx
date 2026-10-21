@@ -113,7 +113,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
   // 2. Opinions Form
   const [opinionForm, setOpinionForm] = useState({
-    authorName: "", titleEn: "", titleMl: "", contentEn: "", contentMl: "", approved: true
+    authorName: "", titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", approved: true
   });
 
   // 3. Events Form
@@ -195,7 +195,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
   // 8. Notices Form
   const [noticeForm, setNoticeForm] = useState({
-    titleEn: "", titleMl: "", contentEn: "", contentMl: "",
+    titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
     type: "notice",
     severity: "medium",
     date: "",
@@ -258,11 +258,11 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setEditingId(null);
     setEditingType(null);
     setNewsForm({
-      titleEn: "", titleMl: "", contentEn: "", contentMl: "",
+      titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
       category: "latest", regions: [], image: "", isSlide: false, isCard: true
     });
     setOpinionForm({
-      authorName: "", titleEn: "", titleMl: "", contentEn: "", contentMl: "", approved: true
+      authorName: "", titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", approved: true
     });
     setEventForm({
       titleEn: "", titleMl: "", date: "", time: "", locationEn: "", locationMl: "", descriptionEn: "", descriptionMl: ""
@@ -780,7 +780,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     if (response.ok) {
       triggerToast(isEdit ? "News article updated successfully!" : "News article published successfully! (വാർത്ത പ്രസിദ്ധീകരിച്ചു)");
       setNewsForm({
-        titleEn: "", titleMl: "", contentEn: "", contentMl: "",
+        titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
         category: "latest", regions: [], image: "", isSlide: false, isCard: true
       });
       setEditingId(null);
@@ -1020,7 +1020,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Opinion column updated successfully." : "Opinion column published successfully.");
-      setOpinionForm({ authorName: "", titleEn: "", titleMl: "", contentEn: "", contentMl: "", approved: true });
+      setOpinionForm({ authorName: "", titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", approved: true });
       setEditingId(null);
       setEditingType(null);
       fetchOpinions();
@@ -1715,7 +1715,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Notice details updated successfully." : "New announcement notice published.");
-      setNoticeForm({ titleEn: "", titleMl: "", contentEn: "", contentMl: "", type: "notice", severity: "medium", date: "", active: true, image: "" });
+      setNoticeForm({ titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", type: "notice", severity: "medium", date: "", active: true, image: "" });
       setEditingId(null);
       setEditingType(null);
       fetchNotices();
@@ -5228,7 +5228,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   onClick={() => {
                     setEditingId(null);
                     setEditingType(null);
-                    setNoticeForm({ titleEn: "", titleMl: "", contentEn: "", contentMl: "", type: "notice", severity: "medium", date: "", active: true });
+                    setNoticeForm({ titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", type: "notice", severity: "medium", date: "", active: true });
                   }}
                   className="px-3 py-1.5 bg-slate-105 hover:bg-slate-205 text-slate-805 font-bold rounded-lg transition text-[10px] cursor-pointer"
                 >
