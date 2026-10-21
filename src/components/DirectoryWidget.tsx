@@ -723,10 +723,10 @@ export default function DirectoryWidget({
                   >
                     <div>
                       <h4 className="font-bold text-[#052962] leading-tight mb-0.5">
-                        {lang !== "ml" ? item.nameEn : item.nameMl}
+                        {lang === "ta" ? (item.nameTa || item.nameEn) : lang === "ml" ? (item.nameMl || item.nameEn) : item.nameEn}
                       </h4>
                       <p className="text-[9px] text-gray-400 uppercase font-semibold">
-                        {item.category} • {lang !== "ml" ? item.locationEn : item.locationMl}
+                        {item.category} • {lang === "ta" ? (item.locationTa || item.locationEn) : lang === "ml" ? (item.locationMl || item.locationEn) : item.locationEn}
                       </p>
                     </div>
                     
@@ -1544,9 +1544,9 @@ export default function DirectoryWidget({
                 const filtered = lostFoundList.filter(item => {
                   if (lfFilterTab !== "all" && item.type !== lfFilterTab) return false;
                   if (q) {
-                    const matchTitle = item.itemTitleEn.toLowerCase().includes(q) || item.itemTitleMl.toLowerCase().includes(q);
-                    const matchDesc = item.descriptionEn.toLowerCase().includes(q) || item.descriptionMl.toLowerCase().includes(q);
-                    const matchLoc = item.locationEn.toLowerCase().includes(q) || item.locationMl.toLowerCase().includes(q);
+                    const matchTitle = [item.itemTitleEn, item.itemTitleMl, item.itemTitleTa].some(v => (v || "").toLowerCase().includes(q));
+                    const matchDesc = [item.descriptionEn, item.descriptionMl, item.descriptionTa].some(v => (v || "").toLowerCase().includes(q));
+                    const matchLoc = [item.locationEn, item.locationMl, item.locationTa].some(v => (v || "").toLowerCase().includes(q));
                     return matchTitle || matchDesc || matchLoc;
                   }
                   return true;
@@ -1592,7 +1592,7 @@ export default function DirectoryWidget({
                         <div className="flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-gray-400 font-bold">
                           <span className="flex items-center gap-0.5">
                             <MapPin className="w-3.5 h-3.5 text-red-500" />
-                            {lang !== "ml" ? item.locationEn : item.locationMl}
+                            {lang === "ta" ? (item.locationTa || item.locationEn) : lang === "ml" ? (item.locationMl || item.locationEn) : item.locationEn}
                           </span>
                           <span>
                             By: <strong className="text-slate-700">{item.reporterName}</strong>
