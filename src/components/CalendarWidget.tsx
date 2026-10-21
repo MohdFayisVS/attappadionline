@@ -387,6 +387,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
                           </button>
                         )}
                         <ShareButtons 
+                          lang={lang}
                           title={eventText(ev, "title")}
                           summary={`${eventText(ev, "location")}${lang === "en" ? " at " : ", "}${ev.time}`}
                           url={`${window.location.origin}/#event-${ev.id}`}
