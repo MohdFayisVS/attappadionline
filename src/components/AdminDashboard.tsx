@@ -5013,6 +5013,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   <Phone className="w-5 h-5 text-[#005689]" /> Register business / local service directory card
                 </h3>
                 <form onSubmit={handleCreateDirectory} className="space-y-3">
+                  <label className="block text-sm font-semibold">Vendor Name (Tamil)<input lang="ta" required value={dirForm.nameTa} onChange={e => setDirForm({...dirForm, nameTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">Location (Tamil)<input lang="ta" required value={dirForm.locationTa} onChange={e => setDirForm({...dirForm, locationTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-slate-500 font-semibold mb-0.5">Vendor Name (En)</label>
@@ -5144,6 +5146,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   <AlertCircle className="w-5 h-5 text-red-650 shrink-0" /> Publish critical emergency helpline number
                 </h3>
                 <form onSubmit={handleCreateEmergency} className="space-y-3">
+                  <label className="block text-sm font-semibold">Service Name (Tamil)<input lang="ta" required value={emergForm.nameTa} onChange={e => setEmergForm({...emergForm, nameTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-slate-500 font-semibold mb-0.5">Service agency (En)</label>
@@ -5262,6 +5265,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   {editingId && editingType === "notice" ? "Modify existing notice announcement" : "Publish new notice announcement"}
                 </h3>
                 <form onSubmit={handleCreateNotice} className="space-y-4">
+                  <label className="block text-sm font-semibold">Notice Title (Tamil)<input lang="ta" required value={noticeForm.titleTa} onChange={e => setNoticeForm({...noticeForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">Notice Content (Tamil)<textarea lang="ta" required value={noticeForm.contentTa} onChange={e => setNoticeForm({...noticeForm, contentTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-slate-500 font-semibold mb-0.5">Notice Title (English)</label>
