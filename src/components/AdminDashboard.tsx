@@ -4303,6 +4303,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             {exploreSubTab === "travelogues" && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <form onSubmit={handleCreateTravelogue} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5">
+                  <label className="block text-sm font-semibold">title (Tamil)<input lang="ta" value={travelogueForm.titleTa} onChange={e => setTravelogueForm({...travelogueForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  <label className="block text-sm font-semibold">author (Tamil)<input lang="ta" value={travelogueForm.authorTa} onChange={e => setTravelogueForm({...travelogueForm, authorTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  <label className="block text-sm font-semibold">snippet (Tamil)<textarea lang="ta" value={travelogueForm.snippetTa} onChange={e => setTravelogueForm({...travelogueForm, snippetTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  <label className="block text-sm font-semibold">readTime (Tamil)<input lang="ta" value={travelogueForm.readTimeTa} onChange={e => setTravelogueForm({...travelogueForm, readTimeTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
                     <PlusCircle className="w-4 h-4 text-[#005689]" /> Publish travel blog story / Column
                   </h3>
@@ -4470,6 +4474,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             {exploreSubTab === "photos" && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <form onSubmit={handleCreatePhoto} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5">
+                  <label className="block text-sm font-semibold">title (Tamil)<input lang="ta" value={photoForm.titleTa} onChange={e => setPhotoForm({...photoForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  <label className="block text-sm font-semibold">desc (Tamil)<textarea lang="ta" value={photoForm.descTa} onChange={e => setPhotoForm({...photoForm, descTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
                     <PlusCircle className="w-4 h-4 text-[#005689]" /> Register/Add Photo to Hub Frame
                   </h3>
