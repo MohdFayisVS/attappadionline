@@ -1547,6 +1547,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       { en: "timingsEn", ml: "timingsMl" }
     ]);
 
+    if (!translatedBus.routeTa?.trim() || !translatedBus.busTypeTa?.trim() || !translatedBus.runsTa?.trim()) {
+      alert("Tamil route, bus type and operating days are required.");
+      return;
+    }
     const isEdit = typeof editingId === "string" && editingType === "busroutes";
     const url = isEdit ? `/api/busroutes/${editingId}` : "/api/busroutes";
     const method = isEdit ? "PUT" : "POST";
