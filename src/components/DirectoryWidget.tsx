@@ -176,9 +176,11 @@ export default function DirectoryWidget({
   const [isRegisteringAuto, setIsRegisteringAuto] = useState(false);
   const [regNameEn, setRegNameEn] = useState("");
   const [regNameMl, setRegNameMl] = useState("");
+  const [regNameTa, setRegNameTa] = useState("");
   const [regNumber, setRegNumber] = useState("");
   const [regContact, setRegContact] = useState("");
   const [regLocationEn, setRegLocationEn] = useState("Agali");
+  const [regLocationTa, setRegLocationTa] = useState("");
   const [isTranslating, setIsTranslating] = useState(false);
   const [regError, setRegError] = useState("");
   const [regSuccess, setRegSuccess] = useState("");
@@ -374,7 +376,7 @@ export default function DirectoryWidget({
     setRegError("");
     setRegSuccess("");
 
-    if (!regNameEn.trim() || !regNameMl.trim() || !regNumber.trim() || !regContact.trim()) {
+    if (!regNameEn.trim() || !regNameMl.trim() || !regNameTa.trim() || !regLocationTa.trim() || !regNumber.trim() || !regContact.trim()) {
       setRegError(lang === "ta" ? "அனைத்து விவரங்களையும் நிரப்பவும்" : lang === "ml" ? "ദയവായി എല്ലാ വിവരങ്ങളും നൽകുക" : "Please fill all fields");
       return;
     }
@@ -389,10 +391,12 @@ export default function DirectoryWidget({
         body: JSON.stringify({
           driverNameEn: regNameEn.trim(),
           driverNameMl: regNameMl.trim(),
+          driverNameTa: regNameTa.trim(),
           autoNumber: regNumber.trim().toUpperCase(),
           contact: regContact.trim(),
           locationEn: regLocationEn,
           locationMl: matchedMl,
+          locationTa: regLocationTa.trim(),
           isAvailable: true
         })
       });
@@ -405,6 +409,8 @@ export default function DirectoryWidget({
 
         setRegNameEn("");
         setRegNameMl("");
+        setRegNameTa("");
+        setRegLocationTa("");
         setRegNumber("");
         setRegContact("");
 
@@ -911,6 +917,7 @@ export default function DirectoryWidget({
                       className="w-full border border-gray-200 p-2 rounded focus:ring-1 focus:ring-emerald-500 focus:outline-none placeholder-gray-400 bg-white"
                     />
                   </div>
+                  <div className="space-y-1"><label className="block text-[11px] font-bold text-slate-700">Driver name (Tamil)*</label><input required lang="ta" value={regNameTa} onChange={e => setRegNameTa(e.target.value)} className="w-full border border-gray-200 p-2 rounded font-anek-tamil" /></div>
 
                   {/* Auto Number */}
                   <div className="space-y-1">
@@ -959,6 +966,7 @@ export default function DirectoryWidget({
                       ))}
                     </select>
                   </div>
+                  <div className="space-y-1"><label className="block text-[11px] font-bold text-slate-700">Location (Tamil)*</label><input required lang="ta" value={regLocationTa} onChange={e => setRegLocationTa(e.target.value)} className="w-full border border-gray-200 p-2 rounded font-anek-tamil" /></div>
 
                   {/* Buttons */}
                   <div className="flex gap-2 sm:col-span-2 pt-2">
