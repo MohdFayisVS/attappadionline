@@ -206,13 +206,15 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   // 8b. Quick Tickers Form
   const [quickBreakingForm, setQuickBreakingForm] = useState({
     titleEn: "",
-    titleMl: ""
+    titleMl: "",
+    titleTa: ""
   });
   const [quickNoticeForm, setQuickNoticeForm] = useState({
     titleEn: "",
     titleMl: "", titleTa: "",
     contentEn: "",
     contentMl: "",
+    contentTa: "",
     type: "notice",
     severity: "medium",
     date: new Date().toISOString().split("T")[0],
@@ -1857,11 +1859,17 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       }
     }
 
+    if (!translatedForm.titleTa?.trim()) {
+      alert("Tamil breaking headline is required.");
+      return;
+    }
     const payload = {
       titleEn: translatedForm.titleEn || "Breaking Alert",
       titleMl: translatedForm.titleMl || "ബ്രേക്കിംഗ് വാർത്ത",
       contentEn: "Urgent Live Ticker Alert",
       contentMl: "അടിയന്തിര തത്സമയ അലേർട്ട്",
+      titleTa: translatedForm.titleTa,
+      contentTa: "அவசர நேரடி செய்தி",
       category: "breaking",
       regions: [],
       image: "",
@@ -1877,7 +1885,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
     if (res.ok) {
       triggerToast("🔴 New Breaking Ticker item published live!");
-      setQuickBreakingForm({ titleEn: "", titleMl: "" });
+      setQuickBreakingForm({ titleEn: "", titleMl: "", titleTa: "" });
       fetchNews();
     }
   };
@@ -1959,6 +1967,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       }
     }
 
+    if (!translatedForm.titleTa?.trim() || !translatedForm.contentTa?.trim()) {
+      alert("Tamil quick notice title and content are required.");
+      return;
+    }
     const res = await adminFetch("/api/notices", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
