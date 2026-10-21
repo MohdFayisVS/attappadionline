@@ -185,12 +185,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
   // 6. Directory Form
   const [dirForm, setDirForm] = useState({
-    nameEn: "", nameMl: "", category: "hospital" as any, contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി"
+    nameEn: "", nameMl: "", nameTa: "", category: "hospital" as any, contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി", locationTa: "அட்டப்பாடி"
   });
 
   // 7. Emergency Contact Form
   const [emergForm, setEmergForm] = useState({
-    nameEn: "", nameMl: "", number: "", type: "hospital" as any
+    nameEn: "", nameMl: "", nameTa: "", number: "", type: "hospital" as any
   });
 
   // 8. Notices Form
@@ -293,10 +293,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     setBusTransitList([]);
     setDirForm({
-      nameEn: "", nameMl: "", category: "hospital", contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി"
+      nameEn: "", nameMl: "", nameTa: "", category: "hospital", contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി"
     });
     setEmergForm({
-      nameEn: "", nameMl: "", number: "", type: "hospital"
+      nameEn: "", nameMl: "", nameTa: "", number: "", type: "hospital"
     });
     setLpgForm({
       agencyNameEn: "",
@@ -1581,10 +1581,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setDirForm({
       nameEn: item.nameEn,
       nameMl: item.nameMl,
+      nameTa: item.nameTa || "",
       category: item.category || "hospital",
       contact: item.contact || "",
       locationEn: item.locationEn || "Attappadi",
-      locationMl: item.locationMl || "അട്ടപ്പാടി"
+      locationMl: item.locationMl || "അട്ടപ്പാടി",
+      locationTa: item.locationTa || ""
     });
     setEditingId(item.id);
     setEditingType("directory");
@@ -1609,7 +1611,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Local business phone listing updated!" : "Local business phone listing saved!");
-      setDirForm({ nameEn: "", nameMl: "", category: "hospital", contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി" });
+      setDirForm({ nameEn: "", nameMl: "", nameTa: "", category: "hospital", contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി" });
       setEditingId(null);
       setEditingType(null);
       fetchDirectory();
@@ -1638,6 +1640,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setEmergForm({
       nameEn: item.nameEn,
       nameMl: item.nameMl,
+      nameTa: item.nameTa || "",
       number: item.number || "",
       type: item.type || "hospital"
     });
@@ -1663,7 +1666,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Critical hazard contact updated." : "Critical hazard contact saved.");
-      setEmergForm({ nameEn: "", nameMl: "", number: "", type: "hospital" });
+      setEmergForm({ nameEn: "", nameMl: "", nameTa: "", number: "", type: "hospital" });
       setEditingId(null);
       setEditingType(null);
       fetchEmergency();
