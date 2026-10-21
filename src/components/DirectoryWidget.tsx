@@ -226,6 +226,10 @@ export default function DirectoryWidget({
     e.preventDefault();
     setRegError("");
     setRegSuccess("");
+    if (!lfTitleTa.trim() || !lfDescTa.trim() || !lfLocationTa.trim()) {
+      setRegError(lang === "ta" ? "தமிழ் தலைப்பு, விவரம் மற்றும் இடத்தை நிரப்பவும்." : lang === "ml" ? "തമിഴ് തലക്കെട്ടും വിവരണവും സ്ഥലവും നൽകുക." : "Please provide the Tamil title, description and location.");
+      return;
+    }
     setLfSubmitting(true);
 
     try {
