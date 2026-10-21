@@ -615,7 +615,7 @@ app.post("/api/news", async (req, res) => {
 
 app.put("/api/news/:id", async (req, res) => {
   const { id } = req.params;
-  const { titleEn, titleMl, contentEn, contentMl, category, regions, image, isSlide, isCard } = req.body;
+  const { titleEn, titleMl, titleTa, contentEn, contentMl, contentTa, category, regions, image, isSlide, isCard } = req.body;
   
   const newsList = await getCollectionData("news");
   const itemIndex = newsList.findIndex((item: any) => item.id === id);
@@ -1182,7 +1182,7 @@ app.get("/api/notices", async (req, res) => {
 });
 
 app.post("/api/notices", async (req, res) => {
-  const { titleEn, titleMl, contentEn, contentMl, type, severity, date, active, image } = req.body;
+  const { titleEn, titleMl, titleTa, contentEn, contentMl, contentTa, type, severity, date, active, image } = req.body;
   if (!noticesParamsCheck(req.body)) {
     return res.status(400).json({ error: "Missing required fields for Notice" });
   }
@@ -1191,8 +1191,10 @@ app.post("/api/notices", async (req, res) => {
     id: "not_" + Date.now().toString(),
     titleEn,
     titleMl,
+    titleTa: typeof titleTa === "string" ? titleTa.trim() : "",
     contentEn,
     contentMl,
+    contentTa: typeof contentTa === "string" ? contentTa.trim() : "",
     type: type || "notice",
     severity: severity || "medium",
     date: date || new Date().toISOString().split("T")[0],
@@ -1217,7 +1219,7 @@ function noticesParamsCheck(body: any) {
 
 app.put("/api/notices/:id", async (req, res) => {
   const { id } = req.params;
-  const { titleEn, titleMl, contentEn, contentMl, type, severity, date, active, image } = req.body;
+  const { titleEn, titleMl, titleTa, contentEn, contentMl, contentTa, type, severity, date, active, image } = req.body;
   
   const noticesList = await getCollectionData("notices");
   const itemIndex = noticesList.findIndex((not: any) => not.id === id);
@@ -1227,8 +1229,10 @@ app.put("/api/notices/:id", async (req, res) => {
       ...noticesList[itemIndex],
       titleEn: titleEn !== undefined ? titleEn : noticesList[itemIndex].titleEn,
       titleMl: titleMl !== undefined ? titleMl : noticesList[itemIndex].titleMl,
+      titleTa: titleTa !== undefined ? titleTa : noticesList[itemIndex].titleTa,
       contentEn: contentEn !== undefined ? contentEn : noticesList[itemIndex].contentEn,
       contentMl: contentMl !== undefined ? contentMl : noticesList[itemIndex].contentMl,
+      contentTa: contentTa !== undefined ? contentTa : noticesList[itemIndex].contentTa,
       type: type !== undefined ? type : noticesList[itemIndex].type,
       severity: severity !== undefined ? severity : noticesList[itemIndex].severity,
       date: date !== undefined ? date : noticesList[itemIndex].date,
