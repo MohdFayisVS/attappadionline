@@ -1051,7 +1051,7 @@ export default function DirectoryWidget({
                           </div>
 
                           <h4 className="font-extrabold text-[#052962] text-sm leading-tight truncate">
-                            {lang !== "ml" ? auto.driverNameEn : auto.driverNameMl}
+                            {lang === "ta" ? (auto.driverNameTa || auto.driverNameEn) : lang === "ml" ? (auto.driverNameMl || auto.driverNameEn) : auto.driverNameEn}
                           </h4>
 
                           <p className="text-[10px] text-gray-500 font-bold flex items-center gap-1">
@@ -1583,7 +1583,7 @@ export default function DirectoryWidget({
                             {lang === "ta" ? (item.itemTitleTa || item.itemTitleEn) : lang === "ml" ? (item.itemTitleMl || item.itemTitleEn) : item.itemTitleEn}
                           </h4>
                           <p className="text-slate-500 text-[11px] leading-relaxed mt-1 font-semibold">
-                            {lang !== "ml" ? item.descriptionEn : item.descriptionMl}
+                            {lang === "ta" ? (item.descriptionTa || item.descriptionEn) : lang === "ml" ? (item.descriptionMl || item.descriptionEn) : item.descriptionEn}
                           </p>
                         </div>
                       </div>
