@@ -1084,6 +1084,11 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       return;
     }
 
+    if (!translatedEvent.titleTa?.trim() || !translatedEvent.locationTa?.trim()) {
+      alert("Tamil event name and venue are required.");
+      return;
+    }
+
     const isEdit = typeof editingId === "string" && editingType === "events";
     const url = isEdit ? `/api/events/${editingId}` : "/api/events";
     const method = isEdit ? "PUT" : "POST";
