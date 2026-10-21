@@ -24,8 +24,8 @@ export default function LatestNews({
   onToggleBookmark
 }: LatestNewsProps) {
   const [newsSearch, setNewsSearch] = useState("");
-  const newsTitle = (post: NewsPost) => lang === "ta" ? (post.titleTa || post.titleEn) : lang === "ml" ? post.titleMl : post.titleEn;
-  const newsBody = (post: NewsPost) => lang === "ta" ? (post.contentTa || post.contentEn) : lang === "ml" ? post.contentMl : post.contentEn;
+  const newsTitle = (post: NewsPost) => (lang === "ta" ? [post.titleTa, post.titleEn, post.titleMl] : lang === "ml" ? [post.titleMl, post.titleEn, post.titleTa] : [post.titleEn, post.titleMl, post.titleTa]).find(value => typeof value === "string" && value.trim()) || "";
+  const newsBody = (post: NewsPost) => (lang === "ta" ? [post.contentTa, post.contentEn, post.contentMl] : lang === "ml" ? [post.contentMl, post.contentEn, post.contentTa] : [post.contentEn, post.contentMl, post.contentTa]).find(value => typeof value === "string" && value.trim()) || "";
   const [activeCategoryTab, setActiveCategoryTab] = useState<"all" | "breaking" | "latest" | "updates">("all");
 
   const regionNames: { [key: string]: { en: string; ml: string; ta: string } } = {
@@ -56,8 +56,8 @@ export default function LatestNews({
     // 3. Text Search
     if (newsSearch.trim() !== "") {
       const q = newsSearch.toLowerCase();
-      const matchEn = post.titleEn.toLowerCase().includes(q) || post.contentEn.toLowerCase().includes(q);
-      const matchMl = post.titleMl.toLowerCase().includes(q) || post.contentMl.toLowerCase().includes(q);
+      const matchEn = (post.titleEn || "").toLowerCase().includes(q) || (post.contentEn || "").toLowerCase().includes(q);
+      const matchMl = (post.titleMl || "").toLowerCase().includes(q) || (post.contentMl || "").toLowerCase().includes(q);
       const matchTa = (post.titleTa || "").toLowerCase().includes(q) || (post.contentTa || "").toLowerCase().includes(q);
       return matchEn || matchMl || matchTa;
     }
@@ -66,7 +66,7 @@ export default function LatestNews({
   });
 
   return (
-    <div className="space-y-6 text-gray-800 dark:text-slate-200">
+    <div lang={lang} className="ao-localized-content space-y-6 text-gray-800 dark:text-slate-200">
       
       {/* Category control bar & search */}
       <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 p-4 rounded-lg shadow-sm space-y-4 animate-fade-in">
@@ -179,7 +179,7 @@ export default function LatestNews({
                         onToggleBookmark(post.id, e);
                       }}
                       className="absolute top-2.5 right-2.5 p-1.5 bg-white/95 hover:bg-white text-slate-700 hover:text-amber-500 rounded-full shadow-md hover:scale-110 transition duration-200 z-10 flex items-center justify-center cursor-pointer border border-slate-100"
-                      title={bookmarks.includes(post.id) ? ("Remove Bookmark") : ("Bookmark Article")}
+                      title={bookmarks.includes(post.id) ? (lang === "ta" ? "சேமித்ததை நீக்கு" : lang === "ml" ? "ബുക്ക്‌മാർക്ക് നീക്കുക" : "Remove Bookmark") : (lang === "ta" ? "செய்தியைச் சேமி" : lang === "ml" ? "വാർത്ത ബുക്ക്‌മാർക്ക് ചെയ്യുക" : "Bookmark Article")}
                     >
                       <Bookmark className={`w-3.5 h-3.5 ${bookmarks.includes(post.id) ? "fill-amber-500 text-amber-500" : "text-slate-600"}`} />
                     </button>
@@ -193,11 +193,11 @@ export default function LatestNews({
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-gray-400">
                     <span className="flex items-center gap-1">
                       <Calendar className="w-3.5 h-3.5" />
-                      <span>{new Date(post.publishedAt).toLocaleDateString(lang === "ml" ? "ml-IN" : "en-US")}</span>
+                      <span>{new Date(post.publishedAt).toLocaleDateString(lang === "ta" ? "ta-IN" : lang === "ml" ? "ml-IN" : "en-US")}</span>
                     </span>
                     <span className="flex items-center gap-1">
                       <Eye className="w-3.5 h-3.5" />
-                      <span>{post.views || 1} views</span>
+                      <span>{post.views ?? 0} {lang === "ta" ? "பார்வைகள்" : lang === "ml" ? "കാഴ്ചകൾ" : "views"}</span>
                     </span>
                   </div>
 

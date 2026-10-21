@@ -71,7 +71,7 @@ export default function WeatherWidget({
   const avgTemp = temps.length > 0 ? Math.round(temps.reduce((sum, item) => sum + Number(item), 0) / temps.length) : 28;
 
   return (
-    <div className={`rounded-2xl shadow-xs p-4.5 space-y-3 font-anek-malayalam border transition-colors duration-300 ${
+    <div className={`rounded-2xl shadow-xs p-4.5 space-y-3 ao-localized-content border transition-colors duration-300 ${
       theme === "dark" 
         ? "bg-[#090d16] border-slate-800 text-slate-100" 
         : "bg-white border-slate-200 text-slate-800"
@@ -84,10 +84,10 @@ export default function WeatherWidget({
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
-          <h3 className={`text-xs font-black tracking-wider uppercase ${
+          <h3 lang="en" className={`ao-fixed-ui text-xs font-black tracking-wider uppercase ${
             theme === "dark" ? "text-slate-200" : "text-[#052962]"
           }`}>
-            {lang !== "ml" ? "WEATHER NOW" : "കാലാവസ്ഥ ഇപ്പോൾ"}
+            WEATHER NOW
           </h3>
         </div>
         
@@ -99,7 +99,7 @@ export default function WeatherWidget({
               ? "hover:bg-slate-800 border-slate-800 text-slate-400 hover:text-white" 
               : "hover:bg-slate-50 border-slate-100 text-slate-400 hover:text-[#052962]"
           }`}
-          title="Refresh Weather Info"
+          title={lang === "ta" ? "வானிலை தகவலைப் புதுப்பிக்கவும்" : lang === "ml" ? "കാലാവസ്ഥ പുതുക്കുക" : "Refresh Weather Info"}
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
         </button>
@@ -120,7 +120,7 @@ export default function WeatherWidget({
             <span className={`text-[8px] font-black uppercase tracking-wider block leading-none ${
               theme === "dark" ? "text-yellow-400" : "text-[#ffe500]"
             }`}>
-              {lang !== "ml" ? "VALLEY AVG" : "അട്ടപ്പാടി"}
+              {lang === "ta" ? "பள்ளத்தாக்கு சராசரி" : lang === "ml" ? "താഴ്‌വര ശരാശരി" : "VALLEY AVG"}
             </span>
             {/* Display pure visual icon instead of text description */}
             <div className="flex items-center justify-center py-2">
@@ -170,12 +170,12 @@ export default function WeatherWidget({
       <div className={`flex items-center justify-between text-[8px] font-bold border-t pt-2 select-none ${
         theme === "dark" ? "text-slate-500 border-slate-800" : "text-slate-400 border-slate-100"
       }`}>
-        <span>{lang !== "ml" ? "SWIPE TO BROWSE MICROCLIMATES" : "കൂടുതൽ കാണാൻ വലത്തോട്ട് മാറ്റുക"}</span>
+        <span>{lang === "ta" ? "பகுதிகளின் வானிலையைப் பார்க்க நகர்த்தவும்" : lang === "ml" ? "കൂടുതൽ കാണാൻ വലത്തോട്ട് മാറ്റുക" : "SWIPE TO BROWSE MICROCLIMATES"}</span>
         <span>•</span>
         <span className="flex items-center gap-0.5">
-          <span>{lang !== "ml" ? "Wind: " : "കാറ്റ്: "}</span>
+          <span>{lang === "ta" ? "காற்று: " : lang === "ml" ? "കാറ്റ്: " : "Wind: "}</span>
           <span className={theme === "dark" ? "text-slate-300" : "text-slate-600"}>
-            {lang !== "ml" ? weather.breezeEn : weather.breezeMl}
+            {lang === "ta" ? (weather.breezeTa || weather.breezeEn) : lang === "ml" ? (weather.breezeMl || weather.breezeEn) : weather.breezeEn}
           </span>
         </span>
       </div>

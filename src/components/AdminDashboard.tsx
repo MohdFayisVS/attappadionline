@@ -69,7 +69,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   // Editing/Form states
   // 1. News Form
   const [newsForm, setNewsForm] = useState({
-    titleEn: "", titleMl: "", contentEn: "", contentMl: "",
+    titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
     category: "latest" as "breaking" | "latest" | "updates", regions: [] as string[],
     image: "", isSlide: false, isCard: true
   });
@@ -79,12 +79,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   // LPG Form State
   const [lpgForm, setLpgForm] = useState({
     agencyNameEn: "",
-    agencyNameMl: "",
+    agencyNameMl: "", agencyNameTa: "",
     areasEn: "",
-    areasMl: "",
+    areasMl: "", areasTa: "",
     date: new Date().toLocaleDateString("en-US", { weekday: "long", day: "numeric", month: "long" }),
     statusEn: "Delivering Today",
-    statusMl: "ഇന്ന് വിതരണമുണ്ട്",
+    statusMl: "ഇന്ന് വിതരണമുണ്ട്", statusTa: "இன்று விநியோகம்",
     contact: "",
     notesEn: "",
     notesMl: ""
@@ -113,33 +113,33 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
   // 2. Opinions Form
   const [opinionForm, setOpinionForm] = useState({
-    authorName: "", titleEn: "", titleMl: "", contentEn: "", contentMl: "", approved: true
+    authorName: "", titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", approved: true
   });
 
   // 3. Events Form
   const [eventForm, setEventForm] = useState({
-    titleEn: "", titleMl: "", date: "", time: "", locationEn: "", locationMl: "", descriptionEn: "", descriptionMl: ""
+    titleEn: "", titleMl: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: ""
   });
 
   // 4. Explore sub-forms
   const [destForm, setDestForm] = useState({
-    nameEn: "", nameMl: "", locationEn: "", locationMl: "", image: "",
-    descriptionEn: "", descriptionMl: "", highlightsEn: "", highlightsMl: ""
+    nameEn: "", nameMl: "", nameTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
+    descriptionEn: "", descriptionMl: "", descriptionTa: "", highlightsEn: "", highlightsMl: "", highlightsTa: ""
   });
   const [cultureForm, setCultureForm] = useState({
-    type: "culture", titleEn: "", titleMl: "", subtitleEn: "", subtitleMl: "", image: "",
-    descEn: "", descMl: "", elementEn: "", elementMl: ""
+    type: "culture", titleEn: "", titleMl: "", titleTa: "", subtitleEn: "", subtitleMl: "", subtitleTa: "", image: "",
+    descEn: "", descMl: "", descTa: "", descTa: "", elementEn: "", elementMl: ""
   });
   const [stayForm, setStayForm] = useState({
-    nameEn: "", nameMl: "", typeEn: "", typeMl: "", locationEn: "", locationMl: "", image: "",
-    priceEn: "", priceMl: "", featuresEn: "", featuresMl: ""
+    nameEn: "", nameMl: "", nameTa: "", typeEn: "", typeMl: "", typeTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
+    priceEn: "", priceMl: "", priceTa: "", featuresEn: "", featuresMl: ""
   });
   const [travelogueForm, setTravelogueForm] = useState({
-    titleEn: "", titleMl: "", authorEn: "", authorMl: "", date: "", snippetEn: "", snippetMl: "",
-    readTimeEn: "", readTimeMl: ""
+    titleEn: "", titleMl: "", titleTa: "", authorEn: "", authorMl: "", authorTa: "", date: "", snippetEn: "", snippetMl: "", snippetTa: "",
+    readTimeEn: "", readTimeMl: "", readTimeTa: ""
   });
   const [photoForm, setPhotoForm] = useState({
-    url: "", titleEn: "", titleMl: "", descEn: "", descMl: ""
+    url: "", titleEn: "", titleMl: "", titleTa: "", descEn: "", descMl: "", descTa: ""
   });
 
   // Helper to get standard bus types for selected Authority
@@ -173,29 +173,29 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
   // 5. Bus Timings Form
   const [busForm, setBusForm] = useState({
-    routeEn: "", routeMl: "", type: "KSRTC", busTypeEn: "", busTypeMl: "",
-    runsEn: "Daily Line", runsMl: "എല്ലാ ദിവസവും", frequencyEn: "", frequencyMl: "",
-    timingsEn: "", timingsMl: "", privateBusName: ""
+    routeEn: "", routeMl: "", routeTa: "", type: "KSRTC", busTypeEn: "", busTypeMl: "", busTypeTa: "",
+    runsEn: "Daily Line", runsMl: "എല്ലാ ദിവസവും", runsTa: "தினசரி", frequencyEn: "", frequencyMl: "", frequencyTa: "",
+    timingsEn: "", timingsMl: "", timingsTa: "", privateBusName: ""
   });
   const [busTransitList, setBusTransitList] = useState<BusStopTransit[]>([]);
   const [routeForm, setRouteForm] = useState({ routeEn: "", routeMl: "" });
   const [transitInput, setTransitInput] = useState({
-    time: "", typeEn: "", typeMl: "", viaCodeEn: "", viaCodeMl: ""
+    time: "", typeEn: "", typeMl: "", typeTa: "", viaCodeEn: "", viaCodeMl: "", viaCodeTa: ""
   });
 
   // 6. Directory Form
   const [dirForm, setDirForm] = useState({
-    nameEn: "", nameMl: "", category: "hospital" as any, contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി"
+    nameEn: "", nameMl: "", nameTa: "", category: "hospital" as any, contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി", locationTa: "அட்டப்பாடி"
   });
 
   // 7. Emergency Contact Form
   const [emergForm, setEmergForm] = useState({
-    nameEn: "", nameMl: "", number: "", type: "hospital" as any
+    nameEn: "", nameMl: "", nameTa: "", number: "", type: "hospital" as any
   });
 
   // 8. Notices Form
   const [noticeForm, setNoticeForm] = useState({
-    titleEn: "", titleMl: "", contentEn: "", contentMl: "",
+    titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
     type: "notice",
     severity: "medium",
     date: "",
@@ -206,13 +206,15 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   // 8b. Quick Tickers Form
   const [quickBreakingForm, setQuickBreakingForm] = useState({
     titleEn: "",
-    titleMl: ""
+    titleMl: "",
+    titleTa: ""
   });
   const [quickNoticeForm, setQuickNoticeForm] = useState({
     titleEn: "",
-    titleMl: "",
+    titleMl: "", titleTa: "",
     contentEn: "",
     contentMl: "",
+    contentTa: "",
     type: "notice",
     severity: "medium",
     date: new Date().toISOString().split("T")[0],
@@ -223,14 +225,14 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   // 9. Side Banner Advertisements Form State
   const [adForm, setAdForm] = useState({
     leftAd: {
-      titleEn: "", titleMl: "",
-      subtitleEn: "", subtitleMl: "",
+      titleEn: "", titleMl: "", titleTa: "",
+      subtitleEn: "", subtitleMl: "", subtitleTa: "",
       contact: "", actionType: "share" as "phone" | "website" | "whatsapp" | "share",
       externalUrl: "", image: ""
     },
     rightAd: {
-      titleEn: "", titleMl: "",
-      subtitleEn: "", subtitleMl: "",
+      titleEn: "", titleMl: "", titleTa: "",
+      subtitleEn: "", subtitleMl: "", subtitleTa: "",
       contact: "", actionType: "phone" as "phone" | "website" | "whatsapp" | "share",
       externalUrl: "", image: ""
     }
@@ -258,54 +260,54 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setEditingId(null);
     setEditingType(null);
     setNewsForm({
-      titleEn: "", titleMl: "", contentEn: "", contentMl: "",
+      titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
       category: "latest", regions: [], image: "", isSlide: false, isCard: true
     });
     setOpinionForm({
-      authorName: "", titleEn: "", titleMl: "", contentEn: "", contentMl: "", approved: true
+      authorName: "", titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", approved: true
     });
     setEventForm({
-      titleEn: "", titleMl: "", date: "", time: "", locationEn: "", locationMl: "", descriptionEn: "", descriptionMl: ""
+      titleEn: "", titleMl: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: ""
     });
     setDestForm({
-      nameEn: "", nameMl: "", locationEn: "", locationMl: "", image: "",
+      nameEn: "", nameMl: "", nameTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
       descriptionEn: "", descriptionMl: "", highlightsEn: "", highlightsMl: ""
     });
     setCultureForm({
-      type: "culture", titleEn: "", titleMl: "", subtitleEn: "", subtitleMl: "", image: "",
-      descEn: "", descMl: "", elementEn: "", elementMl: ""
+      type: "culture", titleEn: "", titleMl: "", titleTa: "", subtitleEn: "", subtitleMl: "", subtitleTa: "", image: "",
+      descEn: "", descMl: "", descTa: "", descTa: "", elementEn: "", elementMl: ""
     });
     setStayForm({
-      nameEn: "", nameMl: "", typeEn: "", typeMl: "", locationEn: "", locationMl: "", image: "",
-      priceEn: "", priceMl: "", featuresEn: "", featuresMl: ""
+      nameEn: "", nameMl: "", nameTa: "", typeEn: "", typeMl: "", typeTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
+      priceEn: "", priceMl: "", priceTa: "", featuresEn: "", featuresMl: ""
     });
     setTravelogueForm({
-      titleEn: "", titleMl: "", authorEn: "", authorMl: "", date: "", snippetEn: "", snippetMl: "",
-      readTimeEn: "", readTimeMl: ""
+      titleEn: "", titleMl: "", titleTa: "", authorEn: "", authorMl: "", authorTa: "", date: "", snippetEn: "", snippetMl: "", snippetTa: "",
+      readTimeEn: "", readTimeMl: "", readTimeTa: ""
     });
     setPhotoForm({
-      url: "", titleEn: "", titleMl: "", descEn: "", descMl: ""
+      url: "", titleEn: "", titleMl: "", titleTa: "", descEn: "", descMl: "", descTa: ""
     });
     setBusForm({
-      routeEn: "", routeMl: "", type: "KSRTC", busTypeEn: "", busTypeMl: "",
-      runsEn: "Daily Line", runsMl: "എല്ലാ ദിവസവും", frequencyEn: "", frequencyMl: "",
-      timingsEn: "", timingsMl: "", privateBusName: ""
+      routeEn: "", routeMl: "", routeTa: "", type: "KSRTC", busTypeEn: "", busTypeMl: "", busTypeTa: "",
+      runsEn: "Daily Line", runsMl: "എല്ലാ ദിവസവും", runsTa: "தினசரி", frequencyEn: "", frequencyMl: "", frequencyTa: "",
+      timingsEn: "", timingsMl: "", timingsTa: "", privateBusName: ""
     });
     setBusTransitList([]);
     setDirForm({
-      nameEn: "", nameMl: "", category: "hospital", contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി"
+      nameEn: "", nameMl: "", nameTa: "", category: "hospital", contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി"
     });
     setEmergForm({
-      nameEn: "", nameMl: "", number: "", type: "hospital"
+      nameEn: "", nameMl: "", nameTa: "", number: "", type: "hospital"
     });
     setLpgForm({
       agencyNameEn: "",
-      agencyNameMl: "",
+      agencyNameMl: "", agencyNameTa: "",
       areasEn: "",
-      areasMl: "",
+      areasMl: "", areasTa: "",
       date: new Date().toLocaleDateString("en-US", { weekday: "long", day: "numeric", month: "long" }),
       statusEn: "Delivering Today",
-      statusMl: "ഇന്ന് വിതരണമുണ്ട്",
+      statusMl: "ഇന്ന് വിതരണമുണ്ട്", statusTa: "இன்று விநியோகம்",
       contact: "",
       notesEn: "",
       notesMl: ""
@@ -580,8 +582,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             leftAd: {
               titleEn: data.leftAd?.titleEn || "",
               titleMl: data.leftAd?.titleMl || "",
+              titleTa: data.leftAd?.titleTa || "",
               subtitleEn: data.leftAd?.subtitleEn || "",
               subtitleMl: data.leftAd?.subtitleMl || "",
+              subtitleTa: data.leftAd?.subtitleTa || "",
               contact: data.leftAd?.contact || "",
               actionType: data.leftAd?.actionType || "share",
               externalUrl: data.leftAd?.externalUrl || "",
@@ -590,8 +594,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             rightAd: {
               titleEn: data.rightAd?.titleEn || "",
               titleMl: data.rightAd?.titleMl || "",
+              titleTa: data.rightAd?.titleTa || "",
               subtitleEn: data.rightAd?.subtitleEn || "",
               subtitleMl: data.rightAd?.subtitleMl || "",
+              subtitleTa: data.rightAd?.subtitleTa || "",
               contact: data.rightAd?.contact || "",
               actionType: data.rightAd?.actionType || "phone",
               externalUrl: data.rightAd?.externalUrl || "",
@@ -677,6 +683,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       }
     }
 
+    if (["leftAd", "rightAd"].some(side => !finalAdForm[side as "leftAd" | "rightAd"].titleTa?.trim() || !finalAdForm[side as "leftAd" | "rightAd"].subtitleTa?.trim())) {
+      alert("Both advertisements require Tamil titles and subtitles.");
+      return;
+    }
     try {
       const response = await adminFetch("/api/adconfig", {
         method: "PUT",
@@ -736,8 +746,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setNewsForm({
       titleEn: item.titleEn,
       titleMl: item.titleMl,
+      titleTa: item.titleTa || "",
       contentEn: item.contentEn || "",
       contentMl: item.contentMl || "",
+      contentTa: item.contentTa || "",
       category: item.category,
       regions: item.regions || [],
       image: item.image || "",
@@ -761,6 +773,11 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       return;
     }
 
+    if (!translatedNews.titleTa?.trim() || !translatedNews.contentTa?.trim()) {
+      alert("Tamil headline and article content are required before publishing.");
+      return;
+    }
+
     const isEdit = typeof editingId === "string" && editingType === "news";
     const url = isEdit ? `/api/news/${editingId}` : "/api/news";
     const method = isEdit ? "PUT" : "POST";
@@ -773,7 +790,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     if (response.ok) {
       triggerToast(isEdit ? "News article updated successfully!" : "News article published successfully! (വാർത്ത പ്രസിദ്ധീകരിച്ചു)");
       setNewsForm({
-        titleEn: "", titleMl: "", contentEn: "", contentMl: "",
+        titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
         category: "latest", regions: [], image: "", isSlide: false, isCard: true
       });
       setEditingId(null);
@@ -982,8 +999,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       authorName: item.authorName,
       titleEn: item.titleEn,
       titleMl: item.titleMl,
+      titleTa: item.titleTa || "",
       contentEn: item.contentEn,
       contentMl: item.contentMl || "",
+      contentTa: item.contentTa || "",
       approved: item.approved !== undefined ? item.approved : true
     });
     setEditingId(item.id);
@@ -1002,6 +1021,11 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       return;
     }
 
+    if (!translatedOpinion.titleTa?.trim() || !translatedOpinion.contentTa?.trim()) {
+      alert("Tamil opinion title and content are required.");
+      return;
+    }
+
     const isEdit = typeof editingId === "string" && editingType === "opinions";
     const url = isEdit ? `/api/opinions/${editingId}` : "/api/opinions";
     const method = isEdit ? "PUT" : "POST";
@@ -1013,7 +1037,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Opinion column updated successfully." : "Opinion column published successfully.");
-      setOpinionForm({ authorName: "", titleEn: "", titleMl: "", contentEn: "", contentMl: "", approved: true });
+      setOpinionForm({ authorName: "", titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", approved: true });
       setEditingId(null);
       setEditingType(null);
       fetchOpinions();
@@ -1050,12 +1074,16 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setEventForm({
       titleEn: item.titleEn,
       titleMl: item.titleMl,
+      titleTa: item.titleTa || "",
       date: item.date,
       time: item.time || "",
       locationEn: item.locationEn,
       locationMl: item.locationMl,
+      locationTa: item.locationTa || "",
+      locationTa: item.locationTa || "",
       descriptionEn: item.descriptionEn || "",
-      descriptionMl: item.descriptionMl || ""
+      descriptionMl: item.descriptionMl || "",
+      descriptionTa: item.descriptionTa || ""
     });
     setEditingId(item.id);
     setEditingType("events");
@@ -1074,6 +1102,11 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       return;
     }
 
+    if (!translatedEvent.titleTa?.trim() || !translatedEvent.locationTa?.trim()) {
+      alert("Tamil event name and venue are required.");
+      return;
+    }
+
     const isEdit = typeof editingId === "string" && editingType === "events";
     const url = isEdit ? `/api/events/${editingId}` : "/api/events";
     const method = isEdit ? "PUT" : "POST";
@@ -1085,7 +1118,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Community event updated successfully." : "Community event scheduled successfully.");
-      setEventForm({ titleEn: "", titleMl: "", date: "", time: "", locationEn: "", locationMl: "", descriptionEn: "", descriptionMl: "" });
+      setEventForm({ titleEn: "", titleMl: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: "" });
       setEditingId(null);
       setEditingType(null);
       fetchEvents();
@@ -1114,11 +1147,16 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setDestForm({
       nameEn: item.nameEn,
       nameMl: item.nameMl,
+      nameTa: item.nameTa || "",
+      nameTa: item.nameTa || "",
       locationEn: item.locationEn,
       locationMl: item.locationMl,
+      locationTa: item.locationTa || "",
       image: item.image || "",
       descriptionEn: item.descriptionEn || "",
       descriptionMl: item.descriptionMl || "",
+      descriptionTa: item.descriptionTa || "",
+      highlightsTa: Array.isArray(item.highlightsTa) ? item.highlightsTa.join(", ") : (item.highlightsTa || ""),
       highlightsEn: Array.isArray(item.highlightsEn) ? item.highlightsEn.join(", ") : (item.highlightsEn || ""),
       highlightsMl: Array.isArray(item.highlightsMl) ? item.highlightsMl.join(", ") : (item.highlightsMl || "")
     });
@@ -1139,7 +1177,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
     const highlightsEnArr = translatedDestForm.highlightsEn.split(",").map(x => x.trim()).filter(Boolean);
     const highlightsMlArr = translatedDestForm.highlightsMl.split(",").map(x => x.trim()).filter(Boolean);
+    const highlightsTaArr = translatedDestForm.highlightsTa.split(",").map(x => x.trim()).filter(Boolean);
     
+    if (!translatedDestForm.nameTa?.trim() || !translatedDestForm.locationTa?.trim() || !translatedDestForm.descriptionTa?.trim()) {
+      alert("Tamil destination name, location and description are required.");
+      return;
+    }
     const isEdit = typeof editingId === "string" && editingType === "destinations";
     const url = isEdit ? `/api/destinations/${editingId}` : "/api/destinations";
     const method = isEdit ? "PUT" : "POST";
@@ -1150,12 +1193,13 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       body: JSON.stringify({
         ...translatedDestForm,
         highlightsEn: highlightsEnArr,
-        highlightsMl: highlightsMlArr
+        highlightsMl: highlightsMlArr,
+        highlightsTa: highlightsTaArr
       })
     });
     if (response.ok) {
       triggerToast(isEdit ? "Tourist destination updated!" : "New Tourist destination added!");
-      setDestForm({ nameEn: "", nameMl: "", locationEn: "", locationMl: "", image: "", descriptionEn: "", descriptionMl: "", highlightsEn: "", highlightsMl: "" });
+      setDestForm({ nameEn: "", nameMl: "", nameTa: "", locationEn: "", locationMl: "", locationTa: "", image: "", descriptionEn: "", descriptionMl: "", descriptionTa: "", highlightsEn: "", highlightsMl: "", highlightsTa: "" });
       setEditingId(null);
       setEditingType(null);
       fetchExploreDestinations();
@@ -1185,11 +1229,14 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       type: item.type || "culture",
       titleEn: item.titleEn,
       titleMl: item.titleMl,
+      titleTa: item.titleTa || "",
       subtitleEn: item.subtitleEn || "",
       subtitleMl: item.subtitleMl || "",
+      subtitleTa: item.subtitleTa || "",
       image: item.image || "",
       descEn: item.descEn || "",
       descMl: item.descMl || "",
+      descTa: item.descTa || "",
       elementEn: item.elementEn || "",
       elementMl: item.elementMl || ""
     });
@@ -1208,6 +1255,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       { en: "elementEn", ml: "elementMl" }
     ]);
 
+    if (!translatedCulture.titleTa?.trim() || !translatedCulture.descTa?.trim()) {
+      alert("Tamil culture title and description are required.");
+      return;
+    }
     const isEdit = typeof editingId === "string" && editingType === "cultures";
     const url = isEdit ? `/api/cultures/${editingId}` : "/api/cultures";
     const method = isEdit ? "PUT" : "POST";
@@ -1219,7 +1270,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Culture item updated!" : "Culture item added!");
-      setCultureForm({ type: "culture", titleEn: "", titleMl: "", subtitleEn: "", subtitleMl: "", image: "", descEn: "", descMl: "", elementEn: "", elementMl: "" });
+      setCultureForm({ type: "culture", titleEn: "", titleMl: "", titleTa: "", subtitleEn: "", subtitleMl: "", subtitleTa: "", image: "", descEn: "", descMl: "", descTa: "", descTa: "", elementEn: "", elementMl: "" });
       setEditingId(null);
       setEditingType(null);
       fetchExploreCultures();
@@ -1250,13 +1301,16 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       nameMl: item.nameMl,
       typeEn: item.typeEn || "",
       typeMl: item.typeMl || "",
+      typeTa: item.typeTa || "",
       locationEn: item.locationEn,
       locationMl: item.locationMl,
       image: item.image || "",
       priceEn: item.priceEn || "",
       priceMl: item.priceMl || "",
+      priceTa: item.priceTa || "",
       featuresEn: Array.isArray(item.featuresEn) ? item.featuresEn.join(", ") : (item.featuresEn || ""),
-      featuresMl: Array.isArray(item.featuresMl) ? item.featuresMl.join(", ") : (item.featuresMl || "")
+      featuresMl: Array.isArray(item.featuresMl) ? item.featuresMl.join(", ") : (item.featuresMl || ""),
+      featuresTa: Array.isArray(item.featuresTa) ? item.featuresTa.join(", ") : (item.featuresTa || "")
     });
     setEditingId(item.id);
     setEditingType("stays");
@@ -1275,7 +1329,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     ]);
     const featsEn = translatedStay.featuresEn.split(",").map(x => x.trim()).filter(Boolean);
     const featsMl = translatedStay.featuresMl.split(",").map(x => x.trim()).filter(Boolean);
+    const featsTa = translatedStay.featuresTa.split(",").map(x => x.trim()).filter(Boolean);
 
+    if (!translatedStay.nameTa?.trim() || !translatedStay.locationTa?.trim()) {
+      alert("Tamil accommodation name and location are required.");
+      return;
+    }
     const isEdit = typeof editingId === "string" && editingType === "stays";
     const url = isEdit ? `/api/stays/${editingId}` : "/api/stays";
     const method = isEdit ? "PUT" : "POST";
@@ -1286,12 +1345,13 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       body: JSON.stringify({
         ...translatedStay,
         featuresEn: featsEn,
-        featuresMl: featsMl
+        featuresMl: featsMl,
+        featuresTa: featsTa
       })
     });
     if (response.ok) {
       triggerToast(isEdit ? "Lodging option updated!" : "Nature lodging option saved!");
-      setStayForm({ nameEn: "", nameMl: "", typeEn: "", typeMl: "", locationEn: "", locationMl: "", image: "", priceEn: "", priceMl: "", featuresEn: "", featuresMl: "" });
+      setStayForm({ nameEn: "", nameMl: "", nameTa: "", typeEn: "", typeMl: "", typeTa: "", locationEn: "", locationMl: "", locationTa: "", image: "", priceEn: "", priceMl: "", priceTa: "", featuresEn: "", featuresMl: "" });
       setEditingId(null);
       setEditingType(null);
       fetchExploreStays();
@@ -1320,13 +1380,17 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setTravelogueForm({
       titleEn: item.titleEn,
       titleMl: item.titleMl,
+      titleTa: item.titleTa || "",
       authorEn: item.authorEn || "",
       authorMl: item.authorMl || "",
+      authorTa: item.authorTa || "",
       date: item.date || "June 2026",
       snippetEn: item.snippetEn || "",
       snippetMl: item.snippetMl || "",
+      snippetTa: item.snippetTa || "",
       readTimeEn: item.readTimeEn || "5 min read",
-      readTimeMl: item.readTimeMl || "5 മിനുട്ട് വായന"
+      readTimeMl: item.readTimeMl || "5 മിനുട്ട് വായന",
+      readTimeTa: item.readTimeTa || ""
     });
     setEditingId(item.id);
     setEditingType("travelogues");
@@ -1342,6 +1406,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       { en: "readTimeEn", ml: "readTimeMl" }
     ]);
 
+    if (!translatedTravelogue.titleTa?.trim() || !translatedTravelogue.snippetTa?.trim()) {
+      alert("Tamil translation is required before publishing.");
+      return;
+    }
     const isEdit = typeof editingId === "string" && editingType === "travelogues";
     const url = isEdit ? `/api/travelogues/${editingId}` : "/api/travelogues";
     const method = isEdit ? "PUT" : "POST";
@@ -1353,7 +1421,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Travelogue narrative updated!" : "Travelogue narrative shared!");
-      setTravelogueForm({ titleEn: "", titleMl: "", authorEn: "", authorMl: "", date: "June 2026", snippetEn: "", snippetMl: "", readTimeEn: "5 min read", readTimeMl: "5 മിനുട്ട് വായന" });
+      setTravelogueForm({ titleEn: "", titleMl: "", titleTa: "", authorEn: "", authorMl: "", date: "June 2026", snippetEn: "", snippetMl: "", readTimeEn: "5 min read", readTimeMl: "5 മിനുട്ട് വായന" });
       setEditingId(null);
       setEditingType(null);
       fetchExploreTravelogues();
@@ -1383,8 +1451,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       url: item.url,
       titleEn: item.titleEn,
       titleMl: item.titleMl,
+      titleTa: item.titleTa || "",
       descEn: item.descEn || "",
-      descMl: item.descMl || ""
+      descMl: item.descMl || "",
+      descTa: item.descTa || ""
     });
     setEditingId(item.id);
     setEditingType("photos");
@@ -1398,6 +1468,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       { en: "descEn", ml: "descMl" }
     ]);
 
+    if (!translatedPhoto.titleTa?.trim() || !translatedPhoto.descTa?.trim()) {
+      alert("Tamil translation is required before publishing.");
+      return;
+    }
     const isEdit = typeof editingId === "string" && editingType === "photos";
     const url = isEdit ? `/api/photos/${editingId}` : "/api/photos";
     const method = isEdit ? "PUT" : "POST";
@@ -1409,7 +1483,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Gallery frame updated!" : "Gallery frame registered!");
-      setPhotoForm({ url: "", titleEn: "", titleMl: "", descEn: "", descMl: "" });
+      setPhotoForm({ url: "", titleEn: "", titleMl: "", titleTa: "", descEn: "", descMl: "", descTa: "" });
       setEditingId(null);
       setEditingType(null);
       fetchExplorePhotos();
@@ -1438,15 +1512,20 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setBusForm({
       routeEn: item.routeEn,
       routeMl: item.routeMl,
+      routeTa: item.routeTa || "",
       type: item.type || "KSRTC",
       busTypeEn: item.busTypeEn || "",
       busTypeMl: item.busTypeMl || "",
+      busTypeTa: item.busTypeTa || "",
       runsEn: item.runsEn || "Daily Line",
       runsMl: item.runsMl || "എല്ലാ ദിവസവും",
+      runsTa: item.runsTa || "",
       frequencyEn: item.frequencyEn || "",
       frequencyMl: item.frequencyMl || "",
+      frequencyTa: item.frequencyTa || "",
       timingsEn: item.timingsEn || "",
       timingsMl: item.timingsMl || "",
+      timingsTa: item.timingsTa || "",
       privateBusName: item.privateBusName || ""
     });
     setBusTransitList(item.list || []);
@@ -1456,18 +1535,22 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   };
 
   const handleAddTransitStop = () => {
-    if (!transitInput.time || !transitInput.typeEn || !transitInput.typeMl) {
+    if (!transitInput.time || !transitInput.typeEn || !transitInput.typeMl || !transitInput.typeTa) {
       alert("Transit stop requires Time, Service type, and Via stops info.");
       return;
     }
     setBusTransitList(prev => [...prev, { ...transitInput }]);
-    setTransitInput({ time: "", typeEn: "", typeMl: "", viaCodeEn: "", viaCodeMl: "" });
+    setTransitInput({ time: "", typeEn: "", typeMl: "", typeTa: "", viaCodeEn: "", viaCodeMl: "", viaCodeTa: "" });
   };
 
   const handleCreateBusRoute = async (e: React.FormEvent) => {
     e.preventDefault();
     if (busTransitList.length === 0) {
       alert("Please add at least one schedule transit stop timing on the route list.");
+      return;
+    }
+    if (busTransitList.some(stop => !stop.typeTa?.trim())) {
+      alert("Every scheduled bus stop needs a Tamil name.");
       return;
     }
     const translatedBus = await performAutoTranslationForForm(busForm, setBusForm, [
@@ -1478,6 +1561,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       { en: "timingsEn", ml: "timingsMl" }
     ]);
 
+    if (!translatedBus.routeTa?.trim() || !translatedBus.busTypeTa?.trim() || !translatedBus.runsTa?.trim()) {
+      alert("Tamil route, bus type and operating days are required.");
+      return;
+    }
     const isEdit = typeof editingId === "string" && editingType === "busroutes";
     const url = isEdit ? `/api/busroutes/${editingId}` : "/api/busroutes";
     const method = isEdit ? "PUT" : "POST";
@@ -1492,7 +1579,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Trans-valley bus timetable updated!" : "Trans-valley bus timetable registered!");
-      setBusForm({ routeEn: "", routeMl: "", type: "KSRTC", busTypeEn: "", busTypeMl: "", runsEn: "Daily Line", runsMl: "എല്ലാ ദിവസവും", frequencyEn: "", frequencyMl: "", timingsEn: "", timingsMl: "", privateBusName: "" });
+      setBusForm({ routeEn: "", routeMl: "", routeTa: "", type: "KSRTC", busTypeEn: "", busTypeMl: "", busTypeTa: "", runsEn: "Daily Line", runsMl: "എല്ലാ ദിവസവും", runsTa: "தினசரி", frequencyEn: "", frequencyMl: "", frequencyTa: "", timingsEn: "", timingsMl: "", timingsTa: "", privateBusName: "" });
       setBusTransitList([]);
       setEditingId(null);
       setEditingType(null);
@@ -1566,10 +1653,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setDirForm({
       nameEn: item.nameEn,
       nameMl: item.nameMl,
+      nameTa: item.nameTa || "",
       category: item.category || "hospital",
       contact: item.contact || "",
       locationEn: item.locationEn || "Attappadi",
-      locationMl: item.locationMl || "അട്ടപ്പാടി"
+      locationMl: item.locationMl || "അട്ടപ്പാടി",
+      locationTa: item.locationTa || ""
     });
     setEditingId(item.id);
     setEditingType("directory");
@@ -1583,6 +1672,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       { en: "locationEn", ml: "locationMl" }
     ]);
 
+    if (!translatedDir.nameTa?.trim() || !translatedDir.locationTa?.trim()) {
+      alert("Tamil translation fields are required before publishing.");
+      return;
+    }
     const isEdit = typeof editingId === "string" && editingType === "directory";
     const url = isEdit ? `/api/directory/${editingId}` : "/api/directory";
     const method = isEdit ? "PUT" : "POST";
@@ -1594,7 +1687,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Local business phone listing updated!" : "Local business phone listing saved!");
-      setDirForm({ nameEn: "", nameMl: "", category: "hospital", contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി" });
+      setDirForm({ nameEn: "", nameMl: "", nameTa: "", category: "hospital", contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി" });
       setEditingId(null);
       setEditingType(null);
       fetchDirectory();
@@ -1623,6 +1716,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setEmergForm({
       nameEn: item.nameEn,
       nameMl: item.nameMl,
+      nameTa: item.nameTa || "",
       number: item.number || "",
       type: item.type || "hospital"
     });
@@ -1637,6 +1731,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       { en: "nameEn", ml: "nameMl" }
     ]);
 
+    if (!translatedEmerg.nameTa?.trim()) {
+      alert("Tamil translation fields are required before publishing.");
+      return;
+    }
     const isEdit = typeof editingId === "string" && editingType === "emergency";
     const url = isEdit ? `/api/emergency/${editingId}` : "/api/emergency";
     const method = isEdit ? "PUT" : "POST";
@@ -1648,7 +1746,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Critical hazard contact updated." : "Critical hazard contact saved.");
-      setEmergForm({ nameEn: "", nameMl: "", number: "", type: "hospital" });
+      setEmergForm({ nameEn: "", nameMl: "", nameTa: "", number: "", type: "hospital" });
       setEditingId(null);
       setEditingType(null);
       fetchEmergency();
@@ -1677,8 +1775,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setNoticeForm({
       titleEn: item.titleEn,
       titleMl: item.titleMl,
+      titleTa: item.titleTa || "",
       contentEn: item.contentEn || "",
       contentMl: item.contentMl || "",
+      contentTa: item.contentTa || "",
       type: item.type || "notice",
       severity: item.severity || "medium",
       date: item.date || new Date().toISOString().split("T")[0],
@@ -1697,6 +1797,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       { en: "contentEn", ml: "contentMl" }
     ]);
 
+    if (!translatedNotice.titleTa?.trim() || !translatedNotice.contentTa?.trim()) {
+      alert("Tamil translation fields are required before publishing.");
+      return;
+    }
     const isEdit = typeof editingId === "string" && editingType === "notice";
     const url = isEdit ? `/api/notices/${editingId}` : "/api/notices";
     const method = isEdit ? "PUT" : "POST";
@@ -1708,7 +1812,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Notice details updated successfully." : "New announcement notice published.");
-      setNoticeForm({ titleEn: "", titleMl: "", contentEn: "", contentMl: "", type: "notice", severity: "medium", date: "", active: true, image: "" });
+      setNoticeForm({ titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", type: "notice", severity: "medium", date: "", active: true, image: "" });
       setEditingId(null);
       setEditingType(null);
       fetchNotices();
@@ -1763,11 +1867,17 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       }
     }
 
+    if (!translatedForm.titleTa?.trim()) {
+      alert("Tamil breaking headline is required.");
+      return;
+    }
     const payload = {
       titleEn: translatedForm.titleEn || "Breaking Alert",
       titleMl: translatedForm.titleMl || "ബ്രേക്കിംഗ് വാർത്ത",
       contentEn: "Urgent Live Ticker Alert",
       contentMl: "അടിയന്തിര തത്സമയ അലേർട്ട്",
+      titleTa: translatedForm.titleTa,
+      contentTa: "அவசர நேரடி செய்தி",
       category: "breaking",
       regions: [],
       image: "",
@@ -1783,7 +1893,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
     if (res.ok) {
       triggerToast("🔴 New Breaking Ticker item published live!");
-      setQuickBreakingForm({ titleEn: "", titleMl: "" });
+      setQuickBreakingForm({ titleEn: "", titleMl: "", titleTa: "" });
       fetchNews();
     }
   };
@@ -1792,8 +1902,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     const payload = {
       titleEn: item.titleEn,
       titleMl: item.titleMl,
+      titleTa: item.titleTa || "",
       contentEn: item.contentEn || "",
       contentMl: item.contentMl || "",
+      contentTa: item.contentTa || "",
       category: makeBreaking ? "breaking" : "latest",
       regions: item.regions || [],
       image: item.image || "",
@@ -1865,6 +1977,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       }
     }
 
+    if (!translatedForm.titleTa?.trim() || !translatedForm.contentTa?.trim()) {
+      alert("Tamil quick notice title and content are required.");
+      return;
+    }
     const res = await adminFetch("/api/notices", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -1881,7 +1997,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       triggerToast("📢 New Notice ticker announcement published live!");
       setQuickNoticeForm({
         titleEn: "",
-        titleMl: "",
+        titleMl: "", titleTa: "",
         contentEn: "",
         contentMl: "",
         type: "notice",
@@ -1898,8 +2014,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     const payload = {
       titleEn: item.titleEn,
       titleMl: item.titleMl,
+      titleTa: item.titleTa || "",
       contentEn: item.contentEn || "",
       contentMl: item.contentMl || "",
+      contentTa: item.contentTa || "",
       type: item.type || "notice",
       severity: item.severity || "medium",
       date: item.date || "",
@@ -1924,8 +2042,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setLpgForm({
       agencyNameEn: item.agencyNameEn,
       agencyNameMl: item.agencyNameMl,
+      agencyNameTa: item.agencyNameTa || "",
       areasEn: item.areasEn || "",
       areasMl: item.areasMl || "",
+      areasTa: item.areasTa || "",
       date: item.date || "",
       statusEn: item.statusEn || "Delivering Today",
       statusMl: item.statusMl || "ഇന്ന് വിതരണമുണ്ട്",
@@ -1946,6 +2066,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       { en: "notesEn", ml: "notesMl" }
     ]);
 
+    if (!translatedLpg.agencyNameTa?.trim() || !translatedLpg.areasTa?.trim() || !translatedLpg.statusTa?.trim()) {
+      alert("Tamil LPG agency, area and delivery status are required.");
+      return;
+    }
     const isEdit = typeof editingId === "string" && editingType === "lpg";
     const url = isEdit ? `/api/lpg/${editingId}` : "/api/lpg";
     const method = isEdit ? "PUT" : "POST";
@@ -1959,12 +2083,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       triggerToast(isEdit ? "LPG schedule updated successfully." : "New LPG delivery schedule added.");
       setLpgForm({
         agencyNameEn: "",
-        agencyNameMl: "",
+        agencyNameMl: "", agencyNameTa: "",
         areasEn: "",
-        areasMl: "",
+        areasMl: "", areasTa: "",
         date: new Date().toLocaleDateString("en-US", { weekday: "long", day: "numeric", month: "long" }),
         statusEn: "Delivering Today",
-        statusMl: "ഇന്ന് വിതരണമുണ്ട്",
+        statusMl: "ഇന്ന് വിതരണമുണ്ട്", statusTa: "இன்று விநியோகம்",
         contact: "",
         notesEn: "",
         notesMl: ""
@@ -2262,7 +2386,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </h3>
                   
                   <form onSubmit={handleQuickCreateBreaking} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <label className="block text-xs font-semibold">Headline (Tamil)<input lang="ta" required value={quickBreakingForm.titleTa} onChange={e => setQuickBreakingForm({...quickBreakingForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-slate-500 font-semibold mb-0.5">Breaking Title (English)</label>
                         <input
@@ -2365,7 +2490,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </h3>
 
                   <form onSubmit={handleQuickCreateNotice} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <label className="block text-xs font-semibold">Headline (Tamil)<input lang="ta" required value={quickNoticeForm.titleTa} onChange={e => setQuickNoticeForm({...quickNoticeForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-xs font-semibold">Details (Tamil)<textarea lang="ta" required value={quickNoticeForm.contentTa} onChange={e => setQuickNoticeForm({...quickNoticeForm, contentTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-slate-500 font-semibold mb-0.5">Notice Title (English)</label>
                         <input
@@ -2860,6 +2987,14 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </div>
                 </div>
 
+                <div>
+                  <label className="block text-slate-500 font-semibold mb-1">Headline (Tamil)</label>
+                  <input type="text" lang="ta" required value={newsForm.titleTa}
+                    onChange={(e) => setNewsForm({...newsForm, titleTa: e.target.value})}
+                    placeholder="தமிழில் செய்தித் தலைப்பை எழுதவும்"
+                    className="w-full border rounded p-2 focus:ring-1 font-bold font-anek-tamil" />
+                </div>
+
                 {/* News Photo Upload Selection directly targeting local files */}
                 <div className="bg-slate-50 rounded-lg p-4 border border-slate-200/50 space-y-3.5">
                   <div className="flex items-center justify-between">
@@ -3001,6 +3136,14 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   />
                 </div>
 
+                <div className="space-y-1">
+                  <label className="block text-slate-700 font-semibold">3. Article Content (Tamil)</label>
+                  <textarea lang="ta" required rows={5} value={newsForm.contentTa}
+                    onChange={(e) => setNewsForm({...newsForm, contentTa: e.target.value})}
+                    placeholder="தமிழில் செய்தி உள்ளடக்கத்தை எழுதவும்"
+                    className="w-full border rounded p-2.5 leading-relaxed font-anek-tamil" />
+                </div>
+
                 <div className="pt-2 flex justify-end gap-2">
                   {editingId && editingType === "news" && (
                     <button
@@ -3094,6 +3237,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 )}
 
                 <form onSubmit={handleCreateOpinion} className="space-y-3.5">
+                  <label className="block">Opinion Title (Tamil)<input lang="ta" required value={opinionForm.titleTa} onChange={e => setOpinionForm({...opinionForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  <label className="block">Opinion Content (Tamil)<textarea lang="ta" required rows={5} value={opinionForm.contentTa} onChange={e => setOpinionForm({...opinionForm, contentTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <div>
                     <label className="block text-slate-500 font-bold mb-1">Author Name / Expert credentials</label>
                     <input 
@@ -3253,6 +3398,11 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   <Calendar className="w-5 h-5 text-[#005689]" /> Register/Schedule Event
                 </h3>
                 <form onSubmit={handleCreateEvent} className="space-y-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <label>Event Name (Tamil)<input lang="ta" required value={eventForm.titleTa} onChange={e => setEventForm({...eventForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                    <label>Event Venue (Tamil)<input lang="ta" required value={eventForm.locationTa} onChange={e => setEventForm({...eventForm, locationTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  </div>
+                  <label className="block">Event Description (Tamil)<textarea lang="ta" value={eventForm.descriptionTa} onChange={e => setEventForm({...eventForm, descriptionTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-slate-500 font-bold mb-1">Event Name (En)</label>
@@ -3417,6 +3567,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             {exploreSubTab === "destinations" && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <form onSubmit={handleCreateDestination} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5">
+                  <label className="block">Destination Name (Tamil)<input lang="ta" required={true} value={destForm.nameTa} onChange={e => setDestForm({...destForm, nameTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block">Location (Tamil)<input lang="ta" required={true} value={destForm.locationTa} onChange={e => setDestForm({...destForm, locationTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block">Description (Tamil)<textarea lang="ta" required={true} value={destForm.descriptionTa} onChange={e => setDestForm({...destForm, descriptionTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block">Highlights (Tamil, comma separated)<textarea lang="ta" required={false} value={destForm.highlightsTa} onChange={e => setDestForm({...destForm, highlightsTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
                     <PlusCircle className="w-4 h-4 text-[#005689]" /> Add Destination Attraction
                   </h3>
@@ -3665,6 +3819,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             {exploreSubTab === "cultures" && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <form onSubmit={handleCreateCulture} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5">
+                  <label className="block">Culture Title (Tamil)<textarea lang="ta" value={cultureForm.titleTa} onChange={e => setCultureForm({...cultureForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block">Subtitle (Tamil)<textarea lang="ta" value={cultureForm.subtitleTa} onChange={e => setCultureForm({...cultureForm, subtitleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block">Description (Tamil)<textarea lang="ta" value={cultureForm.descTa} onChange={e => setCultureForm({...cultureForm, descTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block">Element (Tamil)<textarea lang="ta" value={cultureForm.elementTa} onChange={e => setCultureForm({...cultureForm, elementTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
                     <PlusCircle className="w-4 h-4 text-[#005689]" /> Add Culture / Food Entry
                   </h3>
@@ -3913,6 +4071,11 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             {exploreSubTab === "stays" && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <form onSubmit={handleCreateStay} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5">
+                  <label className="block">name (Tamil)<input lang="ta" value={stayForm.nameTa} onChange={e => setStayForm({...stayForm, nameTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block">type (Tamil)<input lang="ta" value={stayForm.typeTa} onChange={e => setStayForm({...stayForm, typeTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block">location (Tamil)<input lang="ta" value={stayForm.locationTa} onChange={e => setStayForm({...stayForm, locationTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block">price (Tamil)<input lang="ta" value={stayForm.priceTa} onChange={e => setStayForm({...stayForm, priceTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block">features (Tamil)<input lang="ta" value={stayForm.featuresTa} onChange={e => setStayForm({...stayForm, featuresTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
                     <PlusCircle className="w-4 h-4 text-[#005689]" /> Add Eco Lodging stay option
                   </h3>
@@ -4194,6 +4357,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             {exploreSubTab === "travelogues" && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <form onSubmit={handleCreateTravelogue} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5">
+                  <label className="block text-sm font-semibold">title (Tamil)<input lang="ta" value={travelogueForm.titleTa} onChange={e => setTravelogueForm({...travelogueForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  <label className="block text-sm font-semibold">author (Tamil)<input lang="ta" value={travelogueForm.authorTa} onChange={e => setTravelogueForm({...travelogueForm, authorTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  <label className="block text-sm font-semibold">snippet (Tamil)<textarea lang="ta" value={travelogueForm.snippetTa} onChange={e => setTravelogueForm({...travelogueForm, snippetTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  <label className="block text-sm font-semibold">readTime (Tamil)<input lang="ta" value={travelogueForm.readTimeTa} onChange={e => setTravelogueForm({...travelogueForm, readTimeTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
                     <PlusCircle className="w-4 h-4 text-[#005689]" /> Publish travel blog story / Column
                   </h3>
@@ -4361,6 +4528,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             {exploreSubTab === "photos" && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <form onSubmit={handleCreatePhoto} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5">
+                  <label className="block text-sm font-semibold">title (Tamil)<input lang="ta" value={photoForm.titleTa} onChange={e => setPhotoForm({...photoForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  <label className="block text-sm font-semibold">desc (Tamil)<textarea lang="ta" value={photoForm.descTa} onChange={e => setPhotoForm({...photoForm, descTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
                     <PlusCircle className="w-4 h-4 text-[#005689]" /> Register/Add Photo to Hub Frame
                   </h3>
@@ -4638,6 +4807,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 </div>
 
                 <form onSubmit={handleCreateBusRoute} className="space-y-3">
+                  <div className="text-xs text-slate-600">Every bus stop must have its Tamil name before it can be added to the schedule.</div>
+                  <label className="block text-sm font-semibold">route (Tamil)<input lang="ta" value={busForm.routeTa} onChange={e => setBusForm({...busForm, routeTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">busType (Tamil)<input lang="ta" value={busForm.busTypeTa} onChange={e => setBusForm({...busForm, busTypeTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">runs (Tamil)<input lang="ta" value={busForm.runsTa} onChange={e => setBusForm({...busForm, runsTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">frequency (Tamil)<input lang="ta" value={busForm.frequencyTa} onChange={e => setBusForm({...busForm, frequencyTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">timings (Tamil)<input lang="ta" value={busForm.timingsTa} onChange={e => setBusForm({...busForm, timingsTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   
                   {/* ROUTE SELECT FROM REGISTRY */}
                   <div className="bg-blue-50/50 p-3 rounded-lg border border-blue-100/50 space-y-2">
@@ -4880,6 +5055,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                           className="w-full border rounded p-1 bg-white" 
                         />
                       </div>
+                      <label className="block text-sm font-semibold">Stop Name (Tamil)<input lang="ta" value={transitInput.typeTa} onChange={e => setTransitInput({...transitInput, typeTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                       <div>
                         <span className="text-[9px] font-bold text-slate-400 block mb-0.5">Stop Name Ml</span>
                         <input 
@@ -4974,6 +5150,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   <Phone className="w-5 h-5 text-[#005689]" /> Register business / local service directory card
                 </h3>
                 <form onSubmit={handleCreateDirectory} className="space-y-3">
+                  <label className="block text-sm font-semibold">Vendor Name (Tamil)<input lang="ta" required value={dirForm.nameTa} onChange={e => setDirForm({...dirForm, nameTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">Location (Tamil)<input lang="ta" required value={dirForm.locationTa} onChange={e => setDirForm({...dirForm, locationTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-slate-500 font-semibold mb-0.5">Vendor Name (En)</label>
@@ -5105,6 +5283,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   <AlertCircle className="w-5 h-5 text-red-650 shrink-0" /> Publish critical emergency helpline number
                 </h3>
                 <form onSubmit={handleCreateEmergency} className="space-y-3">
+                  <label className="block text-sm font-semibold">Service Name (Tamil)<input lang="ta" required value={emergForm.nameTa} onChange={e => setEmergForm({...emergForm, nameTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-slate-500 font-semibold mb-0.5">Service agency (En)</label>
@@ -5205,7 +5384,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   onClick={() => {
                     setEditingId(null);
                     setEditingType(null);
-                    setNoticeForm({ titleEn: "", titleMl: "", contentEn: "", contentMl: "", type: "notice", severity: "medium", date: "", active: true });
+                    setNoticeForm({ titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", type: "notice", severity: "medium", date: "", active: true });
                   }}
                   className="px-3 py-1.5 bg-slate-105 hover:bg-slate-205 text-slate-805 font-bold rounded-lg transition text-[10px] cursor-pointer"
                 >
@@ -5223,6 +5402,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   {editingId && editingType === "notice" ? "Modify existing notice announcement" : "Publish new notice announcement"}
                 </h3>
                 <form onSubmit={handleCreateNotice} className="space-y-4">
+                  <label className="block text-sm font-semibold">Notice Title (Tamil)<input lang="ta" required value={noticeForm.titleTa} onChange={e => setNoticeForm({...noticeForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">Notice Content (Tamil)<textarea lang="ta" required value={noticeForm.contentTa} onChange={e => setNoticeForm({...noticeForm, contentTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-slate-500 font-semibold mb-0.5">Notice Title (English)</label>
@@ -5544,9 +5725,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     setEditingId(null);
                     setEditingType(null);
                     setLpgForm({
-                      agencyNameEn: "", agencyNameMl: "", areasEn: "", areasMl: "",
+                      agencyNameEn: "", agencyNameMl: "", agencyNameTa: "", areasEn: "", areasMl: "", areasTa: "",
                       date: new Date().toLocaleDateString("en-US", { weekday: "long", day: "numeric", month: "long" }),
-                      statusEn: "Delivering Today", statusMl: "ഇന്ന് വിതരണമുണ്ട്",
+                      statusEn: "Delivering Today", statusMl: "ഇന്ന് വിതരണമുണ്ട്", statusTa: "இன்று விநியோகம்",
                       contact: "", notesEn: "", notesMl: ""
                     });
                   }}
@@ -5566,6 +5747,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   {editingId && editingType === "lpg" ? "Modify LPG scheduling details" : "Schedule new gas delivery route"}
                 </h3>
                 <form onSubmit={handleCreateLpg} className="space-y-4">
+                  <label className="block text-sm font-semibold">agencyName (Tamil)<input lang="ta" value={lpgForm.agencyNameTa} onChange={e => setLpgForm({...lpgForm, agencyNameTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">areas (Tamil)<input lang="ta" value={lpgForm.areasTa} onChange={e => setLpgForm({...lpgForm, areasTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">status (Tamil)<input lang="ta" value={lpgForm.statusTa} onChange={e => setLpgForm({...lpgForm, statusTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">notes (Tamil)<input lang="ta" value={lpgForm.notesTa} onChange={e => setLpgForm({...lpgForm, notesTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-slate-500 font-semibold mb-0.5">Agency Name (English)</label>
@@ -5922,6 +6107,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             </div>
 
             <form onSubmit={handleSaveAdConfig} className="space-y-8">
+              <fieldset className="border rounded p-3 space-y-2"><legend className="font-semibold">Left advertisement Tamil text</legend><label className="block text-sm">Title (Tamil)<input lang="ta" value={adForm.leftAd.titleTa} onChange={e => setAdForm({...adForm, leftAd: {...adForm.leftAd, titleTa: e.target.value}})} className="w-full border rounded p-2 font-anek-tamil" /></label><label className="block text-sm">Subtitle (Tamil)<input lang="ta" value={adForm.leftAd.subtitleTa} onChange={e => setAdForm({...adForm, leftAd: {...adForm.leftAd, subtitleTa: e.target.value}})} className="w-full border rounded p-2 font-anek-tamil" /></label></fieldset>
+<fieldset className="border rounded p-3 space-y-2"><legend className="font-semibold">Right advertisement Tamil text</legend><label className="block text-sm">Title (Tamil)<input lang="ta" value={adForm.rightAd.titleTa} onChange={e => setAdForm({...adForm, rightAd: {...adForm.rightAd, titleTa: e.target.value}})} className="w-full border rounded p-2 font-anek-tamil" /></label><label className="block text-sm">Subtitle (Tamil)<input lang="ta" value={adForm.rightAd.subtitleTa} onChange={e => setAdForm({...adForm, rightAd: {...adForm.rightAd, subtitleTa: e.target.value}})} className="w-full border rounded p-2 font-anek-tamil" /></label></fieldset>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 
                 {/* 1. LEFT SIDE AD BLOCK */}

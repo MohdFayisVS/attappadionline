@@ -19,6 +19,24 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
   const [loading, setLoading] = useState(true);
   const [selectedNotice, setSelectedNotice] = useState<NoticeItem | null>(null);
 
+  const noticeType = (type: string) => {
+    const labels: Record<string, [string, string, string]> = {
+      caution: ["Caution", "ജാഗ്രത", "எச்சரிக்கை"],
+      attention: ["Attention", "ശ്രദ്ധിക്കുക", "கவனம்"],
+      notice: ["Notice", "അറിയിപ്പ്", "அறிவிப்பு"]
+    };
+    return labels[type]?.[lang === "en" ? 0 : lang === "ml" ? 1 : 2] || type;
+  };
+
+  const noticeText = (notice: NoticeItem, field: "title" | "content") => {
+    const values = lang === "ta"
+      ? [notice[`${field}Ta`], notice[`${field}En`], notice[`${field}Ml`]]
+      : lang === "ml"
+        ? [notice[`${field}Ml`], notice[`${field}En`], notice[`${field}Ta`]]
+        : [notice[`${field}En`], notice[`${field}Ml`], notice[`${field}Ta`]];
+    return values.find(value => typeof value === "string" && value.trim()) || "";
+  };
+
   const fetchNotices = async () => {
     setLoading(true);
     try {
@@ -70,7 +88,7 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
   }
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs p-4.5 space-y-3 font-anek-malayalam select-none">
+    <div lang={lang} className="ao-localized-content bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs p-4.5 space-y-3 select-none">
       {/* Widget Header */}
       <div className="flex justify-between items-center pb-1">
         <div className="flex items-center gap-2">
@@ -122,7 +140,7 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
                         ? "bg-amber-100 text-amber-805 dark:bg-amber-950/40 dark:text-amber-300" 
                         : "bg-blue-105 text-[#052962] dark:bg-blue-950/45 dark:text-[#38bdf8]"
                   }`}>
-                    {lang !== "ml" ? not.type : not.type === "caution" ? "ജാഗ്രത" : not.type === "attention" ? "ശ്രദ്ധിക്കുക" : "നോട്ടീസ്"}
+                    {noticeType(not.type)}
                   </span>
 
                   <span className="text-[8px] text-slate-400 dark:text-slate-500 font-bold font-mono">
@@ -141,11 +159,11 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
                   )}
                   <div className="flex-1 min-w-0">
                     <h4 className="text-xs font-black text-slate-800 dark:text-slate-200 leading-snug line-clamp-1">
-                      {lang === "ml" ? not.titleMl : lang === "ta" ? (not.titleTa || not.titleEn) : not.titleEn}
+                      {noticeText(not, "title")}
                     </h4>
 
                     <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-normal line-clamp-2">
-                      {lang === "ml" ? not.contentMl : lang === "ta" ? (not.contentTa || not.contentEn) : not.contentEn}
+                      {noticeText(not, "content")}
                     </p>
                   </div>
                 </div>
@@ -160,7 +178,7 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
                       onDownloadCard(not);
                     }}
                     className="p-1 cursor-pointer bg-slate-100 hover:bg-[#ffe500] hover:text-slate-900 dark:bg-slate-800 dark:hover:bg-yellow-450 dark:hover:text-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg transition flex items-center justify-center"
-                    title={lang !== "ml" ? "Generate Graphic Card" : "ഷെയർ കാർഡ്"}
+                    title={lang === "ta" ? "பகிர்வு அட்டை உருவாக்கு" : lang === "ml" ? "ഷെയർ കാർഡ് സൃഷ്ടിക്കുക" : "Generate Graphic Card"}
                   >
                     <IdCard className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                   </button>
@@ -187,7 +205,7 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full shadow-lg overflow-hidden flex flex-col font-anek-malayalam"
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full shadow-lg overflow-hidden flex flex-col ao-localized-content" lang={lang}
             >
               <div className={`p-4 text-white flex items-center justify-between ${
                 selectedNotice.severity === "high" 
@@ -199,7 +217,7 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-emerald-100 shrink-0" />
                   <h4 className="text-sm font-black uppercase tracking-wider">
-                    {lang !== "ml" ? "OFFICIAL NOTIFICATION" : "പഞ്ചായത്ത് ഔദ്യോഗിക അറിയിപ്പ്"}
+                    OFFICIAL NOTIFICATION
                   </h4>
                 </div>
                 <button
@@ -217,7 +235,7 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
                     <span>{selectedNotice.date}</span>
                   </span>
                   <span className="uppercase text-[9px] bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded font-black text-slate-800 dark:text-slate-300 border dark:border-slate-750">
-                    {selectedNotice.type}
+                    {noticeType(selectedNotice.type)}
                   </span>
                 </div>
 
@@ -234,10 +252,10 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
 
                 <div className="space-y-1.5 text-left bg-white dark:bg-slate-900">
                   <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 leading-snug">
-                    {lang === "ml" ? selectedNotice.titleMl : lang === "ta" ? (selectedNotice.titleTa || selectedNotice.titleEn) : selectedNotice.titleEn}
+                    {noticeText(selectedNotice, "title")}
                   </h3>
                   <p className="text-xs text-slate-650 dark:text-slate-300 leading-relaxed font-semibold whitespace-pre-wrap pt-2 border-t border-slate-50 dark:border-slate-800">
-                    {lang === "ml" ? selectedNotice.contentMl : lang === "ta" ? (selectedNotice.contentTa || selectedNotice.contentEn) : selectedNotice.contentEn}
+                    {noticeText(selectedNotice, "content")}
                   </p>
                 </div>
 
@@ -247,7 +265,7 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
                     <p className="font-extrabold leading-normal">
                       {lang === "en" 
                         ? "CRITICAL ATTENTION REQUIRED: Please spread the word to local neighborhood groups." 
-                        : "അടിയന്തര ശ്രദ്ധ ആവശ്യമാണ്: വിവരങ്ങൾ പ്രാദേശിക ഗ്രൂപ്പുകളിലേക്ക് പങ്കുവെക്കുക."}
+                        : lang === "ta" ? "உடனடி கவனம் தேவை: இந்தத் தகவலை உள்ளூர் குழுக்களுடன் பகிரவும்." : "അടിയന്തര ശ്രദ്ധ ആവശ്യമാണ്: വിവരങ്ങൾ പ്രാദേശിക ഗ്രൂപ്പുകളിലേക്ക് പങ്കുവെക്കുക."}
                     </p>
                   </div>
                 )}
@@ -261,14 +279,14 @@ export default function NoticesWidget({ lang, onDownloadCard }: { lang: "en" | "
                       }}
                       className="px-3.5 py-2 bg-[#ffe500] hover:bg-[#e6ce00] text-slate-950 rounded-xl text-xs font-black cursor-pointer transition flex items-center gap-1.5 shadow-xs"
                     >
-                      <IdCard className="w-4 h-4 text-slate-950 shrink-0" /> {lang !== "ml" ? "Share Card" : "ഷെയർ കാർഡ്"}
+                      <IdCard className="w-4 h-4 text-slate-950 shrink-0" /> {lang === "ta" ? "பகிர்வு அட்டை" : lang === "ml" ? "ഷെയർ കാർഡ്" : "Share Card"}
                     </button>
                   )}
                   <button
                     onClick={() => setSelectedNotice(null)}
                     className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-800 dark:text-slate-200 rounded-xl text-xs font-black cursor-pointer transition"
                   >
-                    {lang !== "ml" ? "Close" : "വായിച്ചു ബോധ്യപ്പെട്ടു"}
+                    {lang === "ta" ? "மூடு" : lang === "ml" ? "അടയ്ക്കുക" : "Close"}
                   </button>
                 </div>
               </div>

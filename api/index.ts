@@ -615,7 +615,7 @@ app.post("/api/news", async (req, res) => {
 
 app.put("/api/news/:id", async (req, res) => {
   const { id } = req.params;
-  const { titleEn, titleMl, contentEn, contentMl, category, regions, image, isSlide, isCard } = req.body;
+  const { titleEn, titleMl, titleTa, contentEn, contentMl, contentTa, category, regions, image, isSlide, isCard } = req.body;
   
   const newsList = await getCollectionData("news");
   const itemIndex = newsList.findIndex((item: any) => item.id === id);
@@ -755,18 +755,20 @@ app.get("/api/opinions", async (req, res) => {
 });
 
 app.post("/api/opinions", async (req, res) => {
-  const { authorName, titleEn, titleMl, contentEn, contentMl, approved } = req.body;
-  if (!authorName || !titleEn || !contentEn) {
+  const { authorName, titleEn, titleMl, titleTa, contentEn, contentMl, contentTa, approved } = req.body;
+  if (!authorName || !(titleEn || titleMl || titleTa) || !(contentEn || contentMl || contentTa)) {
     return res.status(400).json({ error: "Missing author name, title, or opinion content." });
   }
 
   const newOpinion = {
     id: "opinion_" + Date.now().toString(),
     authorName,
-    titleEn,
-    titleMl: titleMl || titleEn,
-    contentEn,
-    contentMl: contentMl || contentEn,
+    titleEn: titleEn || "",
+    titleMl: titleMl || "",
+    titleTa: titleTa || "",
+    contentEn: contentEn || "",
+    contentMl: contentMl || "",
+    contentTa: contentTa || "",
     createdAt: new Date().toISOString(),
     approved: approved !== undefined ? !!approved : false
   };
@@ -784,7 +786,7 @@ app.post("/api/opinions", async (req, res) => {
 
 app.put("/api/opinions/:id", async (req, res) => {
   const { id } = req.params;
-  const { authorName, titleEn, titleMl, contentEn, contentMl, approved } = req.body;
+  const { authorName, titleEn, titleMl, titleTa, contentEn, contentMl, contentTa, approved } = req.body;
   
   const opinionsList = await getCollectionData("opinions");
   const itemIndex = opinionsList.findIndex((op: any) => op.id === id);
@@ -795,8 +797,10 @@ app.put("/api/opinions/:id", async (req, res) => {
       authorName: authorName !== undefined ? authorName : opinionsList[itemIndex].authorName,
       titleEn: titleEn !== undefined ? titleEn : opinionsList[itemIndex].titleEn,
       titleMl: titleMl !== undefined ? titleMl : opinionsList[itemIndex].titleMl,
+      titleTa: titleTa !== undefined ? titleTa : opinionsList[itemIndex].titleTa,
       contentEn: contentEn !== undefined ? contentEn : opinionsList[itemIndex].contentEn,
       contentMl: contentMl !== undefined ? contentMl : opinionsList[itemIndex].contentMl,
+      contentTa: contentTa !== undefined ? contentTa : opinionsList[itemIndex].contentTa,
       approved: approved !== undefined ? !!approved : opinionsList[itemIndex].approved
     };
 
@@ -1014,7 +1018,7 @@ app.get("/api/lostfound", async (req, res) => {
 });
 
 app.post("/api/lostfound", async (req, res) => {
-  const { type, itemTitleEn, itemTitleMl, descriptionEn, descriptionMl, reporterName, contactNumber, locationEn, locationMl } = req.body;
+  const { type, itemTitleEn, itemTitleMl, itemTitleTa, descriptionEn, descriptionMl, descriptionTa, reporterName, contactNumber, locationEn, locationMl, locationTa } = req.body;
   if (!type || (!itemTitleEn && !itemTitleMl) || !reporterName || !contactNumber) {
     return res.status(400).json({ error: "Missing required fields for Lost & Found reporting" });
   }
@@ -1031,12 +1035,15 @@ app.post("/api/lostfound", async (req, res) => {
     type, // "lost" | "found"
     itemTitleEn: finalTitleEn,
     itemTitleMl: finalTitleMl,
+    itemTitleTa: typeof itemTitleTa === "string" ? itemTitleTa.trim() : "",
     descriptionEn: finalDescEn,
     descriptionMl: finalDescMl,
+    descriptionTa: typeof descriptionTa === "string" ? descriptionTa.trim() : "",
     reporterName,
     contactNumber,
     locationEn: finalLocEn,
     locationMl: finalLocMl,
+    locationTa: typeof locationTa === "string" ? locationTa.trim() : "",
     dateReported: new Date().toISOString(),
     status: "active"
   };
@@ -1179,7 +1186,7 @@ app.get("/api/notices", async (req, res) => {
 });
 
 app.post("/api/notices", async (req, res) => {
-  const { titleEn, titleMl, contentEn, contentMl, type, severity, date, active, image } = req.body;
+  const { titleEn, titleMl, titleTa, contentEn, contentMl, contentTa, type, severity, date, active, image } = req.body;
   if (!noticesParamsCheck(req.body)) {
     return res.status(400).json({ error: "Missing required fields for Notice" });
   }
@@ -1188,8 +1195,10 @@ app.post("/api/notices", async (req, res) => {
     id: "not_" + Date.now().toString(),
     titleEn,
     titleMl,
+    titleTa: typeof titleTa === "string" ? titleTa.trim() : "",
     contentEn,
     contentMl,
+    contentTa: typeof contentTa === "string" ? contentTa.trim() : "",
     type: type || "notice",
     severity: severity || "medium",
     date: date || new Date().toISOString().split("T")[0],
@@ -1214,7 +1223,7 @@ function noticesParamsCheck(body: any) {
 
 app.put("/api/notices/:id", async (req, res) => {
   const { id } = req.params;
-  const { titleEn, titleMl, contentEn, contentMl, type, severity, date, active, image } = req.body;
+  const { titleEn, titleMl, titleTa, contentEn, contentMl, contentTa, type, severity, date, active, image } = req.body;
   
   const noticesList = await getCollectionData("notices");
   const itemIndex = noticesList.findIndex((not: any) => not.id === id);
@@ -1224,8 +1233,10 @@ app.put("/api/notices/:id", async (req, res) => {
       ...noticesList[itemIndex],
       titleEn: titleEn !== undefined ? titleEn : noticesList[itemIndex].titleEn,
       titleMl: titleMl !== undefined ? titleMl : noticesList[itemIndex].titleMl,
+      titleTa: titleTa !== undefined ? titleTa : noticesList[itemIndex].titleTa,
       contentEn: contentEn !== undefined ? contentEn : noticesList[itemIndex].contentEn,
       contentMl: contentMl !== undefined ? contentMl : noticesList[itemIndex].contentMl,
+      contentTa: contentTa !== undefined ? contentTa : noticesList[itemIndex].contentTa,
       type: type !== undefined ? type : noticesList[itemIndex].type,
       severity: severity !== undefined ? severity : noticesList[itemIndex].severity,
       date: date !== undefined ? date : noticesList[itemIndex].date,
@@ -1353,7 +1364,7 @@ app.get("/api/autos", async (req, res) => {
 });
 
 app.post("/api/autos", async (req, res) => {
-  const { driverNameEn, driverNameMl, autoNumber, contact, locationEn, locationMl, isAvailable } = req.body;
+  const { driverNameEn, driverNameMl, driverNameTa, autoNumber, contact, locationEn, locationMl, locationTa, isAvailable } = req.body;
   if (!driverNameEn || !driverNameMl || !autoNumber || !contact || !locationEn || !locationMl) {
     return res.status(400).json({ error: "Missing required fields for Autorikshaw Service" });
   }
@@ -1362,10 +1373,12 @@ app.post("/api/autos", async (req, res) => {
     id: "auto_" + Date.now().toString(),
     driverNameEn,
     driverNameMl,
+    driverNameTa: typeof driverNameTa === "string" ? driverNameTa.trim() : "",
     autoNumber,
     contact,
     locationEn,
     locationMl,
+    locationTa: typeof locationTa === "string" ? locationTa.trim() : "",
     isAvailable: isAvailable !== undefined ? Boolean(isAvailable) : true,
     registeredDate: new Date().toISOString().split("T")[0]
   };
@@ -1383,7 +1396,7 @@ app.post("/api/autos", async (req, res) => {
 
 app.put("/api/autos/:id", async (req, res) => {
   const { id } = req.params;
-  const { driverNameEn, driverNameMl, autoNumber, contact, locationEn, locationMl, isAvailable } = req.body;
+  const { driverNameEn, driverNameMl, driverNameTa, autoNumber, contact, locationEn, locationMl, locationTa, isAvailable } = req.body;
   
   const autosList = await getCollectionData("autos");
   const itemIndex = autosList.findIndex((aut: any) => aut.id === id);
@@ -1393,10 +1406,12 @@ app.put("/api/autos/:id", async (req, res) => {
       ...autosList[itemIndex],
       driverNameEn: driverNameEn !== undefined ? driverNameEn : autosList[itemIndex].driverNameEn,
       driverNameMl: driverNameMl !== undefined ? driverNameMl : autosList[itemIndex].driverNameMl,
+      driverNameTa: typeof driverNameTa === "string" ? driverNameTa.trim() : autosList[itemIndex].driverNameTa,
       autoNumber: autoNumber !== undefined ? autoNumber : autosList[itemIndex].autoNumber,
       contact: contact !== undefined ? contact : autosList[itemIndex].contact,
       locationEn: locationEn !== undefined ? locationEn : autosList[itemIndex].locationEn,
       locationMl: locationMl !== undefined ? locationMl : autosList[itemIndex].locationMl,
+      locationTa: typeof locationTa === "string" ? locationTa.trim() : autosList[itemIndex].locationTa,
       isAvailable: isAvailable !== undefined ? Boolean(isAvailable) : autosList[itemIndex].isAvailable
     };
 

@@ -13,6 +13,21 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" | "ta" }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
+  const labels = {
+    en: { invalid: "Please fill in all blanks.", failed: "Action failed. Try again.", connection: "Connection timeout.", loading: "Loading opinion columns...", empty: "No editorial columns approved yet.", heading: "Attappadi Citizen Voices", question: "Have an outlook on Attappadi's local reforms?", intro: "Submit your views on local development, the environment, farming, healthcare or infrastructure. Submissions are reviewed before publication.", success: "Opinion Submitted Successfully!", successDetail: "Our editorial desk has queued your column for moderation review. Thank you for contributing to Attappadi's local journalism.", name: "Your Full Name & Designation", topic: "Topic / Headline of Opinion", body: "Write your opinion here...", submit: "Submit for Moderation", policy: "All submissions are strictly moderated to prevent hate speech." },
+    ml: { invalid: "എല്ലാ വിവരങ്ങളും പൂരിപ്പിക്കുക.", failed: "സമർപ്പിക്കാൻ കഴിഞ്ഞില്ല. വീണ്ടും ശ്രമിക്കുക.", connection: "കണക്ഷൻ സമയം കഴിഞ്ഞു.", loading: "അഭിപ്രായങ്ങൾ ലഭ്യമാക്കുന്നു...", empty: "അംഗീകരിച്ച അഭിപ്രായങ്ങൾ ഇതുവരെ ഇല്ല.", heading: "അട്ടപ്പാടിയിലെ ജനങ്ങളുടെ അഭിപ്രായങ്ങൾ", question: "അട്ടപ്പാടിയുടെ വികസനത്തെക്കുറിച്ച് അഭിപ്രായമുണ്ടോ?", intro: "പ്രാദേശിക വികസനം, പരിസ്ഥിതി, കൃഷി, ആരോഗ്യം, അടിസ്ഥാന സൗകര്യങ്ങൾ എന്നിവയെക്കുറിച്ചുള്ള അഭിപ്രായങ്ങൾ അയയ്ക്കുക. പ്രസിദ്ധീകരിക്കുന്നതിന് മുമ്പ് പരിശോധിക്കും.", success: "അഭിപ്രായം വിജയകരമായി സമർപ്പിച്ചു!", successDetail: "നിങ്ങളുടെ അഭിപ്രായം പരിശോധനയ്ക്കായി അയച്ചിട്ടുണ്ട്. നന്ദി.", name: "പേരും പദവിയും", topic: "അഭിപ്രായത്തിന്റെ തലക്കെട്ട്", body: "നിങ്ങളുടെ അഭിപ്രായം എഴുതുക...", submit: "പരിശോധനയ്ക്കായി സമർപ്പിക്കുക", policy: "വിദ്വേഷ പ്രസംഗം തടയുന്നതിനായി എല്ലാ അഭിപ്രായങ്ങളും പരിശോധിക്കും." },
+    ta: { invalid: "அனைத்து விவரங்களையும் நிரப்பவும்.", failed: "சமர்ப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.", connection: "இணைப்பு நேரம் முடிந்தது.", loading: "கருத்துகள் ஏற்றப்படுகின்றன...", empty: "அங்கீகரிக்கப்பட்ட கருத்துகள் இதுவரை இல்லை.", heading: "அட்டப்பாடி மக்களின் கருத்துகள்", question: "அட்டப்பாடியின் வளர்ச்சி குறித்து கருத்து உள்ளதா?", intro: "உள்ளூர் வளர்ச்சி, சுற்றுச்சூழல், விவசாயம், சுகாதாரம் மற்றும் உள்கட்டமைப்பு குறித்து உங்கள் கருத்துகளை அனுப்புங்கள். வெளியிடுவதற்கு முன் மதிப்பாய்வு செய்யப்படும்.", success: "கருத்து வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது!", successDetail: "உங்கள் கருத்து மதிப்பாய்வுக்கு அனுப்பப்பட்டுள்ளது. நன்றி.", name: "பெயர் மற்றும் பதவி", topic: "கருத்தின் தலைப்பு", body: "உங்கள் கருத்தை எழுதுங்கள்...", submit: "மதிப்பாய்வுக்கு சமர்ப்பிக்கவும்", policy: "வெறுப்புப் பேச்சைத் தடுக்க அனைத்து கருத்துகளும் மதிப்பாய்வு செய்யப்படும்." }
+  }[lang];
+
+  const getOpinionText = (op: OpinionItem, field: "title" | "content") => {
+    const values = lang === "ta"
+      ? [op[`${field}Ta`], op[`${field}En`], op[`${field}Ml`]]
+      : lang === "ml"
+        ? [op[`${field}Ml`], op[`${field}En`], op[`${field}Ta`]]
+        : [op[`${field}En`], op[`${field}Ml`], op[`${field}Ta`]];
+    return values.find(value => typeof value === "string" && value.trim()) || "";
+  };
+
   const fetchOpinions = async () => {
     setLoading(true);
     try {
@@ -34,7 +49,7 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" | "ta" }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!authorName.trim() || !title.trim() || !content.trim()) {
-      alert("Please fill in all blanks.");
+      alert(labels.invalid);
       return;
     }
 
@@ -45,8 +60,12 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" | "ta" }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           authorName,
-          titleEn: title,
-          contentEn: content
+          titleEn: lang === "en" ? title : "",
+          titleMl: lang === "ml" ? title : "",
+          titleTa: lang === "ta" ? title : "",
+          contentEn: lang === "en" ? content : "",
+          contentMl: lang === "ml" ? content : "",
+          contentTa: lang === "ta" ? content : ""
         })
       });
 
@@ -57,10 +76,10 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" | "ta" }) {
         setSubmitSuccess(true);
         setTimeout(() => setSubmitSuccess(false), 9000);
       } else {
-        alert("Action failed. Try again.");
+        alert(labels.failed);
       }
     } catch (_) {
-      alert("Connection timeout.");
+      alert(labels.connection);
     } finally {
       setIsSubmitting(false);
     }
@@ -70,13 +89,13 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" | "ta" }) {
     return (
       <div className="bg-white border p-4 text-center rounded-lg shadow-sm">
         <span className="animate-spin text-[#052962] rounded-full h-4.5 w-4.5 border-2 border-current border-t-transparent inline-block mr-2"></span>
-        <span className="text-xs text-gray-400">Loading Opinion columns...</span>
+        <span className="text-xs text-gray-400">{labels.loading}</span>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 text-gray-800">
+    <div lang={lang} className={`space-y-6 text-gray-800 ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-latin"}`}>
       
       {/* Dynamic Grid: Opinions list on left, Submit opinion on right (Desktop) */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -88,13 +107,13 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" | "ta" }) {
           </h3>
           <h4 className="font-serif-guardian text-base font-extrabold text-[#052962] flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-amber-600 shrink-0" />
-            Attappadi Citizen Voices
+            {labels.heading}
           </h4>
 
           <div className="space-y-4 max-h-[460px] overflow-y-auto pr-1">
             {opinions.length === 0 ? (
               <div className="p-8 text-center text-xs text-gray-400">
-                No editorial columns approved yet.
+                {labels.empty}
               </div>
             ) : (
               opinions.map((op) => (
@@ -111,17 +130,17 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" | "ta" }) {
                         {op.authorName}
                       </span>
                       <span className="text-[10px] text-gray-400 block mt-0.5">
-                        {new Date(op.createdAt).toLocaleDateString(lang === "ml" ? "ml-IN" : "en-US")}
+                        {new Date(op.createdAt).toLocaleDateString(lang === "ml" ? "ml-IN" : lang === "ta" ? "ta-IN" : "en-US")}
                       </span>
                     </div>
                   </div>
 
                   <h5 className="font-serif-guardian font-bold text-sm text-[#052962] leading-snug">
-                    {lang === "ml" ? (op.titleMl || op.titleEn) : lang === "ta" ? (op.titleTa || op.titleEn) : op.titleEn}
+                    {getOpinionText(op, "title")}
                   </h5>
 
                   <p className="text-xs text-gray-600 leading-relaxed italic border-l-2 border-amber-300 pl-3">
-                    "{lang === "ml" ? (op.contentMl || op.contentEn) : lang === "ta" ? (op.contentTa || op.contentEn) : op.contentEn}"
+                    "{getOpinionText(op, "content")}"
                   </p>
                 </div>
               ))
@@ -137,21 +156,21 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" | "ta" }) {
               OPINION SUBMISSION
             </h3>
             <h4 className="font-serif-guardian text-base font-extrabold mb-4 leading-tight">
-              Have an outlook on Attappadi's local reforms?
+              {labels.question}
             </h4>
             
             <p className="text-xs text-slate-200 leading-relaxed mb-6">
-              Submit your views on local development, the environment, farming, healthcare or infrastructure. Submissions are reviewed before publication.
+              {labels.intro}
             </p>
 
             {submitSuccess && (
               <div className="p-4 bg-emerald-50 text-emerald-800 border-l-4 border-emerald-500 rounded text-xs space-y-1 mb-4">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-                  <span className="font-bold">Opinion Submitted Successfully!</span>
+                  <span className="font-bold">{labels.success}</span>
                 </div>
                 <p className="text-[11px] text-emerald-700 font-medium">
-                  Our editorial desk has queued your column for moderation review. Thank you for contributing to Attappadi's local journalism.
+                  {labels.successDetail}
                 </p>
               </div>
             )}
@@ -160,7 +179,7 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" | "ta" }) {
               <div>
                 <input 
                   type="text"
-                  placeholder="Your Full Name & Designation"
+                  placeholder={labels.name}
                   value={authorName}
                   onChange={(e) => setAuthorName(e.target.value)}
                   className="w-full bg-white border border-slate-300 rounded px-3 py-2 text-xs focus:ring-1 focus:ring-amber-300 focus:outline-none"
@@ -171,7 +190,7 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" | "ta" }) {
               <div>
                 <input 
                   type="text"
-                  placeholder="Topic / Headline of Opinion"
+                  placeholder={labels.topic}
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   className="w-full bg-white border border-slate-300 rounded px-3 py-2 text-xs focus:ring-1 focus:ring-amber-300 focus:outline-none"
@@ -182,7 +201,7 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" | "ta" }) {
               <div>
                 <textarea 
                   rows={4}
-                  placeholder="Write your opinion here..."
+                  placeholder={labels.body}
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   className="w-full bg-white border border-slate-300 rounded px-3 py-2 text-xs focus:ring-1 focus:ring-amber-300 focus:outline-none leading-relaxed"
@@ -200,14 +219,14 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" | "ta" }) {
                 ) : (
                   <Send className="w-4 h-4" />
                 )}
-                Submit for Moderation
+                {labels.submit}
               </button>
             </form>
           </div>
 
           <div className="mt-6 pt-4 border-t border-white/10 text-center">
             <span className="text-[10px] text-white/50 block">
-              All submissions are strictly moderated to prevent hate speech.
+              {labels.policy}
             </span>
           </div>
         </div>
