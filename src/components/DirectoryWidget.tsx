@@ -631,7 +631,7 @@ export default function DirectoryWidget({
                             type="button"
                             onClick={() => onDownloadCard(item)}
                             className="w-full flex items-center justify-center gap-1 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-200 rounded font-black text-[9px] uppercase tracking-wider cursor-pointer transition active:scale-95 text-center leading-none"
-                            title={lang !== "ml" ? "Download as styled greeting card graphic" : "നിറമുള്ള അറിയിപ്പ് കാർഡ് രൂപത്തിൽ ഡൗൺലോഡ് ചെയ്യാം"}
+                            title={lang === "ta" ? "அறிவிப்பு அட்டையாகப் பதிவிறக்கவும்" : lang !== "ml" ? "Download as styled greeting card graphic" : "നിറമുള്ള അറിയിപ്പ് കാർഡ് രൂപത്തിൽ ഡൗൺലോഡ് ചെയ്യാം"}
                           >
                             <IdCard className="w-3.5 h-3.5 text-amber-700 font-bold shrink-0" /> {lang !== "ml" ? "CARD" : "കാർഡ്"}
                           </button>
@@ -910,7 +910,7 @@ export default function DirectoryWidget({
                         className="text-[9px] font-black text-emerald-700 hover:text-emerald-900 bg-emerald-100/55 px-1.5 py-0.5 rounded flex items-center gap-0.5 border border-emerald-200"
                       >
                         <Sparkles className="w-2.5 h-2.5 text-emerald-600" />
-                        {isTranslating ? "..." : (lang !== "ml" ? "AUTO FILL ML" : "ഓട്ടോ ഫിൽ")}
+                        {isTranslating ? "..." : (lang === "ta" ? "மலையாளத்தைத் தானாக நிரப்பு" : lang !== "ml" ? "AUTO FILL ML" : "ഓട്ടോ ഫിൽ")}
                       </button>
                     </div>
                     <input 
@@ -1297,7 +1297,7 @@ export default function DirectoryWidget({
                             📋 {lang === "ta" ? "ஆர்டர் பட்டியலை இங்கே எழுதவும்:" : lang !== "ml" ? "Write Order List here:" : "വാങ്ങേണ്ട സാധനങ്ങളുടെ ലിസ്റ്റ്:"}
                           </label>
                           <textarea
-                            placeholder={lang !== "ml" ? "e.g. 5kg ragi, honey bucket, 2L coconut oil" : "ഉദാഹരത്തിന്: കാട്ടുതേൻ 1 കുപ്പി, മുത്താറിപ്പൊടി 2 കിലോ..."}
+                            placeholder={lang === "ta" ? "எ.கா. 5 கிலோ கேழ்வரகு, தேன், 2 லிட்டர் தேங்காய் எண்ணெய்" : lang !== "ml" ? "e.g. 5kg ragi, honey bucket, 2L coconut oil" : "ഉദാഹരത്തിന്: കാട്ടുതേൻ 1 കുപ്പി, മുത്താറിപ്പൊടി 2 കിലോ..."}
                             value={targetMsg}
                             onChange={(e) => setCustomOrderText(prev => ({ ...prev, [shop.id]: e.target.value }))}
                             className="w-full h-[65px] border border-gray-250 rounded p-1.5 text-xs focus:ring-1 focus:ring-fuchsia-400 focus:outline-none bg-white font-semibold resize-none leading-normal"
@@ -1679,7 +1679,7 @@ export default function DirectoryWidget({
             </p>
             <input
               type="text"
-              placeholder={lang !== "ml" ? "e.g. 9876543210" : "മൊബൈൽ നമ്പർ നൽകുക..."}
+              placeholder={lang === "ta" ? "எ.கா. 9876543210" : lang !== "ml" ? "e.g. 9876543210" : "മൊബൈൽ നമ്പർ നൽകുക..."}
               value={resolveContactInput}
               onChange={(e) => setResolveContactInput(e.target.value)}
               className="w-full border border-gray-250 p-2 rounded text-xs focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white font-semibold"
