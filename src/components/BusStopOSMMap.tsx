@@ -279,7 +279,7 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang,
     {isAdmin && <div className="rounded-lg border border-slate-300 p-3 space-y-3 bg-white">
       <button type="button" onClick={() => setEditMode(v => !v)} className="rounded bg-slate-900 px-3 py-2 text-white text-sm">{editMode ? "Close station editor" : "Edit bus station positions"}</button>
       {editMode && <>
-        <p className="text-sm">Choose a station, then click its actual location on the map to place or move its dot. Click another dot to select it for editing. Changes are saved in this browser only until exported and published centrally.</p>
+        <p className="text-sm">Choose a station, then click its actual location on the map to place or move its dot. Click another dot to select it for editing. Draft changes are local until you click Publish selected station to website.</p>
         <select aria-label="Station to position" value={editingStop} onChange={e => { setEditingStop(e.target.value); setCustomName(manual[e.target.value]?.name || stops.find(s => s.id === e.target.value)?.en || ""); }} className="w-full border rounded p-2">
           {stops.map(stop => <option key={stop.id} value={stop.id}>{stop.en}{manual[stop.id] ? " ✓" : " — needs manual placement"}</option>)}
         </select>
@@ -287,7 +287,7 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang,
         <div className="flex flex-wrap gap-2">
           <button type="button" disabled={saving} className="rounded bg-emerald-800 text-white px-3 py-2 disabled:opacity-50" onClick={() => void publishStation()}>{saving ? "Saving..." : "Publish selected station to website"}</button>
           <button type="button" disabled={saving || !published[editingStop]} className="rounded border px-3 py-2 disabled:opacity-50" onClick={() => void unpublishStation()}>Unpublish station</button>
-          <button type="button" className="rounded bg-blue-800 text-white px-3 py-2" onClick={() => { const old = manual[editingStop] || positions[editingStop]; if (old) saveManual({ ...manual, [editingStop]: { lat: old.lat, lon: old.lon, name: customName.trim() || editingStop } }); }}>Save station name</button>
+          <button type="button" className="rounded bg-blue-800 text-white px-3 py-2" onClick={() => { const old = manual[editingStop] || published[editingStop] || positions[editingStop]; if (old) saveManual({ ...manual, [editingStop]: { lat: old.lat, lon: old.lon, name: customName.trim() || editingStop } }); }}>Save station name</button>
           <button type="button" className="rounded border px-3 py-2" onClick={() => { const next = { ...manual }; delete next[editingStop]; saveManual(next); }}>Reset manual position</button>
           <button type="button" className="rounded border px-3 py-2" onClick={() => { const blob = new Blob([JSON.stringify(manual, null, 2)], { type: "application/json" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "attappadi-bus-stop-positions.json"; a.click(); URL.revokeObjectURL(url); }}>Export positions JSON</button>
         </div>
