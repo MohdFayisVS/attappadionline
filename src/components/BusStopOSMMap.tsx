@@ -1,16 +1,16 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 type Stop = { id: string; en: string; ml: string };
-type Props = { stops: Stop[]; selectedStop: string; onSelectStop: (id: string) => void; lang: "en" | "ml" | "ta" };
+type Props = { stops: Stop[]; selectedStop: string; onSelectStop: (id: string) => void; lang: "en" | "ml" | "ta"; isAdmin?: boolean };
 type Position = { lat: number; lon: number; kind: "station" | "stop" | "place"; name: string };
 type Layer = { clearLayers: () => void; addTo: (map: MapInstance) => Layer };
-type Marker = { addTo: (layer: Layer) => Marker; on: (event: string, callback: () => void) => Marker; bindTooltip: (text: string, options?: Record<string, unknown>) => Marker };
-type MapInstance = { scrollWheelZoom: { enable: () => void }; dragging: { enable: () => void }; setView: (point: [number, number], zoom: number) => MapInstance; remove: () => void; invalidateSize: () => void; fitBounds: (bounds: [number, number][], options?: Record<string, unknown>) => void };
+type Marker = { dragging?: { enable: () => void }; getLatLng?: () => { lat: number; lng: number }; addTo: (layer: Layer) => Marker; on: (event: string, callback: () => void) => Marker; bindTooltip: (text: string, options?: Record<string, unknown>) => Marker };
+type MapInstance = { on: (event: string, callback: (e: { latlng: { lat: number; lng: number } }) => void) => void; scrollWheelZoom: { enable: () => void }; dragging: { enable: () => void }; setView: (point: [number, number], zoom: number) => MapInstance; remove: () => void; invalidateSize: () => void; fitBounds: (bounds: [number, number][], options?: Record<string, unknown>) => void };
 type Leaflet = {
   map: (element: HTMLElement) => MapInstance;
   layerGroup: () => Layer;
   tileLayer: (url: string, options: Record<string, unknown>) => { addTo: (map: MapInstance) => void };
-  circleMarker: (point: [number, number], options: Record<string, unknown>) => Marker;
+  circleMarker: (point: [number, number], options: Record<string, unknown>) => Marker;\n  marker: (point: [number, number], options?: Record<string, unknown>) => Marker;
 };
 declare global { interface Window { L?: Leaflet } }
 type OsmElement = { lat?: number; lon?: number; center?: { lat: number; lon: number }; tags?: Record<string, string> };
@@ -101,7 +101,7 @@ async function lookupStops(stops: Stop[], signal: AbortSignal): Promise<Record<s
   return found;
 }
 
-export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang }: Props) {
+export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang, isAdmin = false }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapInstance | null>(null);
   const layerRef = useRef<Layer | null>(null);
@@ -110,8 +110,25 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang 
   const [ready, setReady] = useState(false);
   const [positions, setPositions] = useState<Record<string, Position>>(() => ({ ...KNOWN_PLACES, ...loadCache() }));
   const [loading, setLoading] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [editingStop, setEditingStop] = useState("AGALI");
+  const [manual, setManual] = useState<Record<string, { lat: number; lon: number; name: string }>>(() => {
+    try { return JSON.parse(localStorage.getItem("attappadi_bus_manual_stops_v1") || "{}"); } catch { return {}; }
+  });
+  const [customName, setCustomName] = useState("");
+  const [importText, setImportText] = useState("");
+  const manualRef = useRef(manual);
+  manualRef.current = manual;
+  const editRef = useRef(editMode);
+  editRef.current = editMode;
+  const editingRef = useRef(editingStop);
+  editingRef.current = editingStop;
+  const saveManual = (next: typeof manual) => {
+    setManual(next);
+    try { localStorage.setItem("attappadi_bus_manual_stops_v1", JSON.stringify(next)); } catch { /* storage unavailable */ }
+  };
   const [error, setError] = useState("");
-  const available = useMemo(() => stops.filter(s => positions[s.id]), [stops, positions]);
+  const available = useMemo(() => stops.filter(s => manual[s.id] || positions[s.id]), [stops, positions, manual]);
 
   useEffect(() => {
     let mounted = true;
@@ -124,6 +141,13 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang 
       }).addTo(map);
       map.scrollWheelZoom.enable();
       map.dragging.enable();
+      map.on("click", e => {
+        if (!editRef.current || !editingRef.current) return;
+        const id = editingRef.current;
+        const old = manualRef.current[id];
+        const next = { ...manualRef.current, [id]: { lat: e.latlng.lat, lon: e.latlng.lng, name: old?.name || stopListRef.current.find(s => s.id === id)?.en || id } };
+        saveManual(next);
+      });
       mapRef.current = map;
       layerRef.current = L.layerGroup().addTo(map);
       setReady(true);
@@ -194,9 +218,9 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang 
     const layer = layerRef.current;
     layer.clearLayers();
     available.forEach(stop => {
-      const point = positions[stop.id];
+      const point = manual[stop.id] || positions[stop.id];
       const selected = stop.id === selectedStop;
-      window.L!.circleMarker([point.lat, point.lon], {
+      const marker = window.L!.circleMarker([point.lat, point.lon], {
         radius: selected ? 10 : 7, weight: 3,
         color: selected ? "#052962" : "#d97706",
         fillColor: selected ? "#ffe500" : "#ffffff",
@@ -207,11 +231,28 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang 
     const selected = positions[selectedStop];
     if (selected) mapRef.current.setView([selected.lat, selected.lon], 12);
     else if (available.length) mapRef.current.fitBounds(available.map(s => [positions[s.id].lat, positions[s.id].lon]), { padding: [24, 24], maxZoom: 11 });
-  }, [ready, positions, selectedStop, available]);
+  }, [ready, positions, selectedStop, available, manual]);
 
   return <section className="space-y-2" aria-label="OpenStreetMap bus stops">
     <div ref={container} className="h-[360px] sm:h-[460px] w-full rounded-lg border border-slate-200" />
     <p className="text-xs font-semibold">{label(lang, "Tap a station dot to see its bus timetable", "ബസ് സമയക്രമം കാണാൻ മാപ്പിലെ സ്റ്റേഷൻ അടയാളം തിരഞ്ഞെടുക്കുക", "பேருந்து நேர அட்டவணையைக் காண வரைபடத்தில் நிறுத்தத்தைத் தேர்ந்தெடுக்கவும்")}</p>
+    {isAdmin && <div className="rounded-lg border border-slate-300 p-3 space-y-3 bg-white">
+      <button type="button" onClick={() => setEditMode(v => !v)} className="rounded bg-slate-900 px-3 py-2 text-white text-sm">{editMode ? "Close station editor" : "Edit bus station positions"}</button>
+      {editMode && <>
+        <p className="text-sm">Choose a station, then click its actual location on the map to place or move its dot. Click another dot to select it for editing. Changes are saved in this browser only until exported and published centrally.</p>
+        <select aria-label="Station to position" value={editingStop} onChange={e => { setEditingStop(e.target.value); setCustomName(manual[e.target.value]?.name || stops.find(s => s.id === e.target.value)?.en || ""); }} className="w-full border rounded p-2">
+          {stops.map(stop => <option key={stop.id} value={stop.id}>{stop.en}{manual[stop.id] ? " ✓" : " — needs manual placement"}</option>)}
+        </select>
+        <input aria-label="Station display name" value={customName} onChange={e => setCustomName(e.target.value)} placeholder="Station display name" className="w-full border rounded p-2" />
+        <div className="flex flex-wrap gap-2">
+          <button type="button" className="rounded bg-blue-800 text-white px-3 py-2" onClick={() => { const old = manual[editingStop] || positions[editingStop]; if (old) saveManual({ ...manual, [editingStop]: { lat: old.lat, lon: old.lon, name: customName.trim() || editingStop } }); }}>Save station name</button>
+          <button type="button" className="rounded border px-3 py-2" onClick={() => { const next = { ...manual }; delete next[editingStop]; saveManual(next); }}>Reset manual position</button>
+          <button type="button" className="rounded border px-3 py-2" onClick={() => { const blob = new Blob([JSON.stringify(manual, null, 2)], { type: "application/json" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "attappadi-bus-stop-positions.json"; a.click(); URL.revokeObjectURL(url); }}>Export positions JSON</button>
+        </div>
+        <textarea aria-label="Import saved positions JSON" value={importText} onChange={e => setImportText(e.target.value)} placeholder="Paste exported station coordinates JSON" className="w-full border rounded p-2" rows={3} />
+        <button type="button" className="rounded border px-3 py-2" onClick={() => { try { const parsed = JSON.parse(importText); if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw Error(); const next = { ...manual }; for (const [id, p] of Object.entries(parsed as Record<string, { lat: number; lon: number; name: string }>)) { if (stops.some(s => s.id === id) && Number.isFinite(p?.lat) && Number.isFinite(p?.lon) && Math.abs(p.lat) <= 90 && Math.abs(p.lon) <= 180 && typeof p.name === "string") next[id] = p; } saveManual(next); setImportText(""); } catch { window.alert("Invalid station coordinate JSON"); } }}>Import positions</button>
+      </>}
+    </div>}
     <p className="text-xs text-slate-600" role="status">{loading ? "Checking additional OpenStreetMap locations..." : `${available.length} of ${stops.length} places mapped`}</p>
     {error && <p className="text-xs text-amber-700" role="alert">{error}</p>}
     <p className="text-[10px] text-slate-500">© OpenStreetMap contributors. Dots use OSM bus stops or stations where available; town-center markers are labeled and may not be the exact boarding point. Timetables are scheduled, not live GPS.</p>
