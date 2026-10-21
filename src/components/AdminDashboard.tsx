@@ -582,8 +582,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             leftAd: {
               titleEn: data.leftAd?.titleEn || "",
               titleMl: data.leftAd?.titleMl || "",
+              titleTa: data.leftAd?.titleTa || "",
               subtitleEn: data.leftAd?.subtitleEn || "",
               subtitleMl: data.leftAd?.subtitleMl || "",
+              subtitleTa: data.leftAd?.subtitleTa || "",
               contact: data.leftAd?.contact || "",
               actionType: data.leftAd?.actionType || "share",
               externalUrl: data.leftAd?.externalUrl || "",
@@ -592,8 +594,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             rightAd: {
               titleEn: data.rightAd?.titleEn || "",
               titleMl: data.rightAd?.titleMl || "",
+              titleTa: data.rightAd?.titleTa || "",
               subtitleEn: data.rightAd?.subtitleEn || "",
               subtitleMl: data.rightAd?.subtitleMl || "",
+              subtitleTa: data.rightAd?.subtitleTa || "",
               contact: data.rightAd?.contact || "",
               actionType: data.rightAd?.actionType || "phone",
               externalUrl: data.rightAd?.externalUrl || "",
@@ -679,6 +683,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       }
     }
 
+    if (["leftAd", "rightAd"].some(side => !finalAdForm[side as "leftAd" | "rightAd"].titleTa?.trim() || !finalAdForm[side as "leftAd" | "rightAd"].subtitleTa?.trim())) {
+      alert("Both advertisements require Tamil titles and subtitles.");
+      return;
+    }
     try {
       const response = await adminFetch("/api/adconfig", {
         method: "PUT",
