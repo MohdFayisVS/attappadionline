@@ -16,9 +16,11 @@ import ShareButtons from "./ShareButtons";
 import { motion, AnimatePresence } from "motion/react";
 
 const weekDaysEn = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const weekDaysTa = ["ஞாயி", "திங்", "செவ்", "புத", "வியா", "வெள்", "சனி"];
 const weekDaysMl = ["ഞായർ", "തിങ്കൾ", "ചൊവ്വാ", "ബുധൻ", "വ്യാഴം", "വെള്ളി", "ശനി"];
 
 const monthNamesEn = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const monthNamesTa = ["ஜன", "பிப்", "மார்", "ஏப்", "மே", "ஜூன்", "ஜூலை", "ஆக", "செப்", "அக்", "நவ", "டிச"];
 const monthNamesMl = ["ജനു", "ഫെബ്രു", "മാർ", "ഏപ്രി", "മേയ്", "ജൂൺ", "ജൂലൈ", "ഓഗ", "സെപ്റ്റ", "ഒക്ടോ", "നവം", "ഡിസം"];
 
 export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | "ml" | "ta"; onDownloadCard?: (ev: EventItem) => void }) {
@@ -107,7 +109,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
     try {
       const d = new Date(dateStr);
       const day = d.getDate();
-      const month = lang !== "ml" ? monthNamesEn[d.getMonth()] : monthNamesMl[d.getMonth()];
+      const month = lang === "ta" ? monthNamesTa[d.getMonth()] : lang === "ml" ? monthNamesMl[d.getMonth()] : monthNamesEn[d.getMonth()];
       return { day, month };
     } catch (_) {
       return { day: "?", month: "Date" };
@@ -128,8 +130,8 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
     return (
       <div id="calendar-widget-wrapper" className="bg-white border p-6 text-center rounded-xl shadow-xs">
         <span className="animate-spin text-[#052962] rounded-full h-5 w-5 border-2 border-current border-t-transparent inline-block mr-2"></span>
-        <span className="text-xs text-gray-400 font-anek-malayalam font-bold">
-          {lang !== "ml" ? "Syncing Community Calendar..." : "കലണ്ടർ വിവരങ്ങൾ ലഭ്യമാക്കുന്നു..."}
+        <span className="text-xs text-gray-400 ao-localized-content font-bold">
+          {lang === "ta" ? "நிகழ்வு நாட்காட்டி ஏற்றப்படுகிறது..." : lang === "ml" ? "കലണ്ടർ വിവരങ്ങൾ ലഭ്യമാക്കുന്നു..." : "Syncing Community Calendar..."}
         </span>
       </div>
     );
@@ -148,7 +150,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
               <Sparkles className="w-3.5 h-3.5" />
             </span>
             <span className="text-[10px] uppercase font-black tracking-widest text-[#ffe500]">
-              {lang !== "ml" ? "CALENDAR" : "കലണ്ടർ"}
+              {"CALENDAR"}
             </span>
           </div>
           
@@ -157,7 +159,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
             onClick={resetToToday}
             className="text-[10px] bg-white/10 hover:bg-white/20 border border-white/20 px-2.5 py-0.5 rounded font-black transition duration-200 cursor-pointer"
           >
-            {lang !== "ml" ? "Today" : "ഇന്ന്"}
+            {lang === "ta" ? "இன்று" : lang === "ml" ? "ഇന്ന്" : "Today"}
           </button>
         </div>
 
@@ -165,10 +167,10 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
         <div className="flex items-center justify-between mt-3">
           <div className="space-y-0.5">
             <h3 className="text-base font-black tracking-tight leading-none text-white">
-              {lang !== "ml" ? monthNamesEn[baseDate.getMonth()] : monthNamesMl[baseDate.getMonth()]} {baseDate.getFullYear()}
+              {lang === "ta" ? monthNamesTa[baseDate.getMonth()] : lang === "ml" ? monthNamesMl[baseDate.getMonth()] : monthNamesEn[baseDate.getMonth()]} {baseDate.getFullYear()}
             </h3>
             <p className="text-[10px] text-white/75 font-bold">
-              {lang !== "ml" ? "Swipe left / right to browse calendar timeline" : "വലത്തോട്ടും ഇടത്തോട്ടും മാറ്റി ദിവസങ്ങൾ തിരഞ്ഞെടുക്കുക"}
+              {lang === "ta" ? "நாட்களைப் பார்க்க இடது / வலது பக்கம் நகர்த்தவும்" : lang === "ml" ? "വലത്തോട്ടും ഇടത്തോട്ടും മാറ്റി ദിവസങ്ങൾ തിരഞ്ഞെടുക്കുക" : "Swipe left / right to browse calendar timeline"}
             </p>
           </div>
           
@@ -214,9 +216,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
             const dayEvents = getEventsForDay(dayObj);
             const hasEvents = dayEvents.length > 0;
 
-            const dayOfWeekLabel = lang === "en" 
-              ? weekDaysEn[dayObj.getDay()] 
-              : weekDaysMl[dayObj.getDay()];
+            const dayOfWeekLabel = lang === "ta" ? weekDaysTa[dayObj.getDay()] : lang === "ml" ? weekDaysMl[dayObj.getDay()] : weekDaysEn[dayObj.getDay()];
 
             return (
               <button
@@ -279,13 +279,13 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
           <span>
             {selectedDateFilter ? (
               <>
-                {lang !== "ml" ? "Filtered Date:" : "ഫിൽട്ടർ ചെയ്ത ദിവസം:"} {" "}
+                {lang === "ta" ? "தேர்ந்தெடுத்த தேதி:" : lang === "ml" ? "ഫിൽട്ടർ ചെയ്ത ദിവസം:" : "Filtered Date:"} {" "}
                 <span className="text-slate-900 bg-white border border-slate-200 px-2 py-0.5 rounded font-black font-anek-malayalam">
                   {selectedDateFilter}
                 </span>
               </>
             ) : (
-              lang !== "ml" ? "Showing all scheduled events" : "എല്ലാ തീയതികളിലെയും വിവരങ്ങൾ"
+              lang === "ta" ? "அனைத்து நிகழ்வுகளும் காட்டப்படுகின்றன" : lang === "ml" ? "എല്ലാ തീയതികളിലെയും വിവരങ്ങൾ" : "Showing all scheduled events"
             )}
           </span>
         </div>
@@ -296,7 +296,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
             className="flex items-center gap-1 text-[10px] text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 px-2 py-0.5 rounded transition font-black cursor-pointer"
           >
             <X className="w-3 h-3" />
-            <span>{lang !== "ml" ? "Show All" : "എല്ലാം കാണിക്കാം"}</span>
+            <span>{lang === "ta" ? "அனைத்தையும் காட்டு" : lang === "ml" ? "എല്ലാം കാണിക്കാം" : "Show All"}</span>
           </button>
         )}
       </div>
@@ -318,7 +318,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
                 </div>
                 <div className="space-y-0.5 text-xs text-slate-400">
                   <p className="font-extrabold font-anek-malayalam text-slate-700">
-                    {lang !== "ml" ? "No Events Scheduled" : "പരിപാടികൾ ഒന്നും നിശ്ചയിച്ചിട്ടില്ല"}
+                    {lang === "ta" ? "நிகழ்வுகள் எதுவும் இல்லை" : lang === "ml" ? "പരിപാടികൾ ഒന്നും നിശ്ചയിച്ചിട്ടില്ല" : "No Events Scheduled"}
                   </p>
                   <p className="text-[10px] leading-tight font-semibold">
                     {lang === "en"
@@ -376,7 +376,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
                             className="px-2.5 py-1 hover:bg-amber-100 text-[#052962] hover:text-amber-800 rounded-md bg-[#ffe500]/15 border border-[#ffe500]/40 text-[9px] font-black uppercase tracking-wider transition duration-200 flex items-center gap-1 cursor-pointer select-none"
                             title="Generate Shareable Graphic Card"
                           >
-                            <IdCard className="w-3.5 h-3.5 text-amber-600 shrink-0" /> {lang !== "ml" ? "Card Preview" : "കാർഡ്"}
+                            <IdCard className="w-3.5 h-3.5 text-amber-600 shrink-0" /> {lang === "ta" ? "அட்டையைப் பார்க்க" : lang === "ml" ? "കാർഡ്" : "Card Preview"}
                           </button>
                         )}
                         <ShareButtons 
