@@ -546,20 +546,6 @@ export default function DirectoryWidget({
             <span className="truncate">{lang !== "ml" ? "DIRECTORY" : "ഡയറക്ടറി"}</span>
           </button>
           <button
-            onClick={() => setCurrTab("autorikshaw")}
-            className={`flex-1 min-w-[90px] py-3 text-center transition flex justify-center items-center gap-1 border-r cursor-pointer ${currTab === "autorikshaw" ? "bg-emerald-50 text-emerald-800 border-b-2 border-emerald-600 font-extrabold" : "text-gray-500 hover:bg-gray-100"}`}
-          >
-            <Radio className="w-3.5 h-3.5 text-emerald-600 shrink-0 animate-pulse" />
-            <span className="truncate">{lang !== "ml" ? "AUTO TAXI" : "ഓട്ടോ റിക്ഷ"}</span>
-          </button>
-          <button
-            onClick={() => setCurrTab("shopping")}
-            className={`flex-1 min-w-[90px] py-3 text-center transition flex justify-center items-center gap-1 border-r cursor-pointer ${currTab === "shopping" ? "bg-fuchsia-50 text-fuchsia-800 border-b-2 border-fuchsia-600 font-extrabold" : "text-gray-500 hover:bg-gray-100"}`}
-          >
-            <ShoppingBag className="w-3.5 h-3.5 text-fuchsia-600 shrink-0" />
-            <span className="truncate">{lang !== "ml" ? "LOCAL SHOPPING" : "വ്യാപാരശാലകൾ"}</span>
-          </button>
-          <button
             onClick={() => setCurrTab("lostfound")}
             className={`flex-1 min-w-[90px] py-3 text-center transition flex justify-center items-center gap-1 cursor-pointer ${currTab === "lostfound" ? "bg-rose-50 text-rose-800 border-b-2 border-rose-600 font-extrabold" : "text-gray-500 hover:bg-gray-100"}`}
           >
