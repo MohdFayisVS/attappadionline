@@ -778,7 +778,7 @@ export default function DirectoryWidget({
               <div className="space-y-0.5">
                 <h4 className="text-xs font-black flex items-center gap-1.5 text-emerald-800">
                   <span className="p-1 bg-emerald-100 rounded text-base animate-bounce">🛺</span>
-                  {lang !== "ml" ? "Autorikshaw Taxi Finder" : "പ്രാദേശിക ഓട്ടോ ടാക്സി ഡയറക്ടറി"}
+                  {lang === "ta" ? "ஆட்டோ டாக்ஸி தேடல்" : lang !== "ml" ? "Autorikshaw Taxi Finder" : "പ്രാദേശിക ഓട്ടോ ടാക്സി ഡയറക്ടറി"}
                 </h4>
                 <p className="text-[11px] text-emerald-800/90 leading-snug">
                   {lang === "en" 
@@ -860,7 +860,7 @@ export default function DirectoryWidget({
 
                 <div>
                   <h4 className="font-serif-guardian font-extrabold text-[#052962] text-sm">
-                    {lang !== "ml" ? "Register Your Autorikshaw Taxi" : "ഡ്രൈവർമാരുടെ രജിസ്ട്രേഷൻ"}
+                    {lang === "ta" ? "உங்கள் ஆட்டோ டாக்ஸியைப் பதிவு செய்க" : lang !== "ml" ? "Register Your Autorikshaw Taxi" : "ഡ്രൈവർമാരുടെ രജിസ്ട്രേഷൻ"}
                   </h4>
                   <p className="text-[10px] text-gray-400">
                     {lang === "en" 
@@ -1132,7 +1132,7 @@ export default function DirectoryWidget({
               <div className="space-y-1">
                 <h4 className="text-sm font-black flex items-center gap-1.5 text-fuchsia-800">
                   <span className="p-1.5 bg-fuchsia-100 rounded text-base">🛍️</span>
-                  {lang !== "ml" ? "Attappadi Local Shopping & Orders" : "അട്ടപ്പാടി ലോക്കൽ ഷോപ്പിംഗ് പോർട്ടൽ"}
+                  {lang === "ta" ? "அட்டப்பாடி உள்ளூர் கடைகள் மற்றும் ஆர்டர்கள்" : lang !== "ml" ? "Attappadi Local Shopping & Orders" : "അട്ടപ്പാടി ലോക്കൽ ഷോപ്പിംഗ് പോർട്ടൽ"}
                 </h4>
                 <p className="text-xs text-fuchsia-900 leading-relaxed font-sans">
                   {lang === "en" 
@@ -1344,7 +1344,7 @@ export default function DirectoryWidget({
               <div className="space-y-0.5">
                 <h4 className="text-xs font-black flex items-center gap-1.5 text-rose-800">
                   <span className="p-1 bg-rose-100 rounded text-base animate-bounce">📢</span>
-                  {lang !== "ml" ? "Lost & Found Board" : "നഷ്ടപ്പെട്ടവ & ലഭിച്ചവ ബോർഡ്"}
+                  {lang === "ta" ? "தொலைந்த மற்றும் கண்டெடுத்த பொருட்கள்" : lang !== "ml" ? "Lost & Found Board" : "നഷ്ടപ്പെട്ടവ & ലഭിച്ചവ ബോർഡ്"}
                 </h4>
                 <p className="text-[11px] text-rose-800/90 leading-snug">
                   {lang === "en" 
