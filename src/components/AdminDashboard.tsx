@@ -79,12 +79,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   // LPG Form State
   const [lpgForm, setLpgForm] = useState({
     agencyNameEn: "",
-    agencyNameMl: "",
+    agencyNameMl: "", agencyNameTa: "",
     areasEn: "",
-    areasMl: "",
+    areasMl: "", areasTa: "",
     date: new Date().toLocaleDateString("en-US", { weekday: "long", day: "numeric", month: "long" }),
     statusEn: "Delivering Today",
-    statusMl: "ഇന്ന് വിതരണമുണ്ട്",
+    statusMl: "ഇന്ന് വിതരണമുണ്ട്", statusTa: "இன்று விநியோகம்",
     contact: "",
     notesEn: "",
     notesMl: ""
@@ -300,12 +300,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     setLpgForm({
       agencyNameEn: "",
-      agencyNameMl: "",
+      agencyNameMl: "", agencyNameTa: "",
       areasEn: "",
-      areasMl: "",
+      areasMl: "", areasTa: "",
       date: new Date().toLocaleDateString("en-US", { weekday: "long", day: "numeric", month: "long" }),
       statusEn: "Delivering Today",
-      statusMl: "ഇന്ന് വിതരണമുണ്ട്",
+      statusMl: "ഇന്ന് വിതരണമുണ്ട്", statusTa: "இன்று விநியோகம்",
       contact: "",
       notesEn: "",
       notesMl: ""
@@ -2005,8 +2005,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setLpgForm({
       agencyNameEn: item.agencyNameEn,
       agencyNameMl: item.agencyNameMl,
+      agencyNameTa: item.agencyNameTa || "",
       areasEn: item.areasEn || "",
       areasMl: item.areasMl || "",
+      areasTa: item.areasTa || "",
       date: item.date || "",
       statusEn: item.statusEn || "Delivering Today",
       statusMl: item.statusMl || "ഇന്ന് വിതരണമുണ്ട്",
@@ -2040,12 +2042,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       triggerToast(isEdit ? "LPG schedule updated successfully." : "New LPG delivery schedule added.");
       setLpgForm({
         agencyNameEn: "",
-        agencyNameMl: "",
+        agencyNameMl: "", agencyNameTa: "",
         areasEn: "",
-        areasMl: "",
+        areasMl: "", areasTa: "",
         date: new Date().toLocaleDateString("en-US", { weekday: "long", day: "numeric", month: "long" }),
         statusEn: "Delivering Today",
-        statusMl: "ഇന്ന് വിതരണമുണ്ട്",
+        statusMl: "ഇന്ന് വിതരണമുണ്ട്", statusTa: "இன்று விநியோகம்",
         contact: "",
         notesEn: "",
         notesMl: ""
@@ -5672,9 +5674,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     setEditingId(null);
                     setEditingType(null);
                     setLpgForm({
-                      agencyNameEn: "", agencyNameMl: "", areasEn: "", areasMl: "",
+                      agencyNameEn: "", agencyNameMl: "", agencyNameTa: "", areasEn: "", areasMl: "", areasTa: "",
                       date: new Date().toLocaleDateString("en-US", { weekday: "long", day: "numeric", month: "long" }),
-                      statusEn: "Delivering Today", statusMl: "ഇന്ന് വിതരണമുണ്ട്",
+                      statusEn: "Delivering Today", statusMl: "ഇന്ന് വിതരണമുണ്ട്", statusTa: "இன்று விநியோகம்",
                       contact: "", notesEn: "", notesMl: ""
                     });
                   }}
@@ -5694,6 +5696,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   {editingId && editingType === "lpg" ? "Modify LPG scheduling details" : "Schedule new gas delivery route"}
                 </h3>
                 <form onSubmit={handleCreateLpg} className="space-y-4">
+                  <label className="block text-sm font-semibold">agencyName (Tamil)<input lang="ta" value={lpgForm.agencyNameTa} onChange={e => setLpgForm({...lpgForm, agencyNameTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">areas (Tamil)<input lang="ta" value={lpgForm.areasTa} onChange={e => setLpgForm({...lpgForm, areasTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">status (Tamil)<input lang="ta" value={lpgForm.statusTa} onChange={e => setLpgForm({...lpgForm, statusTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">notes (Tamil)<input lang="ta" value={lpgForm.notesTa} onChange={e => setLpgForm({...lpgForm, notesTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-slate-500 font-semibold mb-0.5">Agency Name (English)</label>
