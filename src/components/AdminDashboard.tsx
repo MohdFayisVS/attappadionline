@@ -118,7 +118,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
   // 3. Events Form
   const [eventForm, setEventForm] = useState({
-    titleEn: "", titleMl: "", date: "", time: "", locationEn: "", locationMl: "", descriptionEn: "", descriptionMl: ""
+    titleEn: "", titleMl: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: ""
   });
 
   // 4. Explore sub-forms
@@ -265,7 +265,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       authorName: "", titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", approved: true
     });
     setEventForm({
-      titleEn: "", titleMl: "", date: "", time: "", locationEn: "", locationMl: "", descriptionEn: "", descriptionMl: ""
+      titleEn: "", titleMl: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: ""
     });
     setDestForm({
       nameEn: "", nameMl: "", locationEn: "", locationMl: "", image: "",
@@ -1092,7 +1092,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Community event updated successfully." : "Community event scheduled successfully.");
-      setEventForm({ titleEn: "", titleMl: "", date: "", time: "", locationEn: "", locationMl: "", descriptionEn: "", descriptionMl: "" });
+      setEventForm({ titleEn: "", titleMl: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: "" });
       setEditingId(null);
       setEditingType(null);
       fetchEvents();
