@@ -69,7 +69,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   // Editing/Form states
   // 1. News Form
   const [newsForm, setNewsForm] = useState({
-    titleEn: "", titleMl: "", contentEn: "", contentMl: "",
+    titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
     category: "latest" as "breaking" | "latest" | "updates", regions: [] as string[],
     image: "", isSlide: false, isCard: true
   });
