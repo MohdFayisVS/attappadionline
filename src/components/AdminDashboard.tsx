@@ -1245,6 +1245,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       { en: "elementEn", ml: "elementMl" }
     ]);
 
+    if (!translatedCulture.titleTa?.trim() || !translatedCulture.descTa?.trim()) {
+      alert("Tamil culture title and description are required.");
+      return;
+    }
     const isEdit = typeof editingId === "string" && editingType === "cultures";
     const url = isEdit ? `/api/cultures/${editingId}` : "/api/cultures";
     const method = isEdit ? "PUT" : "POST";
@@ -1315,7 +1319,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     ]);
     const featsEn = translatedStay.featuresEn.split(",").map(x => x.trim()).filter(Boolean);
     const featsMl = translatedStay.featuresMl.split(",").map(x => x.trim()).filter(Boolean);
+    const featsTa = translatedStay.featuresTa.split(",").map(x => x.trim()).filter(Boolean);
 
+    if (!translatedStay.nameTa?.trim() || !translatedStay.locationTa?.trim()) {
+      alert("Tamil accommodation name and location are required.");
+      return;
+    }
     const isEdit = typeof editingId === "string" && editingType === "stays";
     const url = isEdit ? `/api/stays/${editingId}` : "/api/stays";
     const method = isEdit ? "PUT" : "POST";
@@ -1326,7 +1335,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       body: JSON.stringify({
         ...translatedStay,
         featuresEn: featsEn,
-        featuresMl: featsMl
+        featuresMl: featsMl,
+        featuresTa: featsTa
       })
     });
     if (response.ok) {
