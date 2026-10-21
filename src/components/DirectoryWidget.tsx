@@ -247,7 +247,7 @@ export default function DirectoryWidget({
         throw new Error(errData.error || "Failed to publish report");
       }
 
-      setRegSuccess(lang !== "ml" ? "Report published successfully!" : "വിവരം വിജയകരമായി പ്രസിദ്ധീകരിച്ചു!");
+      setRegSuccess(lang === "ta" ? "அறிக்கை வெற்றிகரமாக வெளியிடப்பட்டது!" : lang === "ml" ? "വിവരം വിജയകരമായി പ്രസിദ്ധീകരിച്ചു!" : "Report published successfully!");
       
       // Reset form
       setLfTitleEn("");
@@ -289,7 +289,7 @@ export default function DirectoryWidget({
         throw new Error(errData.error || "Verification failed");
       }
 
-      setResolveSuccess(lang !== "ml" ? "Report resolved successfully!" : "വിവരം വിജയകരമായി ഒഴിവാക്കി!");
+      setResolveSuccess(lang === "ta" ? "அறிக்கை வெற்றிகரமாக முடிக்கப்பட்டது!" : lang === "ml" ? "വിവരം വിജയകരമായി ഒഴിവാക്കി!" : "Report resolved successfully!");
       
       fetchLostFound();
 
@@ -363,7 +363,7 @@ export default function DirectoryWidget({
     setRegSuccess("");
 
     if (!regNameEn.trim() || !regNameMl.trim() || !regNumber.trim() || !regContact.trim()) {
-      setRegError(lang !== "ml" ? "Please fill all fields" : "ദയവായി എല്ലാ വിവരങ്ങളും നൽകുക");
+      setRegError(lang === "ta" ? "அனைத்து விவரங்களையும் நிரப்பவும்" : lang === "ml" ? "ദയവായി എല്ലാ വിവരങ്ങളും നൽകുക" : "Please fill all fields");
       return;
     }
 
@@ -387,7 +387,7 @@ export default function DirectoryWidget({
 
       if (res.ok) {
         const data = await res.json();
-        setRegSuccess(lang !== "ml" ? "Service registered successfully!" : "ഓട്ടോ സർവീസ് വിജയകരമായി രജിസ്റ്റർ ചെയ്തു!");
+        setRegSuccess(lang === "ta" ? "சேவை வெற்றிகரமாகப் பதிவு செய்யப்பட்டது!" : lang === "ml" ? "ഓട്ടോ സർവീസ് വിജയകരമായി രജിസ്റ്റർ ചെയ്തു!" : "Service registered successfully!");
         localStorage.setItem("my_registered_auto_id", data.id);
         setMyAutoId(data.id);
 
@@ -668,7 +668,7 @@ export default function DirectoryWidget({
               </span>
               <input 
                 type="text"
-                placeholder={lang !== "ml" ? "Search plumber, jeep operators, hospital..." : "ഡയറക്ടറിയിൽ തിരയുക..."}
+                placeholder={lang === "ta" ? "பிளம்பர், வாகன சேவை, மருத்துவமனையைத் தேடுங்கள்..." : lang === "ml" ? "ഡയറക്ടറിയിൽ തിരയുക..." : "Search plumber, jeep operators, hospital..."}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full border border-gray-200 pl-8 pr-3 py-1.5 rounded text-xs focus:ring-1 focus:ring-[#005689] focus:outline-none placeholder-gray-400"
@@ -1574,13 +1574,13 @@ export default function DirectoryWidget({
                             {isLost ? (lang !== "ml" ? "LOST" : "നഷ്ടപ്പെട്ടു") : (lang !== "ml" ? "FOUND" : "ലഭിച്ചു")}
                           </span>
                           <span className="text-[9px] text-gray-400 font-mono">
-                            {new Date(item.dateReported).toLocaleDateString(lang === "ml" ? "ml-IN" : "en-US")}
+                            {new Date(item.dateReported).toLocaleDateString(lang === "ml" ? "ml-IN" : lang === "ta" ? "ta-IN" : "en-US")}
                           </span>
                         </div>
 
                         <div>
                           <h4 className="font-extrabold text-[#052962] text-sm leading-tight">
-                            {lang !== "ml" ? item.itemTitleEn : item.itemTitleMl}
+                            {lang === "ta" ? (item.itemTitleTa || item.itemTitleEn) : lang === "ml" ? (item.itemTitleMl || item.itemTitleEn) : item.itemTitleEn}
                           </h4>
                           <p className="text-slate-500 text-[11px] leading-relaxed mt-1 font-semibold">
                             {lang !== "ml" ? item.descriptionEn : item.descriptionMl}
