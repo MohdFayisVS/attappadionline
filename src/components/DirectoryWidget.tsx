@@ -497,6 +497,11 @@ export default function DirectoryWidget({
     return matchesSearch && matchesCategory;
   });
 
+  const localizedField = (item: Record<string, any>, field: string): string => {
+    const suffixes = lang === "ta" ? ["Ta", "En", "Ml"] : lang === "ml" ? ["Ml", "En", "Ta"] : ["En", "Ml", "Ta"];
+    return suffixes.map(suffix => item[`${field}${suffix}`]).find(value => typeof value === "string" && value.trim()) || "";
+  };
+
   const filteredAutos = autos.filter((auto) => {
     const matchesLocation = selectedAutoLocation === "all" || auto.locationEn === selectedAutoLocation;
     const query = searchQuery.toLowerCase();
@@ -589,23 +594,23 @@ export default function DirectoryWidget({
                       <div className="space-y-1">
                         <div className="flex flex-wrap items-center gap-1.5">
                           <span className="text-[8px] sm:text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-200">
-                            ⚡ {lang !== "ml" ? item.statusEn : item.statusMl}
+                            ⚡ {localizedField(item, "status")}
                           </span>
                           <span className="text-[9px] text-slate-400 font-semibold font-mono">📅 {item.date}</span>
                         </div>
                         
                         <h4 className="text-xs font-black text-slate-900 leading-tight">
-                          {lang !== "ml" ? item.agencyNameEn : item.agencyNameMl}
+                          {localizedField(item, "agencyName")}
                         </h4>
                         
                         <div className="text-[11px] text-slate-700 leading-normal">
                           <span className="font-extrabold text-amber-700">📍 {lang === "ta" ? "பகுதிகள்: " : lang !== "ml" ? "Areas: " : "സ്ഥലങ്ങൾ: "}</span>
-                          <span className="font-medium bg-amber-50/50 px-1 py-0.5 rounded border border-amber-100/45">{lang !== "ml" ? item.areasEn : item.areasMl}</span>
+                          <span className="font-medium bg-amber-50/50 px-1 py-0.5 rounded border border-amber-100/45">{localizedField(item, "areas")}</span>
                         </div>
 
                         {(item.notesEn || item.notesMl) && (
                           <p className="text-[10px] text-slate-500 bg-slate-50 px-2 py-0.5 rounded inline-block italic leading-tight">
-                            ℹ️ {lang !== "ml" ? item.notesEn : item.notesMl}
+                            ℹ️ {localizedField(item, "notes")}
                           </p>
                         )}
                       </div>
@@ -659,7 +664,7 @@ export default function DirectoryWidget({
                     </div>
                     <div>
                       <h4 className="text-xs font-extrabold text-gray-800 leading-tight">
-                        {lang !== "ml" ? em.nameEn : em.nameMl}
+                        {localizedField(em, "name")}
                       </h4>
                       <span className="text-[10px] text-gray-400 capitalize">{em.type} Desk</span>
                     </div>
@@ -807,10 +812,10 @@ export default function DirectoryWidget({
                     </span>
                   </div>
                   <h4 className="text-sm font-black leading-tight">
-                    {lang !== "ml" ? myListing.driverNameEn : myListing.driverNameMl}
+                    {localizedField(myListing, "driverName")}
                   </h4>
                   <p className="text-[11px] text-emerald-100 font-medium font-sans flex items-center gap-1.5">
-                    🛺 {myListing.autoNumber} • 📍 {lang !== "ml" ? myListing.locationEn : myListing.locationMl}
+                    🛺 {myListing.autoNumber} • 📍 {localizedField(myListing, "location")}
                   </p>
                 </div>
 
@@ -1076,7 +1081,7 @@ export default function DirectoryWidget({
 
                           <p className="text-[10px] text-gray-500 font-bold flex items-center gap-1">
                             <MapPin className="w-3 h-3 text-emerald-600" />
-                            {lang !== "ml" ? auto.locationEn : auto.locationMl} Stand
+                            {localizedField(auto, "location")} Stand
                           </p>
                         </div>
 
@@ -1230,7 +1235,7 @@ export default function DirectoryWidget({
                   
                   return matchesSearch && matchesTown && matchesCat;
                 }).map((shop) => {
-                  const itemsList = lang !== "ml" ? shop.itemsEn : shop.itemsMl;
+                  const itemsList = localizedField(shop, "items");
                   const targetMsg = customOrderText[shop.id] || "";
                   const successOrder = orderSuccess[shop.id] || false;
                   
@@ -1262,16 +1267,16 @@ export default function DirectoryWidget({
                             {shop.category}
                           </span>
                           <span className="inline-flex items-center gap-1 text-[9.5px] font-extrabold text-slate-500 bg-slate-150 px-2 py-0.5 rounded">
-                            📍 {lang !== "ml" ? `${shop.locationEn} Town` : shop.locationMl}
+                            📍 {localizedField(shop, "location")}
                           </span>
                         </div>
 
                         <div>
                           <h4 className="font-extrabold text-[#052962] text-sm leading-tight">
-                            {lang !== "ml" ? shop.nameEn : shop.nameMl}
+                            {localizedField(shop, "name")}
                           </h4>
                           <p className="text-[10px] text-emerald-800 bg-emerald-50 border border-emerald-100 font-bold px-2 py-0.5 rounded inline-block mt-1">
-                            🚚 {lang !== "ml" ? shop.deliveryEn : shop.deliveryMl}
+                            🚚 {localizedField(shop, "delivery")}
                           </p>
                         </div>
 
