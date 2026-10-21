@@ -1014,7 +1014,7 @@ app.get("/api/lostfound", async (req, res) => {
 });
 
 app.post("/api/lostfound", async (req, res) => {
-  const { type, itemTitleEn, itemTitleMl, descriptionEn, descriptionMl, reporterName, contactNumber, locationEn, locationMl } = req.body;
+  const { type, itemTitleEn, itemTitleMl, itemTitleTa, descriptionEn, descriptionMl, descriptionTa, reporterName, contactNumber, locationEn, locationMl, locationTa } = req.body;
   if (!type || (!itemTitleEn && !itemTitleMl) || !reporterName || !contactNumber) {
     return res.status(400).json({ error: "Missing required fields for Lost & Found reporting" });
   }
@@ -1031,12 +1031,15 @@ app.post("/api/lostfound", async (req, res) => {
     type, // "lost" | "found"
     itemTitleEn: finalTitleEn,
     itemTitleMl: finalTitleMl,
+    itemTitleTa: typeof itemTitleTa === "string" ? itemTitleTa.trim() : "",
     descriptionEn: finalDescEn,
     descriptionMl: finalDescMl,
+    descriptionTa: typeof descriptionTa === "string" ? descriptionTa.trim() : "",
     reporterName,
     contactNumber,
     locationEn: finalLocEn,
     locationMl: finalLocMl,
+    locationTa: typeof locationTa === "string" ? locationTa.trim() : "",
     dateReported: new Date().toISOString(),
     status: "active"
   };
@@ -1353,7 +1356,7 @@ app.get("/api/autos", async (req, res) => {
 });
 
 app.post("/api/autos", async (req, res) => {
-  const { driverNameEn, driverNameMl, autoNumber, contact, locationEn, locationMl, isAvailable } = req.body;
+  const { driverNameEn, driverNameMl, driverNameTa, autoNumber, contact, locationEn, locationMl, locationTa, isAvailable } = req.body;
   if (!driverNameEn || !driverNameMl || !autoNumber || !contact || !locationEn || !locationMl) {
     return res.status(400).json({ error: "Missing required fields for Autorikshaw Service" });
   }
@@ -1362,10 +1365,12 @@ app.post("/api/autos", async (req, res) => {
     id: "auto_" + Date.now().toString(),
     driverNameEn,
     driverNameMl,
+    driverNameTa: typeof driverNameTa === "string" ? driverNameTa.trim() : "",
     autoNumber,
     contact,
     locationEn,
     locationMl,
+    locationTa: typeof locationTa === "string" ? locationTa.trim() : "",
     isAvailable: isAvailable !== undefined ? Boolean(isAvailable) : true,
     registeredDate: new Date().toISOString().split("T")[0]
   };
@@ -1383,7 +1388,7 @@ app.post("/api/autos", async (req, res) => {
 
 app.put("/api/autos/:id", async (req, res) => {
   const { id } = req.params;
-  const { driverNameEn, driverNameMl, autoNumber, contact, locationEn, locationMl, isAvailable } = req.body;
+  const { driverNameEn, driverNameMl, driverNameTa, autoNumber, contact, locationEn, locationMl, locationTa, isAvailable } = req.body;
   
   const autosList = await getCollectionData("autos");
   const itemIndex = autosList.findIndex((aut: any) => aut.id === id);
@@ -1393,10 +1398,12 @@ app.put("/api/autos/:id", async (req, res) => {
       ...autosList[itemIndex],
       driverNameEn: driverNameEn !== undefined ? driverNameEn : autosList[itemIndex].driverNameEn,
       driverNameMl: driverNameMl !== undefined ? driverNameMl : autosList[itemIndex].driverNameMl,
+      driverNameTa: typeof driverNameTa === "string" ? driverNameTa.trim() : autosList[itemIndex].driverNameTa,
       autoNumber: autoNumber !== undefined ? autoNumber : autosList[itemIndex].autoNumber,
       contact: contact !== undefined ? contact : autosList[itemIndex].contact,
       locationEn: locationEn !== undefined ? locationEn : autosList[itemIndex].locationEn,
       locationMl: locationMl !== undefined ? locationMl : autosList[itemIndex].locationMl,
+      locationTa: typeof locationTa === "string" ? locationTa.trim() : autosList[itemIndex].locationTa,
       isAvailable: isAvailable !== undefined ? Boolean(isAvailable) : autosList[itemIndex].isAvailable
     };
 
