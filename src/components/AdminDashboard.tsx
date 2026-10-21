@@ -736,8 +736,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setNewsForm({
       titleEn: item.titleEn,
       titleMl: item.titleMl,
+      titleTa: item.titleTa || "",
       contentEn: item.contentEn || "",
       contentMl: item.contentMl || "",
+      contentTa: item.contentTa || "",
       category: item.category,
       regions: item.regions || [],
       image: item.image || "",
@@ -758,6 +760,11 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     ]);
     if (!translatedNews.titleEn || !translatedNews.titleMl || !translatedNews.contentEn || !translatedNews.contentMl) {
       alert("Please fill in headline and content in English or Malayalam!");
+      return;
+    }
+
+    if (!translatedNews.titleTa?.trim() || !translatedNews.contentTa?.trim()) {
+      alert("Tamil headline and article content are required before publishing.");
       return;
     }
 
@@ -2860,6 +2867,14 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </div>
                 </div>
 
+                <div>
+                  <label className="block text-slate-500 font-semibold mb-1">Headline (Tamil)</label>
+                  <input type="text" lang="ta" required value={newsForm.titleTa}
+                    onChange={(e) => setNewsForm({...newsForm, titleTa: e.target.value})}
+                    placeholder="தமிழில் செய்தித் தலைப்பை எழுதவும்"
+                    className="w-full border rounded p-2 focus:ring-1 font-bold font-anek-tamil" />
+                </div>
+
                 {/* News Photo Upload Selection directly targeting local files */}
                 <div className="bg-slate-50 rounded-lg p-4 border border-slate-200/50 space-y-3.5">
                   <div className="flex items-center justify-between">
@@ -2999,6 +3014,14 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     placeholder="മലയാളം വാർത്ത ഉള്ളടക്കം നൽകുക..."
                     className="w-full border border-t-0 rounded-b p-2.5 focus:ring-1 focus:ring-[#005689] leading-relaxed font-anek-malayalam"
                   />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="block text-slate-700 font-semibold">3. Article Content (Tamil)</label>
+                  <textarea lang="ta" required rows={5} value={newsForm.contentTa}
+                    onChange={(e) => setNewsForm({...newsForm, contentTa: e.target.value})}
+                    placeholder="தமிழில் செய்தி உள்ளடக்கத்தை எழுதவும்"
+                    className="w-full border rounded p-2.5 leading-relaxed font-anek-tamil" />
                 </div>
 
                 <div className="pt-2 flex justify-end gap-2">
