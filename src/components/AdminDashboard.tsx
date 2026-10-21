@@ -69,7 +69,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   // Editing/Form states
   // 1. News Form
   const [newsForm, setNewsForm] = useState({
-    titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
+    titleEn: "", titleMl: "", titleTa: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
     category: "latest" as "breaking" | "latest" | "updates", regions: [] as string[],
     image: "", isSlide: false, isCard: true
   });
@@ -113,12 +113,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
   // 2. Opinions Form
   const [opinionForm, setOpinionForm] = useState({
-    authorName: "", titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", approved: true
+    authorName: "", titleEn: "", titleMl: "", titleTa: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", approved: true
   });
 
   // 3. Events Form
   const [eventForm, setEventForm] = useState({
-    titleEn: "", titleMl: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: ""
+    titleEn: "", titleMl: "", titleTa: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: ""
   });
 
   // 4. Explore sub-forms
@@ -127,19 +127,19 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     descriptionEn: "", descriptionMl: "", descriptionTa: "", highlightsEn: "", highlightsMl: "", highlightsTa: ""
   });
   const [cultureForm, setCultureForm] = useState({
-    type: "culture", titleEn: "", titleMl: "", subtitleEn: "", subtitleMl: "", image: "",
-    descEn: "", descMl: "", elementEn: "", elementMl: ""
+    type: "culture", titleEn: "", titleMl: "", titleTa: "", subtitleEn: "", subtitleMl: "", subtitleTa: "", titleTa: "", image: "",
+    descEn: "", descMl: "", descTa: "", elementEn: "", elementMl: ""
   });
   const [stayForm, setStayForm] = useState({
     nameEn: "", nameMl: "", typeEn: "", typeMl: "", locationEn: "", locationMl: "", image: "",
     priceEn: "", priceMl: "", featuresEn: "", featuresMl: ""
   });
   const [travelogueForm, setTravelogueForm] = useState({
-    titleEn: "", titleMl: "", authorEn: "", authorMl: "", date: "", snippetEn: "", snippetMl: "",
+    titleEn: "", titleMl: "", titleTa: "", authorEn: "", authorMl: "", date: "", snippetEn: "", snippetMl: "",
     readTimeEn: "", readTimeMl: ""
   });
   const [photoForm, setPhotoForm] = useState({
-    url: "", titleEn: "", titleMl: "", descEn: "", descMl: ""
+    url: "", titleEn: "", titleMl: "", titleTa: "", descEn: "", descMl: ""
   });
 
   // Helper to get standard bus types for selected Authority
@@ -195,7 +195,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
   // 8. Notices Form
   const [noticeForm, setNoticeForm] = useState({
-    titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
+    titleEn: "", titleMl: "", titleTa: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
     type: "notice",
     severity: "medium",
     date: "",
@@ -210,7 +210,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   });
   const [quickNoticeForm, setQuickNoticeForm] = useState({
     titleEn: "",
-    titleMl: "",
+    titleMl: "", titleTa: "",
     contentEn: "",
     contentMl: "",
     type: "notice",
@@ -223,14 +223,14 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   // 9. Side Banner Advertisements Form State
   const [adForm, setAdForm] = useState({
     leftAd: {
-      titleEn: "", titleMl: "",
-      subtitleEn: "", subtitleMl: "",
+      titleEn: "", titleMl: "", titleTa: "",
+      subtitleEn: "", subtitleMl: "", subtitleTa: "", titleTa: "",
       contact: "", actionType: "share" as "phone" | "website" | "whatsapp" | "share",
       externalUrl: "", image: ""
     },
     rightAd: {
-      titleEn: "", titleMl: "",
-      subtitleEn: "", subtitleMl: "",
+      titleEn: "", titleMl: "", titleTa: "",
+      subtitleEn: "", subtitleMl: "", subtitleTa: "", titleTa: "",
       contact: "", actionType: "phone" as "phone" | "website" | "whatsapp" | "share",
       externalUrl: "", image: ""
     }
@@ -258,33 +258,33 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setEditingId(null);
     setEditingType(null);
     setNewsForm({
-      titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
+      titleEn: "", titleMl: "", titleTa: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
       category: "latest", regions: [], image: "", isSlide: false, isCard: true
     });
     setOpinionForm({
-      authorName: "", titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", approved: true
+      authorName: "", titleEn: "", titleMl: "", titleTa: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", approved: true
     });
     setEventForm({
-      titleEn: "", titleMl: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: ""
+      titleEn: "", titleMl: "", titleTa: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: ""
     });
     setDestForm({
       nameEn: "", nameMl: "", locationEn: "", locationMl: "", image: "",
       descriptionEn: "", descriptionMl: "", highlightsEn: "", highlightsMl: ""
     });
     setCultureForm({
-      type: "culture", titleEn: "", titleMl: "", subtitleEn: "", subtitleMl: "", image: "",
-      descEn: "", descMl: "", elementEn: "", elementMl: ""
+      type: "culture", titleEn: "", titleMl: "", titleTa: "", subtitleEn: "", subtitleMl: "", subtitleTa: "", titleTa: "", image: "",
+      descEn: "", descMl: "", descTa: "", elementEn: "", elementMl: ""
     });
     setStayForm({
       nameEn: "", nameMl: "", typeEn: "", typeMl: "", locationEn: "", locationMl: "", image: "",
       priceEn: "", priceMl: "", featuresEn: "", featuresMl: ""
     });
     setTravelogueForm({
-      titleEn: "", titleMl: "", authorEn: "", authorMl: "", date: "", snippetEn: "", snippetMl: "",
+      titleEn: "", titleMl: "", titleTa: "", authorEn: "", authorMl: "", date: "", snippetEn: "", snippetMl: "",
       readTimeEn: "", readTimeMl: ""
     });
     setPhotoForm({
-      url: "", titleEn: "", titleMl: "", descEn: "", descMl: ""
+      url: "", titleEn: "", titleMl: "", titleTa: "", descEn: "", descMl: ""
     });
     setBusForm({
       routeEn: "", routeMl: "", type: "KSRTC", busTypeEn: "", busTypeMl: "",
@@ -780,7 +780,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     if (response.ok) {
       triggerToast(isEdit ? "News article updated successfully!" : "News article published successfully! (വാർത്ത പ്രസിദ്ധീകരിച്ചു)");
       setNewsForm({
-        titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
+        titleEn: "", titleMl: "", titleTa: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "",
         category: "latest", regions: [], image: "", isSlide: false, isCard: true
       });
       setEditingId(null);
@@ -1027,7 +1027,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Opinion column updated successfully." : "Opinion column published successfully.");
-      setOpinionForm({ authorName: "", titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", approved: true });
+      setOpinionForm({ authorName: "", titleEn: "", titleMl: "", titleTa: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", approved: true });
       setEditingId(null);
       setEditingType(null);
       fetchOpinions();
@@ -1107,7 +1107,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Community event updated successfully." : "Community event scheduled successfully.");
-      setEventForm({ titleEn: "", titleMl: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: "" });
+      setEventForm({ titleEn: "", titleMl: "", titleTa: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: "" });
       setEditingId(null);
       setEditingType(null);
       fetchEvents();
@@ -1217,11 +1217,14 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       type: item.type || "culture",
       titleEn: item.titleEn,
       titleMl: item.titleMl,
+      titleTa: item.titleTa || "",
       subtitleEn: item.subtitleEn || "",
       subtitleMl: item.subtitleMl || "",
+      subtitleTa: item.subtitleTa || "",
       image: item.image || "",
       descEn: item.descEn || "",
       descMl: item.descMl || "",
+      descTa: item.descTa || "",
       elementEn: item.elementEn || "",
       elementMl: item.elementMl || ""
     });
@@ -1251,7 +1254,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Culture item updated!" : "Culture item added!");
-      setCultureForm({ type: "culture", titleEn: "", titleMl: "", subtitleEn: "", subtitleMl: "", image: "", descEn: "", descMl: "", elementEn: "", elementMl: "" });
+      setCultureForm({ type: "culture", titleEn: "", titleMl: "", titleTa: "", subtitleEn: "", subtitleMl: "", subtitleTa: "", titleTa: "", image: "", descEn: "", descMl: "", descTa: "", elementEn: "", elementMl: "" });
       setEditingId(null);
       setEditingType(null);
       fetchExploreCultures();
@@ -1385,7 +1388,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Travelogue narrative updated!" : "Travelogue narrative shared!");
-      setTravelogueForm({ titleEn: "", titleMl: "", authorEn: "", authorMl: "", date: "June 2026", snippetEn: "", snippetMl: "", readTimeEn: "5 min read", readTimeMl: "5 മിനുട്ട് വായന" });
+      setTravelogueForm({ titleEn: "", titleMl: "", titleTa: "", authorEn: "", authorMl: "", date: "June 2026", snippetEn: "", snippetMl: "", readTimeEn: "5 min read", readTimeMl: "5 മിനുട്ട് വായന" });
       setEditingId(null);
       setEditingType(null);
       fetchExploreTravelogues();
@@ -1441,7 +1444,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Gallery frame updated!" : "Gallery frame registered!");
-      setPhotoForm({ url: "", titleEn: "", titleMl: "", descEn: "", descMl: "" });
+      setPhotoForm({ url: "", titleEn: "", titleMl: "", titleTa: "", descEn: "", descMl: "" });
       setEditingId(null);
       setEditingType(null);
       fetchExplorePhotos();
@@ -1757,7 +1760,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Notice details updated successfully." : "New announcement notice published.");
-      setNoticeForm({ titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", type: "notice", severity: "medium", date: "", active: true, image: "" });
+      setNoticeForm({ titleEn: "", titleMl: "", titleTa: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", type: "notice", severity: "medium", date: "", active: true, image: "" });
       setEditingId(null);
       setEditingType(null);
       fetchNotices();
@@ -1930,7 +1933,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       triggerToast("📢 New Notice ticker announcement published live!");
       setQuickNoticeForm({
         titleEn: "",
-        titleMl: "",
+        titleMl: "", titleTa: "",
         contentEn: "",
         contentMl: "",
         type: "notice",
@@ -3741,6 +3744,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             {exploreSubTab === "cultures" && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <form onSubmit={handleCreateCulture} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5">
+                  <label className="block">Culture Title (Tamil)<textarea lang="ta" value={cultureForm.titleTa} onChange={e => setCultureForm({...cultureForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block">Subtitle (Tamil)<textarea lang="ta" value={cultureForm.subtitleTa} onChange={e => setCultureForm({...cultureForm, subtitleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block">Description (Tamil)<textarea lang="ta" value={cultureForm.descTa} onChange={e => setCultureForm({...cultureForm, descTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block">Element (Tamil)<textarea lang="ta" value={cultureForm.elementTa} onChange={e => setCultureForm({...cultureForm, elementTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
                     <PlusCircle className="w-4 h-4 text-[#005689]" /> Add Culture / Food Entry
                   </h3>
@@ -5284,7 +5291,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   onClick={() => {
                     setEditingId(null);
                     setEditingType(null);
-                    setNoticeForm({ titleEn: "", titleMl: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", type: "notice", severity: "medium", date: "", active: true });
+                    setNoticeForm({ titleEn: "", titleMl: "", titleTa: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", type: "notice", severity: "medium", date: "", active: true });
                   }}
                   className="px-3 py-1.5 bg-slate-105 hover:bg-slate-205 text-slate-805 font-bold rounded-lg transition text-[10px] cursor-pointer"
                 >
