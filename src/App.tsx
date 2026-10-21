@@ -108,9 +108,19 @@ export default function App() {
   };
   
   // Language control
-  const [lang, setLang] = useState<"en" | "ml" | "ta">("ml");
+  const [lang, setLang] = useState<"en" | "ml" | "ta">(() => {
+    try {
+      const saved = localStorage.getItem("attappadi_language");
+      return saved === "en" || saved === "ml" || saved === "ta" ? saved : "ml";
+    } catch { return "ml"; }
+  });
   const tamilMode = lang === "ta";
   const selectLanguage = (next: "en" | "ml" | "ta") => setLang(next);
+  useEffect(() => {
+    try { localStorage.setItem("attappadi_language", lang); } catch {}
+    document.documentElement.lang = lang;
+    document.documentElement.setAttribute("data-content-language", lang);
+  }, [lang]);
   
   // Quick Access Deep Link States
   const [exploreTab, setExploreTab] = useState<"destinations" | "food" | "stays" | "travelogues" | "photos" | "culture" | "busTimings">("destinations");
