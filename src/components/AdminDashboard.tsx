@@ -118,12 +118,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
   // 3. Events Form
   const [eventForm, setEventForm] = useState({
-    titleEn: "", titleMl: "", titleTa: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: ""
+    titleEn: "", titleMl: "", titleTa: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: ""
   });
 
   // 4. Explore sub-forms
   const [destForm, setDestForm] = useState({
-    nameEn: "", nameMl: "", nameTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
+    nameEn: "", nameMl: "", nameTa: "", nameTa: "", locationEn: "", locationMl: "", locationTa: "", locationTa: "", image: "",
     descriptionEn: "", descriptionMl: "", descriptionTa: "", highlightsEn: "", highlightsMl: "", highlightsTa: ""
   });
   const [cultureForm, setCultureForm] = useState({
@@ -131,8 +131,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     descEn: "", descMl: "", descTa: "", elementEn: "", elementMl: ""
   });
   const [stayForm, setStayForm] = useState({
-    nameEn: "", nameMl: "", typeEn: "", typeMl: "", locationEn: "", locationMl: "", image: "",
-    priceEn: "", priceMl: "", featuresEn: "", featuresMl: ""
+    nameEn: "", nameMl: "", nameTa: "", typeEn: "", typeMl: "", typeTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
+    priceEn: "", priceMl: "", priceTa: "", featuresEn: "", featuresMl: ""
   });
   const [travelogueForm, setTravelogueForm] = useState({
     titleEn: "", titleMl: "", titleTa: "", authorEn: "", authorMl: "", date: "", snippetEn: "", snippetMl: "",
@@ -180,17 +180,17 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   const [busTransitList, setBusTransitList] = useState<BusStopTransit[]>([]);
   const [routeForm, setRouteForm] = useState({ routeEn: "", routeMl: "" });
   const [transitInput, setTransitInput] = useState({
-    time: "", typeEn: "", typeMl: "", viaCodeEn: "", viaCodeMl: ""
+    time: "", typeEn: "", typeMl: "", typeTa: "", viaCodeEn: "", viaCodeMl: ""
   });
 
   // 6. Directory Form
   const [dirForm, setDirForm] = useState({
-    nameEn: "", nameMl: "", nameTa: "", category: "hospital" as any, contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി", locationTa: "அட்டப்பாடி"
+    nameEn: "", nameMl: "", nameTa: "", nameTa: "", category: "hospital" as any, contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി", locationTa: "அட்டப்பாடி"
   });
 
   // 7. Emergency Contact Form
   const [emergForm, setEmergForm] = useState({
-    nameEn: "", nameMl: "", nameTa: "", number: "", type: "hospital" as any
+    nameEn: "", nameMl: "", nameTa: "", nameTa: "", number: "", type: "hospital" as any
   });
 
   // 8. Notices Form
@@ -265,10 +265,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       authorName: "", titleEn: "", titleMl: "", titleTa: "", titleTa: "", contentEn: "", contentMl: "", contentTa: "", approved: true
     });
     setEventForm({
-      titleEn: "", titleMl: "", titleTa: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: ""
+      titleEn: "", titleMl: "", titleTa: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: ""
     });
     setDestForm({
-      nameEn: "", nameMl: "", locationEn: "", locationMl: "", image: "",
+      nameEn: "", nameMl: "", nameTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
       descriptionEn: "", descriptionMl: "", highlightsEn: "", highlightsMl: ""
     });
     setCultureForm({
@@ -276,8 +276,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       descEn: "", descMl: "", descTa: "", elementEn: "", elementMl: ""
     });
     setStayForm({
-      nameEn: "", nameMl: "", typeEn: "", typeMl: "", locationEn: "", locationMl: "", image: "",
-      priceEn: "", priceMl: "", featuresEn: "", featuresMl: ""
+      nameEn: "", nameMl: "", nameTa: "", typeEn: "", typeMl: "", typeTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
+      priceEn: "", priceMl: "", priceTa: "", featuresEn: "", featuresMl: ""
     });
     setTravelogueForm({
       titleEn: "", titleMl: "", titleTa: "", authorEn: "", authorMl: "", date: "", snippetEn: "", snippetMl: "",
@@ -293,10 +293,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     setBusTransitList([]);
     setDirForm({
-      nameEn: "", nameMl: "", nameTa: "", category: "hospital", contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി"
+      nameEn: "", nameMl: "", nameTa: "", nameTa: "", category: "hospital", contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി"
     });
     setEmergForm({
-      nameEn: "", nameMl: "", nameTa: "", number: "", type: "hospital"
+      nameEn: "", nameMl: "", nameTa: "", nameTa: "", number: "", type: "hospital"
     });
     setLpgForm({
       agencyNameEn: "",
@@ -1070,6 +1070,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       locationEn: item.locationEn,
       locationMl: item.locationMl,
       locationTa: item.locationTa || "",
+      locationTa: item.locationTa || "",
       descriptionEn: item.descriptionEn || "",
       descriptionMl: item.descriptionMl || "",
       descriptionTa: item.descriptionTa || ""
@@ -1107,7 +1108,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Community event updated successfully." : "Community event scheduled successfully.");
-      setEventForm({ titleEn: "", titleMl: "", titleTa: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: "" });
+      setEventForm({ titleEn: "", titleMl: "", titleTa: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: "" });
       setEditingId(null);
       setEditingType(null);
       fetchEvents();
@@ -1136,6 +1137,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setDestForm({
       nameEn: item.nameEn,
       nameMl: item.nameMl,
+      nameTa: item.nameTa || "",
       nameTa: item.nameTa || "",
       locationEn: item.locationEn,
       locationMl: item.locationMl,
@@ -1187,7 +1189,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Tourist destination updated!" : "New Tourist destination added!");
-      setDestForm({ nameEn: "", nameMl: "", nameTa: "", locationEn: "", locationMl: "", locationTa: "", image: "", descriptionEn: "", descriptionMl: "", descriptionTa: "", highlightsEn: "", highlightsMl: "", highlightsTa: "" });
+      setDestForm({ nameEn: "", nameMl: "", nameTa: "", nameTa: "", locationEn: "", locationMl: "", locationTa: "", locationTa: "", image: "", descriptionEn: "", descriptionMl: "", descriptionTa: "", highlightsEn: "", highlightsMl: "", highlightsTa: "" });
       setEditingId(null);
       setEditingType(null);
       fetchExploreDestinations();
@@ -1285,13 +1287,16 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       nameMl: item.nameMl,
       typeEn: item.typeEn || "",
       typeMl: item.typeMl || "",
+      typeTa: item.typeTa || "",
       locationEn: item.locationEn,
       locationMl: item.locationMl,
       image: item.image || "",
       priceEn: item.priceEn || "",
       priceMl: item.priceMl || "",
+      priceTa: item.priceTa || "",
       featuresEn: Array.isArray(item.featuresEn) ? item.featuresEn.join(", ") : (item.featuresEn || ""),
-      featuresMl: Array.isArray(item.featuresMl) ? item.featuresMl.join(", ") : (item.featuresMl || "")
+      featuresMl: Array.isArray(item.featuresMl) ? item.featuresMl.join(", ") : (item.featuresMl || ""),
+      featuresTa: Array.isArray(item.featuresTa) ? item.featuresTa.join(", ") : (item.featuresTa || "")
     });
     setEditingId(item.id);
     setEditingType("stays");
@@ -1326,7 +1331,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Lodging option updated!" : "Nature lodging option saved!");
-      setStayForm({ nameEn: "", nameMl: "", typeEn: "", typeMl: "", locationEn: "", locationMl: "", image: "", priceEn: "", priceMl: "", featuresEn: "", featuresMl: "" });
+      setStayForm({ nameEn: "", nameMl: "", nameTa: "", typeEn: "", typeMl: "", typeTa: "", locationEn: "", locationMl: "", locationTa: "", image: "", priceEn: "", priceMl: "", priceTa: "", featuresEn: "", featuresMl: "" });
       setEditingId(null);
       setEditingType(null);
       fetchExploreStays();
@@ -1496,7 +1501,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       return;
     }
     setBusTransitList(prev => [...prev, { ...transitInput }]);
-    setTransitInput({ time: "", typeEn: "", typeMl: "", viaCodeEn: "", viaCodeMl: "" });
+    setTransitInput({ time: "", typeEn: "", typeMl: "", typeTa: "", viaCodeEn: "", viaCodeMl: "" });
   };
 
   const handleCreateBusRoute = async (e: React.FormEvent) => {
@@ -1635,7 +1640,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Local business phone listing updated!" : "Local business phone listing saved!");
-      setDirForm({ nameEn: "", nameMl: "", nameTa: "", category: "hospital", contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി" });
+      setDirForm({ nameEn: "", nameMl: "", nameTa: "", nameTa: "", category: "hospital", contact: "", locationEn: "Attappadi", locationMl: "അട്ടപ്പാടി" });
       setEditingId(null);
       setEditingType(null);
       fetchDirectory();
@@ -1694,7 +1699,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Critical hazard contact updated." : "Critical hazard contact saved.");
-      setEmergForm({ nameEn: "", nameMl: "", nameTa: "", number: "", type: "hospital" });
+      setEmergForm({ nameEn: "", nameMl: "", nameTa: "", nameTa: "", number: "", type: "hospital" });
       setEditingId(null);
       setEditingType(null);
       fetchEmergency();
@@ -3996,6 +4001,11 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             {exploreSubTab === "stays" && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <form onSubmit={handleCreateStay} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5">
+                  <label className="block">name (Tamil)<input lang="ta" value={stayForm.nameTa} onChange={e => setStayForm({...stayForm, nameTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block">type (Tamil)<input lang="ta" value={stayForm.typeTa} onChange={e => setStayForm({...stayForm, typeTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block">location (Tamil)<input lang="ta" value={stayForm.locationTa} onChange={e => setStayForm({...stayForm, locationTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block">price (Tamil)<input lang="ta" value={stayForm.priceTa} onChange={e => setStayForm({...stayForm, priceTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block">features (Tamil)<input lang="ta" value={stayForm.featuresTa} onChange={e => setStayForm({...stayForm, featuresTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
                     <PlusCircle className="w-4 h-4 text-[#005689]" /> Add Eco Lodging stay option
                   </h3>
