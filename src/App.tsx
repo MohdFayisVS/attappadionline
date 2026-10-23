@@ -114,20 +114,26 @@ export default function App() {
       return saved === "en" || saved === "ml" || saved === "ta" ? saved : "ml";
     } catch { return "ml"; }
   });
+  // Explicit URL-only visual test; never inserts demo items into the news database.
+  const tickerDemo = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("tickerDemo") === "1";
+  const demoBreaking = { id: "ticker-demo-breaking", titleEn: "DEMO ONLY — Breaking news ticker test", titleMl: "പരീക്ഷണം മാത്രം — ബ്രേക്കിങ് ന്യൂസ് ടിക്കർ പരിശോധന", titleTa: "சோதனை மட்டும் — முக்கியச் செய்தி ஓட்டச் சோதனை" };
+  const demoNotice = { id: "ticker-demo-notice", titleEn: "DEMO ONLY — Public notice and alert ticker test", titleMl: "പരീക്ഷണം മാത്രം — അറിയിപ്പ്, മുന്നറിയിപ്പ് ടിക്കർ പരിശോധന", titleTa: "சோதனை மட்டும் — அறிவிப்பு மற்றும் எச்சரிக்கை ஓட்டச் சோதனை" };
+  const tickerBreakingItems = tickerDemo ? [demoBreaking] : breakingPosts;
+  const tickerNoticeItems = tickerDemo ? [demoNotice] : announcements;
   const [tickerMode, setTickerMode] = useState<"breaking" | "notice">("breaking");
   useEffect(() => {
-    if (breakingPosts.length === 0 && announcements.length > 0) {
+    if (tickerBreakingItems.length === 0 && tickerNoticeItems.length > 0) {
       setTickerMode("notice");
       return;
     }
-    if (announcements.length === 0 && breakingPosts.length > 0) {
+    if (tickerNoticeItems.length === 0 && tickerBreakingItems.length > 0) {
       setTickerMode("breaking");
       return;
     }
-    if (breakingPosts.length === 0 || announcements.length === 0) return;
+    if (tickerBreakingItems.length === 0 || tickerNoticeItems.length === 0) return;
     const interval = window.setInterval(() => setTickerMode(previous => previous === "breaking" ? "notice" : "breaking"), 9000);
     return () => window.clearInterval(interval);
-  }, [breakingPosts.length, announcements.length]);
+  }, [tickerDemo, breakingPosts.length, announcements.length]);
   const tamilMode = lang === "ta";
   const selectLanguage = (next: "en" | "ml" | "ta") => setLang(next);
   useEffect(() => {
@@ -844,7 +850,7 @@ export default function App() {
       </header>
 
       {/* Broadcast-style news channel ticker: one alternating slot below the header. */}
-      {activeSection === "news" && (breakingPosts.length > 0 || announcements.length > 0) && (
+      {activeSection === "news" && (tickerBreakingItems.length > 0 || tickerNoticeItems.length > 0) && (
         <section aria-label="Live news and alerts" className="relative flex min-h-[74px] sm:min-h-[86px] overflow-hidden border-y-2 border-white/20 shadow-lg bg-[#052962]">
           <div className="relative z-20 flex w-[86px] sm:w-[130px] shrink-0 flex-col items-center justify-center gap-1 bg-white px-2 py-2 shadow-[5px_0_15px_rgba(0,0,0,0.25)]">
             <img src="/attappadi-mark.svg" alt="Attappadi Online" className="h-9 w-9 sm:h-12 sm:w-12 object-contain" />
@@ -866,11 +872,11 @@ export default function App() {
               </div>
               <div className="relative flex flex-1 min-w-0 items-center overflow-hidden">
                 <div className="ao-broadcast-scroll flex w-max items-center whitespace-nowrap py-3 hover:[animation-play-state:paused] focus-within:[animation-play-state:paused]">
-                  {(tickerMode === "breaking" ? breakingPosts : announcements).map((item) => (
+                  {(tickerMode === "breaking" ? tickerBreakingItems : tickerNoticeItems).map((item) => (
                     <button
                       key={item.id}
                       type="button"
-                      onClick={() => tickerMode === "breaking" ? handleArticleClick(item as NewsPost) : setSelectedAnnouncement(item as NoticeItem)}
+                      onClick={() => { if (tickerDemo) return; tickerMode === "breaking" ? handleArticleClick(item as NewsPost) : setSelectedAnnouncement(item as NoticeItem); }}
                       lang={lang}
                       className={`mx-7 sm:mx-12 shrink-0 text-left text-base sm:text-xl md:text-2xl font-bold hover:underline focus-visible:outline-2 focus-visible:outline-white ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}
                     >
