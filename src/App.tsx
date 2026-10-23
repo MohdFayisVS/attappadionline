@@ -119,6 +119,7 @@ export default function App() {
   const demoBreaking = { id: "ticker-demo-breaking", titleEn: "DEMO ONLY — Breaking news ticker test", titleMl: "പരീക്ഷണം മാത്രം — ബ്രേക്കിങ് ന്യൂസ് ടിക്കർ പരിശോധന", titleTa: "சோதனை மட்டும் — முக்கியச் செய்தி ஓட்டச் சோதனை" };
   const demoNotice = { id: "ticker-demo-notice", titleEn: "DEMO ONLY — Public notice and alert ticker test", titleMl: "പരീക്ഷണം മാത്രം — അറിയിപ്പ്, മുന്നറിയിപ്പ് ടിക്കർ പരിശോധന", titleTa: "சோதனை மட்டும் — அறிவிப்பு மற்றும் எச்சரிக்கை ஓட்டச் சோதனை" };
   const [tickerMode, setTickerMode] = useState<"breaking" | "notice">("breaking");
+  const [tickerIndex, setTickerIndex] = useState(0);
   const tamilMode = lang === "ta";
   const selectLanguage = (next: "en" | "ml" | "ta") => setLang(next);
   useEffect(() => {
@@ -138,17 +139,18 @@ export default function App() {
   const [announcements, setAnnouncements] = useState<NoticeItem[]>([]);
   const tickerBreakingItems = tickerDemo ? [demoBreaking] : breakingPosts;
   const tickerNoticeItems = tickerDemo ? [demoNotice] : announcements;
+  const currentTickerItems = tickerMode === "breaking" ? tickerBreakingItems : tickerNoticeItems;
+  const currentTickerItem = currentTickerItems[tickerIndex % Math.max(1, currentTickerItems.length)];
   useEffect(() => {
-    if (tickerBreakingItems.length === 0 && tickerNoticeItems.length > 0) {
-      setTickerMode("notice");
-      return;
-    }
-    if (tickerNoticeItems.length === 0 && tickerBreakingItems.length > 0) {
-      setTickerMode("breaking");
-      return;
-    }
-    if (tickerBreakingItems.length === 0 || tickerNoticeItems.length === 0) return;
-    const interval = window.setInterval(() => setTickerMode(previous => previous === "breaking" ? "notice" : "breaking"), 9000);
+    const hasBreaking = tickerBreakingItems.length > 0;
+    const hasNotice = tickerNoticeItems.length > 0;
+    if (!hasBreaking && !hasNotice) return;
+    if (!hasBreaking) setTickerMode("notice");
+    if (!hasNotice) setTickerMode("breaking");
+    const interval = window.setInterval(() => {
+      setTickerIndex(previous => previous + 1);
+      if (hasBreaking && hasNotice) setTickerMode(previous => previous === "breaking" ? "notice" : "breaking");
+    }, 7000);
     return () => window.clearInterval(interval);
   }, [tickerDemo, breakingPosts.length, announcements.length]);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<NoticeItem | null>(null);
@@ -851,7 +853,7 @@ export default function App() {
 
       {/* Broadcast-style news channel ticker: one alternating slot below the header. */}
       {activeSection === "news" && (tickerBreakingItems.length > 0 || tickerNoticeItems.length > 0) && (
-        <section aria-label="Live news and alerts" className="relative flex min-h-[74px] sm:min-h-[86px] overflow-hidden border-y-2 border-white/20 shadow-lg bg-[#052962]">
+        <section aria-label="Live news and alerts" className="relative flex h-[94px] sm:h-[106px] overflow-hidden border-y-2 border-white/20 shadow-lg bg-[#052962]">
           <div className="relative z-20 flex w-[86px] sm:w-[130px] shrink-0 flex-col items-center justify-center gap-1 bg-white px-2 py-2 shadow-[5px_0_15px_rgba(0,0,0,0.25)]">
             <img src="/attappadi-mark.svg" alt="Attappadi Online" className="h-9 w-9 sm:h-12 sm:w-12 object-contain" />
             <span className="font-anek-english text-[9px] sm:text-[11px] font-black tracking-tight text-[#052962] text-center leading-tight">ATTAPPADI ONLINE</span>
@@ -871,19 +873,25 @@ export default function App() {
                 </span>
               </div>
               <div className="relative flex flex-1 min-w-0 items-center overflow-hidden">
-                <div className="ao-broadcast-scroll flex w-max items-center whitespace-nowrap py-3 hover:[animation-play-state:paused] focus-within:[animation-play-state:paused]">
-                  {(tickerMode === "breaking" ? tickerBreakingItems : tickerNoticeItems).map((item) => (
-                    <button
-                      key={item.id}
+                <AnimatePresence mode="wait" initial={false}>
+                  {currentTickerItem && (
+                    <motion.button
+                      key={`${tickerMode}-${currentTickerItem.id}-${tickerIndex}`}
                       type="button"
-                      onClick={() => { if (tickerDemo) return; tickerMode === "breaking" ? handleArticleClick(item as NewsPost) : setSelectedAnnouncement(item as NoticeItem); }}
+                      initial={{ y: "75%", opacity: 0, filter: "blur(5px)" }}
+                      animate={{ y: "0%", opacity: 1, filter: "blur(0px)" }}
+                      exit={{ y: "-75%", opacity: 0, filter: "blur(5px)" }}
+                      transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+                      onClick={() => { if (tickerDemo) return; tickerMode === "breaking" ? handleArticleClick(currentTickerItem as NewsPost) : setSelectedAnnouncement(currentTickerItem as NoticeItem); }}
                       lang={lang}
-                      className={`mx-7 sm:mx-12 shrink-0 text-left text-base sm:text-xl md:text-2xl font-bold hover:underline focus-visible:outline-2 focus-visible:outline-white ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}
+                      className={`w-full px-4 sm:px-7 py-2 text-left text-base sm:text-xl md:text-2xl font-bold leading-snug hover:underline focus-visible:outline-2 focus-visible:outline-white ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}
                     >
-                      {lang === "ta" ? (item.titleTa || item.titleEn || item.titleMl) : lang === "ml" ? (item.titleMl || item.titleEn || item.titleTa) : (item.titleEn || item.titleMl || item.titleTa)}
-                    </button>
-                  ))}
-                </div>
+                      <span className="block overflow-hidden text-ellipsis line-clamp-2">
+                        {lang === "ta" ? (currentTickerItem.titleTa || currentTickerItem.titleEn || currentTickerItem.titleMl) : lang === "ml" ? (currentTickerItem.titleMl || currentTickerItem.titleEn || currentTickerItem.titleTa) : (currentTickerItem.titleEn || currentTickerItem.titleMl || currentTickerItem.titleTa)}
+                      </span>
+                    </motion.button>
+                  )}
+                </AnimatePresence>
               </div>
             </motion.div>
           </AnimatePresence>
