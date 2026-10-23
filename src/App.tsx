@@ -119,19 +119,6 @@ export default function App() {
   const demoBreaking = { id: "ticker-demo-breaking", titleEn: "DEMO ONLY — Breaking news ticker test", titleMl: "പരീക്ഷണം മാത്രം — ബ്രേക്കിങ് ന്യൂസ് ടിക്കർ പരിശോധന", titleTa: "சோதனை மட்டும் — முக்கியச் செய்தி ஓட்டச் சோதனை" };
   const demoNotice = { id: "ticker-demo-notice", titleEn: "DEMO ONLY — Public notice and alert ticker test", titleMl: "പരീക്ഷണം മാത്രം — അറിയിപ്പ്, മുന്നറിയിപ്പ് ടിക്കർ പരിശോധന", titleTa: "சோதனை மட்டும் — அறிவிப்பு மற்றும் எச்சரிக்கை ஓட்டச் சோதனை" };
   const [tickerMode, setTickerMode] = useState<"breaking" | "notice">("breaking");
-  useEffect(() => {
-    if (tickerBreakingItems.length === 0 && tickerNoticeItems.length > 0) {
-      setTickerMode("notice");
-      return;
-    }
-    if (tickerNoticeItems.length === 0 && tickerBreakingItems.length > 0) {
-      setTickerMode("breaking");
-      return;
-    }
-    if (tickerBreakingItems.length === 0 || tickerNoticeItems.length === 0) return;
-    const interval = window.setInterval(() => setTickerMode(previous => previous === "breaking" ? "notice" : "breaking"), 9000);
-    return () => window.clearInterval(interval);
-  }, [tickerDemo, breakingPosts.length, announcements.length]);
   const tamilMode = lang === "ta";
   const selectLanguage = (next: "en" | "ml" | "ta") => setLang(next);
   useEffect(() => {
@@ -151,6 +138,19 @@ export default function App() {
   const [announcements, setAnnouncements] = useState<NoticeItem[]>([]);
   const tickerBreakingItems = tickerDemo ? [demoBreaking] : breakingPosts;
   const tickerNoticeItems = tickerDemo ? [demoNotice] : announcements;
+  useEffect(() => {
+    if (tickerBreakingItems.length === 0 && tickerNoticeItems.length > 0) {
+      setTickerMode("notice");
+      return;
+    }
+    if (tickerNoticeItems.length === 0 && tickerBreakingItems.length > 0) {
+      setTickerMode("breaking");
+      return;
+    }
+    if (tickerBreakingItems.length === 0 || tickerNoticeItems.length === 0) return;
+    const interval = window.setInterval(() => setTickerMode(previous => previous === "breaking" ? "notice" : "breaking"), 9000);
+    return () => window.clearInterval(interval);
+  }, [tickerDemo, breakingPosts.length, announcements.length]);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<NoticeItem | null>(null);
   const [loading, setLoading] = useState(true);
 
