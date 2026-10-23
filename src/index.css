@@ -407,3 +407,16 @@ header [lang="ta"] { font-family: "Anek Tamil", sans-serif; }
   .ao-masthead-brand .ao-brand-mark { max-width: 100%; }
   .ao-header-wordmark { font-size: clamp(1.45rem, 6.8vw, 2.5rem); }
 }
+
+/* Broadcast ticker: uninterrupted horizontal crawl, paused for interaction. */
+@keyframes ao-broadcast-crawl {
+  from { transform: translateX(100vw); }
+  to { transform: translateX(-100%); }
+}
+.ao-broadcast-scroll {
+  animation: ao-broadcast-crawl 24s linear infinite;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ao-broadcast-scroll { animation: none; transform: none; }
+}

@@ -114,6 +114,26 @@ export default function App() {
       return saved === "en" || saved === "ml" || saved === "ta" ? saved : "ml";
     } catch { return "ml"; }
   });
+  // Explicit URL-only visual test; never inserts demo items into the news database.
+  const tickerDemo = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("tickerDemo") === "1";
+  const demoBreaking = { id: "ticker-demo-breaking", titleEn: "DEMO ONLY — Breaking news ticker test", titleMl: "പരീക്ഷണം മാത്രം — ബ്രേക്കിങ് ന്യൂസ് ടിക്കർ പരിശോധന", titleTa: "சோதனை மட்டும் — முக்கியச் செய்தி ஓட்டச் சோதனை" };
+  const demoNotice = { id: "ticker-demo-notice", titleEn: "DEMO ONLY — Public notice and alert ticker test", titleMl: "പരീക്ഷണം മാത്രം — അറിയിപ്പ്, മുന്നറിയിപ്പ് ടിക്കർ പരിശോധന", titleTa: "சோதனை மட்டும் — அறிவிப்பு மற்றும் எச்சரிக்கை ஓட்டச் சோதனை" };
+  const tickerBreakingItems = tickerDemo ? [demoBreaking] : breakingPosts;
+  const tickerNoticeItems = tickerDemo ? [demoNotice] : announcements;
+  const [tickerMode, setTickerMode] = useState<"breaking" | "notice">("breaking");
+  useEffect(() => {
+    if (tickerBreakingItems.length === 0 && tickerNoticeItems.length > 0) {
+      setTickerMode("notice");
+      return;
+    }
+    if (tickerNoticeItems.length === 0 && tickerBreakingItems.length > 0) {
+      setTickerMode("breaking");
+      return;
+    }
+    if (tickerBreakingItems.length === 0 || tickerNoticeItems.length === 0) return;
+    const interval = window.setInterval(() => setTickerMode(previous => previous === "breaking" ? "notice" : "breaking"), 9000);
+    return () => window.clearInterval(interval);
+  }, [tickerDemo, breakingPosts.length, announcements.length]);
   const tamilMode = lang === "ta";
   const selectLanguage = (next: "en" | "ml" | "ta") => setLang(next);
   useEffect(() => {
@@ -579,62 +599,6 @@ export default function App() {
   return (
     <div lang="en" className="min-h-screen bg-[#fcfcfb] dark:bg-[#090d16] text-gray-900 dark:text-slate-150 transition-colors duration-300 font-anek-english">
       
-      {/* 1. TOP NEWS TICKER (BREAKING) */}
-      {breakingPosts.length > 0 && (
-        <div id="breaking-ticker-bar" className="bg-[#c70000] text-white py-2 px-4 shadow text-xs font-bold flex items-center gap-3 overflow-hidden select-none">
-          <span className="bg-white text-red-700 px-2 py-0.5 rounded-sm uppercase tracking-wider text-[10px] font-extrabold shrink-0 flex items-center gap-1 animate-pulse">
-            <AlertTriangle className="w-3.5 h-3.5" />
-            BREAKING NOW
-          </span>
-          <div className="relative flex-1 w-full overflow-hidden whitespace-nowrap">
-            <div className="inline-block animate-marquee pl-[100%] hover:pause">
-              {breakingPosts.map((bp) => (
-                <button
-                  key={bp.id}
-                  onClick={() => handleArticleClick(bp)}
-                  className="mr-12 hover:underline hover:text-yellow-200 transition text-left inline-block"
-                >
-                  <span className="text-white mr-1.5 font-bold flex items-center gap-1">
-                    <MapPin className="w-3 h-3 text-yellow-300" /> {lang === "en" ? (bp.titleEn || bp.titleMl) : (bp.titleMl || bp.titleEn)}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 1b. TOP ANNOUNCEMENTS TICKER (OFFICIAL NOTICES & ALERTS) */}
-      {announcements.length > 0 && (
-        <div id="announcement-ticker-bar" className="bg-[#f0fdf4] dark:bg-[#06221c] text-[#047857] dark:text-[#34d399] py-1.5 px-4 shadow-xs text-xs font-bold flex items-center gap-3 overflow-hidden select-none border-t border-[#d1fae5] dark:border-[#0c4035] border-b">
-          <span className="bg-[#047857] dark:bg-[#34d399] text-white dark:text-[#06221c] px-2 py-0.5 rounded-sm uppercase tracking-wider text-[10px] font-extrabold shrink-0 flex items-center gap-1 animate-pulse">
-            <Megaphone className="w-3.5 h-3.5" />
-            {lang === "en" ? "ANNOUNCEMENTS" : "അറിയിപ്പുകൾ"}
-          </span>
-          <div className="relative flex-1 w-full overflow-hidden whitespace-nowrap">
-            <div className="inline-block animate-marquee pl-[100%] hover:pause">
-              {announcements.map((not) => (
-                <button
-                  key={not.id}
-                  onClick={() => setSelectedAnnouncement(not)}
-                  className="mr-12 hover:underline hover:text-emerald-800 dark:hover:text-emerald-200 transition text-left inline-block cursor-pointer"
-                >
-                  <span className="text-slate-900 dark:text-emerald-50 mr-1.5 font-bold inline-flex items-center gap-1">
-                    {not.type === "caution" ? (
-                      <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
-                    ) : (
-                      <MapPin className="w-3.5 h-3.5 text-emerald-500" />
-                    )}{" "}
-                    {lang === "en" ? not.titleEn : not.titleMl}
-                  </span>
-                  <span className="text-emerald-600 dark:text-[#a7f3d0]/70 text-[10px] font-mono font-normal">[{not.date}]</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* 2. CHIEF BRAND BANNER */}
       <header className="bg-[#052962] text-white relative">
         <a href="#main-content" className="ao-skip-link">Skip to main content</a>
@@ -883,6 +847,49 @@ export default function App() {
         </div>
       </div>
 
+      </header>
+
+      {/* Broadcast-style news channel ticker: one alternating slot below the header. */}
+      {activeSection === "news" && (tickerBreakingItems.length > 0 || tickerNoticeItems.length > 0) && (
+        <section aria-label="Live news and alerts" className="relative flex min-h-[74px] sm:min-h-[86px] overflow-hidden border-y-2 border-white/20 shadow-lg bg-[#052962]">
+          <div className="relative z-20 flex w-[86px] sm:w-[130px] shrink-0 flex-col items-center justify-center gap-1 bg-white px-2 py-2 shadow-[5px_0_15px_rgba(0,0,0,0.25)]">
+            <img src="/attappadi-mark.svg" alt="Attappadi Online" className="h-9 w-9 sm:h-12 sm:w-12 object-contain" />
+            <span className="font-anek-english text-[9px] sm:text-[11px] font-black tracking-tight text-[#052962] text-center leading-tight">ATTAPPADI ONLINE</span>
+          </div>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={tickerMode}
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -18 }}
+              transition={{ duration: 0.45, ease: "easeInOut" }}
+              className={`relative flex min-w-0 flex-1 items-stretch text-white ${tickerMode === "breaking" ? "bg-[#d60016]" : "bg-[#0754aa]"}`}
+            >
+              <div className="z-10 flex w-[115px] sm:w-[205px] shrink-0 items-center justify-center border-r border-white/25 px-2 sm:px-4 text-center shadow-[4px_0_12px_rgba(0,0,0,0.16)]">
+                <span lang="en" className="font-anek-english text-base sm:text-2xl md:text-[27px] font-black uppercase tracking-tight leading-none">
+                  {tickerMode === "breaking" ? "BREAKING NEWS" : "NOTICE & ALERT"}
+                </span>
+              </div>
+              <div className="relative flex flex-1 min-w-0 items-center overflow-hidden">
+                <div className="ao-broadcast-scroll flex w-max items-center whitespace-nowrap py-3 hover:[animation-play-state:paused] focus-within:[animation-play-state:paused]">
+                  {(tickerMode === "breaking" ? tickerBreakingItems : tickerNoticeItems).map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => { if (tickerDemo) return; tickerMode === "breaking" ? handleArticleClick(item as NewsPost) : setSelectedAnnouncement(item as NoticeItem); }}
+                      lang={lang}
+                      className={`mx-7 sm:mx-12 shrink-0 text-left text-base sm:text-xl md:text-2xl font-bold hover:underline focus-visible:outline-2 focus-visible:outline-white ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}
+                    >
+                      {lang === "ta" ? (item.titleTa || item.titleEn || item.titleMl) : lang === "ml" ? (item.titleMl || item.titleEn || item.titleTa) : (item.titleEn || item.titleMl || item.titleTa)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </section>
+      )}
+
         {/* Language-aware, wrapping region navigation: grows naturally as regions are added. */}
         <div className="bg-[#dcdcdc] text-[#121212] px-4 sm:px-6 py-3 border-b border-gray-300">
           <nav aria-label="Regions" className="max-w-7xl mx-auto flex flex-wrap items-center gap-x-4 gap-y-2.5">
@@ -913,7 +920,6 @@ export default function App() {
           </nav>
         </div>
 
-      </header>
 
       {/* 3. HERO SLIDES SHOWCASE */}
       {sliderPosts.length > 0 && searchQuery.trim().length === 0 && activeSection === "news" && (
