@@ -158,6 +158,30 @@ export default function App() {
 
   // Dynamic Advertisement State Hooks
   const [adConfig, setAdConfig] = useState<any>(null);
+  const [adSlide, setAdSlide] = useState(0);
+  useEffect(() => {
+    const timer = window.setInterval(() => setAdSlide(n => n + 1), 4500);
+    return () => window.clearInterval(timer);
+  }, []);
+  const sampleAds = [
+    { image: "/attappadi-mark.svg", titleEn: "Attappadi Online", subtitleEn: "All around the Attappadi Hills", titleMl: "അട്ടപ്പാടി ഓൺലൈൻ", titleTa: "அட்டப்பாடி ஆன்லைன்" },
+    { image: "/attappadi-mark.svg", titleEn: "Local News • Community • Updates", subtitleEn: "Attappadi Online", titleMl: "പ്രാദേശിക വാർത്തകളും അറിയിപ്പുകളും", titleTa: "உள்ளூர் செய்திகள் மற்றும் அறிவிப்புகள்" },
+    { image: "/attappadi-mark.svg", titleEn: "Discover Attappadi", subtitleEn: "Explore the hills with Attappadi Online", titleMl: "അട്ടപ്പാടിയെ അറിയാം", titleTa: "அட்டப்பாடியை அறிந்திடுங்கள்" }
+  ];
+  const uploadedAds = [adConfig?.leftAd, adConfig?.rightAd].filter((ad: any) => typeof ad?.image === "string" && ad.image.trim());
+  const carouselAds = uploadedAds.length ? uploadedAds : sampleAds;
+  const renderCarouselAd = (ad: any) => (
+    <div className="relative h-full min-h-[108px] sm:min-h-[140px] overflow-hidden rounded-xl bg-[#102e61] flex items-center justify-center" aria-label="Advertisement">
+      {uploadedAds.length ? (
+        <img src={ad.image} alt={ad.titleEn || "Advertisement"} className="w-full h-full absolute inset-0 object-contain" loading="lazy" />
+      ) : (
+        <div className="flex items-center justify-center gap-4 px-4 py-3 text-white text-center">
+          <img src="/attappadi-mark.svg" alt="" className="w-14 h-14 sm:w-20 sm:h-20 object-contain rounded-lg bg-white p-2 shrink-0" />
+          <div className="min-w-0"><strong className="block font-anek-english text-lg sm:text-xl">{ad.titleEn}</strong><span className="block text-xs sm:text-sm text-yellow-200">{ad.subtitleEn}</span></div>
+        </div>
+      )}
+    </div>
+  );
   const [activeAdDetail, setActiveAdDetail] = useState<{
     title: string;
     subtitle: string;
@@ -651,7 +675,7 @@ export default function App() {
 
         {/* Newspaper edition strip: date occupies the left-hand calendar block */}
         <div className="ao-edition-strip bg-[#f8f7f3] text-[#052962] border-b border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col md:flex-row gap-3 md:gap-5 items-stretch">
+          <div className="w-full mx-auto px-4 sm:px-6 py-3 flex flex-col md:flex-row gap-3 md:gap-5 items-stretch">
             <div className="ao-edition-calendar flex-none w-full md:w-[172px] border border-slate-300 bg-white rounded-sm overflow-hidden shadow-sm" aria-label="Date and India local time">
               <time dateTime={currentTime.toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit" })} className="flex flex-row md:flex-col items-center justify-center gap-2 md:gap-0 px-3 py-2 md:py-3 text-[#052962]">
                 <span className="font-serif-guardian font-black text-4xl md:text-5xl leading-none tabular-nums">{currentTime.toLocaleDateString("en-GB", { day: "2-digit", timeZone: "Asia/Kolkata" })}</span>
@@ -664,9 +688,19 @@ export default function App() {
                 <span className="text-[10px] font-extrabold tracking-widest text-slate-500">IST</span>
               </div>
             </div>
-            <div className="ao-edition-promos flex-1 min-w-0 grid grid-cols-1 md:grid-cols-2 gap-3 self-stretch">
-              {renderAdBox(adConfig?.leftAd || { titleEn: "Your Advertisement Here", titleMl: "നിങ്ങളുടെ പരസ്യം ഇവിടെ", subtitleEn: "Sample advertisement • Contact details coming soon", subtitleMl: "മാതൃകാ പരസ്യം • ബന്ധപ്പെടാനുള്ള വിവരങ്ങൾ ഉടൻ", contact: "", actionType: "share", image: "" }, Boolean(adConfig?.leftAd))}
-              {renderAdBox(adConfig?.rightAd || { titleEn: "Contact Information", titleMl: "ബന്ധപ്പെടാനുള്ള വിവരങ്ങൾ", subtitleEn: "Sample contact • Number to be configured", subtitleMl: "മാതൃകാ വിവരം • നമ്പർ ഉടൻ ചേർക്കും", contact: "", actionType: "phone", image: "" }, Boolean(adConfig?.rightAd))}
+            <div className="ao-edition-promos flex-1 min-w-0 grid grid-cols-1 md:grid-cols-2 gap-3 self-stretch" aria-label="Automatic advertisement carousel">
+              {[0, 1].map(slot => (
+                <div key={slot} className="relative min-w-0 overflow-hidden rounded-xl">
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.div key={String((adSlide + slot) % carouselAds.length) + "-" + slot}
+                      initial={{ opacity: 0, x: 28 }} animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -28 }} transition={{ duration: 0.55 }}
+                      className="h-full">
+                      {renderCarouselAd(carouselAds[(adSlide + slot) % carouselAds.length])}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -853,10 +887,10 @@ export default function App() {
 
       {/* Broadcast-style news channel ticker: one alternating slot below the header. */}
       {activeSection === "news" && (tickerBreakingItems.length > 0 || tickerNoticeItems.length > 0) && (
-        <section aria-label="Live news and alerts" className="relative flex h-[94px] sm:h-[106px] overflow-hidden border-y-2 border-white/20 shadow-lg bg-[#052962]">
-          <div className="relative z-20 flex w-[86px] sm:w-[130px] shrink-0 flex-col items-center justify-center gap-1 bg-white px-2 py-2 shadow-[5px_0_15px_rgba(0,0,0,0.25)]">
-            <img src="/attappadi-mark.svg" alt="Attappadi Online" className="h-9 w-9 sm:h-12 sm:w-12 object-contain" />
-            <span className="font-anek-english text-[9px] sm:text-[11px] font-black tracking-tight text-[#052962] text-center leading-tight">ATTAPPADI ONLINE</span>
+        <section aria-label="Live news and alerts" className="relative flex h-[82px] min-[380px]:h-[88px] sm:h-[106px] overflow-hidden border-y-2 border-white/20 shadow-lg bg-[#052962]">
+          <div className="relative z-20 flex w-[54px] min-[380px]:w-[66px] sm:w-[130px] shrink-0 flex-col items-center justify-center gap-0.5 bg-white px-1 py-1.5 sm:gap-1 sm:px-2 sm:py-2 shadow-[5px_0_15px_rgba(0,0,0,0.25)]">
+            <img src="/attappadi-mark.svg" alt="Attappadi Online" className="h-7 w-7 min-[380px]:h-8 min-[380px]:w-8 sm:h-12 sm:w-12 object-contain" />
+            <span className="font-anek-english text-[7px] min-[380px]:text-[8px] sm:text-[11px] font-black tracking-tight text-[#052962] text-center leading-tight">ATTAPPADI ONLINE</span>
           </div>
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
@@ -867,8 +901,8 @@ export default function App() {
               transition={{ duration: 0.45, ease: "easeInOut" }}
               className={`relative flex min-w-0 flex-1 items-stretch text-white ${tickerMode === "breaking" ? "bg-[#d60016]" : "bg-[#0754aa]"}`}
             >
-              <div className="z-10 flex w-[115px] sm:w-[205px] shrink-0 items-center justify-center border-r border-white/25 px-2 sm:px-4 text-center shadow-[4px_0_12px_rgba(0,0,0,0.16)]">
-                <span lang="en" className="font-anek-english text-base sm:text-2xl md:text-[27px] font-black uppercase tracking-tight leading-none">
+              <div className="z-10 flex w-[76px] min-[380px]:w-[94px] sm:w-[205px] shrink-0 items-center justify-center border-r border-white/25 px-1 min-[380px]:px-2 sm:px-4 text-center shadow-[4px_0_12px_rgba(0,0,0,0.16)]">
+                <span lang="en" className="font-anek-english text-[11px] min-[380px]:text-[13px] sm:text-2xl md:text-[27px] font-black uppercase tracking-tight leading-none">
                   {tickerMode === "breaking" ? "BREAKING NEWS" : "NOTICE & ALERT"}
                 </span>
               </div>
@@ -884,7 +918,7 @@ export default function App() {
                       transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
                       onClick={() => { if (tickerDemo) return; tickerMode === "breaking" ? handleArticleClick(currentTickerItem as NewsPost) : setSelectedAnnouncement(currentTickerItem as NoticeItem); }}
                       lang={lang}
-                      className={`w-full px-4 sm:px-7 py-2 text-left text-base sm:text-xl md:text-2xl font-bold leading-snug hover:underline focus-visible:outline-2 focus-visible:outline-white ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}
+                      className={`w-full px-2 min-[380px]:px-3 sm:px-7 py-2 text-left text-[13px] min-[380px]:text-[15px] sm:text-xl md:text-2xl font-bold leading-snug hover:underline focus-visible:outline-2 focus-visible:outline-white ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}
                     >
                       <span className="block overflow-hidden text-ellipsis line-clamp-2">
                         {lang === "ta" ? (currentTickerItem.titleTa || currentTickerItem.titleEn || currentTickerItem.titleMl) : lang === "ml" ? (currentTickerItem.titleMl || currentTickerItem.titleEn || currentTickerItem.titleTa) : (currentTickerItem.titleEn || currentTickerItem.titleMl || currentTickerItem.titleTa)}
