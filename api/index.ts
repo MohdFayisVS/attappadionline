@@ -515,8 +515,8 @@ app.post("/api/citizen-reports", async (req, res) => {
   if (!areaText || !title || body.length < 30 || !["Agali", "Mukkali", "Sholayur", "Pudur", "Kottathara", "Thavalam", "Anaikatty", "Other Attappadi"].includes(areaText)) {
     return res.status(400).json({ error: "Please provide a valid area, headline and report (at least 30 characters)." });
   }
-  if (photo && (typeof photo !== "string" || !/^data:image\/(jpeg|png|webp);base64,[a-zA-Z0-9+/=]+$/.test(photo) || photo.length > 1500000)) {
-    return res.status(400).json({ error: "Photo must be JPEG, PNG or WebP and under 1 MB." });
+  if (photo && (typeof photo !== "string" || !/^data:image\/(jpeg|png|webp);base64,[a-zA-Z0-9+/=]+$/.test(photo) || photo.length > 700000)) {
+    return res.status(400).json({ error: "Photo must be JPEG, PNG or WebP and under 500 KB." });
   }
   let editedTitle = title, editedBody = body, aiStatus = "pending";
   if (process.env.GEMINI_API_KEY) {
