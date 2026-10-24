@@ -244,6 +244,8 @@ const defaultPhotos: PhotoItem[] = [
   },
   {
     id: "photo_4",
+    titleTa: "பவானி ஆற்றங்கரையின் பழமையான மூங்கில் காடுகள்",
+    descTa: "உள்ளூர் பறவைகளும் வன உயிரினங்களும் வாழும் இயற்கைச் சூழல்.",
     url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1000&auto=format&fit=crop",
     titleEn: "Ancient Bamboo Thickets near Bhavani Banks",
     titleMl: "ഭവാനിപ്പുഴയോരത്തെ പുരാതന മുളങ്കാടുകൾ",
@@ -252,6 +254,8 @@ const defaultPhotos: PhotoItem[] = [
   },
   {
     id: "photo_5",
+    titleTa: "புதூர் ஊராட்சியின் ராகி மற்றும் சிறுதானிய வயல்கள்",
+    descTa: "பாரம்பரிய உணவுப் பாதுகாப்புக்கும் விவசாய வாழ்வாதாரத்துக்கும் துணைபுரியும் வயல்கள்.",
     url: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=1000&auto=format&fit=crop",
     titleEn: "Ragi and Millet Farmlands of Pudur Grama Panchayat",
     titleMl: "പുതൂരിലെ മനോഹരമായ പരമ്പരാഗത റാഗി കൃഷിയിടം",
@@ -260,6 +264,8 @@ const defaultPhotos: PhotoItem[] = [
   },
   {
     id: "photo_6",
+    titleTa: "முக்காலி பாதுகாப்புப் பகுதியில் மர நடைபாதை",
+    descTa: "சைலண்ட் வேலியின் பசுமையான வன எல்லையை அண்மையில் காணும் பாதை.",
     url: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1000&auto=format&fit=crop",
     titleEn: "Rustic Wooden Walkway in Mukkali Buffer Zone",
     titleMl: "മുക്കാലി ബഫർ സോണിലെ പ്രകൃതിദത്ത നടപ്പാത",
@@ -292,8 +298,8 @@ const defaultBusRoutes: BusRouteItem[] = [
   },
   {
     id: "bus_2",
-    routeEn: "PALAKKAD - ANAIKATTY (KSRTC - Morning Trip)",
-    routeMl: "പാലക്കാട് - ആനക്കട്ടി (KSRTC - രാവിലത്തെ ട്രിപ്പ്)",
+    routeEn: "PALAKKAD - ANAIKATTY  (KSRTC)",
+    routeMl: "പാലക്കാട് - ആനക്കട്ടി  (KSRTC)",
     type: "KSRTC",
     busTypeEn: "KSRTC Fast Passenger",
     busTypeMl: "KSRTC ഫാസ്റ്റ് പാസഞ്ചർ",
@@ -313,8 +319,8 @@ const defaultBusRoutes: BusRouteItem[] = [
   },
   {
     id: "bus_3",
-    routeEn: "PALAKKAD - ANAIKATTY (KSRTC - Noon Trip)",
-    routeMl: "പാലക്കാട് - ആനക്കട്ടി (KSRTC - ഉച്ചയ്ക്കുള്ള ട്രിപ്പ്)",
+    routeEn: "PALAKKAD - ANAIKATTY  (KSRTC)",
+    routeMl: "പാലക്കാട് - ആനക്കട്ടി  (KSRTC)",
     type: "KSRTC",
     busTypeEn: "KSRTC Ordinary",
     busTypeMl: "KSRTC ഓർഡിനറി സർവീസ്",
@@ -334,8 +340,8 @@ const defaultBusRoutes: BusRouteItem[] = [
   },
   {
     id: "bus_4",
-    routeEn: "PALAKKAD - ANAIKATTY (KSRTC - Evening Trip)",
-    routeMl: "പാലക്കാട് - ആനക്കട്ടി (KSRTC - വൈകിട്ടുള്ള ട്രിപ്പ്)",
+    routeEn: "PALAKKAD - ANAIKATTY  (KSRTC)",
+    routeMl: "പാലക്കാട് - ആനക്കട്ടി  (KSRTC)",
     type: "KSRTC",
     busTypeEn: "KSRTC Fast Passenger",
     busTypeMl: "KSRTC ഫാസ്റ്റ് പാസഞ്ചർ",
@@ -398,8 +404,8 @@ const defaultBusRoutes: BusRouteItem[] = [
   },
   {
     id: "bus_7",
-    routeEn: "MANNARKKAD - ANAIKATTY (KSRTC - Morning Trip)",
-    routeMl: "മണ്ണാർക്കാട് - ആനക്കട്ടി (KSRTC - രാവിലെ)",
+    routeEn: "MANNARKKAD - ANAIKATTY  (KSRTC)",
+    routeMl: "മണ്ണാർക്കാട് - ആനക്കട്ടി  (KSRTC)",
     type: "KSRTC",
     busTypeEn: "KSRTC Fast Passenger",
     busTypeMl: "KSRTC ഫാസ്റ്റ് പാസഞ്ചർ",
@@ -418,8 +424,8 @@ const defaultBusRoutes: BusRouteItem[] = [
   },
   {
     id: "bus_8",
-    routeEn: "MANNARKKAD - ANAIKATTY (KSRTC - Night Stay)",
-    routeMl: "മണ്ണാർക്കാട് - ആനക്കട്ടി (KSRTC - രാത്രി സർവീസ്)",
+    routeEn: "MANNARKKAD - ANAIKATTY  (KSRTC)",
+    routeMl: "മണ്ണാർക്കാട് - ആനക്കട്ടി  (KSRTC)",
     type: "KSRTC",
     busTypeEn: "KSRTC Ordinary Night Service",
     busTypeMl: "KSRTC നൈറ്റ് സ്റ്റേ ഓർഡിനറി",
