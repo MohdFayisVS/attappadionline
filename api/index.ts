@@ -1670,6 +1670,43 @@ app.delete("/api/photos/:id", async (req, res) => {
 });
 
 // BUS TIMINGS/ROUTES
+
+/** Shared bus-stop coordinates: public read, server-verified administrator writes only. */
+app.get("/api/bus-stop-positions", async (_req, res) => {
+  if (!firestoreDb) return res.status(503).json({ error: "Database unavailable" });
+  try {
+    const entries = await getCollectionData("busStopPositions");
+    res.setHeader("Cache-Control", "no-store");
+    res.json(entries);
+  } catch (error) {
+    res.status(503).json({ error: "Could not load published bus stop positions" });
+  }
+});
+app.put("/api/bus-stop-positions/:id", requireAdmin, async (req, res) => {
+  const id = req.params.id;
+  const { lat, lon, name } = req.body || {};
+  if (!/^[A-Z0-9_]{2,80}$/.test(id) || typeof lat !== "number" || typeof lon !== "number" ||
+      !Number.isFinite(lat) || !Number.isFinite(lon) || lat < 9.3 || lat > 11.8 || lon < 75.5 || lon > 77.6 ||
+      typeof name !== "string" || !name.trim() || name.trim().length > 120) {
+    return res.status(400).json({ error: "Invalid station ID, name or regional coordinates" });
+  }
+  try {
+    await writeItemToFirestore("busStopPositions", id, { id, lat, lon, name: name.trim(), updatedAt: new Date().toISOString() });
+    res.json({ success: true, id });
+  } catch (error) {
+    res.status(503).json({ error: "Firestore write failed; location was not published" });
+  }
+});
+app.delete("/api/bus-stop-positions/:id", requireAdmin, async (req, res) => {
+  if (!/^[A-Z0-9_]{2,80}$/.test(req.params.id)) return res.status(400).json({ error: "Invalid station ID" });
+  try {
+    await deleteItemFromFirestore("busStopPositions", req.params.id);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(503).json({ error: "Firestore delete failed" });
+  }
+});
+
 app.get("/api/busroutes", async (req, res) => {
   const data = await getCollectionData("busRoutes");
   res.json(data);
