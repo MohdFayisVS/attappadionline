@@ -3030,7 +3030,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         className="w-16 h-12 object-cover rounded border"
                         referrerPolicy="no-referrer"
                       />
-                      <div className="space-y-0.5 truncate flex-1">
+                      <div className="space-y-0.5 min-w-0 flex-1">
                         <p className="text-[10px] font-bold text-emerald-800 flex items-center gap-0.5">✓ Picture loaded ready</p>
                         <p className="text-[8px] text-slate-400 text-ellipsis overflow-hidden shrink-0 block">{newsForm.image.substring(0, 100)}...</p>
                       </div>
@@ -3139,14 +3139,14 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   <div className="p-8 text-center text-slate-400">No news articles published on database.</div>
                 ) : (
                   newsList.map((item) => (
-                    <div key={item.id} className="p-3 bg-slate-50 rounded border hover:border-slate-300 transition flex items-center gap-4">
+                    <div key={item.id} className="p-3 bg-slate-50 rounded-xl border hover:border-slate-300 transition flex flex-wrap sm:flex-nowrap items-center gap-3">
                       <img 
                         src={item.image} 
                         alt="News listing item" 
                         className="w-16 h-12 object-cover rounded shrink-0 border bg-white"
                         referrerPolicy="no-referrer"
                       />
-                      <div className="flex-1 truncate space-y-0.5">
+                      <div className="min-w-0 flex-1 space-y-0.5">
                         <div className="flex items-center gap-2">
                           <span className="text-[8px] font-bold text-white bg-red-650 px-1.5 py-0.5 rounded uppercase">
                             {item.category}
@@ -3156,20 +3156,20 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         <h4 className="font-bold text-slate-800 text-sm truncate">{item.titleEn}</h4>
                         <p className="text-[10px] text-[#005689] truncate font-anek-malayalam font-bold">{item.titleMl}</p>
                       </div>
-                      <div className="flex gap-1 shrink-0">
+                      <div className="flex w-full sm:w-auto items-center justify-end gap-2 shrink-0">
                         <button
                           onClick={() => handleStartEditNews(item)}
-                          className="p-1.5 text-slate-800 bg-amber-100 hover:bg-amber-200 rounded transition"
-                          title="Edit article"
+                          className="inline-flex items-center gap-1.5 px-3 py-2 text-amber-900 bg-amber-100 hover:bg-amber-200 rounded-lg transition font-bold"
+                          title="Edit article" aria-label={`Edit article: ${item.titleEn}`}
                         >
-                          <Pencil className="w-3.5 h-3.5" />
+                          <Pencil className="w-4 h-4" /> <span>Edit</span>
                         </button>
                         <button
                           onClick={() => handleDeleteNews(item.id)}
-                          className="p-1.5 text-white bg-red-850 hover:bg-red-750 rounded transition"
-                          title="Delete article"
+                          className="inline-flex items-center gap-1.5 px-3 py-2 text-white bg-red-700 hover:bg-red-800 rounded-lg transition font-bold"
+                          title="Delete article" aria-label={`Delete article: ${item.titleEn}`}
                         >
-                          <Trash2 className="w-3.5 h-3.5" />
+                          <Trash2 className="w-4 h-4" /> <span>Delete</span>
                         </button>
                       </div>
                     </div>
@@ -3476,7 +3476,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 </h3>
                 <div className="space-y-2.5 max-h-[500px] overflow-y-auto pr-2">
                   {eventsList.map((ev) => (
-                    <div key={ev.id} className="p-3 border rounded bg-slate-50 flex items-center justify-between">
+                    <div key={ev.id} className="p-3 border rounded-xl bg-slate-50 flex flex-wrap items-center justify-between gap-3">
                       <div className="space-y-0.5">
                         <span className="text-[9px] font-mono font-bold bg-amber-100 text-slate-800 px-1.5 py-0.5 rounded">
                           {ev.date}
@@ -5054,7 +5054,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     type="submit"
                     className="w-full py-2 bg-slate-900 text-[#ffe500] font-bold rounded cursor-pointer hover:bg-slate-850 transition"
                   >
-                    Commit Entire Bus Timetable (ക്രമവിവരപ്പട്ടിക ചേർക്കുക)
+                    {editingType === "busroutes" ? "Save Changes to Bus Timetable" : "Publish Bus Timetable"}
                   </button>
                 </form>
               </div>
@@ -5075,7 +5075,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         <p className="text-[10px] text-slate-400 font-bold truncate uppercase">{route.routeEn}</p>
                         <p className="text-[9px] text-[#c70000] font-bold">{route.list.length} Stops defined</p>
                       </div>
-                      <button onClick={() => handleDeleteBusRoute(route.id as string)} className="p-1.5 bg-red-800 text-white rounded hover:bg-red-650 cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
+                      <div className="flex shrink-0 flex-wrap items-center gap-2"><button type="button" onClick={() => handleStartEditBusRoute(route)} aria-label={`Edit bus route: ${route.routeEn}`} className="inline-flex items-center gap-1.5 rounded-lg bg-amber-100 px-3 py-2 font-bold text-amber-900 hover:bg-amber-200"><Pencil className="h-4 w-4" /> Edit</button><button type="button" onClick={() => handleDeleteBusRoute(route.id as string)} aria-label={`Delete bus route: ${route.routeEn}`} className="inline-flex items-center gap-1.5 rounded-lg bg-red-700 px-3 py-2 font-bold text-white hover:bg-red-800"><Trash2 className="h-4 w-4" /> Delete</button></div>
                     </div>
                   ))}
                   {busRoutesList.length === 0 && (
