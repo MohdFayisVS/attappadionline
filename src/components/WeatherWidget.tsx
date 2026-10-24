@@ -1,185 +1,87 @@
-import { useState, useEffect } from "react";
-import { CloudSun, CloudRain, CloudLightning, Wind, Sun, RefreshCw } from "lucide-react";
-import { WeatherData } from "../types";
+import { useCallback, useEffect, useState } from "react";
+import { CloudSun, CloudRain, CloudLightning, Sun, Cloud, CloudFog, RefreshCw } from "lucide-react";
 
-export default function WeatherWidget({ 
-  lang, 
-  theme = "light" 
-}: { 
-  lang: "en" | "ml" | "ta"; 
-  theme?: "light" | "dark"; 
-}) {
-  const [weather, setWeather] = useState<WeatherData | null>(null);
+type Language = "en" | "ml" | "ta";
+type Forecast = {
+  location: string; source: string; updatedAt: string;
+  current: { temperature: number; humidity: number; windSpeed: number; weatherCode: number };
+  tomorrow: { date: string; minTemperature: number; maxTemperature: number; rainProbability: number; weatherCode: number };
+};
+
+function condition(code: number, lang: Language) {
+  const labels: Record<string, [string, string, string]> = {
+    clear: ["Clear sky", "തെളിഞ്ഞ ആകാശം", "தெளிவான வானம்"],
+    cloudy: ["Partly cloudy", "ഭാഗികമായി മേഘാവൃതം", "பகுதியளவு மேகமூட்டம்"],
+    overcast: ["Cloudy", "മേഘാവൃതം", "மேகமூட்டம்"],
+    fog: ["Foggy", "മൂടൽമഞ്ഞ്", "மூடுபனி"],
+    drizzle: ["Light drizzle", "ചാറ്റൽമഴ", "லேசான தூறல்"],
+    rain: ["Rain expected", "മഴയ്ക്ക് സാധ്യത", "மழை பெய்ய வாய்ப்பு"],
+    snow: ["Snow", "മഞ്ഞുവീഴ്ച", "பனிப்பொழிவு"],
+    thunder: ["Thunderstorms", "ഇടിമിന്നലോടുകൂടിയ മഴ", "இடியுடன் கூடிய மழை"]
+  };
+  const key = code === 0 ? "clear" : code <= 2 ? "cloudy" : code === 3 ? "overcast" : code <= 48 ? "fog" : code <= 57 ? "drizzle" : code <= 67 || (code >= 80 && code <= 82) ? "rain" : code >= 95 ? "thunder" : code >= 71 && code <= 86 ? "snow" : "cloudy";
+  return labels[key][lang === "en" ? 0 : lang === "ml" ? 1 : 2];
+}
+function WeatherIcon({ code }: { code: number }) {
+  const className = "w-9 h-9 text-amber-400";
+  if (code >= 95) return <CloudLightning className={className} />;
+  if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return <CloudRain className={className} />;
+  if (code >= 45 && code <= 48) return <CloudFog className={className} />;
+  if (code === 0) return <Sun className={className} />;
+  if (code === 3) return <Cloud className={className} />;
+  return <CloudSun className={className} />;
+}
+export default function WeatherWidget({ lang, theme = "light" }: { lang: Language; theme?: "light" | "dark" }) {
+  const [weather, setWeather] = useState<Forecast | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const fetchWeather = async () => {
+  const [error, setError] = useState(false);
+  const fetchWeather = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/weather");
-      const data = await res.json();
-      setWeather(data);
-    } catch (err) {
-      console.error("Failed to load local weather", err);
+      const response = await fetch("/api/weather");
+      if (!response.ok) throw new Error("Weather request failed");
+      const result: Forecast = await response.json();
+      if (!result.current || !result.tomorrow) throw new Error("Missing forecast");
+      setWeather(result);
+      setError(false);
+    } catch {
+      setError(true);
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchWeather();
   }, []);
-
-  const getWeatherIcon = (enCondition: string, iconClass = "w-6 h-6") => {
-    const term = enCondition.toLowerCase();
-    const isDark = theme === "dark";
-    
-    // Choose dynamic colors: white in light mode, yellow in dark mode
-    const colorClass = isDark ? "text-yellow-400 fill-yellow-400/10" : "text-white fill-white/10";
-    
-    if (term.includes("shower") || term.includes("rain") || term.includes("drizzle")) {
-      return <CloudRain className={`${iconClass} ${colorClass} animate-bounce`} />;
-    }
-    if (term.includes("thunder") || term.includes("lightning")) {
-      return <CloudLightning className={`${iconClass} ${colorClass} animate-pulse`} />;
-    }
-    if (term.includes("wind") || term.includes("breeze")) {
-      return <Wind className={`${iconClass} ${colorClass}`} />;
-    }
-    if (term.includes("sunny") || term.includes("clear")) {
-      return <Sun className={`${iconClass} ${colorClass} animate-pulse`} />;
-    }
-    return <CloudSun className={`${iconClass} ${colorClass}`} />;
-  };
-
-  if (loading || !weather) {
-    return (
-      <div className={`p-4 text-center rounded-xl shadow-xs border transition-colors duration-300 ${
-        theme === "dark" 
-          ? "bg-[#090d16] border-slate-800 text-slate-100" 
-          : "bg-white border-slate-200 text-slate-800"
-      }`}>
-        <span className="animate-spin text-[#052962] dark:text-yellow-400 rounded-full h-4.5 w-4.5 border-2 border-current border-t-transparent inline-block mr-2"></span>
-        <span lang={lang} className="ao-localized-content text-xs text-slate-400 font-bold">
-          {lang === "ta" ? "வானிலை தகவல்கள் ஏற்றப்படுகின்றன..." : lang === "ml" ? "കാലാവസ്ഥ വിവരങ്ങൾ വരുന്നു..." : "Loading Weather Now..."}
-        </span>
-      </div>
-    );
-  }
-
-  // Calculate average temperature of sub-regions dynamically
-  const temps = weather.subRegions.map(r => r.temp).filter(t => typeof t === 'number' || !isNaN(Number(t)));
-  const avgTemp = temps.length > 0 ? Math.round(temps.reduce((sum, item) => sum + Number(item), 0) / temps.length) : 28;
-
+  useEffect(() => {
+    void fetchWeather();
+    const timer = window.setInterval(() => { void fetchWeather(); }, 600000);
+    return () => window.clearInterval(timer);
+  }, [fetchWeather]);
+  const font = lang === "ml" ? "font-anek-malayalam" : lang === "ta" ? "font-anek-tamil" : "font-anek-english";
+  const tr = (en: string, ml: string, ta: string) => lang === "ml" ? ml : lang === "ta" ? ta : en;
+  const card = theme === "dark" ? "bg-slate-900 border-slate-700 text-slate-100" : "bg-white border-slate-200 text-[#052962]";
   return (
-    <div className={`rounded-2xl shadow-xs p-4.5 space-y-3 ao-localized-content border transition-colors duration-300 ${
-      theme === "dark" 
-        ? "bg-[#090d16] border-slate-800 text-slate-100" 
-        : "bg-white border-slate-200 text-slate-800"
-    }`}>
-      
-      {/* 1. Header showing "WEATHER NOW" */}
-      <div className="flex justify-between items-center select-none pb-1">
-        <div className="flex items-center gap-2">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-          </span>
-          <h3 lang="en" className={`ao-fixed-ui text-xs font-black tracking-wider uppercase ${
-            theme === "dark" ? "text-slate-200" : "text-[#052962]"
-          }`}>
-            WEATHER NOW
-          </h3>
-        </div>
-        
-        <button 
-          onClick={fetchWeather} 
-          disabled={loading}
-          className={`p-1 border rounded-lg transition cursor-pointer ${
-            theme === "dark" 
-              ? "hover:bg-slate-800 border-slate-800 text-slate-400 hover:text-white" 
-              : "hover:bg-slate-50 border-slate-100 text-slate-400 hover:text-[#052962]"
-          }`}
-          title={lang === "ta" ? "வானிலை தகவலைப் புதுப்பிக்கவும்" : lang === "ml" ? "കാലാവസ്ഥ പുതുക്കുക" : "Refresh Weather Info"}
-        >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-        </button>
+    <section className={`rounded-2xl border p-4 space-y-3 ${card}`} aria-label="Attappadi weather">
+      <div className="flex justify-between items-center gap-2">
+        <span lang={lang} className={`text-xs ${font}`}>{tr("Attappadi overall weather · Agali reference", "അട്ടപ്പാടിയിലെ പൊതുവായ കാലാവസ്ഥ · അഗളി അടിസ്ഥാനമാക്കി", "அட்டப்பாடியின் பொதுவான வானிலை · அகளி அடிப்படையில்")}</span>
+        <button type="button" onClick={() => void fetchWeather()} disabled={loading} aria-label="Refresh weather" className="p-2 rounded-lg border border-slate-400/20"><RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} /></button>
       </div>
-
-      {/* 2. Interactive Horizontal Weather Strip with hides scrollbar styled inline */}
-      <div className="flex items-stretch gap-2.5 overflow-x-auto pb-1 pt-1 scroll-smooth select-none [ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        
-        {/* Module A: Overall Valley Average */}
-        <div className={`p-3 rounded-xl min-w-[125px] flex flex-col justify-between shrink-0 shadow-sm relative overflow-hidden group border ${
-          theme === "dark" 
-            ? "bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700 text-slate-100" 
-            : "bg-gradient-to-br from-[#052962] to-[#003980] border-[#042456] text-white"
-        }`}>
-          <div className="absolute -right-4 -bottom-4 w-11 h-11 bg-white/5 rounded-full group-hover:scale-135 transition-all duration-300 pointer-events-none" />
-          
-          <div>
-            <span className={`text-[8px] font-black uppercase tracking-wider block leading-none ${
-              theme === "dark" ? "text-yellow-400" : "text-[#ffe500]"
-            }`}>
-              {lang === "ta" ? "பள்ளத்தாக்கு சராசரி" : lang === "ml" ? "താഴ്‌വര ശരാശരി" : "VALLEY AVG"}
-            </span>
-            {/* Display pure visual icon instead of text description */}
-            <div className="flex items-center justify-center py-2">
-              {getWeatherIcon(weather.conditionEn, "w-10 h-10")}
-            </div>
+      {error && <p lang={lang} className={`text-xs text-amber-600 ${font}`}>{tr("Live weather temporarily unavailable.", "തത്സമയ കാലാവസ്ഥാ വിവരങ്ങൾ താൽക്കാലികമായി ലഭ്യമല്ല.", "நேரடி வானிலைத் தகவல் தற்காலிகமாகக் கிடைக்கவில்லை.")}</p>}
+      {weather ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="rounded-xl border border-slate-400/20 p-4 space-y-2">
+            <h3 lang="en" className="font-anek-english text-sm font-black uppercase tracking-wide">WEATHER NOW</h3>
+            <div className="flex items-center gap-3"><WeatherIcon code={weather.current.weatherCode} /><strong className="text-3xl tabular-nums">{Math.round(weather.current.temperature)}°C</strong></div>
+            <p lang={lang} className={`text-sm ${font}`}>{condition(weather.current.weatherCode, lang)}</p>
+            <p lang={lang} className={`text-xs opacity-75 ${font}`}>{tr("Humidity", "ആർദ്രത", "ஈரப்பதம்")}: {weather.current.humidity}% · {tr("Wind", "കാറ്റ്", "காற்று")}: {weather.current.windSpeed} km/h</p>
           </div>
-
-          <div className="mt-1 flex items-baseline justify-between z-10">
-            <span className="text-base font-black tracking-tight leading-none">{avgTemp}°C</span>
-            <span className={`text-[8.5px] font-bold ${theme === "dark" ? "text-slate-400" : "text-white/80"}`}>{weather.humidity} %</span>
+          <div className="rounded-xl border border-slate-400/20 p-4 space-y-2">
+            <h3 lang="en" className="font-anek-english text-sm font-black uppercase tracking-wide">WEATHER TOMORROW</h3>
+            <div className="flex items-center gap-3"><WeatherIcon code={weather.tomorrow.weatherCode} /><strong className="text-2xl tabular-nums">{Math.round(weather.tomorrow.minTemperature)}°–{Math.round(weather.tomorrow.maxTemperature)}°C</strong></div>
+            <p lang={lang} className={`text-sm ${font}`}>{condition(weather.tomorrow.weatherCode, lang)}</p>
+            <p lang={lang} className={`text-xs opacity-75 ${font}`}>{tr("Chance of rain", "മഴയ്ക്കുള്ള സാധ്യത", "மழைக்கான வாய்ப்பு")}: {weather.tomorrow.rainProbability ?? "—"}%</p>
           </div>
         </div>
-
-        {/* Modules B-F: Subregions Inline Strip */}
-        {weather.subRegions.map((reg) => (
-          <div 
-            key={reg.name} 
-            className={`p-3 rounded-xl min-w-[105px] flex flex-col justify-between shrink-0 transition duration-155 relative border ${
-              theme === "dark" 
-                ? "bg-slate-900 border-slate-800 text-slate-100" 
-                : "bg-slate-800 border-slate-900 text-white"
-            }`}
-          >
-            <div>
-              <span className={`text-[8px] font-black uppercase tracking-wider block leading-none truncate max-w-[95px] ${
-                theme === "dark" ? "text-slate-400" : "text-slate-300"
-              }`}>
-                {reg.name}
-              </span>
-              {/* Display pure visual icon instead of text description */}
-              <div className="flex items-center justify-center py-2">
-                {getWeatherIcon(reg.conditionEn, "w-8 h-8")}
-              </div>
-            </div>
-
-            <div className="mt-1 flex items-baseline justify-center">
-              <span className={`text-sm font-black tracking-tight leading-none ${
-                theme === "dark" ? "text-yellow-400" : "text-white"
-              }`}>{reg.temp}°C</span>
-            </div>
-          </div>
-        ))}
-
-      </div>
-
-      {/* Decorative footer details indicator strip */}
-      <div className={`flex items-center justify-between text-[8px] font-bold border-t pt-2 select-none ${
-        theme === "dark" ? "text-slate-500 border-slate-800" : "text-slate-400 border-slate-100"
-      }`}>
-        <span>{lang === "ta" ? "பகுதிகளின் வானிலையைப் பார்க்க நகர்த்தவும்" : lang === "ml" ? "കൂടുതൽ കാണാൻ വലത്തോട്ട് മാറ്റുക" : "SWIPE TO BROWSE MICROCLIMATES"}</span>
-        <span>•</span>
-        <span className="flex items-center gap-0.5">
-          <span>{lang === "ta" ? "காற்று: " : lang === "ml" ? "കാറ്റ്: " : "Wind: "}</span>
-          <span className={theme === "dark" ? "text-slate-300" : "text-slate-600"}>
-            {lang === "ta" ? (weather.breezeTa || weather.breezeEn) : lang === "ml" ? (weather.breezeMl || weather.breezeEn) : weather.breezeEn}
-          </span>
-        </span>
-      </div>
-
-    </div>
+      ) : !loading ? <p lang={lang} className={font}>{tr("Weather data unavailable.", "കാലാവസ്ഥാ വിവരങ്ങൾ ലഭ്യമല്ല.", "வானிலைத் தகவல் கிடைக்கவில்லை.")}</p> : <p lang={lang} className={font}>{tr("Loading weather…", "കാലാവസ്ഥാ വിവരങ്ങൾ ലഭ്യമാക്കുന്നു…", "வானிலைத் தகவல் ஏற்றப்படுகிறது…")}</p>}
+      <p className="text-[10px] opacity-65 font-anek-english">Source: <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer" className="underline">Open-Meteo</a> · Forecast for the Agali reference point; local hill conditions may vary. {weather?.updatedAt ? `Updated: ${weather.updatedAt} IST` : ""}</p>
+    </section>
   );
 }

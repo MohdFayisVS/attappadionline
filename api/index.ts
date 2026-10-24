@@ -1978,30 +1978,39 @@ app.post("/api/admin/ai-generate", async (req, res) => {
 });
 
 // Dynamic Weather information helper
-app.get("/api/weather", (req, res) => {
-  const hour = new Date().getHours();
-  const baseTemp = (hour < 7 || hour > 19) ? 21 : 28;
-  
-  const weatherData = {
-    blockName: "Attappadi Block valley",
-    conditionEn: hour > 10 && hour < 17 ? "Scattered Showers" : "Mist & Heavy Overcast",
-    conditionMl: hour > 10 && hour < 17 ? "ചിലയിടങ്ങളിൽ മഴ" : "മൂടൽമഞ്ഞും കനത്ത മേഘാവൃതമായ അന്തരീക്ഷവും",
-    humidity: "86%",
-    breezeEn: "SW 18 km/h",
-    breezeMl: "തെക്ക്-പടിഞ്ഞാറൻ കാറ്റ് 18 കി.മീ/മണിക്കൂർ",
-    subRegions: [
-      { name: "Agali (Town)", temp: baseTemp + 1, conditionEn: "Overcast", conditionMl: "മേഘാവൃതം" },
-      { name: "Mukkali (Hills)", temp: baseTemp - 2, conditionEn: "Continuous drizzle", conditionMl: "തുള്ളിമഴ" },
-      { name: "Thavalam", temp: baseTemp + 0.5, conditionEn: "Passing Clouds", conditionMl: "മേഘങ്ങൾ" },
-      { name: "Kottathara", temp: baseTemp + 0, conditionEn: "Heavy Breeze", conditionMl: "ശക്തമായ കാറ്റ്" },
-      { name: "Sholayur", temp: baseTemp + 1.5, conditionEn: "Windy & Sunny", conditionMl: "കാറ്റുള്ള അന്തരീക്ഷം" },
-      { name: "Pudur", temp: baseTemp - 1, conditionEn: "Mist Cover", conditionMl: "മൂടൽമഞ്ഞ്" },
-      { name: "Anaikatty", temp: baseTemp + 2, conditionEn: "Humid & Cloudy", conditionMl: "മേഘാവൃതം" },
-      { name: "Jellippara", temp: baseTemp - 0.5, conditionEn: "Cool Breeze", conditionMl: "തണുത്ത കാറ്റ്" },
-      { name: "Chittur", temp: baseTemp + 1, conditionEn: "Light Showers", conditionMl: "ചെറിയ തോതിൽ മഴ" }
-    ]
-  };
-  res.json(weatherData);
+// Representative Attappadi forecast using Open-Meteo live observations and daily forecast.
+// Agali is the reference point; actual conditions can differ across the hills.
+app.get("/api/weather", async (_req, res) => {
+  try {
+    const url = "https://api.open-meteo.com/v1/forecast?latitude=11.0667&longitude=76.6500&timezone=Asia%2FKolkata&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&forecast_days=2";
+    const response = await fetch(url, { signal: AbortSignal.timeout(8000) });
+    if (!response.ok) throw new Error("Weather provider returned " + response.status);
+    const data: any = await response.json();
+    if (!data.current || !data.daily?.time?.[1]) throw new Error("Incomplete weather response");
+    res.set("Cache-Control", "public, max-age=600, s-maxage=600");
+    res.json({
+      location: "Attappadi (Agali reference)",
+      source: "Open-Meteo",
+      updatedAt: data.current.time,
+      current: {
+        temperature: data.current.temperature_2m,
+        humidity: data.current.relative_humidity_2m,
+        windSpeed: data.current.wind_speed_10m,
+        weatherCode: data.current.weather_code
+      },
+      tomorrow: {
+        date: data.daily.time[1],
+        minTemperature: data.daily.temperature_2m_min[1],
+        maxTemperature: data.daily.temperature_2m_max[1],
+        rainProbability: data.daily.precipitation_probability_max[1],
+        weatherCode: data.daily.weather_code[1]
+      }
+    });
+  } catch (error) {
+    console.error("Live Attappadi weather unavailable:", error);
+    res.set("Cache-Control", "no-store");
+    res.status(503).json({ error: "Live weather is temporarily unavailable" });
+  }
 });
 
 app.all("/api/debug-route-details", (req, res) => {
