@@ -332,7 +332,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     sourceFieldPath: string, // e.g. "titleEn" or "leftAd.titleEn"
     targetFieldPath: string, // e.g. "titleMl" or "leftAd.titleMl"
     setFormState: React.Dispatch<React.SetStateAction<any>>,
-    targetLang: "en" | "ml"
+    targetLang: "en" | "ml" | "ta"
   ) => {
     const trimmed = text.trim();
     if (!trimmed) return;
@@ -351,7 +351,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
         const response = await adminFetch("/api/admin/translate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: trimmed, targetLang })
+          body: JSON.stringify({ text: trimmed, targetLang, sourceLang: sourceFieldPath.endsWith("Ml") ? "ml" : "en" })
         });
         if (response.ok) {
           const data = await response.json();
@@ -391,80 +391,63 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     }, delay);
   };
 
-  // Generic Auto Translation Core Engine
+  // Fill missing translations in all three languages; never replace manually entered values.
   const performAutoTranslationForForm = async <T extends Record<string, any>>(
     formState: T,
     setFormState: React.Dispatch<React.SetStateAction<T>>,
     fields: { en: keyof T; ml: keyof T; label?: string }[]
   ): Promise<T> => {
-    if (!autoTranslateOnSubmit) {
-      return formState;
-    }
-
-    let updatedForm = { ...formState };
-    let hasKeysToTranslate = false;
-
-    // Direct pre-check
-    for (const pair of fields) {
-      const enVal = String(formState[pair.en] || "").trim();
-      const mlVal = String(formState[pair.ml] || "").trim();
-      if ((enVal && !mlVal) || (mlVal && !enVal)) {
-        hasKeysToTranslate = true;
+    if (!autoTranslateOnSubmit) return formState;
+    const updatedForm = { ...formState };
+    const groups = new Map<string, Partial<Record<"en" | "ml" | "ta", keyof T>>>();
+    const register = (key: keyof T) => {
+      const match = String(key).match(/^(.*)(En|Ml|Ta)$/);
+      if (!match) return;
+      const language = match[2].toLowerCase() as "en" | "ml" | "ta";
+      const group = groups.get(match[1]) || {};
+      group[language] = key;
+      groups.set(match[1], group);
+    };
+    Object.keys(formState).forEach(key => register(key as keyof T));
+    fields.forEach(pair => { register(pair.en); register(pair.ml); });
+    const jobs: { source: keyof T; target: keyof T; sourceLang: "en" | "ml" | "ta"; targetLang: "en" | "ml" | "ta" }[] = [];
+    for (const group of groups.values()) {
+      const sourceLang = (["en", "ml", "ta"] as const).find(lang => group[lang] && String(formState[group[lang]!] || "").trim());
+      if (!sourceLang) continue;
+      for (const targetLang of ["en", "ml", "ta"] as const) {
+        const target = group[targetLang];
+        if (target && targetLang !== sourceLang && !String(formState[target] || "").trim()) {
+          jobs.push({ source: group[sourceLang]!, target, sourceLang, targetLang });
+        }
       }
     }
-
-    if (!hasKeysToTranslate) {
-      return formState;
-    }
-
+    if (!jobs.length) return formState;
     setIsTranslatingForm(true);
-    triggerToast("✨ Gemini AI is generating translations for empty language fields...");
-
     try {
-      const promises = fields.map(async (pair) => {
-        const enVal = String(formState[pair.en] || "").trim();
-        const mlVal = String(formState[pair.ml] || "").trim();
-
-        if (enVal && !mlVal) {
-          try {
-            const response = await adminFetch("/api/admin/translate", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ text: enVal, targetLang: "ml" })
-            });
-            const data = await response.json();
-            if (response.ok && data.translatedText) {
-              updatedForm[pair.ml] = data.translatedText as any;
-            }
-          } catch (e) {
-            console.error("Auto translate error for " + String(pair.ml), e);
-          }
-        } else if (mlVal && !enVal) {
-          try {
-            const response = await adminFetch("/api/admin/translate", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ text: mlVal, targetLang: "en" })
-            });
-            const data = await response.json();
-            if (response.ok && data.translatedText) {
-              updatedForm[pair.en] = data.translatedText as any;
-            }
-          } catch (e) {
-            console.error("Auto translate error for " + String(pair.en), e);
-          }
-        }
+      const results = await Promise.all(jobs.map(async job => {
+        try {
+          const response = await adminFetch("/api/admin/translate", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: String(formState[job.source]), sourceLang: job.sourceLang, targetLang: job.targetLang })
+          });
+          if (!response.ok) return null;
+          const data = await response.json();
+          return typeof data.translatedText === "string" && data.translatedText.trim()
+            ? { target: job.target, text: data.translatedText.trim() } : null;
+        } catch (error) { console.error("Translation failed", job.target, error); return null; }
+      }));
+      results.forEach(result => {
+        if (result && !String(updatedForm[result.target] || "").trim()) updatedForm[result.target] = result.text as any;
       });
-
-      await Promise.all(promises);
-      setFormState(updatedForm);
-      triggerToast("✨ Translations updated & completed by Gemini AI!");
-    } catch (err) {
-      console.error("Master translation routing failed", err);
-    } finally {
-      setIsTranslatingForm(false);
-    }
-
+      setFormState(previous => {
+        const next = { ...previous };
+        results.forEach(result => {
+          if (result && !String(previous[result.target] || "").trim()) next[result.target] = result.text as any;
+        });
+        return next;
+      });
+      if (results.some(Boolean)) triggerToast("English, Malayalam and Tamil translations updated.");
+    } finally { setIsTranslatingForm(false); }
     return updatedForm;
   };
 
@@ -2289,7 +2272,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
           </div>
           <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-slate-100 pt-4 text-xs">
             <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 font-bold text-emerald-700"><Check size={13}/> Authenticated session</span>
-            <span className="text-slate-500">Automatic translation</span>
+            <span className="text-slate-500">Automatic translation (EN / ML / TA)</span>
             <button type="button" role="switch" aria-checked={autoTranslateOnSubmit} onClick={() => setAutoTranslateOnSubmit(v => !v)} className={`rounded-full px-3 py-1.5 font-bold ${autoTranslateOnSubmit ? "bg-[#ffe500] text-[#101d34]" : "bg-slate-200 text-slate-600"}`}>{autoTranslateOnSubmit ? "Enabled" : "Disabled"}</button>
             {activeLiveTranslationsCount > 0 && <span className="font-bold text-blue-700">Translating {activeLiveTranslationsCount} item(s)…</span>}
           </div>
