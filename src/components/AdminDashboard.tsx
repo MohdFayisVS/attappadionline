@@ -468,6 +468,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
         return next;
       });
       if (results.some(Boolean)) triggerToast("English, Malayalam and Tamil translations updated.");
+      if (results.some(result => !result)) triggerToast("Some translations failed. Check all language fields before publishing.");
     } finally { setIsTranslatingForm(false); }
     return updatedForm;
   };
@@ -958,10 +959,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
           ...prev,
           titleEn: data.titleEn || "",
           titleMl: data.titleMl || "",
+          titleTa: data.titleTa || "",
           contentEn: data.contentEn || "",
-          contentMl: data.contentMl || ""
+          contentMl: data.contentMl || "",
+          contentTa: data.contentTa || ""
         }));
-        triggerToast("AI reporting created, loaded into translation blocks below!");
+        triggerToast("AI news draft generated in English, Malayalam and Tamil.");
       } else {
         alert(data.error || "AI Generation error");
       }
