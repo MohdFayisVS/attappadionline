@@ -1483,17 +1483,19 @@ export default function App() {
             </div>
           ) : activeSection === "local-services" ? (
             <div className="bg-white border border-gray-100 rounded-lg shadow-xs p-5 md:p-6 space-y-6 animate-fade-in">
-              <div className="border-b pb-4">
-                <span className="text-[10px] bg-red-600 text-white font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">
-                  {lang === "en" ? "HELPLINES & SERVICES" : "സഹായങ്ങൾ & സേവനങ്ങൾ"}
+              <div className="border-b border-slate-200 pb-6 md:pb-8 space-y-3">
+                <span lang="en" className="inline-flex items-center rounded-md bg-red-600 px-3 py-1.5 text-[11px] sm:text-xs font-anek-english font-extrabold uppercase tracking-[0.12em] text-white shadow-sm">
+                  HELPLINES & SERVICES
                 </span>
-                <h2 className="font-serif-guardian font-extrabold text-[#052962] text-2xl mt-1 leading-tight">
-                  {lang === "en" ? "Local Services & Emergency Directory" : "പ്രാദേശിക സേവനങ്ങളും ഡയറക്ടറിയും"}
+                <h2 lang="en" className="font-anek-english font-extrabold text-[#052962] text-[clamp(2rem,4.5vw,3.75rem)] tracking-tight leading-[1.08] text-balance">
+                  Local Services & Emergency Directory
                 </h2>
-                <p className="text-xs text-gray-400 mt-1">
-                  {lang === "en" 
-                    ? "Quick emergency hotlines, essential tribal healthcare desks, forest department patrols, and verified regional services."
-                    : "അടിയന്തര സഹായ നമ്പറുകൾ, ആരോഗ്യ കേന്ദ്രങ്ങൾ, കാട്ടാന/വനപാലക വിഭാഗം, പ്രാദേശിക ടെക്നീഷ്യൻമാരുടെയും ജിപ്പുകളുടെയും ഡയറക്ടറി വിവരങ്ങൾ."}
+                <p lang={lang} className={`max-w-4xl text-sm sm:text-base md:text-lg leading-relaxed text-slate-600 ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
+                  {lang === "ta"
+                    ? "அவசர உதவி எண்கள், சுகாதார மையங்கள், வனத்துறை தொடர்புகள் மற்றும் அட்டப்பாடியின் நம்பகமான உள்ளூர் சேவைகளை இங்கே காணலாம்."
+                    : lang === "ml"
+                    ? "അടിയന്തര സഹായ നമ്പറുകൾ, ആരോഗ്യ കേന്ദ്രങ്ങൾ, വനംവകുപ്പ് ബന്ധപ്പെടാനുള്ള വിവരങ്ങൾ, അട്ടപ്പാടിയിലെ വിശ്വസനീയമായ പ്രാദേശിക സേവനങ്ങൾ എന്നിവ ഇവിടെ കണ്ടെത്താം."
+                    : "Find emergency helplines, healthcare centres, forest department contacts and trusted local services across Attappadi."}
                 </p>
               </div>
 
