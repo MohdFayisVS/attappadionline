@@ -627,11 +627,11 @@ export default function App() {
     <div lang="en" className="min-h-screen bg-[#fcfcfb] dark:bg-[#090d16] text-gray-900 dark:text-slate-150 transition-colors duration-300 font-anek-english">
       
       {/* 2. CHIEF BRAND BANNER */}
-      <header className="bg-[#052962] text-white relative">
+      <header lang="en" className="bg-[#052962] text-white relative font-anek-english">
         <a href="#main-content" className="ao-skip-link">Skip to main content</a>
         
         {/* Top bar with real-time stats & language switchers */}
-        <div className="ao-header-utility flex flex-col sm:flex-row justify-between items-center px-4 sm:px-6 py-2 border-b border-blue-900/50 gap-2">
+        <div lang="en" className="ao-header-utility flex flex-col sm:flex-row justify-between items-center px-4 sm:px-6 py-2 border-b border-blue-900/50 gap-2">
           
           <div className="flex gap-4 text-xs font-semibold items-center select-none text-slate-300">
             <button 
@@ -675,7 +675,7 @@ export default function App() {
         </div>
 
         {/* Newspaper edition strip: date occupies the left-hand calendar block */}
-        <div className="ao-edition-strip bg-[#f8f7f3] text-[#052962] border-b border-slate-200">
+        <div lang="en" className="ao-edition-strip bg-[#f8f7f3] text-[#052962] border-b border-slate-200">
           <div className="w-full mx-auto px-4 sm:px-6 py-3 flex flex-col md:flex-row gap-3 md:gap-5 items-stretch">
             <div className="ao-edition-calendar flex-none w-full md:w-[172px] border border-slate-300 bg-white rounded-sm overflow-hidden shadow-sm" aria-label="Date and India local time">
               <time dateTime={currentTime.toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit" })} className="flex flex-row md:flex-col items-center justify-center gap-2 md:gap-0 px-3 py-2 md:py-3 text-[#052962]">
@@ -707,7 +707,7 @@ export default function App() {
         </div>
 
         {/* Brand Core Title, Search & Horizontal Navigation Wrapper with Custom Ads */}
-        <div className="ao-header-core max-w-7xl mx-auto px-4 sm:px-6 py-5 sm:py-8 border-b border-white/10 flex flex-col gap-4 sm:gap-6">
+        <div lang="en" className="ao-header-core max-w-7xl mx-auto px-4 sm:px-6 py-5 sm:py-8 border-b border-white/10 flex flex-col gap-4 sm:gap-6">
           
           {/* Row 1: Brand Identity Headline Row (Centered and prominent) */}
           <div className="ao-masthead-row flex flex-col xl:flex-row items-center justify-center xl:justify-between gap-5 xl:gap-6 text-center xl:text-left">
@@ -771,7 +771,7 @@ export default function App() {
             </div>
           </div>
 
-          <button type="button" className="ao-header-menu-toggle lg:hidden flex items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-sm font-bold hover:bg-white/20" onClick={() => setMobileHeaderExpanded(v => !v)} aria-expanded={mobileHeaderExpanded} aria-controls="ao-header-navigation">
+          <button type="button" lang="en" className="ao-header-menu-toggle lg:hidden flex items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-sm font-bold hover:bg-white/20" onClick={() => setMobileHeaderExpanded(v => !v)} aria-expanded={mobileHeaderExpanded} aria-controls="ao-header-navigation">
             {mobileHeaderExpanded ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             {true ? (mobileHeaderExpanded ? "Close navigation" : "Browse sections") : (mobileHeaderExpanded ? "മെനു അടയ്ക്കുക" : "വിഭാഗങ്ങൾ")}
           </button>
@@ -782,7 +782,7 @@ export default function App() {
           <div id="ao-header-navigation" className={`${mobileHeaderExpanded ? "flex" : "hidden"} lg:flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4 lg:gap-6 pt-2`}>
             
             {/* Persistent Search Bar Input - The Guardian Editorial Style */}
-            <div className="relative w-full lg:max-w-sm xl:max-w-md shrink-0">
+            <div lang="en" className="relative w-full lg:max-w-sm xl:max-w-md shrink-0">
               <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
                 <Search className="h-4 w-4 text-slate-300" />
               </div>
@@ -812,7 +812,7 @@ export default function App() {
 
             {/* Section Navigation desk menu */}
             <nav aria-label="Primary navigation"
-              className="ao-primary-nav flex w-full lg:w-auto items-center justify-start lg:justify-end gap-2 overflow-x-auto overscroll-x-contain pb-2 lg:pb-0 text-xs md:text-sm font-bold uppercase tracking-wide">
+              lang="en" className="ao-primary-nav flex w-full lg:w-auto items-center justify-start lg:justify-end gap-2 overflow-x-auto overscroll-x-contain pb-2 lg:pb-0 text-xs md:text-sm font-bold uppercase tracking-wide">
             <button 
               onClick={() => { setActiveSection("news"); setActiveRegion("all"); setSearchQuery(""); }} 
               className={`pb-1 hover:text-[#ffe500] transition duration-200 ${activeSection === "news" ? "text-[#ffe500] border-b-4 border-[#ffe500] font-extrabold" : "text-white"}`}
@@ -2255,7 +2255,7 @@ export default function App() {
       </AnimatePresence>
 
       {/* FOOTER */}
-      <footer className="bg-[#052962] text-gray-300 py-12 px-6 md:px-12 border-t-4 border-[#ffe500]">
+      <footer lang="en" className="bg-[#052962] text-gray-300 py-12 px-6 md:px-12 border-t-4 border-[#ffe500] font-anek-english">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
           
           <div className="space-y-3">
