@@ -651,7 +651,7 @@ export default function App() {
 
         {/* Newspaper edition strip: date occupies the left-hand calendar block */}
         <div className="ao-edition-strip bg-[#f8f7f3] text-[#052962] border-b border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col md:flex-row gap-3 md:gap-5 items-stretch">
+          <div className="w-full mx-auto px-4 sm:px-6 py-3 flex flex-col md:flex-row gap-3 md:gap-5 items-stretch">
             <div className="ao-edition-calendar flex-none w-full md:w-[172px] border border-slate-300 bg-white rounded-sm overflow-hidden shadow-sm" aria-label="Date and India local time">
               <time dateTime={currentTime.toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit" })} className="flex flex-row md:flex-col items-center justify-center gap-2 md:gap-0 px-3 py-2 md:py-3 text-[#052962]">
                 <span className="font-serif-guardian font-black text-4xl md:text-5xl leading-none tabular-nums">{currentTime.toLocaleDateString("en-GB", { day: "2-digit", timeZone: "Asia/Kolkata" })}</span>
