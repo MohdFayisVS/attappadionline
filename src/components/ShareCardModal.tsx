@@ -6,7 +6,7 @@ interface ShareCardModalProps {
   isOpen: boolean;
   onClose: () => void;
   data: NewsPost | EventItem | NoticeItem | LpgDelivery | null;
-  lang: "en" | "ml";
+  lang: "en" | "ml" | "ta";
 }
 
 export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLang }: ShareCardModalProps) {
@@ -18,7 +18,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
   const isLpg = "agencyNameEn" in data;
   
   // State tracking for language preference toggle
-  const [lang, setLang] = useState<"ml" | "en">(defaultLang || "ml");
+  const [lang, setLang] = useState<"ml" | "en" | "ta">(defaultLang || "ml");
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -26,22 +26,22 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
 
   // Parse fields safely based on type
   const title = isNews 
-    ? (lang === "en" ? (data as NewsPost).titleEn : (data as NewsPost).titleMl)
+    ? (lang === "ta" ? ((data as NewsPost).titleTa || (data as NewsPost).titleEn) : lang === "ml" ? (data as NewsPost).titleMl : (data as NewsPost).titleEn)
     : isNotice
-      ? (lang === "en" ? (data as NoticeItem).titleEn : (data as NoticeItem).titleMl)
+      ? (lang === "ta" ? ((data as NoticeItem).titleTa || (data as NoticeItem).titleEn) : lang === "ml" ? (data as NoticeItem).titleMl : (data as NoticeItem).titleEn)
       : isLpg
-        ? (lang === "en" ? (data as LpgDelivery).agencyNameEn : (data as LpgDelivery).agencyNameMl)
-        : (lang === "en" ? (data as EventItem).titleEn : (data as EventItem).titleMl);
+        ? (lang === "ta" ? ((data as LpgDelivery).agencyNameTa || (data as LpgDelivery).agencyNameEn) : lang === "ml" ? (data as LpgDelivery).agencyNameMl : (data as LpgDelivery).agencyNameEn)
+        : (lang === "ta" ? ((data as EventItem).titleTa || (data as EventItem).titleEn) : lang === "ml" ? (data as EventItem).titleMl : (data as EventItem).titleEn);
 
   const summary = isNews
-    ? (lang === "en" ? (data as NewsPost).contentEn : (data as NewsPost).contentMl)
+    ? (lang === "ta" ? ((data as NewsPost).contentTa || (data as NewsPost).contentEn) : lang === "ml" ? (data as NewsPost).contentMl : (data as NewsPost).contentEn)
     : isNotice
-      ? (lang === "en" ? (data as NoticeItem).contentEn : (data as NoticeItem).contentMl)
+      ? (lang === "ta" ? ((data as NoticeItem).contentTa || (data as NoticeItem).contentEn) : lang === "ml" ? (data as NoticeItem).contentMl : (data as NoticeItem).contentEn)
       : isLpg
         ? (lang === "en" 
             ? `📍 Areas Covered:\n${(data as LpgDelivery).areasEn}\n\n⚡ Status: ${(data as LpgDelivery).statusEn === "Delivering Today" ? "Delivering Today" : (data as LpgDelivery).statusEn}\n📞 Helpline No.: ${(data as LpgDelivery).contact}`
             : `📍 ഉൾപ്പെടുന്ന മേഖലകൾ:\n${(data as LpgDelivery).areasMl}\n\n⚡ Status: ${((data as LpgDelivery).statusMl === "ഇന്നത്തെ ഡെലിവറി" || (data as LpgDelivery).statusMl === "ഇന്ന് വിതരണമുണ്ട്") ? "ഇന്ന് വിതരണമുണ്ട്" : (data as LpgDelivery).statusMl}\n📞 ഹെൽപ്‌ലൈൻ: ${(data as LpgDelivery).contact}`)
-        : (lang === "en" ? (data as EventItem).descriptionEn : (data as EventItem).descriptionMl);
+        : (lang === "ta" ? ((data as EventItem).descriptionTa || (data as EventItem).descriptionEn) : lang === "ml" ? (data as EventItem).descriptionMl : (data as EventItem).descriptionEn);
 
   const image = isNews 
     ? (data as NewsPost).image 
@@ -52,12 +52,12 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
         : "https://images.unsplash.com/photo-1508962914676-134849a727f0?q=80&w=1000&auto=format&fit=crop";
 
   const dateStr = isNews
-    ? new Date((data as NewsPost).publishedAt).toLocaleDateString(lang === "ml" ? "ml-IN" : "en-US")
+    ? new Date((data as NewsPost).publishedAt).toLocaleDateString(lang === "ml" ? "ml-IN" : lang === "ta" ? "ta-IN" : "en-US")
     : isNotice
-      ? new Date((data as NoticeItem).date).toLocaleDateString(lang === "ml" ? "ml-IN" : "en-US")
+      ? new Date((data as NoticeItem).date).toLocaleDateString(lang === "ml" ? "ml-IN" : lang === "ta" ? "ta-IN" : "en-US")
       : isLpg
         ? (data as LpgDelivery).date
-        : new Date((data as EventItem).date).toLocaleDateString(lang === "ml" ? "ml-IN" : "en-US");
+        : new Date((data as EventItem).date).toLocaleDateString(lang === "ml" ? "ml-IN" : lang === "ta" ? "ta-IN" : "en-US");
 
   const badgeText = isNews 
     ? (data as NewsPost).category.toUpperCase()
@@ -732,7 +732,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
 
               return (
                 <div className={`w-full max-w-[360px] md:w-[360px] shadow-2xl rounded-lg overflow-hidden ${bgColorClass} text-slate-900 border border-t-[10px] ${borderTopClass} flex flex-col justify-between p-4 space-y-4`}>
-                  <div className="space-y-3 font-anek-malayalam">
+                  <div className={`space-y-3 ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
                     {/* Official Banner Tag */}
                     <div className={`px-2.5 py-1.5 rounded-md ${headerBgClass} text-white text-[11px] font-extrabold text-center tracking-wider select-none`}>
                       {alertIcon} {badgeLabel}
