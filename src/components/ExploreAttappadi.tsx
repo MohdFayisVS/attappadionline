@@ -1178,17 +1178,17 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
           // Mapped dynamically from top-level mapLines state
 
           return (
-            <div className="space-y-6 animate-fade-in font-anek-malayalam">
+            <div lang={lang} className={`space-y-6 animate-fade-in ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
               
               {/* Disclaimer and Help Desk Box */}
               <div className="bg-[#052962]/5 border-l-4 border-[#052962] p-4 rounded-r-md flex gap-3 text-xs text-[#052962]" style={{ contentVisibility: 'auto' }}>
                 <Info className="w-5 h-5 text-[#052962] shrink-0 mt-0.5" />
-                <div className="space-y-1 font-anek-malayalam">
-                  <p className="font-extrabold text-[13px] text-[#052962]">
-                    യാത്രക്കാരുടെ വിവരത്തിന് (Attappadi Transit Help):
+                <div className="space-y-1">
+                  <p lang="en" className="font-anek-english font-extrabold text-[13px] text-[#052962]">
+                    ATTAPPADI TRANSIT HELP
                   </p>
                   <p className="text-[11px] text-slate-700 leading-relaxed font-semibold">
-                    ചുരം റോഡിലെ മൂടൽമഞ്ഞ്, കനത്ത മഴ, വനമേഖലയിലെ സമയനിയന്ത്രണങ്ങൾ എന്നിവ കാരണം സമയക്രമങ്ങളിൽ നേരിയ വ്യത്യാസങ്ങൾ വന്നേക്കാം. പ്രധാന ജംഗ്ഷൻ കേന്ദ്രങ്ങളിലെ കൃത്യവിവരങ്ങൾക്ക് ലഭ്യമായ കെ.എസ്.ആർ.ടി.സി ഹെൽപ്പ് നമ്പറിൽ ബന്ധപ്പെടുക. (അഗളി ബസ് സ്റ്റേഷൻ ഫോൺ: <span className="font-bold underline text-[#052962]">04924-254400</span>)
+                    {lang === "ta" ? "மலைப்பாதையில் பனிமூட்டம், கனமழை மற்றும் வனப்பகுதி நேரக் கட்டுப்பாடுகள் காரணமாக பேருந்து நேரங்களில் மாற்றம் ஏற்படலாம். உறுதியான தகவல்களுக்கு கே.எஸ்.ஆர்.டி.சி உதவி எண்ணைத் தொடர்புகொள்ளவும்." : lang === "ml" ? "ചുരം റോഡിലെ മൂടൽമഞ്ഞ്, കനത്ത മഴ, വനമേഖലയിലെ സമയനിയന്ത്രണങ്ങൾ എന്നിവ കാരണം ബസ് സമയങ്ങളിൽ മാറ്റമുണ്ടാകാം. കൃത്യമായ വിവരങ്ങൾക്ക് കെ.എസ്.ആർ.ടി.സി ഹെൽപ്പ് നമ്പറിൽ ബന്ധപ്പെടുക." : "Fog, heavy rain and forest-area restrictions may affect bus schedules. Contact KSRTC for confirmed timings."} ({lang === "ta" ? "அகளி பேருந்து நிலையம்" : lang === "ml" ? "അഗളി ബസ് സ്റ്റേഷൻ" : "Agali Bus Station"}: <span className="font-bold underline text-[#052962]">04924-254400</span>)
                   </p>
                 </div>
               </div>
@@ -1203,7 +1203,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                   <button
                     key={m.key}
                     onClick={() => setBusTimingMode(m.key as any)}
-                    className={`flex-1 py-3 text-center text-xs font-black transition duration-200 cursor-pointer border-b-2 font-anek-malayalam flex items-center justify-center gap-1.5 ${
+                    className={`flex-1 py-3 text-center text-xs font-black transition duration-200 cursor-pointer border-b-2 font-anek-english flex items-center justify-center gap-1.5 ${
                       busTimingMode === m.key
                         ? "border-[#052962] text-[#052962] bg-[#052962]/5"
                         : "border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50"
@@ -1218,7 +1218,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
               <BusStopOSMMap stops={stopChoices} selectedStop={selectedMapStop} onSelectStop={(id) => { setSelectedMapStop(id); setBusTimingMode("stop"); window.setTimeout(() => document.getElementById("attappadi-station-board")?.scrollIntoView({ behavior: "smooth", block: "start" }), 120); }} lang={lang} />
 
               {/* Master Responsive Layout split into sidebar panel & Vector Map */}
-              <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start font-anek-malayalam">
+              <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
                 
                 {/* Visual Map widget - Highlight of modern responsive interface */}
                 <div className={isAdmin ? "xl:col-span-5 order-first xl:order-last space-y-4" : "hidden"}>
@@ -2269,20 +2269,20 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
 
                   {/* Mode 3: SIGHTSEEING SIGHTS BUS ASSISTANT */}
                   {busTimingMode === "assist" && (
-                    <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4 shadow-sm animate-fade-in font-anek-malayalam">
+                    <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4 shadow-sm animate-fade-in">
                       
                       <div className="space-y-1">
                         <span className="text-[10px] bg-[#052962]/5 text-[#052962] font-black px-2 py-0.5 rounded tracking-wide uppercase font-anek-malayalam">
                           SIGHTSEEING DEPARTURES
                         </span>
-                        <h4 className="font-black text-[#052962] text-xl leading-snug font-anek-malayalam">
-                          ടൂറിസ്റ്റ് കേന്ദ്രങ്ങളും സമീപത്തുള്ള ബസ് സ്റ്റോപ്പും
+                        <h4 lang="en" className="font-black font-anek-english text-[#052962] text-xl leading-snug">
+                          TOURIST DESTINATIONS & NEAREST BUS STOPS
                         </h4>
                       </div>
 
                       <div className="space-y-2">
                         <label className="block text-xs font-bold text-slate-500 mb-1">
-                          കണ്ടെത്തേണ്ട ടൂറിസ്റ്റ് കേന്ദ്രം തിരഞ്ഞെടുക്കുക (Sightseeing Spot):
+                          {lang === "ta" ? "செல்ல வேண்டிய சுற்றுலாத் தலத்தைத் தேர்ந்தெடுக்கவும்:" : lang === "ml" ? "സന്ദർശിക്കേണ്ട ടൂറിസ്റ്റ് കേന്ദ്രം തിരഞ്ഞെടുക്കുക:" : "Choose a sightseeing destination:"}
                         </label>
                         <div className="flex flex-col gap-2">
                           {assistHotspots.map((ah) => (
@@ -2302,7 +2302,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                 🌲 {lang === "ml" ? ah.nameMl : lang === "ta" ? (((ah as any).nameTa) || ah.nameEn) : ah.nameEn}
                               </span>
                               <span className="bg-white px-2 py-0.5 text-[10px] rounded border border-slate-200 text-slate-400 font-bold">
-                                {lang === "ml" ? "അടുത്ത സ്റ്റോപ്പ്: " : "Stop: "} {ah.nearestStop}
+                                {lang === "ta" ? "அருகிலுள்ள நிறுத்தம்: " : lang === "ml" ? "അടുത്ത സ്റ്റോപ്പ്: " : "Stop: "} {ah.nearestStop}
                               </span>
                             </button>
                           ))}
@@ -2318,7 +2318,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                               {lang === "ml" ? activeSpot.nameMl : lang === "ta" ? (((activeSpot as any).nameTa) || activeSpot.nameEn) : activeSpot.nameEn}
                             </h5>
                             <p className="text-[11px] font-bold text-slate-500 font-anek-malayalam flex items-center gap-1">
-                              <MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> {lang === "ml" ? `അടുത്തുള്ള സ്റ്റോപ്പ്: ${stopChoices.find(sc => sc.id === activeSpot.nearestStop)?.ml} (${activeSpot.distanceMl})` : `Nearest Bus Stop: ${activeSpot.nearestStop} (${activeSpot.distanceEn})`}
+                              <MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> {lang === "ta" ? `அருகிலுள்ள பேருந்து நிறுத்தம்: ${activeSpot.nearestStop} (${activeSpot.distanceEn})` : lang === "ml" ? `അടുത്തുള്ള സ്റ്റോപ്പ്: ${stopChoices.find(sc => sc.id === activeSpot.nearestStop)?.ml} (${activeSpot.distanceMl})` : `Nearest Bus Stop: ${activeSpot.nearestStop} (${activeSpot.distanceEn})`}
                             </p>
                           </div>
                         </div>
@@ -2326,7 +2326,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                         <div className="text-[11.5px] text-slate-700 font-semibold leading-relaxed font-anek-malayalam">
                           <span className="font-extrabold text-red-800 flex items-center gap-1 text-xs mb-0.5">
                             <Info className="w-3.5 h-3.5 text-red-700 shrink-0" />
-                            {lang === "ml" ? "എങ്ങനെ എത്തിച്ചേരാം (Transit Tip):" : "Transit Tip:"}
+                            {lang === "ta" ? "பயண வழிகாட்டி:" : lang === "ml" ? "യാത്രാ നിർദേശം:" : "Transit Tip:"}
                           </span>
                           {lang === "ml" ? activeSpot.guideMl : lang === "ta" ? (((activeSpot as any).guideTa) || activeSpot.guideEn) : activeSpot.guideEn}
                         </div>
@@ -2335,7 +2335,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                       {/* Display schedules arriving at this nearest point */}
                       <div className="space-y-3 pt-2">
                         <h6 className="font-extrabold text-xs text-[#052962] border-b pb-2">
-                          🚌 '{stopChoices.find(sc => sc.id === activeSpot.nearestStop)?.ml}' വഴിയുള്ള കോൺടാക്റ്റ് ബസുകൾ:
+                          🚌 {lang === "ta" ? `${activeSpot.nearestStop} வழியாகச் செல்லும் பேருந்துகள்:` : lang === "ml" ? `${stopChoices.find(sc => sc.id === activeSpot.nearestStop)?.ml} വഴിയുള്ള ബസുകൾ:` : `Buses serving ${activeSpot.nearestStop}:`}
                         </h6>
                         
                         {spotDepartures.length > 0 ? (
@@ -2359,7 +2359,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                             ))}
                           </div>
                         ) : (
-                          <p className="text-xs text-slate-400 text-center font-medium font-anek-malayalam">No schedules match this location.</p>
+                          <p className="text-xs text-slate-400 text-center font-medium">{lang === "ta" ? "இந்த இடத்திற்கான பேருந்து நேரங்கள் கிடைக்கவில்லை." : lang === "ml" ? "ഈ സ്ഥലത്തേക്കുള്ള ബസ് സമയക്രമം ലഭ്യമല്ല." : "No schedules match this location."}</p>
                         )}
                       </div>
 
