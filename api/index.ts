@@ -1935,15 +1935,17 @@ app.post("/api/admin/ai-generate", async (req, res) => {
       Write an elegant, professional, trustworthy news article based on this idea: "${titleSuggest}".
       Points outline or clues: "${mainPoints || "None provided. Generate realistic news matching local issues in Attappadi Block"}".
       
-      Generate a realistic, balanced news report suited for Attappadi locals. Output should include high-quality Malayalam and English titles and narratives.
+      Generate a realistic, balanced news report suited for Attappadi locals. Output MUST include high-quality English, Malayalam AND Tamil titles and narratives. Use factual information supplied by the editor only; do not fabricate quotes, incidents, dates, or claims. If details are insufficient, clearly identify missing facts.
       Your response MUST be strict valid JSON matching exactly the schemas below. No markdown wrap, no backticks enclosing, just pure JSON text.
       
       JSON Scheme to return:
       {
         "titleEn": "A concise English news headline",
         "titleMl": "നല്ല ശൈലിയിലുള്ള മലയാളം വാർത്താ തലക്കെട്ട്",
+        "titleTa": "இயல்பான தமிழில் செய்தித் தலைப்பு",
         "contentEn": "A detailed, professional two-paragraph English news article writing",
-        "contentMl": "വിശദവും പത്രപ്രവർത്തന ശൈലിയിലുള്ളതുമായ രണ്ടു ഖണ്ഡികകളുള്ള മലയാളം വാർത്താ വിവരണം"
+        "contentMl": "വിശദവും പത്രപ്രവർത്തന ശൈലിയിലുള്ളതുമായ രണ്ടു ഖണ്ഡികകളുള്ള മലയാളം വാർത്താ വിവരണം",
+        "contentTa": "இயல்பான தமிழில் இரண்டு பத்திகள் கொண்ட செய்தி விவரம்"
       }`;
 
     const response = await ai.models.generateContent({
@@ -1955,6 +1957,9 @@ app.post("/api/admin/ai-generate", async (req, res) => {
     });
 
     const parsed = JSON.parse(response.text?.trim() || "{}");
+    if (["titleEn", "titleMl", "titleTa", "contentEn", "contentMl", "contentTa"].some(key => typeof parsed[key] !== "string" || !parsed[key].trim())) {
+      return res.status(502).json({ error: "AI returned an incomplete multilingual draft. Please try again." });
+    }
     res.json(parsed);
   } catch (err: any) {
     console.log(`AI Assist Notice - API service returned notice: ${err.message || "Rate limited"}`);
