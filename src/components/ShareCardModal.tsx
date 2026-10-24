@@ -6,7 +6,7 @@ interface ShareCardModalProps {
   isOpen: boolean;
   onClose: () => void;
   data: NewsPost | EventItem | NoticeItem | LpgDelivery | null;
-  lang: "en" | "ml";
+  lang: "en" | "ml" | "ta";
 }
 
 export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLang }: ShareCardModalProps) {
@@ -18,7 +18,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
   const isLpg = "agencyNameEn" in data;
   
   // State tracking for language preference toggle
-  const [lang, setLang] = useState<"ml" | "en">(defaultLang || "ml");
+  const [lang, setLang] = useState<"ml" | "en" | "ta">(defaultLang || "ml");
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -26,22 +26,22 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
 
   // Parse fields safely based on type
   const title = isNews 
-    ? (lang === "en" ? (data as NewsPost).titleEn : (data as NewsPost).titleMl)
+    ? (lang === "ta" ? ((data as NewsPost).titleTa || (data as NewsPost).titleEn) : lang === "ml" ? (data as NewsPost).titleMl : (data as NewsPost).titleEn)
     : isNotice
-      ? (lang === "en" ? (data as NoticeItem).titleEn : (data as NoticeItem).titleMl)
+      ? (lang === "ta" ? ((data as NoticeItem).titleTa || (data as NoticeItem).titleEn) : lang === "ml" ? (data as NoticeItem).titleMl : (data as NoticeItem).titleEn)
       : isLpg
-        ? (lang === "en" ? (data as LpgDelivery).agencyNameEn : (data as LpgDelivery).agencyNameMl)
-        : (lang === "en" ? (data as EventItem).titleEn : (data as EventItem).titleMl);
+        ? (lang === "ta" ? ((data as LpgDelivery).agencyNameTa || (data as LpgDelivery).agencyNameEn) : lang === "ml" ? (data as LpgDelivery).agencyNameMl : (data as LpgDelivery).agencyNameEn)
+        : (lang === "ta" ? ((data as EventItem).titleTa || (data as EventItem).titleEn) : lang === "ml" ? (data as EventItem).titleMl : (data as EventItem).titleEn);
 
   const summary = isNews
-    ? (lang === "en" ? (data as NewsPost).contentEn : (data as NewsPost).contentMl)
+    ? (lang === "ta" ? ((data as NewsPost).contentTa || (data as NewsPost).contentEn) : lang === "ml" ? (data as NewsPost).contentMl : (data as NewsPost).contentEn)
     : isNotice
-      ? (lang === "en" ? (data as NoticeItem).contentEn : (data as NoticeItem).contentMl)
+      ? (lang === "ta" ? ((data as NoticeItem).contentTa || (data as NoticeItem).contentEn) : lang === "ml" ? (data as NoticeItem).contentMl : (data as NoticeItem).contentEn)
       : isLpg
         ? (lang === "en" 
             ? `📍 Areas Covered:\n${(data as LpgDelivery).areasEn}\n\n⚡ Status: ${(data as LpgDelivery).statusEn === "Delivering Today" ? "Delivering Today" : (data as LpgDelivery).statusEn}\n📞 Helpline No.: ${(data as LpgDelivery).contact}`
             : `📍 ഉൾപ്പെടുന്ന മേഖലകൾ:\n${(data as LpgDelivery).areasMl}\n\n⚡ Status: ${((data as LpgDelivery).statusMl === "ഇന്നത്തെ ഡെലിവറി" || (data as LpgDelivery).statusMl === "ഇന്ന് വിതരണമുണ്ട്") ? "ഇന്ന് വിതരണമുണ്ട്" : (data as LpgDelivery).statusMl}\n📞 ഹെൽപ്‌ലൈൻ: ${(data as LpgDelivery).contact}`)
-        : (lang === "en" ? (data as EventItem).descriptionEn : (data as EventItem).descriptionMl);
+        : (lang === "ta" ? ((data as EventItem).descriptionTa || (data as EventItem).descriptionEn) : lang === "ml" ? (data as EventItem).descriptionMl : (data as EventItem).descriptionEn);
 
   const image = isNews 
     ? (data as NewsPost).image 
@@ -52,12 +52,12 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
         : "https://images.unsplash.com/photo-1508962914676-134849a727f0?q=80&w=1000&auto=format&fit=crop";
 
   const dateStr = isNews
-    ? new Date((data as NewsPost).publishedAt).toLocaleDateString(lang === "ml" ? "ml-IN" : "en-US")
+    ? new Date((data as NewsPost).publishedAt).toLocaleDateString(lang === "ml" ? "ml-IN" : lang === "ta" ? "ta-IN" : "en-US")
     : isNotice
-      ? new Date((data as NoticeItem).date).toLocaleDateString(lang === "ml" ? "ml-IN" : "en-US")
+      ? new Date((data as NoticeItem).date).toLocaleDateString(lang === "ml" ? "ml-IN" : lang === "ta" ? "ta-IN" : "en-US")
       : isLpg
         ? (data as LpgDelivery).date
-        : new Date((data as EventItem).date).toLocaleDateString(lang === "ml" ? "ml-IN" : "en-US");
+        : new Date((data as EventItem).date).toLocaleDateString(lang === "ml" ? "ml-IN" : lang === "ta" ? "ta-IN" : "en-US");
 
   const badgeText = isNews 
     ? (data as NewsPost).category.toUpperCase()
@@ -74,7 +74,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
       ? "Attappadi"
       : isLpg
         ? "Attappadi Area"
-        : (lang === "ml" ? (data as EventItem).locationMl : (data as EventItem).locationEn);
+        : (lang === "ta" ? ((data as EventItem).locationTa || (data as EventItem).locationEn) : lang === "ml" ? (data as EventItem).locationMl : (data as EventItem).locationEn);
 
   // Dynamic absolute share link
   const cardShareUrl = typeof window !== "undefined"
@@ -178,15 +178,11 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
           let noticeY = 140; // Starts below header
           noticeY += 45; // Date banner height
 
-          const titleFont = lang === "ml"
-            ? "800 32px 'Anek Malayalam', sans-serif"
-            : "900 29px system-ui, -apple-system, sans-serif";
+          const titleFont = lang === "ml" ? "800 32px 'Anek Malayalam', sans-serif" : lang === "ta" ? "900 29px 'Anek Tamil', sans-serif" : "900 29px 'Anek Latin', sans-serif";
           const titleLines = getLinesCount(title || "", titleFont, 800 - 108); // paddingX is 54 (x2 = 108)
           noticeY += titleLines * 42 + 15;
 
-          const contentFont = lang === "ml"
-            ? "500 22px 'Anek Malayalam', sans-serif"
-            : "500 20px system-ui, -apple-system, sans-serif";
+          const contentFont = lang === "ml" ? "500 22px 'Anek Malayalam', sans-serif" : lang === "ta" ? "500 20px 'Anek Tamil', sans-serif" : "500 20px 'Anek Latin', sans-serif";
           const contentLines = getLinesCount(summary || "", contentFont, 800 - 108);
           noticeY += Math.min(contentLines, 10) * 32 + 25;
 
@@ -200,9 +196,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
           let newsY = 600; // Starts below image at 560
           newsY += 45; // Date banner
 
-          const titleFont = lang === "ml"
-            ? "800 32px 'Anek Malayalam', sans-serif"
-            : "800 34px 'Playfair Display', Georgia, serif";
+          const titleFont = lang === "ml" ? "800 32px 'Anek Malayalam', sans-serif" : lang === "ta" ? "800 34px 'Anek Tamil', serif" : "800 34px 'Anek Latin', serif";
           const titleLineHeight = lang === "ml" ? 44 : 46;
           const titleLines = getLinesCount(title || "", titleFont, 800 - 96); // paddingX is 48 (x2 = 96)
           newsY += Math.min(titleLines, 3) * titleLineHeight + 25;
@@ -276,26 +270,26 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
             bgColor = "#fffbeb"; // bg-amber-50 / LPG warm color
             headerColor = "#b45309"; // amber-700
             borderCol = "#fde68a"; // amber-200
-            badgeLabel = lang === "ml" ? "എൽ.പി.ജി ഗ്യാസ് വിതരണം" : "LPG TODAY DELIVERY";
+            badgeLabel = lang === "ta" ? "எரிவாயு விநியோகம்" : lang === "ta" ? "எரிவாயு விநியோகம்" : lang === "ml" ? "എൽ.പി.ജി ഗ്യാസ് വിതരണം" : "LPG TODAY DELIVERY";
             alertIcon = "🚚";
           } else {
             const noticeItem = data as NoticeItem;
             const isHigh = noticeItem.severity === "high";
             const isCaution = noticeItem.type === "caution";
-            badgeLabel = lang === "ml" ? "ഔദ്യോഗിക അറിയിപ്പ്" : "OFFICIAL NOTICE";
+            badgeLabel = lang === "ta" ? "அதிகாரப்பூர்வ அறிவிப்பு" : lang === "ml" ? "ഔദ്യോഗിക അറിയിപ്പ്" : "OFFICIAL NOTICE";
             alertIcon = "📢";
 
             if (isHigh) {
               bgColor = "#fff1f2"; // bg-rose-50
               headerColor = "#be123c"; // rose-700
               borderCol = "#fecdd3"; // rose-200
-              badgeLabel = lang === "ml" ? "അടിയന്തര ജാഗ്രത" : "CRITICAL ALERT";
+              badgeLabel = lang === "ta" ? "அவசர எச்சரிக்கை" : lang === "ml" ? "അടിയന്തര ജാഗ്രത" : "CRITICAL ALERT";
               alertIcon = "⚠️";
             } else if (isCaution) {
               bgColor = "#fffbeb"; // bg-amber-50
               headerColor = "#d97706"; // amber-650 / amber-600
               borderCol = "#fde68a"; // amber-200
-              badgeLabel = lang === "ml" ? "ജാഗ്രതാ നിർദ്ദേശം" : "CAUTION ALERT";
+              badgeLabel = lang === "ta" ? "எச்சரிக்கை அறிவிப்பு" : lang === "ml" ? "ജാഗ്രതാ നിർദ്ദേശം" : "CAUTION ALERT";
               alertIcon = "⚠️";
             }
           }
@@ -325,9 +319,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
           ctx.fill();
 
           ctx.fillStyle = "#ffffff";
-          ctx.font = lang === "ml" 
-            ? "bold 24px 'Anek Malayalam', sans-serif" 
-            : "bold 22px system-ui, -apple-system, sans-serif";
+          ctx.font = lang === "ml" ? "bold 24px 'Anek Malayalam', sans-serif" : lang === "ta" ? "bold 22px 'Anek Tamil', sans-serif" : "bold 22px 'Anek Latin', sans-serif";
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
           ctx.fillText(`${alertIcon}  ${badgeLabel}`, canvas.width / 2, badgeY + badgeH / 2);
@@ -340,17 +332,13 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
 
           // 2. Date info
           ctx.fillStyle = "#64748b"; // Slate-500
-          ctx.font = lang === "ml"
-            ? "bold 22px 'Anek Malayalam', sans-serif"
-            : "bold 20px system-ui, -apple-system, sans-serif";
+          ctx.font = lang === "ml" ? "bold 22px 'Anek Malayalam', sans-serif" : lang === "ta" ? "bold 20px 'Anek Tamil', sans-serif" : "bold 20px 'Anek Latin', sans-serif";
           ctx.fillText(`📅  ${dateStr}`, paddingX, currentY);
           currentY += 45;
 
           // 3. Title (Notice title or Gas Agency title)
           ctx.fillStyle = "#0f172a"; // Slate-900
-          ctx.font = lang === "ml"
-            ? "800 32px 'Anek Malayalam', sans-serif"
-            : "900 29px system-ui, -apple-system, sans-serif";
+          ctx.font = lang === "ml" ? "800 32px 'Anek Malayalam', sans-serif" : lang === "ta" ? "900 29px 'Anek Tamil', sans-serif" : "900 29px 'Anek Latin', sans-serif";
           
           const maxTextWidth = canvas.width - (paddingX * 2);
           currentY = wrapTextOnCanvas(title, paddingX, currentY, 42, maxTextWidth, 2);
@@ -358,9 +346,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
 
           // 4. Content (Description of Notice or Gas route summary)
           ctx.fillStyle = "#334155"; // Slate-700
-          ctx.font = lang === "ml"
-            ? "500 22px 'Anek Malayalam', sans-serif"
-            : "500 20px system-ui, -apple-system, sans-serif";
+          ctx.font = lang === "ml" ? "500 22px 'Anek Malayalam', sans-serif" : lang === "ta" ? "500 20px 'Anek Tamil', sans-serif" : "500 20px 'Anek Latin', sans-serif";
           
           currentY = wrapTextOnCanvas(summary, paddingX, currentY, 32, maxTextWidth, 10);
           currentY += 25;
@@ -521,9 +507,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
         ctx.fill();
 
         ctx.fillStyle = "#ffffff";
-        ctx.font = lang === "ml" 
-          ? "bold 15px 'Anek Malayalam', sans-serif" 
-          : "bold 15px system-ui, -apple-system, sans-serif";
+        ctx.font = lang === "ml" ? "bold 15px 'Anek Malayalam', sans-serif" : lang === "ta" ? "bold 15px 'Anek Tamil', sans-serif" : "bold 15px 'Anek Latin', sans-serif";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(badgeText, badgeX + badgeW / 2, badgeY + badgeH / 2);
@@ -538,17 +522,13 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
 
         // 5. Calendar Icon & Date
         ctx.fillStyle = "#94a3b8"; // Slate color
-        ctx.font = lang === "ml"
-          ? "bold 18px 'Anek Malayalam', sans-serif"
-          : "bold 18px system-ui, -apple-system, sans-serif";
+        ctx.font = lang === "ml" ? "bold 18px 'Anek Malayalam', sans-serif" : lang === "ta" ? "bold 18px 'Anek Tamil', sans-serif" : "bold 18px 'Anek Latin', sans-serif";
         ctx.fillText(`📅  ${dateStr}`, paddingX, currentY);
         currentY += 45;
 
         // 6. Draw Headline Title with elegant 'Playfair Display' / Serif font styling
         ctx.fillStyle = "#052962";
-        ctx.font = lang === "ml"
-          ? "800 32px 'Anek Malayalam', sans-serif"
-          : "800 34px 'Playfair Display', Georgia, serif";
+        ctx.font = lang === "ml" ? "800 32px 'Anek Malayalam', sans-serif" : lang === "ta" ? "800 34px 'Anek Tamil', serif" : "800 34px 'Anek Latin', serif";
         const titleLineHeight = lang === "ml" ? 44 : 46;
         const maxTextWidth = canvas.width - (paddingX * 2);
 
@@ -566,9 +546,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
         // 9. Footer Components: Small Location Badge on left, and Elegant Brand typography wordmark on right
         const footerElementsY = footerBorderY + 30;
 
-        ctx.font = lang === "ml"
-          ? "bold 16px 'Anek Malayalam', sans-serif"
-          : "bold 16px system-ui, -apple-system, sans-serif";
+        ctx.font = lang === "ml" ? "bold 16px 'Anek Malayalam', sans-serif" : lang === "ta" ? "bold 16px 'Anek Tamil', sans-serif" : "bold 16px 'Anek Latin', sans-serif";
         const displayLocText = `📍 ${location.toUpperCase()}`;
         const locWidth = ctx.measureText(displayLocText).width + 24;
         const locHeight = 38;
@@ -706,33 +684,33 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
                 bgColorClass = "bg-amber-50/75 border-amber-200";
                 borderTopClass = "border-t-amber-700";
                 headerBgClass = "bg-amber-700";
-                badgeLabel = lang === "ml" ? "എൽ.പി.ജി ഗ്യാസ് വിതരണം" : "LPG TODAY DELIVERY";
+                badgeLabel = lang === "ta" ? "எரிவாயு விநியோகம்" : lang === "ml" ? "എൽ.പി.ജി ഗ്യാസ് വിതരണം" : "LPG TODAY DELIVERY";
                 alertIcon = "🚚";
               } else {
                 const noticeItem = data as NoticeItem;
                 const isHigh = noticeItem.severity === "high";
                 const isCaution = noticeItem.type === "caution";
-                badgeLabel = lang === "ml" ? "ഔദ്യോഗിക അറിയിപ്പ്" : "OFFICIAL NOTICE";
+                badgeLabel = lang === "ta" ? "அதிகாரப்பூர்வ அறிவிப்பு" : lang === "ml" ? "ഔദ്യോഗിക അറിയിപ്പ്" : "OFFICIAL NOTICE";
                 alertIcon = "📢";
 
                 if (isHigh) {
                   bgColorClass = "bg-rose-50 border-rose-200";
                   borderTopClass = "border-t-rose-600";
                   headerBgClass = "bg-rose-700";
-                  badgeLabel = lang === "ml" ? "അടിയന്തര ജാഗ്രത" : "CRITICAL ALERT";
+                  badgeLabel = lang === "ta" ? "அவசர எச்சரிக்கை" : lang === "ml" ? "അടിയന്തര ജാഗ്രത" : "CRITICAL ALERT";
                   alertIcon = "⚠️";
                 } else if (isCaution) {
                   bgColorClass = "bg-amber-50 border-amber-200";
                   borderTopClass = "border-t-amber-500";
                   headerBgClass = "bg-amber-600";
-                  badgeLabel = lang === "ml" ? "ജാഗ്രതാ നിർദ്ദേശം" : "CAUTION ALERT";
+                  badgeLabel = lang === "ta" ? "எச்சரிக்கை அறிவிப்பு" : lang === "ml" ? "ജാഗ്രതാ നിർദ്ദേശം" : "CAUTION ALERT";
                   alertIcon = "⚠️";
                 }
               }
 
               return (
                 <div className={`w-full max-w-[360px] md:w-[360px] shadow-2xl rounded-lg overflow-hidden ${bgColorClass} text-slate-900 border border-t-[10px] ${borderTopClass} flex flex-col justify-between p-4 space-y-4`}>
-                  <div className="space-y-3 font-anek-malayalam">
+                  <div className={`space-y-3 ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
                     {/* Official Banner Tag */}
                     <div className={`px-2.5 py-1.5 rounded-md ${headerBgClass} text-white text-[11px] font-extrabold text-center tracking-wider select-none`}>
                       {alertIcon} {badgeLabel}
@@ -862,13 +840,16 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
                 <Languages className="w-3.5 h-3.5" /> Toggle Card Language
               </span>
-              <div className="grid grid-cols-2 bg-slate-950 p-1 rounded-lg border border-slate-800">
+              <div className="grid grid-cols-3 bg-slate-950 p-1 rounded-lg border border-slate-800">
                 <button
                   type="button"
                   onClick={() => setLang("ml")}
                   className={`py-1.5 text-xs font-bold rounded-md transition ${lang === "ml" ? "bg-[#ffe500] text-slate-950" : "text-slate-400 hover:text-white"}`}
                 >
                   മലയാളം
+                </button>
+                <button type="button" onClick={() => setLang("ta")} className={`py-1.5 text-xs font-bold rounded-md transition ${lang === "ta" ? "bg-[#ffe500] text-slate-950" : "text-slate-400 hover:text-white"}`}>
+                  தமிழ்
                 </button>
                 <button
                   type="button"

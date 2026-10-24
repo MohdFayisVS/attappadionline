@@ -15,6 +15,10 @@ interface ExploreAttappadiProps {
 const defaultDestinations: DestinationItem[] = [
   {
     id: "dest_1",
+    nameTa: "சைலண்ட் வேலி தேசியப் பூங்கா",
+    locationTa: "முக்காலி வனச்சரக அலுவலகம்",
+    descriptionTa: "இந்தியாவில் எஞ்சியுள்ள பாதுகாக்கப்பட்ட மழைக்காடுகளில் ஒன்று. நீலகிரி உயிர்க்கோளக் காப்பகத்தின் ஒரு பகுதியாக உள்ள இப்பகுதி, பசுமையான காடுகள், ஆறுகள் மற்றும் சிங்கவால் குரங்கு உள்ளிட்ட அரிய வனவிலங்குகளுக்குப் பெயர் பெற்றது.",
+    highlightsTa: ["முக்காலியிலிருந்து ஜீப் சவாரி","காட்டுப் பாதைகளில் நடைபயணம்","கண்காணிப்புக் கோபுரக் காட்சிகள்"],
     nameEn: "Silent Valley National Park",
     nameMl: "സൈലന്റ് വാലി ദേശീയോദ്യാനം",
     locationEn: "Mukkali Ranger Station",
@@ -27,6 +31,10 @@ const defaultDestinations: DestinationItem[] = [
   },
   {
     id: "dest_2",
+    nameTa: "மல்லேஸ்வரன் மலைச்சிகரம்",
+    locationTa: "அகளி அருகில்",
+    descriptionTa: "அட்டப்பாடியின் உயரமான மலைச்சிகரங்களில் ஒன்றான மல்லேஸ்வரன் மலை, உள்ளூர் பழங்குடியின மக்களால் சிவபெருமானுடன் தொடர்புடைய புனித இடமாக மதிக்கப்படுகிறது. மேகமூட்டமான மலைக்காட்சிகளுக்கும் சிவராத்திரி வழிபாட்டுக்கும் பெயர் பெற்றது.",
+    highlightsTa: ["பண்பாட்டுச் சிறப்புமிக்க புனிதப் பயணம்","மலை நடைபயணம்","மூடுபனி சூழ்ந்த காட்சிகள்"],
     nameEn: "Malleswara Peak",
     nameMl: "മല്ലേശ്വരൻ മുടി",
     locationEn: "Near Agali",
@@ -39,6 +47,10 @@ const defaultDestinations: DestinationItem[] = [
   },
   {
     id: "dest_3",
+    nameTa: "சிறுவாணி ஆறும் அணை நீர்த்தேக்கமும்",
+    locationTa: "சிங்கம்பட்டி நீர்ப்பிடிப்புப் பகுதி",
+    descriptionTa: "இனிமையான குடிநீருக்குப் பெயர் பெற்ற சிறுவாணி நீர்த்தேக்கம் அடர்ந்த காடுகளாலும் மலைப்பள்ளத்தாக்குகளாலும் சூழப்பட்டுள்ளது. கேரளா மற்றும் தமிழ்நாடு இடையிலான முக்கிய நீர்வளப் பகுதிகளில் இதுவும் ஒன்று.",
+    highlightsTa: ["இயற்கை எழில் மிக்க நீர்வீழ்ச்சிகள்","புகைப்படம் எடுக்கும் இடங்கள்","காட்டின் இயற்கை ஒலிகள்"],
     nameEn: "Siruvani River & Dam Reservoir",
     nameMl: "ശിരുവാണി പുഴയും ഡാമും",
     locationEn: "Singampatti Catchments",
@@ -51,6 +63,10 @@ const defaultDestinations: DestinationItem[] = [
   },
   {
     id: "dest_4",
+    nameTa: "பவானி ஆறும் தொங்குபாலமும்",
+    locationTa: "தாவளம் சந்திப்பு",
+    descriptionTa: "தமிழ்நாட்டை நோக்கிக் கிழக்கே பாயும் பவானி ஆற்றின் அருகில் தாவளத்தில் அமைந்துள்ள தொங்குபாலம், ஆற்றின் அழகிய காட்சிகளை ரசிக்க உதவும் உள்ளூர் சுற்றுலா இடமாகும்.",
+    highlightsTa: ["ஆற்றங்கரையில் ஓய்வு","தொங்குபாலத்தில் நடைபயணம்","பறவைகளைக் கவனித்தல்"],
     nameEn: "Bhavani River & Suspension Bridge",
     nameMl: "ഭവാനി പുഴയും തൂക്കുപാലവും",
     locationEn: "Thavalam Nodal",
@@ -66,6 +82,10 @@ const defaultDestinations: DestinationItem[] = [
 const defaultCultures: CultureItem[] = [
   {
     id: "cult_1",
+    titleTa: "பழங்குடியின நடனங்களும் இசைக்கலைகளும்",
+    subtitleTa: "இருளர், முதுவர் மற்றும் குறும்பர் மரபுகள்",
+    descTa: "அட்டப்பாடியின் பண்பாட்டு அடையாளத்தில் பாரம்பரியப் பழங்குடியின இசைக்கும் நடனத்துக்கும் முக்கிய இடமுண்டு. காக்க கரும்பன், ஏலேலக்கரடி போன்ற நடனங்கள் இயற்கை, அறுவடை மற்றும் சமூக மரபுகளுடன் தொடர்புடையவை.",
+    elementTa: "முக்கிய இசைக்கருவிகள்: குழல், தவி மற்றும் பறை.",
     type: "culture",
     titleEn: "Tribal Dances & Instrumental Arts",
     titleMl: "ഗോത്രവർഗ്ഗ നൃത്തങ്ങളും സംഗീതവും",
@@ -79,6 +99,10 @@ const defaultCultures: CultureItem[] = [
   },
   {
     id: "cult_2",
+    titleTa: "சிறுதானிய உணவுகளும் பாரம்பரியப் பானங்களும்",
+    subtitleTa: "ராகி, சாமை மற்றும் மூங்கில் அரிசி",
+    descTa: "அட்டப்பாடியின் பாரம்பரிய உணவில் ராகிக் கூழ், சாமை அரிசி மற்றும் மூலிகைகள் சேர்த்த பானங்கள் இடம்பெறுகின்றன. மூங்கில் அரிசியால் செய்யப்படும் பாயசமும் சிறப்பு உணவாகக் கருதப்படுகிறது.",
+    elementTa: "சுவைத்துப் பாருங்கள்: காட்டுத் தேன் மற்றும் மூங்கில் அரிசிப் பாயசம்.",
     type: "food",
     titleEn: "Millet-centric Gastronomy & Forest Teas",
     titleMl: "പാരമ്പര്യ ധാന്യ വിഭവങ്ങളും കാട്ടുതേനും",
@@ -95,6 +119,11 @@ const defaultCultures: CultureItem[] = [
 const defaultStays: StayItem[] = [
   {
     id: "stay_1",
+    nameTa: "சைலண்ட் வேலி சுற்றுச்சூழல் வன விடுதி",
+    typeTa: "அரசு நிர்வகிக்கும் இயற்கை விடுதி",
+    locationTa: "முக்காலி கிராமம்",
+    priceTa: "ஒரு இரவுக்கு ₹2,500 – ₹4,500",
+    featuresTa: ["வனத்துறை நிர்வாகம்","உள்ளூர் வழிகாட்டிகள்","பாரம்பரிய உணவகம்"],
     nameEn: "Silent Valley Eco Forest Lodge",
     nameMl: "സൈലന്റ് വാലി ഇക്കോ ലോഗ് ഹൗസ്",
     typeEn: "Govt-owned Eco Haven",
@@ -109,6 +138,11 @@ const defaultStays: StayItem[] = [
   },
   {
     id: "stay_2",
+    nameTa: "பவானி ஆற்றங்கரை இயற்கை விடுதி",
+    typeTa: "தனியார் தங்கும் விடுதி",
+    locationTa: "அகளி மலைப்பகுதி",
+    priceTa: "ஒரு இரவுக்கு ₹4,000 – ₹7,000",
+    featuresTa: ["ஆற்றங்கரைக் காட்சி","நட்சத்திரங்களின் கீழ் முகாம் நெருப்பு","ஜீப் பயண வாய்ப்புகள்"],
     nameEn: "Bhavani Riverside Nature Estate",
     nameMl: "ഭവാനി റിവർസൈഡ് നേച്ചർ എസ്റ്റേറ്റ്",
     typeEn: "Premium Private Lodge",
@@ -123,6 +157,11 @@ const defaultStays: StayItem[] = [
   },
   {
     id: "stay_3",
+    nameTa: "அகளி பள்ளத்தாக்கு வீட்டு விடுதிகள்",
+    typeTa: "சமூகப் பண்ணைத் தங்குமிடம்",
+    locationTa: "தாவளம் – அகளி சாலை",
+    priceTa: "ஒரு இரவுக்கு ₹1,200 – ₹2,000",
+    featuresTa: ["விவசாயக் குடும்பங்களுடன் தங்குதல்","மசாலாத் தோட்ட நடைபயணம்","வீட்டுச் சமையல் உணவுகள்"],
     nameEn: "Agali Valley HomeStays",
     nameMl: "അഗളി വാലി ഹോംസ്റ്റേകൾ",
     typeEn: "Community Farm Stay",
@@ -140,6 +179,10 @@ const defaultStays: StayItem[] = [
 const defaultTravelogues: TravelogueItem[] = [
   {
     id: "trav_1",
+    titleTa: "மழைக்கால மாயம்: சைலண்ட் வேலியின் நீர்ப்பிடிப்புப் பகுதியில் நடைபயணம்",
+    authorTa: "ஃபாயிஸ் முகமது, பயணக் கட்டுரையாளர்",
+    snippetTa: "உயர்ந்த மரங்களின் மேல் அடர்ந்த பனிமூட்டம் படர்கிறது. பழமையான மரங்களிலிருந்து மழைத்துளிகள் விழுகின்றன; தொலைவில் சிறுவாணி ஓடைகளின் ஓசை கேட்கிறது. முக்காலியின் ஈரமான காட்டுப்பாதைகளில் நடப்பது இயற்கையைப் புதிய பார்வையில் காணச் செய்கிறது...",
+    readTimeTa: "5 நிமிட வாசிப்பு",
     titleEn: "Monsoon Magic: Walking Through Silent Valley Catchments",
     titleMl: "വർഷകാലത്തെ പ്രകൃതി വസന്തം: സൈലന്റ് വാലിയിലൂടെ ഒരു കാൽനട യാത്ര",
     authorEn: "Fayis Mohammed, Travel Columnist",
@@ -152,6 +195,10 @@ const defaultTravelogues: TravelogueItem[] = [
   },
   {
     id: "trav_2",
+    titleTa: "மல்லேஸ்வரன் மலையடிவாரத்தில் ஒரு ஆன்மிகப் பயணம்",
+    authorTa: "வழக்கறிஞர் ராஜேஷ் கே., அகளி",
+    snippetTa: "அட்டப்பாடியின் பழங்குடியின மக்கள் மல்லேஸ்வரன் மலையை ஆழ்ந்த மரியாதையுடன் பார்க்கிறார்கள். சிவராத்திரி இரவில் மலை உச்சியில் தீபம் ஏற்றப்படும் வேளையில் பள்ளத்தாக்குகளில் ஒலிக்கும் பாரம்பரிய மேளங்களும் அந்தச் சூழலும் மறக்க முடியாத அனுபவத்தைத் தருகின்றன...",
+    readTimeTa: "4 நிமிட வாசிப்பு",
     titleEn: "Reverence & Height: Gaining Perspective at the base of deity peak Malleswara",
     titleMl: "കരുത്തിന്റെ പ്രതീകം: മല്ലേശ്വരൻ മുടിയുടെ താഴ്വാരങ്ങളിലൂടെയുള്ള അനുഭവം",
     authorEn: "Adv. Rajesh K., Agali",
@@ -167,6 +214,8 @@ const defaultTravelogues: TravelogueItem[] = [
 const defaultPhotos: PhotoItem[] = [
   {
     id: "photo_1",
+    titleTa: "மூடுபனியில் சைலண்ட் வேலியின் பசுமைக் காடுகள்",
+    descTa: "அடர்ந்த மழைக்காட்டின் அதிகாலை இயற்கைக் காட்சி.",
     url: "https://images.unsplash.com/photo-1549221194-4fa7a41413f4?w=1000&auto=format&fit=crop",
     titleEn: "Misty Evergreen Canopies of Silent Valley",
     titleMl: "കോടമഞ്ഞിൽ മൂടിയ സൈലന്റ് വാലി നിബിഡവനങ്ങൾ",
@@ -175,6 +224,8 @@ const defaultPhotos: PhotoItem[] = [
   },
   {
     id: "photo_2",
+    titleTa: "மேகங்களால் சூழப்பட்ட மல்லேஸ்வரன் மலைச்சிகரம்",
+    descTa: "பழங்குடியின மக்களால் புனிதமாக மதிக்கப்படும் மலைச்சிகரம்.",
     url: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1000&auto=format&fit=crop",
     titleEn: "Malleswara Peak Shrouded in Silken Clouds",
     titleMl: "മല്ലേശ്വരൻ മുടിയെ തഴുകുന്ന മേഘജാലം",
@@ -183,6 +234,8 @@ const defaultPhotos: PhotoItem[] = [
   },
   {
     id: "photo_3",
+    titleTa: "இனிய நீர் பாயும் சிறுவாணி ஓடைகள்",
+    descTa: "அடர்ந்த காடுகளின் வழியாகப் பாயும் சிறுவாணி நீரோடைகள்.",
     url: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1000&auto=format&fit=crop",
     titleEn: "Primal Siruvani Streams Carrying Sweet Water",
     titleMl: "മലനിരകളിൽ നിന്നൊഴുകിയെത്തുന്ന ശിരുവാണി പുഴ",
@@ -191,6 +244,8 @@ const defaultPhotos: PhotoItem[] = [
   },
   {
     id: "photo_4",
+    titleTa: "பவானி ஆற்றங்கரையின் பழமையான மூங்கில் காடுகள்",
+    descTa: "உள்ளூர் பறவைகளும் வன உயிரினங்களும் வாழும் இயற்கைச் சூழல்.",
     url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1000&auto=format&fit=crop",
     titleEn: "Ancient Bamboo Thickets near Bhavani Banks",
     titleMl: "ഭവാനിപ്പുഴയോരത്തെ പുരാതന മുളങ്കാടുകൾ",
@@ -199,6 +254,8 @@ const defaultPhotos: PhotoItem[] = [
   },
   {
     id: "photo_5",
+    titleTa: "புதூர் ஊராட்சியின் ராகி மற்றும் சிறுதானிய வயல்கள்",
+    descTa: "பாரம்பரிய உணவுப் பாதுகாப்புக்கும் விவசாய வாழ்வாதாரத்துக்கும் துணைபுரியும் வயல்கள்.",
     url: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=1000&auto=format&fit=crop",
     titleEn: "Ragi and Millet Farmlands of Pudur Grama Panchayat",
     titleMl: "പുതൂരിലെ മനോഹരമായ പരമ്പരാഗത റാഗി കൃഷിയിടം",
@@ -207,6 +264,8 @@ const defaultPhotos: PhotoItem[] = [
   },
   {
     id: "photo_6",
+    titleTa: "முக்காலி பாதுகாப்புப் பகுதியில் மர நடைபாதை",
+    descTa: "சைலண்ட் வேலியின் பசுமையான வன எல்லையை அண்மையில் காணும் பாதை.",
     url: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1000&auto=format&fit=crop",
     titleEn: "Rustic Wooden Walkway in Mukkali Buffer Zone",
     titleMl: "മുക്കാലി ബഫർ സോണിലെ പ്രകൃതിദത്ത നടപ്പാത",
@@ -218,6 +277,11 @@ const defaultPhotos: PhotoItem[] = [
 const defaultBusRoutes: BusRouteItem[] = [
   {
     id: "bus_1",
+    routeTa: "கோழிக்கோடு – ஆனைகட்டி (KSRTC)",
+    busTypeTa: "KSRTC விரைவுப் பயணிகள் பேருந்து",
+    runsTa: "தினசரி சேவை",
+    frequencyTa: "மாவட்டங்களுக்கு இடையிலான சேவை",
+    timingsTa: "மஞ்சேரி, மேலாற்றூர், மன்னார்க்காடு வழியாக",
     routeEn: "KOZHIKODE - ANAIKATTY (KSRTC)",
     routeMl: "കോഴിക്കോട് - ആനക്കട്ടി (KSRTC)",
     type: "KSRTC",
@@ -239,8 +303,13 @@ const defaultBusRoutes: BusRouteItem[] = [
   },
   {
     id: "bus_2",
-    routeEn: "PALAKKAD - ANAIKATTY (KSRTC - Morning Trip)",
-    routeMl: "പാലക്കാട് - ആനക്കട്ടി (KSRTC - രാവിലത്തെ ട്രിപ്പ്)",
+    routeTa: "பாலக்காடு – ஆனைகட்டி (KSRTC)",
+    busTypeTa: "KSRTC விரைவுப் பயணிகள் பேருந்து",
+    runsTa: "தினசரி சேவை",
+    frequencyTa: "காலை பணிமனைச் சேவை",
+    timingsTa: "மன்னார்க்காடு, அகளி வழியாக",
+    routeEn: "PALAKKAD - ANAIKATTY (KSRTC)",
+    routeMl: "പാലക്കാട് - ആനക്കട്ടി (KSRTC)",
     type: "KSRTC",
     busTypeEn: "KSRTC Fast Passenger",
     busTypeMl: "KSRTC ഫാസ്റ്റ് പാസഞ്ചർ",
@@ -260,8 +329,13 @@ const defaultBusRoutes: BusRouteItem[] = [
   },
   {
     id: "bus_3",
-    routeEn: "PALAKKAD - ANAIKATTY (KSRTC - Noon Trip)",
-    routeMl: "പാലക്കാട് - ആനക്കട്ടി (KSRTC - ഉച്ചയ്ക്കുള്ള ട്രിപ്പ്)",
+    routeTa: "பாலக்காடு – ஆனைகட்டி (KSRTC)",
+    busTypeTa: "KSRTC சாதாரணப் பேருந்து",
+    runsTa: "தினசரி சேவை",
+    frequencyTa: "மதிய பணிமனைச் சேவை",
+    timingsTa: "மன்னார்க்காடு, அகளி வழியாக",
+    routeEn: "PALAKKAD - ANAIKATTY (KSRTC)",
+    routeMl: "പാലക്കാട് - ആനക്കട്ടി (KSRTC)",
     type: "KSRTC",
     busTypeEn: "KSRTC Ordinary",
     busTypeMl: "KSRTC ഓർഡിനറി സർവീസ്",
@@ -281,8 +355,13 @@ const defaultBusRoutes: BusRouteItem[] = [
   },
   {
     id: "bus_4",
-    routeEn: "PALAKKAD - ANAIKATTY (KSRTC - Evening Trip)",
-    routeMl: "പാലക്കാട് - ആനക്കട്ടി (KSRTC - വൈകിട്ടുള്ള ട്രിപ്പ്)",
+    routeTa: "பாலக்காடு – ஆனைகட்டி (KSRTC)",
+    busTypeTa: "KSRTC விரைவுப் பயணிகள் பேருந்து",
+    runsTa: "தினசரி சேவை",
+    frequencyTa: "மாலை பணிமனைச் சேவை",
+    timingsTa: "மன்னார்க்காடு, அகளி வழியாக",
+    routeEn: "PALAKKAD - ANAIKATTY (KSRTC)",
+    routeMl: "പാലക്കാട് - ആനക്കട്ടി (KSRTC)",
     type: "KSRTC",
     busTypeEn: "KSRTC Fast Passenger",
     busTypeMl: "KSRTC ഫാസ്റ്റ് പാസഞ്ചർ",
@@ -302,6 +381,11 @@ const defaultBusRoutes: BusRouteItem[] = [
   },
   {
     id: "bus_5",
+    routeTa: "கோட்டயம் – ஆனைகட்டி (KSRTC SWIFT)",
+    busTypeTa: "SWIFT அதிவிரைவுப் பேருந்து",
+    runsTa: "தினசரி சேவை",
+    frequencyTa: "நீண்ட தூர மாநிலங்களுக்கு இடையிலான இணைப்பு",
+    timingsTa: "திருச்சூர், பாலக்காடு, மன்னார்க்காடு வழியாக",
     routeEn: "KOTTAYAM - ANAIKATTY (KSRTC SWIFT)",
     routeMl: "കോട്ടയം - ആനക്കട്ടി (KSRTC സ്വിഫ്റ്റ്)",
     type: "KSRTC",
@@ -324,6 +408,11 @@ const defaultBusRoutes: BusRouteItem[] = [
   },
   {
     id: "bus_6",
+    routeTa: "குருவாயூர் – ஆனைகட்டி (KSRTC)",
+    busTypeTa: "KSRTC விரைவுப் பயணிகள் பேருந்து",
+    runsTa: "தினசரி சேவை",
+    frequencyTa: "புனித யாத்திரை வழித்தடம்",
+    timingsTa: "ஷோரனூர், மன்னார்க்காடு, அகளி வழியாக",
     routeEn: "GURUVAYUR - ANAIKATTY (KSRTC)",
     routeMl: "ഗുരുവായൂർ - ആനക്കട്ടി (KSRTC)",
     type: "KSRTC",
@@ -345,8 +434,13 @@ const defaultBusRoutes: BusRouteItem[] = [
   },
   {
     id: "bus_7",
-    routeEn: "MANNARKKAD - ANAIKATTY (KSRTC - Morning Trip)",
-    routeMl: "മണ്ണാർക്കാട് - ആനക്കട്ടി (KSRTC - രാവിലെ)",
+    routeTa: "மன்னார்க்காடு – ஆனைகட்டி (KSRTC)",
+    busTypeTa: "KSRTC விரைவுப் பயணிகள் பேருந்து",
+    runsTa: "தினசரி சேவை",
+    frequencyTa: "பள்ளத்தாக்கு இணைப்புச் சேவை",
+    timingsTa: "முக்காலி, அகளி, கூளிக்கடவு வழியாக",
+    routeEn: "MANNARKKAD - ANAIKATTY (KSRTC)",
+    routeMl: "മണ്ണാർക്കാട് - ആനക്കട്ടി (KSRTC)",
     type: "KSRTC",
     busTypeEn: "KSRTC Fast Passenger",
     busTypeMl: "KSRTC ഫാസ്റ്റ് പാസഞ്ചർ",
@@ -365,8 +459,13 @@ const defaultBusRoutes: BusRouteItem[] = [
   },
   {
     id: "bus_8",
-    routeEn: "MANNARKKAD - ANAIKATTY (KSRTC - Night Stay)",
-    routeMl: "മണ്ണാർക്കാട് - ആനക്കട്ടി (KSRTC - രാത്രി സർവീസ്)",
+    routeTa: "மன்னார்க்காடு – ஆனைகட்டி (KSRTC)",
+    busTypeTa: "KSRTC இரவு நேர சாதாரணப் பேருந்து",
+    runsTa: "தினசரி சேவை",
+    frequencyTa: "இரவு நேரச் சேவை",
+    timingsTa: "முக்காலி, அகளி வழியாக",
+    routeEn: "MANNARKKAD - ANAIKATTY (KSRTC)",
+    routeMl: "മണ്ണാർക്കാട് - ആനക്കട്ടി (KSRTC)",
     type: "KSRTC",
     busTypeEn: "KSRTC Ordinary Night Service",
     busTypeMl: "KSRTC നൈറ്റ് സ്റ്റേ ഓർഡിനറി",
@@ -385,6 +484,11 @@ const defaultBusRoutes: BusRouteItem[] = [
   },
   {
     id: "bus_9",
+    routeTa: "அகளி – புதூர் – முள்ளி (KSRTC)",
+    busTypeTa: "KSRTC வனப்பகுதி சாதாரணப் பேருந்து",
+    runsTa: "தினசரி சேவை",
+    frequencyTa: "வன எல்லைப் பகுதி வழித்தடம்",
+    timingsTa: "கோட்டத்தறை, புதூர் வழியாக",
     routeEn: "AGALI - PUDUR - MULLI (KSRTC)",
     routeMl: "അഗളി - പുതൂർ - മുള്ളി (KSRTC മലയോര വണ്ടി)",
     type: "KSRTC",
@@ -404,6 +508,11 @@ const defaultBusRoutes: BusRouteItem[] = [
   },
   {
     id: "bus_10",
+    routeTa: "ஆனைகட்டி – கோயம்புத்தூர் (TNSTC)",
+    busTypeTa: "TNSTC தொடர் இணைப்புப் பேருந்துகள்",
+    runsTa: "எல்லை இணைப்புப் பேருந்து (30–40 நிமிடங்களுக்கு ஒருமுறை)",
+    frequencyTa: "கோயம்புத்தூருக்கு நேரடிச் சேவை",
+    timingsTa: "கணுவாய், தடாகம் சாலை வழியாக",
     routeEn: "ANAIKATTY - COIMBATORE (TNSTC)",
     routeMl: "ആനക്കട്ടി - കോയമ്പത്തൂർ (TNSTC)",
     type: "TNSTC",
@@ -423,6 +532,11 @@ const defaultBusRoutes: BusRouteItem[] = [
   },
   {
     id: "bus_11",
+    routeTa: "கோயம்புத்தூர் – ஆனைகட்டி – அகளி (TNSTC)",
+    busTypeTa: "TNSTC சாதாரணப் பேருந்து",
+    runsTa: "தினசரி சேவை",
+    frequencyTa: "கோயம்புத்தூர் இணைப்புச் சேவை",
+    timingsTa: "தடாகம் சாலை, கணுவாய் வழியாக",
     routeEn: "COIMBATORE - ANAIKATTY - AGALI (TNSTC)",
     routeMl: "കോയമ്പത്തൂർ - ആനക്കട്ടി - അഗളി (TNSTC)",
     type: "TNSTC",
@@ -442,6 +556,11 @@ const defaultBusRoutes: BusRouteItem[] = [
   },
   {
     id: "bus_12",
+    routeTa: "மன்னார்க்காடு – ஆனைகட்டி (தனியார் பேருந்து)",
+    busTypeTa: "SRP தனியார் பேருந்து",
+    runsTa: "தினசரி சேவை",
+    frequencyTa: "மாலை நேரச் சேவை",
+    timingsTa: "முக்காலி, அகளி வழியாக",
     routeEn: "MANNARKKAD - ANAIKATTY (PRIVATE)",
     routeMl: "മണ്ണാർക്കാട് - ആനക്കട്ടി (സ്വകാര്യ ബസ്)",
     type: "PRIVATE",
@@ -462,6 +581,11 @@ const defaultBusRoutes: BusRouteItem[] = [
   },
   {
     id: "bus_13",
+    routeTa: "ஆனைகட்டி – மன்னார்க்காடு (தனியார் பேருந்து)",
+    busTypeTa: "SRP தனியார் பேருந்து",
+    runsTa: "தினசரி சேவை",
+    frequencyTa: "காலை நேரச் சேவை",
+    timingsTa: "அகளி, முக்காலி வழியாக",
     routeEn: "ANAIKKATI - MANNARKKAD (PRIVATE)",
     routeMl: "ആനക്കട്ടി - മണ്ണാർക്കാട് (സ്വകാര്യ ബസ്)",
     type: "PRIVATE",
@@ -662,16 +786,16 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
           <div className="flex items-center gap-2 mb-1.5">
             <Compass className="w-5 h-5 text-[#c70000] animate-spin" style={{ animationDuration: '6s' }} />
             <span className="text-[10px] bg-[#c70000] text-white font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">
-              {lang !== "ml" ? "Interactive Travel Desk" : "സഞ്ചാര ഡെസ്ക്"}
+              INTERACTIVE TRAVEL DESK
             </span>
           </div>
-          <h2 className="font-serif-guardian font-extrabold text-[#052962] text-2xl md:text-4.5xl leading-tight">
-            {lang !== "ml" ? "Explore Attappadi Valley" : "അട്ടപ്പാടിയെ അറിയാം..."}
+          <h2 lang="en" className="font-anek-english font-extrabold text-[#052962] text-2xl md:text-4.5xl leading-tight">
+            EXPLORE ATTAPPADI VALLEY
           </h2>
-          <p className="text-xs md:text-sm text-gray-500 mt-2 max-w-3xl leading-relaxed">
+          <p lang={lang} className={`text-xs md:text-sm text-gray-500 mt-2 max-w-3xl leading-relaxed ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
             {lang === "en" 
               ? "Immerse yourself in India's richest biodiversity, pristine flowing rivers, spiritual peaks, rare tribal gastronomy, and organic eco-tourism experiences from Silent Valley to Sholayur."
-              : "സൈലന്റ് വാലി മുതൽ ഷോളയൂർ വരെയുള്ള അട്ടപ്പാടിയുടെ സമൃദ്ധമായ വനസംസ്കാരം, ഒഴുകുന്ന നിത്യഹരിത പുഴകൾ, ആത്മീയ കൊടുമുടികൾ, അപൂർവ ഗോത്രവിഭവങ്ങൾ, പ്രകൃതി സ്നേഹികളുടെ താമസ സൗകര്യങ്ങൾ എന്നിവ ഇവിടെ കണ്ടെത്താം."
+              : lang === "ta" ? "சைலண்ட் வேலி முதல் சோலையூர் வரை அட்டப்பாடியின் பசுமையான காடுகள், ஆறுகள், புனித மலைச்சிகரங்கள், பழங்குடியின உணவு மரபுகள் மற்றும் இயற்கைச் சுற்றுலா அனுபவங்களை அறிந்துகொள்ளுங்கள்." : "സൈലന്റ് വാലി മുതൽ ഷോളയൂർ വരെയുള്ള അട്ടപ്പാടിയുടെ സമൃദ്ധമായ വനസംസ്കാരം, ഒഴുകുന്ന നിത്യഹരിത പുഴകൾ, ആത്മീയ കൊടുമുടികൾ, അപൂർവ ഗോത്രവിഭവങ്ങൾ, പ്രകൃതി സ്നേഹികളുടെ താമസ സൗകര്യങ്ങൾ എന്നിവ ഇവിടെ കണ്ടെത്താം."
             }
           </p>
         </div>
@@ -828,7 +952,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                         return featsEn.map((feat, fIdx) => (
                           <li key={fIdx} className="text-[10px] text-gray-400 flex items-center gap-1">
                             <span className="text-emerald-600 font-black">✔</span>
-                            {lang !== "ml" ? feat : (featsMl[fIdx] || feat)}
+                            {lang === "ml" ? (featsMl[fIdx] || feat) : lang === "ta" ? (((stay as any).featuresTa?.[fIdx]) || feat) : feat}
                           </li>
                         ));
                       })()}
@@ -836,7 +960,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                   </div>
                 </div>
                 <div className="p-4 border-t border-gray-100 bg-slate-50 flex items-center justify-between">
-                  <span className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">{lang !== "ml" ? "Rate Estimate" : "നിരക്ക്"}</span>
+                  <span className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">{lang === "ta" ? "மதிப்பிடப்பட்ட கட்டணம்" : lang === "ml" ? "നിരക്ക്" : "Rate Estimate"}</span>
                   <span className="text-xs font-black text-[#c70000]">{lang === "ml" ? stay.priceMl : lang === "ta" ? (((stay as any).priceTa) || stay.priceEn) : stay.priceEn}</span>
                 </div>
               </motion.div>
@@ -900,7 +1024,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2.5">
                     <div className="text-white text-[10px] space-y-0.5 truncate">
                       <p className="font-bold truncate">{lang === "ml" ? ph.titleMl : lang === "ta" ? (((ph as any).titleTa) || ph.titleEn) : ph.titleEn}</p>
-                      <p className="text-slate-300 text-[8px] truncate">{lang !== "ml" ? "Click to expand" : "വലുതാക്കി കാണാൻ ക്ലിക്ക് ചെയ്യുക"}</p>
+                      <p className="text-slate-300 text-[8px] truncate">{lang === "ta" ? "பெரிதாகப் பார்க்கத் தொடவும்" : lang === "ml" ? "വലുതാക്കി കാണാൻ ക്ലിക്ക് ചെയ്യുക" : "Click to expand"}</p>
                     </div>
                   </div>
                 </div>
@@ -951,13 +1075,13 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                     {/* Bottom overlay text detail */}
                     <div className="w-full text-center text-white mt-4 space-y-1 px-4">
                       <span className="text-[9px] bg-amber-500 text-slate-950 font-black px-2 py-0.5 rounded uppercase tracking-wider inline-block">
-                        {lang !== "ml" ? `Photo ${selectedPhotoIndex + 1} of ${photosList.length}` : `ചിത്രം ${selectedPhotoIndex + 1} / ${photosList.length}`}
+                        {lang === "ta" ? `படம் ${selectedPhotoIndex + 1} / ${photosList.length}` : lang === "ml" ? `ചിത്രം ${selectedPhotoIndex + 1} / ${photosList.length}` : `Photo ${selectedPhotoIndex + 1} of ${photosList.length}`}
                       </span>
                       <h4 className="font-serif-guardian font-extrabold text-base md:text-xl text-[#ffe500]">
-                        {lang !== "ml" ? photosList[selectedPhotoIndex].titleEn : photosList[selectedPhotoIndex].titleMl}
+                        {lang === "ml" ? photosList[selectedPhotoIndex].titleMl : lang === "ta" ? (((photosList[selectedPhotoIndex] as any).titleTa) || photosList[selectedPhotoIndex].titleEn) : photosList[selectedPhotoIndex].titleEn}
                       </h4>
                       <p className="text-xs text-slate-300 font-light max-w-lg mx-auto">
-                        {lang !== "ml" ? photosList[selectedPhotoIndex].descEn : photosList[selectedPhotoIndex].descMl}
+                        {lang === "ml" ? photosList[selectedPhotoIndex].descMl : lang === "ta" ? (((photosList[selectedPhotoIndex] as any).descTa) || photosList[selectedPhotoIndex].descEn) : photosList[selectedPhotoIndex].descEn}
                       </p>
                     </div>
 
@@ -1178,17 +1302,17 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
           // Mapped dynamically from top-level mapLines state
 
           return (
-            <div className="space-y-6 animate-fade-in font-anek-malayalam">
+            <div lang={lang} className={`space-y-6 animate-fade-in ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
               
               {/* Disclaimer and Help Desk Box */}
               <div className="bg-[#052962]/5 border-l-4 border-[#052962] p-4 rounded-r-md flex gap-3 text-xs text-[#052962]" style={{ contentVisibility: 'auto' }}>
                 <Info className="w-5 h-5 text-[#052962] shrink-0 mt-0.5" />
-                <div className="space-y-1 font-anek-malayalam">
-                  <p className="font-extrabold text-[13px] text-[#052962]">
-                    യാത്രക്കാരുടെ വിവരത്തിന് (Attappadi Transit Help):
+                <div className="space-y-1">
+                  <p lang="en" className="font-anek-english font-extrabold text-[13px] text-[#052962]">
+                    ATTAPPADI TRANSIT HELP
                   </p>
                   <p className="text-[11px] text-slate-700 leading-relaxed font-semibold">
-                    ചുരം റോഡിലെ മൂടൽമഞ്ഞ്, കനത്ത മഴ, വനമേഖലയിലെ സമയനിയന്ത്രണങ്ങൾ എന്നിവ കാരണം സമയക്രമങ്ങളിൽ നേരിയ വ്യത്യാസങ്ങൾ വന്നേക്കാം. പ്രധാന ജംഗ്ഷൻ കേന്ദ്രങ്ങളിലെ കൃത്യവിവരങ്ങൾക്ക് ലഭ്യമായ കെ.എസ്.ആർ.ടി.സി ഹെൽപ്പ് നമ്പറിൽ ബന്ധപ്പെടുക. (അഗളി ബസ് സ്റ്റേഷൻ ഫോൺ: <span className="font-bold underline text-[#052962]">04924-254400</span>)
+                    {lang === "ta" ? "மலைப்பாதையில் பனிமூட்டம், கனமழை மற்றும் வனப்பகுதி நேரக் கட்டுப்பாடுகள் காரணமாக பேருந்து நேரங்களில் மாற்றம் ஏற்படலாம். உறுதியான தகவல்களுக்கு கே.எஸ்.ஆர்.டி.சி உதவி எண்ணைத் தொடர்புகொள்ளவும்." : lang === "ml" ? "ചുരം റോഡിലെ മൂടൽമഞ്ഞ്, കനത്ത മഴ, വനമേഖലയിലെ സമയനിയന്ത്രണങ്ങൾ എന്നിവ കാരണം ബസ് സമയങ്ങളിൽ മാറ്റമുണ്ടാകാം. കൃത്യമായ വിവരങ്ങൾക്ക് കെ.എസ്.ആർ.ടി.സി ഹെൽപ്പ് നമ്പറിൽ ബന്ധപ്പെടുക." : "Fog, heavy rain and forest-area restrictions may affect bus schedules. Contact KSRTC for confirmed timings."} ({lang === "ta" ? "அகளி பேருந்து நிலையம்" : lang === "ml" ? "അഗളി ബസ് സ്റ്റേഷൻ" : "Agali Bus Station"}: <span className="font-bold underline text-[#052962]">04924-254400</span>)
                   </p>
                 </div>
               </div>
@@ -1203,7 +1327,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                   <button
                     key={m.key}
                     onClick={() => setBusTimingMode(m.key as any)}
-                    className={`flex-1 py-3 text-center text-xs font-black transition duration-200 cursor-pointer border-b-2 font-anek-malayalam flex items-center justify-center gap-1.5 ${
+                    className={`flex-1 py-3 text-center text-xs font-black transition duration-200 cursor-pointer border-b-2 font-anek-english flex items-center justify-center gap-1.5 ${
                       busTimingMode === m.key
                         ? "border-[#052962] text-[#052962] bg-[#052962]/5"
                         : "border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50"
@@ -1218,7 +1342,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
               <BusStopOSMMap stops={stopChoices} selectedStop={selectedMapStop} onSelectStop={(id) => { setSelectedMapStop(id); setBusTimingMode("stop"); window.setTimeout(() => document.getElementById("attappadi-station-board")?.scrollIntoView({ behavior: "smooth", block: "start" }), 120); }} lang={lang} />
 
               {/* Master Responsive Layout split into sidebar panel & Vector Map */}
-              <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start font-anek-malayalam">
+              <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
                 
                 {/* Visual Map widget - Highlight of modern responsive interface */}
                 <div className={isAdmin ? "xl:col-span-5 order-first xl:order-last space-y-4" : "hidden"}>
@@ -1227,10 +1351,10 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                     {/* Header Map indicators */}
                     <div className="flex items-center justify-between pb-3 border-b border-slate-200 bg-white/70 backdrop-blur-xs p-2.5 rounded-lg">
                       <div>
-                        <span className="text-[9px] uppercase font-bold tracking-widest text-slate-400 block font-anek-malayalam">
+                        <span className="text-[9px] uppercase font-bold tracking-widest text-slate-400 block">
                           INTERACTIVE GEOGRAPHIC MAP
                         </span>
-                        <h5 className="font-extrabold text-[#052962] text-xs font-anek-malayalam">
+                        <h5 className="font-extrabold text-[#052962] text-xs">
                           Attappadi Bus Network
                         </h5>
                       </div>
@@ -1497,7 +1621,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                 fontSize="2.2"
                                 fontWeight="bold"
                                 fill={isEditorSelected ? "#b45309" : isSelectedNode ? "#052962" : "#334155"}
-                                className="font-anek-malayalam select-none"
+                                className="font-inherit select-none"
                               >
                                 {lang === "ml" ? node.nameMl : lang === "ta" ? (((node as any).nameTa) || node.nameEn) : node.nameEn}
                               </text>
@@ -1559,7 +1683,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
 
                     {/* Interactive Layout Editor Control Center */}
                     {isAdmin && isMapEditorOpen && (
-                      <div className="bg-slate-900 text-slate-100 border border-slate-950 rounded-xl p-4 shadow-xl space-y-4 font-anek-malayalam animate-fade-in mt-4 text-left">
+                      <div className="bg-slate-900 text-slate-100 border border-slate-950 rounded-xl p-4 shadow-xl space-y-4 animate-fade-in mt-4 text-left">
                         <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                           <h6 className="text-[11px] font-black uppercase text-amber-500 tracking-wider flex items-center gap-1 font-mono">
                             <Sliders className="w-3.5 h-3.5" /> chart layout tuning
@@ -1688,7 +1812,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                             localStorage.setItem("attappadi_map_nodes2", JSON.stringify(mapNodes));
                                           }, 50);
                                         }}
-                                        className="w-full bg-slate-950 border border-slate-800 px-2 py-1 rounded text-slate-200 text-xs font-bold font-anek-malayalam"
+                                        className="w-full bg-slate-950 border border-slate-800 px-2 py-1 rounded text-slate-200 text-xs font-bold"
                                       />
                                     </div>
                                   </div>
@@ -1760,7 +1884,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                   </div>
                                   <div className="space-y-1">
                                     <label className="block text-[9px] text-slate-400 font-semibold mb-0.5">Malayalam Name:</label>
-                                    <input id="new-hub-ml" type="text" placeholder="പാലൂർ കിഴക്ക്" className="w-full bg-slate-950 border border-slate-800 text-[11px] px-2 py-1 rounded text-slate-200 font-anek-malayalam" />
+                                    <input id="new-hub-ml" type="text" placeholder="പാലൂർ കിഴക്ക്" className="w-full bg-slate-950 border border-slate-800 text-[11px] px-2 py-1 rounded text-slate-200" />
                                   </div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-2">
@@ -1985,7 +2109,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                     <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4 shadow-sm animate-fade-in">
                       
                       <div className="space-y-1">
-                        <span className="text-[10px] bg-[#052962]/5 text-[#052962] font-black px-2 py-0.5 rounded tracking-wide uppercase font-anek-malayalam">
+                        <span className="text-[10px] bg-[#052962]/5 text-[#052962] font-black px-2 py-0.5 rounded tracking-wide uppercase">
                           HUB STATION SELECTOR
                         </span>
                         <h4 className="font-black text-[#052962] text-xl leading-snug">
@@ -2003,7 +2127,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                             <button
                               key={st.id}
                               onClick={() => setSelectedMapStop(st.id)}
-                              className={`p-2 rounded-lg text-xs font-black transition text-center font-anek-malayalam cursor-pointer border ${
+                              className={`p-2 rounded-lg text-xs font-black transition text-center cursor-pointer border ${
                                 selectedMapStop === st.id
                                   ? "bg-[#052962] text-white border-[#052962] shadow-xs"
                                   : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
@@ -2020,7 +2144,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                         <div className="flex items-center justify-between border-b pb-2 pt-2 border-slate-100">
                           <h5 className="font-bold text-[#052962] text-xs leading-none flex items-center gap-1">
                             <span>🕒 Departures from:</span>
-                            <span className="bg-amber-100 text-amber-950 px-2 py-0.5 rounded text-[11px] font-black font-anek-malayalam">
+                            <span className="bg-amber-100 text-amber-950 px-2 py-0.5 rounded text-[11px] font-black">
                               {currentMapStopEntity.ml} ( {currentMapStopEntity.en} )
                             </span>
                           </h5>
@@ -2078,7 +2202,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                   </div>
 
                                   {/* Line stops sequence map timeline snippet */}
-                                  <div className="flex items-center gap-1 py-1 overflow-x-auto text-[9.5px] font-bold text-slate-400 font-anek-malayalam whitespace-nowrap">
+                                  <div className="flex items-center gap-1 py-1 overflow-x-auto text-[9.5px] font-bold text-slate-400 whitespace-nowrap">
                                     {item.fullList.map((stopItem, sIdx) => {
                                       const isSelf = normalizeStopName(stopItem.typeEn) === normalizeStopName(selectedMapStop);
                                       return (
@@ -2098,7 +2222,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                         ) : (
                           <div className="py-12 text-center space-y-2 border border-dashed border-slate-200 rounded-lg">
                             <Bus className="w-8 h-8 text-slate-300 mx-auto animate-bounce" />
-                            <p className="text-xs text-slate-400 font-medium font-anek-malayalam">
+                            <p className="text-xs text-slate-400 font-medium">
                               ഈ സ്റ്റേഷനിൽ പ്രധാന സമയ സർവീസുകളൊന്നും നിശ്ചയിച്ചിട്ടില്ല. മറ്റൊരു സ്റ്റേഷൻ നോക്കൂ.
                             </p>
                           </div>
@@ -2113,10 +2237,10 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                     <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4 shadow-sm animate-fade-in">
                       
                       <div className="space-y-1">
-                        <span className="text-[10px] bg-[#052962]/5 text-[#052962] font-black px-2 py-0.5 rounded tracking-wide uppercase font-anek-malayalam">
+                        <span className="text-[10px] bg-[#052962]/5 text-[#052962] font-black px-2 py-0.5 rounded tracking-wide uppercase">
                           TRANSIT ROUTING
                         </span>
-                        <h4 className="font-black text-[#052962] text-xl leading-snug font-anek-malayalam">
+                        <h4 className="font-black text-[#052962] text-xl leading-snug">
                           കണക്റ്റിങ് സർവീസ് റൂട്ട് കണ്ടെത്തുക
                         </h4>
                       </div>
@@ -2205,7 +2329,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                   <div className="grid grid-cols-2 gap-3 bg-white p-3 rounded-lg border border-slate-150 relative overflow-hidden">
                                     <div className="border-r border-slate-100 pr-1 select-all">
                                       <span className="text-[8.5px] font-bold text-slate-400 block uppercase">START TIME</span>
-                                      <span className="text-slate-800 text-xs font-black block font-anek-malayalam">
+                                      <span className="text-slate-800 text-xs font-black block">
                                         {lang === "ml" ? stopChoices.find(sc => sc.id === navSource)?.ml : navSource}
                                       </span>
                                       <span className="text-[14px] font-black text-[#052962] mt-0.5 inline-block">
@@ -2214,7 +2338,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                     </div>
                                     <div className="pl-1 select-all">
                                       <span className="text-[8.5px] font-bold text-slate-400 block uppercase">ARRIVAL TIME</span>
-                                      <span className="text-slate-800 text-xs font-black block font-anek-malayalam">
+                                      <span className="text-slate-800 text-xs font-black block">
                                         {lang === "ml" ? stopChoices.find(sc => sc.id === navDest)?.ml : navDest}
                                       </span>
                                       <span className="text-[14px] font-black text-red-700 mt-0.5 inline-block">
@@ -2224,7 +2348,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                   </div>
 
                                   {/* Stops Timeline path */}
-                                  <div className="flex items-center gap-1 overflow-x-auto text-[9px] font-bold text-slate-400 font-anek-malayalam whitespace-nowrap pt-1">
+                                  <div className="flex items-center gap-1 overflow-x-auto text-[9px] font-bold text-slate-400 whitespace-nowrap pt-1">
                                     {item.fullList.map((stopItem, sIdx) => {
                                       const isSrc = normalizeStopName(stopItem.typeEn) === normalizeStopName(navSource);
                                       const isDst = normalizeStopName(stopItem.typeEn) === normalizeStopName(navDest);
@@ -2253,10 +2377,10 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                           <div className="py-14 text-center space-y-2.5 border border-dashed border-slate-200 rounded-lg">
                             <Bus className="w-8 h-8 text-slate-300 mx-auto" />
                             <div className="space-y-1">
-                              <p className="text-xs text-slate-700 font-extrabold font-anek-malayalam">
+                              <p className="text-xs text-slate-700 font-extrabold">
                                 നേരിട്ടുള്ള സർവീസുകളൊന്നും കണ്ടെത്തിയിട്ടില്ല
                               </p>
-                              <p className="text-[11px] text-slate-400 font-medium max-w-sm mx-auto font-anek-malayalam">
+                              <p className="text-[11px] text-slate-400 font-medium max-w-sm mx-auto">
                                 ആരംഭവഴിയും ചേരേണ്ട ലക്ഷ്യസ്ഥാനവും മാറ്റി പരീക്ഷിക്കുക. ഉദാഹരണത്തിന് 'മണ്ണാർക്കാട്' മുതൽ 'ആനക്കട്ടി' അല്ലെങ്കിൽ 'പാലക്കാട് - അഗളി'.
                               </p>
                             </div>
@@ -2269,20 +2393,20 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
 
                   {/* Mode 3: SIGHTSEEING SIGHTS BUS ASSISTANT */}
                   {busTimingMode === "assist" && (
-                    <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4 shadow-sm animate-fade-in font-anek-malayalam">
+                    <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4 shadow-sm animate-fade-in">
                       
                       <div className="space-y-1">
-                        <span className="text-[10px] bg-[#052962]/5 text-[#052962] font-black px-2 py-0.5 rounded tracking-wide uppercase font-anek-malayalam">
+                        <span className="text-[10px] bg-[#052962]/5 text-[#052962] font-black px-2 py-0.5 rounded tracking-wide uppercase">
                           SIGHTSEEING DEPARTURES
                         </span>
-                        <h4 className="font-black text-[#052962] text-xl leading-snug font-anek-malayalam">
-                          ടൂറിസ്റ്റ് കേന്ദ്രങ്ങളും സമീപത്തുള്ള ബസ് സ്റ്റോപ്പും
+                        <h4 lang="en" className="font-black font-anek-english text-[#052962] text-xl leading-snug">
+                          TOURIST DESTINATIONS & NEAREST BUS STOPS
                         </h4>
                       </div>
 
                       <div className="space-y-2">
                         <label className="block text-xs font-bold text-slate-500 mb-1">
-                          കണ്ടെത്തേണ്ട ടൂറിസ്റ്റ് കേന്ദ്രം തിരഞ്ഞെടുക്കുക (Sightseeing Spot):
+                          {lang === "ta" ? "செல்ல வேண்டிய சுற்றுலாத் தலத்தைத் தேர்ந்தெடுக்கவும்:" : lang === "ml" ? "സന്ദർശിക്കേണ്ട ടൂറിസ്റ്റ് കേന്ദ്രം തിരഞ്ഞെടുക്കുക:" : "Choose a sightseeing destination:"}
                         </label>
                         <div className="flex flex-col gap-2">
                           {assistHotspots.map((ah) => (
@@ -2298,11 +2422,11 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                   : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
                               }`}
                             >
-                              <span className="font-anek-malayalam flex items-center gap-1.5">
+                              <span className="font-inherit flex items-center gap-1.5">
                                 🌲 {lang === "ml" ? ah.nameMl : lang === "ta" ? (((ah as any).nameTa) || ah.nameEn) : ah.nameEn}
                               </span>
                               <span className="bg-white px-2 py-0.5 text-[10px] rounded border border-slate-200 text-slate-400 font-bold">
-                                {lang === "ml" ? "അടുത്ത സ്റ്റോപ്പ്: " : "Stop: "} {ah.nearestStop}
+                                {lang === "ta" ? "அருகிலுள்ள நிறுத்தம்: " : lang === "ml" ? "അടുത്ത സ്റ്റോപ്പ്: " : "Stop: "} {ah.nearestStop}
                               </span>
                             </button>
                           ))}
@@ -2317,16 +2441,16 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                             <h5 className="font-extrabold text-[#052962] text-[14px]">
                               {lang === "ml" ? activeSpot.nameMl : lang === "ta" ? (((activeSpot as any).nameTa) || activeSpot.nameEn) : activeSpot.nameEn}
                             </h5>
-                            <p className="text-[11px] font-bold text-slate-500 font-anek-malayalam flex items-center gap-1">
-                              <MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> {lang === "ml" ? `അടുത്തുള്ള സ്റ്റോപ്പ്: ${stopChoices.find(sc => sc.id === activeSpot.nearestStop)?.ml} (${activeSpot.distanceMl})` : `Nearest Bus Stop: ${activeSpot.nearestStop} (${activeSpot.distanceEn})`}
+                            <p className="text-[11px] font-bold text-slate-500 flex items-center gap-1">
+                              <MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> {lang === "ta" ? `அருகிலுள்ள பேருந்து நிறுத்தம்: ${activeSpot.nearestStop} (${activeSpot.distanceEn})` : lang === "ml" ? `അടുത്തുള്ള സ്റ്റോപ്പ്: ${stopChoices.find(sc => sc.id === activeSpot.nearestStop)?.ml} (${activeSpot.distanceMl})` : `Nearest Bus Stop: ${activeSpot.nearestStop} (${activeSpot.distanceEn})`}
                             </p>
                           </div>
                         </div>
 
-                        <div className="text-[11.5px] text-slate-700 font-semibold leading-relaxed font-anek-malayalam">
+                        <div className="text-[11.5px] text-slate-700 font-semibold leading-relaxed">
                           <span className="font-extrabold text-red-800 flex items-center gap-1 text-xs mb-0.5">
                             <Info className="w-3.5 h-3.5 text-red-700 shrink-0" />
-                            {lang === "ml" ? "എങ്ങനെ എത്തിച്ചേരാം (Transit Tip):" : "Transit Tip:"}
+                            {lang === "ta" ? "பயண வழிகாட்டி:" : lang === "ml" ? "യാത്രാ നിർദേശം:" : "Transit Tip:"}
                           </span>
                           {lang === "ml" ? activeSpot.guideMl : lang === "ta" ? (((activeSpot as any).guideTa) || activeSpot.guideEn) : activeSpot.guideEn}
                         </div>
@@ -2335,13 +2459,13 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                       {/* Display schedules arriving at this nearest point */}
                       <div className="space-y-3 pt-2">
                         <h6 className="font-extrabold text-xs text-[#052962] border-b pb-2">
-                          🚌 '{stopChoices.find(sc => sc.id === activeSpot.nearestStop)?.ml}' വഴിയുള്ള കോൺടാക്റ്റ് ബസുകൾ:
+                          🚌 {lang === "ta" ? `${activeSpot.nearestStop} வழியாகச் செல்லும் பேருந்துகள்:` : lang === "ml" ? `${stopChoices.find(sc => sc.id === activeSpot.nearestStop)?.ml} വഴിയുള്ള ബസുകൾ:` : `Buses serving ${activeSpot.nearestStop}:`}
                         </h6>
                         
                         {spotDepartures.length > 0 ? (
                           <div className="space-y-2.5 max-h-[300px] overflow-y-auto pr-1">
                             {spotDepartures.map((item, idx) => (
-                              <div key={`${item.routeId}-${idx}`} className="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-xs font-anek-malayalam">
+                              <div key={`${item.routeId}-${idx}`} className="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-xs">
                                 <div className="space-y-0.5 truncate flex-1">
                                   <span className="text-[8px] bg-slate-900 text-white px-1.5 py-0.2 rounded font-extrabold">
                                     {item.typeLabel === "PRIVATE" && item.privateBusName ? item.privateBusName : item.typeLabel}
@@ -2359,7 +2483,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                             ))}
                           </div>
                         ) : (
-                          <p className="text-xs text-slate-400 text-center font-medium font-anek-malayalam">No schedules match this location.</p>
+                          <p className="text-xs text-slate-400 text-center font-medium">{lang === "ta" ? "இந்த இடத்திற்கான பேருந்து நேரங்கள் கிடைக்கவில்லை." : lang === "ml" ? "ഈ സ്ഥലത്തേക്കുള്ള ബസ് സമയക്രമം ലഭ്യമല്ല." : "No schedules match this location."}</p>
                         )}
                       </div>
 

@@ -1402,7 +1402,7 @@ export default function DirectoryWidget({
                       placeholder="ഉദാ: ബാഗ്, പഴ്‌സ്, താക്കോൽ..."
                       value={lfTitleMl}
                       onChange={(e) => setLfTitleMl(e.target.value)}
-                      className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white font-anek-malayalam font-semibold"
+                      className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white font-semibold"
                     />
                   </div>
                   <div className="space-y-1"><label className="block text-[11px] font-bold text-slate-700">Item title (Tamil)</label><input lang="ta" value={lfTitleTa} onChange={e => setLfTitleTa(e.target.value)} className="w-full border border-gray-250 p-2 rounded font-anek-tamil" /></div>
@@ -1427,7 +1427,7 @@ export default function DirectoryWidget({
                       placeholder="ഉദാ: അഗളി സ്റ്റാൻഡിന് സമീപം വെച്ച് നഷ്ടപ്പെട്ടു..."
                       value={lfDescMl}
                       onChange={(e) => setLfDescMl(e.target.value)}
-                      className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white font-anek-malayalam font-semibold"
+                      className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white font-semibold"
                     />
                   </div>
                   <div className="space-y-1"><label className="block text-[11px] font-bold text-slate-700">Description (Tamil)</label><input lang="ta" value={lfDescTa} onChange={e => setLfDescTa(e.target.value)} className="w-full border border-gray-250 p-2 rounded font-anek-tamil" /></div>
@@ -1454,7 +1454,7 @@ export default function DirectoryWidget({
                       placeholder="ഉദാ: അഗളി, മുക്കാലി..."
                       value={lfLocationMl}
                       onChange={(e) => setLfLocationMl(e.target.value)}
-                      className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white font-anek-malayalam font-semibold"
+                      className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white font-semibold"
                     />
                   </div>
                   <div className="space-y-1"><label className="block text-[11px] font-bold text-slate-700">Location (Tamil)</label><input lang="ta" value={lfLocationTa} onChange={e => setLfLocationTa(e.target.value)} className="w-full border border-gray-250 p-2 rounded font-anek-tamil" /></div>

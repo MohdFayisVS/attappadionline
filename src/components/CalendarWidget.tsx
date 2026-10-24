@@ -147,7 +147,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
   }
 
   return (
-    <div id="calendar-widget" className="bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden flex flex-col font-anek-malayalam">
+    <div id="calendar-widget" lang={lang} className={`bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden flex flex-col ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
       
       {/* 1. Header with dynamic month focus indicator & navigation */}
       <div className="bg-linear-to-r from-[#052962] to-[#003980] text-white p-4.5 relative overflow-hidden select-none">
@@ -282,14 +282,14 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
       </div>
 
       {/* 3. Filter Status Area */}
-      <div className="px-4.5 py-3 bg-slate-100/60 border-b border-slate-200 flex items-center justify-between text-xs font-bold text-slate-500 font-anek-malayalam select-none">
+      <div className="px-4.5 py-3 bg-slate-100/60 border-b border-slate-200 flex items-center justify-between text-xs font-bold text-slate-500 select-none">
         <div className="flex items-center gap-1.5">
           <Filter className="w-3.5 h-3.5 text-[#052962]" />
           <span>
             {selectedDateFilter ? (
               <>
                 {lang === "ta" ? "தேர்ந்தெடுத்த தேதி:" : lang === "ml" ? "ഫിൽട്ടർ ചെയ്ത ദിവസം:" : "Filtered Date:"} {" "}
-                <span className="text-slate-900 bg-white border border-slate-200 px-2 py-0.5 rounded font-black font-anek-malayalam">
+                <span className="text-slate-900 bg-white border border-slate-200 px-2 py-0.5 rounded font-black">
                   {selectedDateFilter}
                 </span>
               </>
