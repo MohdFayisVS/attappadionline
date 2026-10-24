@@ -102,10 +102,10 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" | "ta" }) {
         
         {/* OPINION COLUMNS FEED */}
         <div className="bg-white border-t-2 border-[#052962] rounded-lg shadow p-5 space-y-4">
-          <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">
+          <h3 lang="en" className="font-anek-english text-sm font-bold text-gray-400 uppercase tracking-wider">
             EDITORIAL & OUTLOOKS
           </h3>
-          <h4 className="font-serif-guardian text-base font-extrabold text-[#052962] flex items-center gap-2">
+          <h4 lang={lang} className="text-base font-extrabold text-[#052962] flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-amber-600 shrink-0" />
             {labels.heading}
           </h4>
@@ -135,7 +135,7 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" | "ta" }) {
                     </div>
                   </div>
 
-                  <h5 className="font-serif-guardian font-bold text-sm text-[#052962] leading-snug">
+                  <h5 lang={lang} className="font-bold text-sm text-[#052962] leading-snug">
                     {getOpinionText(op, "title")}
                   </h5>
 
@@ -151,11 +151,11 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" | "ta" }) {
         {/* SUBMISSION FORM */}
         <div className="bg-gradient-to-br from-[#052962] to-[#052962]/90 text-white rounded-lg shadow-md p-5 flex flex-col justify-between">
           <div>
-            <h3 className="text-amber-300 text-xs font-bold uppercase tracking-wider mb-1 flex items-center gap-1.5">
+            <h3 lang="en" className="font-anek-english text-amber-300 text-xs font-bold uppercase tracking-wider mb-1 flex items-center gap-1.5">
               <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
               OPINION SUBMISSION
             </h3>
-            <h4 className="font-serif-guardian text-base font-extrabold mb-4 leading-tight">
+            <h4 lang={lang} className="text-base font-extrabold mb-4 leading-tight">
               {labels.question}
             </h4>
             
@@ -175,7 +175,7 @@ export default function OpinionsWidget({ lang }: { lang: "en" | "ml" | "ta" }) {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-3.5 text-slate-800 text-xs font-sans">
+            <form onSubmit={handleSubmit} className="space-y-3.5 text-slate-800 text-xs">
               <div>
                 <input 
                   type="text"
