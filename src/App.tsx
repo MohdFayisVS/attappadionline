@@ -853,10 +853,10 @@ export default function App() {
 
       {/* Broadcast-style news channel ticker: one alternating slot below the header. */}
       {activeSection === "news" && (tickerBreakingItems.length > 0 || tickerNoticeItems.length > 0) && (
-        <section aria-label="Live news and alerts" className="relative flex h-[94px] sm:h-[106px] overflow-hidden border-y-2 border-white/20 shadow-lg bg-[#052962]">
-          <div className="relative z-20 flex w-[86px] sm:w-[130px] shrink-0 flex-col items-center justify-center gap-1 bg-white px-2 py-2 shadow-[5px_0_15px_rgba(0,0,0,0.25)]">
-            <img src="/attappadi-mark.svg" alt="Attappadi Online" className="h-9 w-9 sm:h-12 sm:w-12 object-contain" />
-            <span className="font-anek-english text-[9px] sm:text-[11px] font-black tracking-tight text-[#052962] text-center leading-tight">ATTAPPADI ONLINE</span>
+        <section aria-label="Live news and alerts" className="relative flex h-[82px] min-[380px]:h-[88px] sm:h-[106px] overflow-hidden border-y-2 border-white/20 shadow-lg bg-[#052962]">
+          <div className="relative z-20 flex w-[54px] min-[380px]:w-[66px] sm:w-[130px] shrink-0 flex-col items-center justify-center gap-0.5 bg-white px-1 py-1.5 sm:gap-1 sm:px-2 sm:py-2 shadow-[5px_0_15px_rgba(0,0,0,0.25)]">
+            <img src="/attappadi-mark.svg" alt="Attappadi Online" className="h-7 w-7 min-[380px]:h-8 min-[380px]:w-8 sm:h-12 sm:w-12 object-contain" />
+            <span className="font-anek-english text-[7px] min-[380px]:text-[8px] sm:text-[11px] font-black tracking-tight text-[#052962] text-center leading-tight">ATTAPPADI ONLINE</span>
           </div>
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
@@ -867,8 +867,8 @@ export default function App() {
               transition={{ duration: 0.45, ease: "easeInOut" }}
               className={`relative flex min-w-0 flex-1 items-stretch text-white ${tickerMode === "breaking" ? "bg-[#d60016]" : "bg-[#0754aa]"}`}
             >
-              <div className="z-10 flex w-[115px] sm:w-[205px] shrink-0 items-center justify-center border-r border-white/25 px-2 sm:px-4 text-center shadow-[4px_0_12px_rgba(0,0,0,0.16)]">
-                <span lang="en" className="font-anek-english text-base sm:text-2xl md:text-[27px] font-black uppercase tracking-tight leading-none">
+              <div className="z-10 flex w-[76px] min-[380px]:w-[94px] sm:w-[205px] shrink-0 items-center justify-center border-r border-white/25 px-1 min-[380px]:px-2 sm:px-4 text-center shadow-[4px_0_12px_rgba(0,0,0,0.16)]">
+                <span lang="en" className="font-anek-english text-[11px] min-[380px]:text-[13px] sm:text-2xl md:text-[27px] font-black uppercase tracking-tight leading-none">
                   {tickerMode === "breaking" ? "BREAKING NEWS" : "NOTICE & ALERT"}
                 </span>
               </div>
@@ -884,7 +884,7 @@ export default function App() {
                       transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
                       onClick={() => { if (tickerDemo) return; tickerMode === "breaking" ? handleArticleClick(currentTickerItem as NewsPost) : setSelectedAnnouncement(currentTickerItem as NoticeItem); }}
                       lang={lang}
-                      className={`w-full px-4 sm:px-7 py-2 text-left text-base sm:text-xl md:text-2xl font-bold leading-snug hover:underline focus-visible:outline-2 focus-visible:outline-white ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}
+                      className={`w-full px-2 min-[380px]:px-3 sm:px-7 py-2 text-left text-[13px] min-[380px]:text-[15px] sm:text-xl md:text-2xl font-bold leading-snug hover:underline focus-visible:outline-2 focus-visible:outline-white ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}
                     >
                       <span className="block overflow-hidden text-ellipsis line-clamp-2">
                         {lang === "ta" ? (currentTickerItem.titleTa || currentTickerItem.titleEn || currentTickerItem.titleMl) : lang === "ml" ? (currentTickerItem.titleMl || currentTickerItem.titleEn || currentTickerItem.titleTa) : (currentTickerItem.titleEn || currentTickerItem.titleMl || currentTickerItem.titleTa)}
