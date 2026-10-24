@@ -1716,11 +1716,11 @@ export default function App() {
         <section className="bg-gray-100/50 border-t border-b border-gray-200 mt-12 py-12 px-4 md:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="border-b border-gray-200 pb-3 mb-8">
-              <h3 className="text-xl font-serif-guardian font-extrabold text-[#052962] uppercase tracking-wider">
-                {lang === "en" ? "BEYOND THE DESK: OPINIONS" : "വായനക്കാരുടെ അഭിപ്രായങ്ങൾ"}
+              <h3 lang="en" className="text-xl font-anek-english font-extrabold text-[#052962] uppercase tracking-wider">
+                READERS' COLUMN
               </h3>
-              <p className="text-xs text-gray-500 mt-1">
-                Community discussions, reform outlooks, and civil insights submitted directly by local scholars, farmers, and social activists.
+              <p lang={lang} className={`text-xs text-gray-500 mt-1 ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
+                {lang === "ta" ? "உள்ளூர் அறிஞர்கள், விவசாயிகள் மற்றும் சமூக ஆர்வலர்கள் பகிரும் சமூகக் கருத்துகள், சீர்திருத்தச் சிந்தனைகள் மற்றும் பொதுநலப் பார்வைகள்." : lang === "ml" ? "പ്രാദേശിക പണ്ഡിതർ, കർഷകർ, സാമൂഹിക പ്രവർത്തകർ എന്നിവർ പങ്കുവയ്ക്കുന്ന സാമൂഹിക ചർച്ചകളും വികസന കാഴ്ചപ്പാടുകളും അഭിപ്രായങ്ങളും." : "Community discussions, reform outlooks, and civil insights submitted directly by local scholars, farmers, and social activists."}
               </p>
             </div>
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
