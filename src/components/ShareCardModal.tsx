@@ -74,7 +74,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
       ? "Attappadi"
       : isLpg
         ? "Attappadi Area"
-        : (lang === "ml" ? (data as EventItem).locationMl : (data as EventItem).locationEn);
+        : (lang === "ta" ? ((data as EventItem).locationTa || (data as EventItem).locationEn) : lang === "ml" ? (data as EventItem).locationMl : (data as EventItem).locationEn);
 
   // Dynamic absolute share link
   const cardShareUrl = typeof window !== "undefined"
@@ -276,26 +276,26 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
             bgColor = "#fffbeb"; // bg-amber-50 / LPG warm color
             headerColor = "#b45309"; // amber-700
             borderCol = "#fde68a"; // amber-200
-            badgeLabel = lang === "ml" ? "എൽ.പി.ജി ഗ്യാസ് വിതരണം" : "LPG TODAY DELIVERY";
+            badgeLabel = lang === "ta" ? "எரிவாயு விநியோகம்" : lang === "ta" ? "எரிவாயு விநியோகம்" : lang === "ml" ? "എൽ.പി.ജി ഗ്യാസ് വിതരണം" : "LPG TODAY DELIVERY";
             alertIcon = "🚚";
           } else {
             const noticeItem = data as NoticeItem;
             const isHigh = noticeItem.severity === "high";
             const isCaution = noticeItem.type === "caution";
-            badgeLabel = lang === "ml" ? "ഔദ്യോഗിക അറിയിപ്പ്" : "OFFICIAL NOTICE";
+            badgeLabel = lang === "ta" ? "அதிகாரப்பூர்வ அறிவிப்பு" : lang === "ml" ? "ഔദ്യോഗിക അറിയിപ്പ്" : "OFFICIAL NOTICE";
             alertIcon = "📢";
 
             if (isHigh) {
               bgColor = "#fff1f2"; // bg-rose-50
               headerColor = "#be123c"; // rose-700
               borderCol = "#fecdd3"; // rose-200
-              badgeLabel = lang === "ml" ? "അടിയന്തര ജാഗ്രത" : "CRITICAL ALERT";
+              badgeLabel = lang === "ta" ? "அவசர எச்சரிக்கை" : lang === "ml" ? "അടിയന്തര ജാഗ്രത" : "CRITICAL ALERT";
               alertIcon = "⚠️";
             } else if (isCaution) {
               bgColor = "#fffbeb"; // bg-amber-50
               headerColor = "#d97706"; // amber-650 / amber-600
               borderCol = "#fde68a"; // amber-200
-              badgeLabel = lang === "ml" ? "ജാഗ്രതാ നിർദ്ദേശം" : "CAUTION ALERT";
+              badgeLabel = lang === "ta" ? "எச்சரிக்கை அறிவிப்பு" : lang === "ml" ? "ജാഗ്രതാ നിർദ്ദേശം" : "CAUTION ALERT";
               alertIcon = "⚠️";
             }
           }
@@ -706,26 +706,26 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
                 bgColorClass = "bg-amber-50/75 border-amber-200";
                 borderTopClass = "border-t-amber-700";
                 headerBgClass = "bg-amber-700";
-                badgeLabel = lang === "ml" ? "എൽ.പി.ജി ഗ്യാസ് വിതരണം" : "LPG TODAY DELIVERY";
+                badgeLabel = lang === "ta" ? "எரிவாயு விநியோகம்" : lang === "ml" ? "എൽ.പി.ജി ഗ്യാസ് വിതരണം" : "LPG TODAY DELIVERY";
                 alertIcon = "🚚";
               } else {
                 const noticeItem = data as NoticeItem;
                 const isHigh = noticeItem.severity === "high";
                 const isCaution = noticeItem.type === "caution";
-                badgeLabel = lang === "ml" ? "ഔദ്യോഗിക അറിയിപ്പ്" : "OFFICIAL NOTICE";
+                badgeLabel = lang === "ta" ? "அதிகாரப்பூர்வ அறிவிப்பு" : lang === "ml" ? "ഔദ്യോഗിക അറിയിപ്പ്" : "OFFICIAL NOTICE";
                 alertIcon = "📢";
 
                 if (isHigh) {
                   bgColorClass = "bg-rose-50 border-rose-200";
                   borderTopClass = "border-t-rose-600";
                   headerBgClass = "bg-rose-700";
-                  badgeLabel = lang === "ml" ? "അടിയന്തര ജാഗ്രത" : "CRITICAL ALERT";
+                  badgeLabel = lang === "ta" ? "அவசர எச்சரிக்கை" : lang === "ml" ? "അടിയന്തര ജാഗ്രത" : "CRITICAL ALERT";
                   alertIcon = "⚠️";
                 } else if (isCaution) {
                   bgColorClass = "bg-amber-50 border-amber-200";
                   borderTopClass = "border-t-amber-500";
                   headerBgClass = "bg-amber-600";
-                  badgeLabel = lang === "ml" ? "ജാഗ്രതാ നിർദ്ദേശം" : "CAUTION ALERT";
+                  badgeLabel = lang === "ta" ? "எச்சரிக்கை அறிவிப்பு" : lang === "ml" ? "ജാഗ്രതാ നിർദ്ദേശം" : "CAUTION ALERT";
                   alertIcon = "⚠️";
                 }
               }
@@ -862,13 +862,16 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
                 <Languages className="w-3.5 h-3.5" /> Toggle Card Language
               </span>
-              <div className="grid grid-cols-2 bg-slate-950 p-1 rounded-lg border border-slate-800">
+              <div className="grid grid-cols-3 bg-slate-950 p-1 rounded-lg border border-slate-800">
                 <button
                   type="button"
                   onClick={() => setLang("ml")}
                   className={`py-1.5 text-xs font-bold rounded-md transition ${lang === "ml" ? "bg-[#ffe500] text-slate-950" : "text-slate-400 hover:text-white"}`}
                 >
                   മലയാളം
+                </button>
+                <button type="button" onClick={() => setLang("ta")} className={`py-1.5 text-xs font-bold rounded-md transition ${lang === "ta" ? "bg-[#ffe500] text-slate-950" : "text-slate-400 hover:text-white"}`}>
+                  தமிழ்
                 </button>
                 <button
                   type="button"
