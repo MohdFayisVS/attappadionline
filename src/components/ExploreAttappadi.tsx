@@ -119,6 +119,11 @@ const defaultCultures: CultureItem[] = [
 const defaultStays: StayItem[] = [
   {
     id: "stay_1",
+    nameTa: "சைலண்ட் வேலி சுற்றுச்சூழல் வன விடுதி",
+    typeTa: "அரசு நிர்வகிக்கும் இயற்கை விடுதி",
+    locationTa: "முக்காலி கிராமம்",
+    priceTa: "ஒரு இரவுக்கு ₹2,500 – ₹4,500",
+    featuresTa: ["வனத்துறை நிர்வாகம்","உள்ளூர் வழிகாட்டிகள்","பாரம்பரிய உணவகம்"],
     nameEn: "Silent Valley Eco Forest Lodge",
     nameMl: "സൈലന്റ് വാലി ഇക്കോ ലോഗ് ഹൗസ്",
     typeEn: "Govt-owned Eco Haven",
@@ -133,6 +138,11 @@ const defaultStays: StayItem[] = [
   },
   {
     id: "stay_2",
+    nameTa: "பவானி ஆற்றங்கரை இயற்கை விடுதி",
+    typeTa: "தனியார் தங்கும் விடுதி",
+    locationTa: "அகளி மலைப்பகுதி",
+    priceTa: "ஒரு இரவுக்கு ₹4,000 – ₹7,000",
+    featuresTa: ["ஆற்றங்கரைக் காட்சி","நட்சத்திரங்களின் கீழ் முகாம் நெருப்பு","ஜீப் பயண வாய்ப்புகள்"],
     nameEn: "Bhavani Riverside Nature Estate",
     nameMl: "ഭവാനി റിവർസൈഡ് നേച്ചർ എസ്റ്റേറ്റ്",
     typeEn: "Premium Private Lodge",
@@ -147,6 +157,11 @@ const defaultStays: StayItem[] = [
   },
   {
     id: "stay_3",
+    nameTa: "அகளி பள்ளத்தாக்கு வீட்டு விடுதிகள்",
+    typeTa: "சமூகப் பண்ணைத் தங்குமிடம்",
+    locationTa: "தாவளம் – அகளி சாலை",
+    priceTa: "ஒரு இரவுக்கு ₹1,200 – ₹2,000",
+    featuresTa: ["விவசாயக் குடும்பங்களுடன் தங்குதல்","மசாலாத் தோட்ட நடைபயணம்","வீட்டுச் சமையல் உணவுகள்"],
     nameEn: "Agali Valley HomeStays",
     nameMl: "അഗളി വാലി ഹോംസ്റ്റേകൾ",
     typeEn: "Community Farm Stay",
@@ -191,6 +206,8 @@ const defaultTravelogues: TravelogueItem[] = [
 const defaultPhotos: PhotoItem[] = [
   {
     id: "photo_1",
+    titleTa: "மூடுபனியில் சைலண்ட் வேலியின் பசுமைக் காடுகள்",
+    descTa: "அடர்ந்த மழைக்காட்டின் அதிகாலை இயற்கைக் காட்சி.",
     url: "https://images.unsplash.com/photo-1549221194-4fa7a41413f4?w=1000&auto=format&fit=crop",
     titleEn: "Misty Evergreen Canopies of Silent Valley",
     titleMl: "കോടമഞ്ഞിൽ മൂടിയ സൈലന്റ് വാലി നിബിഡവനങ്ങൾ",
@@ -199,6 +216,8 @@ const defaultPhotos: PhotoItem[] = [
   },
   {
     id: "photo_2",
+    titleTa: "மேகங்களால் சூழப்பட்ட மல்லேஸ்வரன் மலைச்சிகரம்",
+    descTa: "பழங்குடியின மக்களால் புனிதமாக மதிக்கப்படும் மலைச்சிகரம்.",
     url: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1000&auto=format&fit=crop",
     titleEn: "Malleswara Peak Shrouded in Silken Clouds",
     titleMl: "മല്ലേശ്വരൻ മുടിയെ തഴുകുന്ന മേഘജാലം",
@@ -207,6 +226,8 @@ const defaultPhotos: PhotoItem[] = [
   },
   {
     id: "photo_3",
+    titleTa: "இனிய நீர் பாயும் சிறுவாணி ஓடைகள்",
+    descTa: "அடர்ந்த காடுகளின் வழியாகப் பாயும் சிறுவாணி நீரோடைகள்.",
     url: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1000&auto=format&fit=crop",
     titleEn: "Primal Siruvani Streams Carrying Sweet Water",
     titleMl: "മലനിരകളിൽ നിന്നൊഴുകിയെത്തുന്ന ശിരുവാണി പുഴ",
