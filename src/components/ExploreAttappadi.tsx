@@ -881,7 +881,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                         return featsEn.map((feat, fIdx) => (
                           <li key={fIdx} className="text-[10px] text-gray-400 flex items-center gap-1">
                             <span className="text-emerald-600 font-black">✔</span>
-                            {lang !== "ml" ? feat : (featsMl[fIdx] || feat)}
+                            {lang === "ml" ? (featsMl[fIdx] || feat) : lang === "ta" ? (((stay as any).featuresTa?.[fIdx]) || feat) : feat}
                           </li>
                         ));
                       })()}
@@ -889,7 +889,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                   </div>
                 </div>
                 <div className="p-4 border-t border-gray-100 bg-slate-50 flex items-center justify-between">
-                  <span className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">{lang !== "ml" ? "Rate Estimate" : "നിരക്ക്"}</span>
+                  <span className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">{lang === "ta" ? "மதிப்பிடப்பட்ட கட்டணம்" : lang === "ml" ? "നിരക്ക്" : "Rate Estimate"}</span>
                   <span className="text-xs font-black text-[#c70000]">{lang === "ml" ? stay.priceMl : lang === "ta" ? (((stay as any).priceTa) || stay.priceEn) : stay.priceEn}</span>
                 </div>
               </motion.div>
@@ -953,7 +953,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2.5">
                     <div className="text-white text-[10px] space-y-0.5 truncate">
                       <p className="font-bold truncate">{lang === "ml" ? ph.titleMl : lang === "ta" ? (((ph as any).titleTa) || ph.titleEn) : ph.titleEn}</p>
-                      <p className="text-slate-300 text-[8px] truncate">{lang !== "ml" ? "Click to expand" : "വലുതാക്കി കാണാൻ ക്ലിക്ക് ചെയ്യുക"}</p>
+                      <p className="text-slate-300 text-[8px] truncate">{lang === "ta" ? "பெரிதாகப் பார்க்கத் தொடவும்" : lang === "ml" ? "വലുതാക്കി കാണാൻ ക്ലിക്ക് ചെയ്യുക" : "Click to expand"}</p>
                     </div>
                   </div>
                 </div>
@@ -1004,13 +1004,13 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                     {/* Bottom overlay text detail */}
                     <div className="w-full text-center text-white mt-4 space-y-1 px-4">
                       <span className="text-[9px] bg-amber-500 text-slate-950 font-black px-2 py-0.5 rounded uppercase tracking-wider inline-block">
-                        {lang !== "ml" ? `Photo ${selectedPhotoIndex + 1} of ${photosList.length}` : `ചിത്രം ${selectedPhotoIndex + 1} / ${photosList.length}`}
+                        {lang === "ta" ? `படம் ${selectedPhotoIndex + 1} / ${photosList.length}` : lang === "ml" ? `ചിത്രം ${selectedPhotoIndex + 1} / ${photosList.length}` : `Photo ${selectedPhotoIndex + 1} of ${photosList.length}`}
                       </span>
                       <h4 className="font-serif-guardian font-extrabold text-base md:text-xl text-[#ffe500]">
-                        {lang !== "ml" ? photosList[selectedPhotoIndex].titleEn : photosList[selectedPhotoIndex].titleMl}
+                        {lang === "ml" ? photosList[selectedPhotoIndex].titleMl : lang === "ta" ? (((photosList[selectedPhotoIndex] as any).titleTa) || photosList[selectedPhotoIndex].titleEn) : photosList[selectedPhotoIndex].titleEn}
                       </h4>
                       <p className="text-xs text-slate-300 font-light max-w-lg mx-auto">
-                        {lang !== "ml" ? photosList[selectedPhotoIndex].descEn : photosList[selectedPhotoIndex].descMl}
+                        {lang === "ml" ? photosList[selectedPhotoIndex].descMl : lang === "ta" ? (((photosList[selectedPhotoIndex] as any).descTa) || photosList[selectedPhotoIndex].descEn) : photosList[selectedPhotoIndex].descEn}
                       </p>
                     </div>
 
