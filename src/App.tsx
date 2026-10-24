@@ -577,10 +577,10 @@ export default function App() {
           </div>
           
           <div className="shrink-0 inline-flex items-center justify-center bg-[#ffe500] border border-[#ffe500] group-hover:bg-white group-hover:border-white px-4 py-2 rounded-lg text-xs sm:text-sm font-bold tracking-normal text-[#052962] shadow-sm transition duration-300">
-            {ad.actionType === "phone" ? (lang === "en" ? "CALL NOW" : "വിളിക്കുക") : 
-             ad.actionType === "whatsapp" ? (lang === "en" ? "CHAT" : "വാട്സാപ്പ്") : 
-             ad.actionType === "website" ? (lang === "en" ? "VISIT" : "വെബ്സൈറ്റ്") : 
-             (lang === "en" ? "VIEW DETAILS" : "വിശദാംശങ്ങൾ")}
+            {ad.actionType === "phone" ? (lang === "ta" ? "இப்போது அழைக்கவும்" : lang === "ml" ? "വിളിക്കുക" : "CALL NOW") : 
+             ad.actionType === "whatsapp" ? (lang === "ta" ? "உரையாடவும்" : lang === "ml" ? "വാട്സാപ്പ്" : "CHAT") : 
+             ad.actionType === "website" ? (lang === "ta" ? "இணையதளத்தைப் பார்வையிடவும்" : lang === "ml" ? "വെബ്സൈറ്റ്" : "VISIT") : 
+             (lang === "ta" ? "விவரங்களைக் காண்க" : lang === "ml" ? "വിശദാംശങ്ങൾ" : "VIEW DETAILS")}
           </div>
         </div>
       </div>
@@ -2166,7 +2166,7 @@ export default function App() {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white dark:bg-slate-900 border dark:border-slate-800 rounded-2xl max-w-md w-full shadow-lg overflow-hidden flex flex-col font-anek-malayalam text-slate-900 dark:text-slate-100"
+              className={`bg-white dark:bg-slate-900 border dark:border-slate-800 rounded-2xl max-w-md w-full shadow-lg overflow-hidden flex flex-col text-slate-900 dark:text-slate-100 ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}
             >
               <div className={`p-4 text-white flex items-center justify-between ${
                 selectedAnnouncement.severity === "high" 
