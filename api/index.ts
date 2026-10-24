@@ -562,6 +562,26 @@ app.post("/api/citizen-reports/:id/approve", async (req, res) => {
   const suffix = report.language === "ml" ? "Ml" : report.language === "ta" ? "Ta" : "En";
   titles["title" + suffix] = headline;
   bodies["content" + suffix] = content;
+  // Populate all three languages before publishing; never display a mismatched-language fallback.
+  try {
+    if (!process.env.GEMINI_API_KEY) return res.status(503).json({ error: "Multilingual publication requires AI translation configuration." });
+    const { GoogleGenAI } = await import("@google/genai");
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    for (const [code, suffixName] of [["en", "En"], ["ml", "Ml"], ["ta", "Ta"]] as const) {
+      if (code === report.language) continue;
+      const translated = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: "Translate the following news headline and body into " + ({ en: "English", ml: "Malayalam", ta: "Tamil" }[code]) + ". Preserve every fact, attribution, proper noun, number and uncertainty. Never invent facts. Return ONLY JSON with keys headline and content. Text: " + JSON.stringify({ headline, content })
+      });
+      const parsed = JSON.parse((translated.text || "").replace(/^```(?:json)?\\s*|\\s*```$/g, "").trim());
+      if (typeof parsed.headline !== "string" || typeof parsed.content !== "string" || !parsed.headline.trim() || !parsed.content.trim()) throw new Error("Incomplete translation");
+      titles["title" + suffixName] = parsed.headline.trim();
+      bodies["content" + suffixName] = parsed.content.trim();
+    }
+  } catch (error) {
+    console.error("Citizen report translation failed", error);
+    return res.status(503).json({ error: "Translation unavailable. Report remains pending." });
+  }
   const article = {
     id: "news_citizen_" + report.id, ...titles, ...bodies, category: "latest",
     regions: [report.area], image: report.photo || "",
