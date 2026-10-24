@@ -179,6 +179,10 @@ const defaultStays: StayItem[] = [
 const defaultTravelogues: TravelogueItem[] = [
   {
     id: "trav_1",
+    titleTa: "மழைக்கால மாயம்: சைலண்ட் வேலியின் நீர்ப்பிடிப்புப் பகுதியில் நடைபயணம்",
+    authorTa: "ஃபாயிஸ் முகமது, பயணக் கட்டுரையாளர்",
+    snippetTa: "உயர்ந்த மரங்களின் மேல் அடர்ந்த பனிமூட்டம் படர்கிறது. பழமையான மரங்களிலிருந்து மழைத்துளிகள் விழுகின்றன; தொலைவில் சிறுவாணி ஓடைகளின் ஓசை கேட்கிறது. முக்காலியின் ஈரமான காட்டுப்பாதைகளில் நடப்பது இயற்கையைப் புதிய பார்வையில் காணச் செய்கிறது...",
+    readTimeTa: "5 நிமிட வாசிப்பு",
     titleEn: "Monsoon Magic: Walking Through Silent Valley Catchments",
     titleMl: "വർഷകാലത്തെ പ്രകൃതി വസന്തം: സൈലന്റ് വാലിയിലൂടെ ഒരു കാൽനട യാത്ര",
     authorEn: "Fayis Mohammed, Travel Columnist",
@@ -191,6 +195,10 @@ const defaultTravelogues: TravelogueItem[] = [
   },
   {
     id: "trav_2",
+    titleTa: "மல்லேஸ்வரன் மலையடிவாரத்தில் ஒரு ஆன்மிகப் பயணம்",
+    authorTa: "வழக்கறிஞர் ராஜேஷ் கே., அகளி",
+    snippetTa: "அட்டப்பாடியின் பழங்குடியின மக்கள் மல்லேஸ்வரன் மலையை ஆழ்ந்த மரியாதையுடன் பார்க்கிறார்கள். சிவராத்திரி இரவில் மலை உச்சியில் தீபம் ஏற்றப்படும் வேளையில் பள்ளத்தாக்குகளில் ஒலிக்கும் பாரம்பரிய மேளங்களும் அந்தச் சூழலும் மறக்க முடியாத அனுபவத்தைத் தருகின்றன...",
+    readTimeTa: "4 நிமிட வாசிப்பு",
     titleEn: "Reverence & Height: Gaining Perspective at the base of deity peak Malleswara",
     titleMl: "കരുത്തിന്റെ പ്രതീകം: മല്ലേശ്വരൻ മുടിയുടെ താഴ്വാരങ്ങളിലൂടെയുള്ള അനുഭവം",
     authorEn: "Adv. Rajesh K., Agali",
@@ -707,16 +715,16 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
           <div className="flex items-center gap-2 mb-1.5">
             <Compass className="w-5 h-5 text-[#c70000] animate-spin" style={{ animationDuration: '6s' }} />
             <span className="text-[10px] bg-[#c70000] text-white font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">
-              {lang !== "ml" ? "Interactive Travel Desk" : "സഞ്ചാര ഡെസ്ക്"}
+              INTERACTIVE TRAVEL DESK
             </span>
           </div>
-          <h2 className="font-serif-guardian font-extrabold text-[#052962] text-2xl md:text-4.5xl leading-tight">
-            {lang !== "ml" ? "Explore Attappadi Valley" : "അട്ടപ്പാടിയെ അറിയാം..."}
+          <h2 lang="en" className="font-anek-english font-extrabold text-[#052962] text-2xl md:text-4.5xl leading-tight">
+            EXPLORE ATTAPPADI VALLEY
           </h2>
-          <p className="text-xs md:text-sm text-gray-500 mt-2 max-w-3xl leading-relaxed">
+          <p lang={lang} className={`text-xs md:text-sm text-gray-500 mt-2 max-w-3xl leading-relaxed ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
             {lang === "en" 
               ? "Immerse yourself in India's richest biodiversity, pristine flowing rivers, spiritual peaks, rare tribal gastronomy, and organic eco-tourism experiences from Silent Valley to Sholayur."
-              : "സൈലന്റ് വാലി മുതൽ ഷോളയൂർ വരെയുള്ള അട്ടപ്പാടിയുടെ സമൃദ്ധമായ വനസംസ്കാരം, ഒഴുകുന്ന നിത്യഹരിത പുഴകൾ, ആത്മീയ കൊടുമുടികൾ, അപൂർവ ഗോത്രവിഭവങ്ങൾ, പ്രകൃതി സ്നേഹികളുടെ താമസ സൗകര്യങ്ങൾ എന്നിവ ഇവിടെ കണ്ടെത്താം."
+              : lang === "ta" ? "சைலண்ட் வேலி முதல் சோலையூர் வரை அட்டப்பாடியின் பசுமையான காடுகள், ஆறுகள், புனித மலைச்சிகரங்கள், பழங்குடியின உணவு மரபுகள் மற்றும் இயற்கைச் சுற்றுலா அனுபவங்களை அறிந்துகொள்ளுங்கள்." : "സൈലന്റ് വാലി മുതൽ ഷോളയൂർ വരെയുള്ള അട്ടപ്പാടിയുടെ സമൃദ്ധമായ വനസംസ്കാരം, ഒഴുകുന്ന നിത്യഹരിത പുഴകൾ, ആത്മീയ കൊടുമുടികൾ, അപൂർവ ഗോത്രവിഭവങ്ങൾ, പ്രകൃതി സ്നേഹികളുടെ താമസ സൗകര്യങ്ങൾ എന്നിവ ഇവിടെ കണ്ടെത്താം."
             }
           </p>
         </div>
