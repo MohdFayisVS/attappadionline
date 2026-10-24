@@ -268,11 +268,6 @@ body {
 header, footer { font-family: "Anek Latin", sans-serif; }
 /* Shared site chrome must remain visually identical regardless of the page language.
    Explicitly scope the three scripts to the language-switcher labels. */
-header :is(button, a, span, p, strong, time, input),
-footer :is(button, a, span, p, strong, time, input),
-.ao-edition-strip :is(button, a, span, p, strong, time, input) {
-  font-family: "Anek Latin", sans-serif;
-}
 header [lang="ml"], header [lang="ml"] *,
 footer [lang="ml"], footer [lang="ml"] * {
   font-family: "Anek Malayalam", sans-serif;
