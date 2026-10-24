@@ -158,6 +158,30 @@ export default function App() {
 
   // Dynamic Advertisement State Hooks
   const [adConfig, setAdConfig] = useState<any>(null);
+  const [adSlide, setAdSlide] = useState(0);
+  useEffect(() => {
+    const timer = window.setInterval(() => setAdSlide(n => n + 1), 4500);
+    return () => window.clearInterval(timer);
+  }, []);
+  const sampleAds = [
+    { image: "/attappadi-mark.svg", titleEn: "Attappadi Online", subtitleEn: "All around the Attappadi Hills", titleMl: "അട്ടപ്പാടി ഓൺലൈൻ", titleTa: "அட்டப்பாடி ஆன்லைன்" },
+    { image: "/attappadi-mark.svg", titleEn: "Local News • Community • Updates", subtitleEn: "Attappadi Online", titleMl: "പ്രാദേശിക വാർത്തകളും അറിയിപ്പുകളും", titleTa: "உள்ளூர் செய்திகள் மற்றும் அறிவிப்புகள்" },
+    { image: "/attappadi-mark.svg", titleEn: "Discover Attappadi", subtitleEn: "Explore the hills with Attappadi Online", titleMl: "അട്ടപ്പാടിയെ അറിയാം", titleTa: "அட்டப்பாடியை அறிந்திடுங்கள்" }
+  ];
+  const uploadedAds = [adConfig?.leftAd, adConfig?.rightAd].filter((ad: any) => typeof ad?.image === "string" && ad.image.trim());
+  const carouselAds = uploadedAds.length ? uploadedAds : sampleAds;
+  const renderCarouselAd = (ad: any) => (
+    <div className="relative h-full min-h-[108px] sm:min-h-[140px] overflow-hidden rounded-xl bg-[#102e61] flex items-center justify-center" aria-label="Advertisement">
+      {uploadedAds.length ? (
+        <img src={ad.image} alt={ad.titleEn || "Advertisement"} className="w-full h-full absolute inset-0 object-contain" loading="lazy" />
+      ) : (
+        <div className="flex items-center justify-center gap-4 px-4 py-3 text-white text-center">
+          <img src="/attappadi-mark.svg" alt="" className="w-14 h-14 sm:w-20 sm:h-20 object-contain rounded-lg bg-white p-2 shrink-0" />
+          <div className="min-w-0"><strong className="block font-anek-english text-lg sm:text-xl">{ad.titleEn}</strong><span className="block text-xs sm:text-sm text-yellow-200">{ad.subtitleEn}</span></div>
+        </div>
+      )}
+    </div>
+  );
   const [activeAdDetail, setActiveAdDetail] = useState<{
     title: string;
     subtitle: string;
@@ -664,9 +688,19 @@ export default function App() {
                 <span className="text-[10px] font-extrabold tracking-widest text-slate-500">IST</span>
               </div>
             </div>
-            <div className="ao-edition-promos flex-1 min-w-0 grid grid-cols-1 md:grid-cols-2 gap-3 self-stretch">
-              {renderAdBox(adConfig?.leftAd || { titleEn: "Your Advertisement Here", titleMl: "നിങ്ങളുടെ പരസ്യം ഇവിടെ", subtitleEn: "Sample advertisement • Contact details coming soon", subtitleMl: "മാതൃകാ പരസ്യം • ബന്ധപ്പെടാനുള്ള വിവരങ്ങൾ ഉടൻ", contact: "", actionType: "share", image: "" }, Boolean(adConfig?.leftAd))}
-              {renderAdBox(adConfig?.rightAd || { titleEn: "Contact Information", titleMl: "ബന്ധപ്പെടാനുള്ള വിവരങ്ങൾ", subtitleEn: "Sample contact • Number to be configured", subtitleMl: "മാതൃകാ വിവരം • നമ്പർ ഉടൻ ചേർക്കും", contact: "", actionType: "phone", image: "" }, Boolean(adConfig?.rightAd))}
+            <div className="ao-edition-promos flex-1 min-w-0 grid grid-cols-1 md:grid-cols-2 gap-3 self-stretch" aria-label="Automatic advertisement carousel">
+              {[0, 1].map(slot => (
+                <div key={slot} className="relative min-w-0 overflow-hidden rounded-xl">
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.div key={String((adSlide + slot) % carouselAds.length) + "-" + slot}
+                      initial={{ opacity: 0, x: 28 }} animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -28 }} transition={{ duration: 0.55 }}
+                      className="h-full">
+                      {renderCarouselAd(carouselAds[(adSlide + slot) % carouselAds.length])}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              ))}
             </div>
           </div>
         </div>
