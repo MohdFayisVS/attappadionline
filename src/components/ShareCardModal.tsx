@@ -178,15 +178,11 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
           let noticeY = 140; // Starts below header
           noticeY += 45; // Date banner height
 
-          const titleFont = lang === "ml"
-            ? "800 32px 'Anek Malayalam', sans-serif"
-            : "900 29px system-ui, -apple-system, sans-serif";
+          const titleFont = lang === "ml" ? "800 32px 'Anek Malayalam', sans-serif" : lang === "ta" ? "900 29px 'Anek Tamil', sans-serif" : "900 29px 'Anek Latin', sans-serif";
           const titleLines = getLinesCount(title || "", titleFont, 800 - 108); // paddingX is 54 (x2 = 108)
           noticeY += titleLines * 42 + 15;
 
-          const contentFont = lang === "ml"
-            ? "500 22px 'Anek Malayalam', sans-serif"
-            : "500 20px system-ui, -apple-system, sans-serif";
+          const contentFont = lang === "ml" ? "500 22px 'Anek Malayalam', sans-serif" : lang === "ta" ? "500 20px 'Anek Tamil', sans-serif" : "500 20px 'Anek Latin', sans-serif";
           const contentLines = getLinesCount(summary || "", contentFont, 800 - 108);
           noticeY += Math.min(contentLines, 10) * 32 + 25;
 
@@ -200,9 +196,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
           let newsY = 600; // Starts below image at 560
           newsY += 45; // Date banner
 
-          const titleFont = lang === "ml"
-            ? "800 32px 'Anek Malayalam', sans-serif"
-            : "800 34px 'Playfair Display', Georgia, serif";
+          const titleFont = lang === "ml" ? "800 32px 'Anek Malayalam', sans-serif" : lang === "ta" ? "800 34px 'Anek Tamil', serif" : "800 34px 'Anek Latin', serif";
           const titleLineHeight = lang === "ml" ? 44 : 46;
           const titleLines = getLinesCount(title || "", titleFont, 800 - 96); // paddingX is 48 (x2 = 96)
           newsY += Math.min(titleLines, 3) * titleLineHeight + 25;
@@ -325,9 +319,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
           ctx.fill();
 
           ctx.fillStyle = "#ffffff";
-          ctx.font = lang === "ml" 
-            ? "bold 24px 'Anek Malayalam', sans-serif" 
-            : "bold 22px system-ui, -apple-system, sans-serif";
+          ctx.font = lang === "ml" ? "bold 24px 'Anek Malayalam', sans-serif" : lang === "ta" ? "bold 22px 'Anek Tamil', sans-serif" : "bold 22px 'Anek Latin', sans-serif";
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
           ctx.fillText(`${alertIcon}  ${badgeLabel}`, canvas.width / 2, badgeY + badgeH / 2);
@@ -340,17 +332,13 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
 
           // 2. Date info
           ctx.fillStyle = "#64748b"; // Slate-500
-          ctx.font = lang === "ml"
-            ? "bold 22px 'Anek Malayalam', sans-serif"
-            : "bold 20px system-ui, -apple-system, sans-serif";
+          ctx.font = lang === "ml" ? "bold 22px 'Anek Malayalam', sans-serif" : lang === "ta" ? "bold 20px 'Anek Tamil', sans-serif" : "bold 20px 'Anek Latin', sans-serif";
           ctx.fillText(`📅  ${dateStr}`, paddingX, currentY);
           currentY += 45;
 
           // 3. Title (Notice title or Gas Agency title)
           ctx.fillStyle = "#0f172a"; // Slate-900
-          ctx.font = lang === "ml"
-            ? "800 32px 'Anek Malayalam', sans-serif"
-            : "900 29px system-ui, -apple-system, sans-serif";
+          ctx.font = lang === "ml" ? "800 32px 'Anek Malayalam', sans-serif" : lang === "ta" ? "900 29px 'Anek Tamil', sans-serif" : "900 29px 'Anek Latin', sans-serif";
           
           const maxTextWidth = canvas.width - (paddingX * 2);
           currentY = wrapTextOnCanvas(title, paddingX, currentY, 42, maxTextWidth, 2);
@@ -358,9 +346,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
 
           // 4. Content (Description of Notice or Gas route summary)
           ctx.fillStyle = "#334155"; // Slate-700
-          ctx.font = lang === "ml"
-            ? "500 22px 'Anek Malayalam', sans-serif"
-            : "500 20px system-ui, -apple-system, sans-serif";
+          ctx.font = lang === "ml" ? "500 22px 'Anek Malayalam', sans-serif" : lang === "ta" ? "500 20px 'Anek Tamil', sans-serif" : "500 20px 'Anek Latin', sans-serif";
           
           currentY = wrapTextOnCanvas(summary, paddingX, currentY, 32, maxTextWidth, 10);
           currentY += 25;
@@ -521,9 +507,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
         ctx.fill();
 
         ctx.fillStyle = "#ffffff";
-        ctx.font = lang === "ml" 
-          ? "bold 15px 'Anek Malayalam', sans-serif" 
-          : "bold 15px system-ui, -apple-system, sans-serif";
+        ctx.font = lang === "ml" ? "bold 15px 'Anek Malayalam', sans-serif" : lang === "ta" ? "bold 15px 'Anek Tamil', sans-serif" : "bold 15px 'Anek Latin', sans-serif";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(badgeText, badgeX + badgeW / 2, badgeY + badgeH / 2);
@@ -538,17 +522,13 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
 
         // 5. Calendar Icon & Date
         ctx.fillStyle = "#94a3b8"; // Slate color
-        ctx.font = lang === "ml"
-          ? "bold 18px 'Anek Malayalam', sans-serif"
-          : "bold 18px system-ui, -apple-system, sans-serif";
+        ctx.font = lang === "ml" ? "bold 18px 'Anek Malayalam', sans-serif" : lang === "ta" ? "bold 18px 'Anek Tamil', sans-serif" : "bold 18px 'Anek Latin', sans-serif";
         ctx.fillText(`📅  ${dateStr}`, paddingX, currentY);
         currentY += 45;
 
         // 6. Draw Headline Title with elegant 'Playfair Display' / Serif font styling
         ctx.fillStyle = "#052962";
-        ctx.font = lang === "ml"
-          ? "800 32px 'Anek Malayalam', sans-serif"
-          : "800 34px 'Playfair Display', Georgia, serif";
+        ctx.font = lang === "ml" ? "800 32px 'Anek Malayalam', sans-serif" : lang === "ta" ? "800 34px 'Anek Tamil', serif" : "800 34px 'Anek Latin', serif";
         const titleLineHeight = lang === "ml" ? 44 : 46;
         const maxTextWidth = canvas.width - (paddingX * 2);
 
@@ -566,9 +546,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
         // 9. Footer Components: Small Location Badge on left, and Elegant Brand typography wordmark on right
         const footerElementsY = footerBorderY + 30;
 
-        ctx.font = lang === "ml"
-          ? "bold 16px 'Anek Malayalam', sans-serif"
-          : "bold 16px system-ui, -apple-system, sans-serif";
+        ctx.font = lang === "ml" ? "bold 16px 'Anek Malayalam', sans-serif" : lang === "ta" ? "bold 16px 'Anek Tamil', sans-serif" : "bold 16px 'Anek Latin', sans-serif";
         const displayLocText = `📍 ${location.toUpperCase()}`;
         const locWidth = ctx.measureText(displayLocText).width + 24;
         const locHeight = 38;
