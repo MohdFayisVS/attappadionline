@@ -332,7 +332,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     sourceFieldPath: string, // e.g. "titleEn" or "leftAd.titleEn"
     targetFieldPath: string, // e.g. "titleMl" or "leftAd.titleMl"
     setFormState: React.Dispatch<React.SetStateAction<any>>,
-    targetLang: "en" | "ml"
+    targetLang: "en" | "ml" | "ta"
   ) => {
     const trimmed = text.trim();
     if (!trimmed) return;
@@ -351,7 +351,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
         const response = await adminFetch("/api/admin/translate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: trimmed, targetLang })
+          body: JSON.stringify({ text: trimmed, targetLang, sourceLang: sourceFieldPath.endsWith("Ml") ? "ml" : "en" })
         });
         if (response.ok) {
           const data = await response.json();
@@ -383,6 +383,27 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             });
           }
         }
+        // Keep Tamil in sync while authoring; preserve any manually edited Tamil text.
+        if (targetLang !== "ta" && /(?:En|Ml)$/.test(sourceFieldPath)) {
+          const tamilPath = sourceFieldPath.replace(/(?:En|Ml)$/, "Ta");
+          const tamilResponse = await adminFetch("/api/admin/translate", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: trimmed, sourceLang: sourceFieldPath.endsWith("Ml") ? "ml" : "en", targetLang: "ta" })
+          });
+          if (tamilResponse.ok) {
+            const tamilData = await tamilResponse.json();
+            if (tamilData.translatedText) setFormState((previous: any) => {
+              if (sourceFieldPath.includes(".")) {
+                const [section, key] = sourceFieldPath.split(".");
+                const targetKey = tamilPath.split(".")[1];
+                if (!previous[section] || previous[section][key] !== text || previous[section][targetKey]?.trim()) return previous;
+                return { ...previous, [section]: { ...previous[section], [targetKey]: tamilData.translatedText } };
+              }
+              if (previous[sourceFieldPath] !== text || previous[tamilPath]?.trim()) return previous;
+              return { ...previous, [tamilPath]: tamilData.translatedText };
+            });
+          }
+        }
       } catch (err) {
         console.error("Live translation error:", err);
       } finally {
@@ -391,80 +412,63 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     }, delay);
   };
 
-  // Generic Auto Translation Core Engine
+  // Fill missing translations in all three languages; never replace manually entered values.
   const performAutoTranslationForForm = async <T extends Record<string, any>>(
     formState: T,
     setFormState: React.Dispatch<React.SetStateAction<T>>,
     fields: { en: keyof T; ml: keyof T; label?: string }[]
   ): Promise<T> => {
-    if (!autoTranslateOnSubmit) {
-      return formState;
-    }
-
-    let updatedForm = { ...formState };
-    let hasKeysToTranslate = false;
-
-    // Direct pre-check
-    for (const pair of fields) {
-      const enVal = String(formState[pair.en] || "").trim();
-      const mlVal = String(formState[pair.ml] || "").trim();
-      if ((enVal && !mlVal) || (mlVal && !enVal)) {
-        hasKeysToTranslate = true;
+    if (!autoTranslateOnSubmit) return formState;
+    const updatedForm = { ...formState };
+    const groups = new Map<string, Partial<Record<"en" | "ml" | "ta", keyof T>>>();
+    const register = (key: keyof T) => {
+      const match = String(key).match(/^(.*)(En|Ml|Ta)$/);
+      if (!match) return;
+      const language = match[2].toLowerCase() as "en" | "ml" | "ta";
+      const group = groups.get(match[1]) || {};
+      group[language] = key;
+      groups.set(match[1], group);
+    };
+    Object.keys(formState).forEach(key => register(key as keyof T));
+    fields.forEach(pair => { register(pair.en); register(pair.ml); });
+    const jobs: { source: keyof T; target: keyof T; sourceLang: "en" | "ml" | "ta"; targetLang: "en" | "ml" | "ta" }[] = [];
+    for (const group of groups.values()) {
+      const sourceLang = (["en", "ml", "ta"] as const).find(lang => group[lang] && String(formState[group[lang]!] || "").trim());
+      if (!sourceLang) continue;
+      for (const targetLang of ["en", "ml", "ta"] as const) {
+        const target = group[targetLang];
+        if (target && targetLang !== sourceLang && !String(formState[target] || "").trim()) {
+          jobs.push({ source: group[sourceLang]!, target, sourceLang, targetLang });
+        }
       }
     }
-
-    if (!hasKeysToTranslate) {
-      return formState;
-    }
-
+    if (!jobs.length) return formState;
     setIsTranslatingForm(true);
-    triggerToast("✨ Gemini AI is generating translations for empty language fields...");
-
     try {
-      const promises = fields.map(async (pair) => {
-        const enVal = String(formState[pair.en] || "").trim();
-        const mlVal = String(formState[pair.ml] || "").trim();
-
-        if (enVal && !mlVal) {
-          try {
-            const response = await adminFetch("/api/admin/translate", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ text: enVal, targetLang: "ml" })
-            });
-            const data = await response.json();
-            if (response.ok && data.translatedText) {
-              updatedForm[pair.ml] = data.translatedText as any;
-            }
-          } catch (e) {
-            console.error("Auto translate error for " + String(pair.ml), e);
-          }
-        } else if (mlVal && !enVal) {
-          try {
-            const response = await adminFetch("/api/admin/translate", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ text: mlVal, targetLang: "en" })
-            });
-            const data = await response.json();
-            if (response.ok && data.translatedText) {
-              updatedForm[pair.en] = data.translatedText as any;
-            }
-          } catch (e) {
-            console.error("Auto translate error for " + String(pair.en), e);
-          }
-        }
+      const results = await Promise.all(jobs.map(async job => {
+        try {
+          const response = await adminFetch("/api/admin/translate", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: String(formState[job.source]), sourceLang: job.sourceLang, targetLang: job.targetLang })
+          });
+          if (!response.ok) return null;
+          const data = await response.json();
+          return typeof data.translatedText === "string" && data.translatedText.trim()
+            ? { target: job.target, text: data.translatedText.trim() } : null;
+        } catch (error) { console.error("Translation failed", job.target, error); return null; }
+      }));
+      results.forEach(result => {
+        if (result && !String(updatedForm[result.target] || "").trim()) updatedForm[result.target] = result.text as any;
       });
-
-      await Promise.all(promises);
-      setFormState(updatedForm);
-      triggerToast("✨ Translations updated & completed by Gemini AI!");
-    } catch (err) {
-      console.error("Master translation routing failed", err);
-    } finally {
-      setIsTranslatingForm(false);
-    }
-
+      setFormState(previous => {
+        const next = { ...previous };
+        results.forEach(result => {
+          if (result && !String(previous[result.target] || "").trim()) next[result.target] = result.text as any;
+        });
+        return next;
+      });
+      if (results.some(Boolean)) triggerToast("English, Malayalam and Tamil translations updated.");
+    } finally { setIsTranslatingForm(false); }
     return updatedForm;
   };
 
@@ -2289,7 +2293,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
           </div>
           <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-slate-100 pt-4 text-xs">
             <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 font-bold text-emerald-700"><Check size={13}/> Authenticated session</span>
-            <span className="text-slate-500">Automatic translation</span>
+            <span className="text-slate-500">Automatic translation (EN / ML / TA)</span>
             <button type="button" role="switch" aria-checked={autoTranslateOnSubmit} onClick={() => setAutoTranslateOnSubmit(v => !v)} className={`rounded-full px-3 py-1.5 font-bold ${autoTranslateOnSubmit ? "bg-[#ffe500] text-[#101d34]" : "bg-slate-200 text-slate-600"}`}>{autoTranslateOnSubmit ? "Enabled" : "Disabled"}</button>
             {activeLiveTranslationsCount > 0 && <span className="font-bold text-blue-700">Translating {activeLiveTranslationsCount} item(s)…</span>}
           </div>
@@ -2350,7 +2354,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </h3>
                   
                   <form onSubmit={handleQuickCreateBreaking} className="space-y-4">
-                    <label className="block text-xs font-semibold">Headline (Tamil)<input lang="ta" required value={quickBreakingForm.titleTa} onChange={e => setQuickBreakingForm({...quickBreakingForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                    <label className="block text-xs font-semibold">Headline (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={quickBreakingForm.titleTa} onChange={e => setQuickBreakingForm({...quickBreakingForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-slate-500 font-semibold mb-0.5">Breaking Title (English)</label>
@@ -2454,8 +2458,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </h3>
 
                   <form onSubmit={handleQuickCreateNotice} className="space-y-4">
-                    <label className="block text-xs font-semibold">Headline (Tamil)<input lang="ta" required value={quickNoticeForm.titleTa} onChange={e => setQuickNoticeForm({...quickNoticeForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
-<label className="block text-xs font-semibold">Details (Tamil)<textarea lang="ta" required value={quickNoticeForm.contentTa} onChange={e => setQuickNoticeForm({...quickNoticeForm, contentTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                    <label className="block text-xs font-semibold">Headline (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={quickNoticeForm.titleTa} onChange={e => setQuickNoticeForm({...quickNoticeForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-xs font-semibold">Details (Tamil)<textarea lang="ta" required={!autoTranslateOnSubmit} value={quickNoticeForm.contentTa} onChange={e => setQuickNoticeForm({...quickNoticeForm, contentTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-slate-500 font-semibold mb-0.5">Notice Title (English)</label>
@@ -2953,7 +2957,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
                 <div>
                   <label className="block text-slate-500 font-semibold mb-1">Headline (Tamil)</label>
-                  <input type="text" lang="ta" required value={newsForm.titleTa}
+                  <input type="text" lang="ta" required={!autoTranslateOnSubmit} value={newsForm.titleTa}
                     onChange={(e) => setNewsForm({...newsForm, titleTa: e.target.value})}
                     placeholder="தமிழில் செய்தித் தலைப்பை எழுதவும்"
                     className="w-full border rounded p-2 focus:ring-1 font-bold font-anek-tamil" />
@@ -3102,7 +3106,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
                 <div className="space-y-1">
                   <label className="block text-slate-700 font-semibold">3. Article Content (Tamil)</label>
-                  <textarea lang="ta" required rows={5} value={newsForm.contentTa}
+                  <textarea lang="ta" required={!autoTranslateOnSubmit} rows={5} value={newsForm.contentTa}
                     onChange={(e) => setNewsForm({...newsForm, contentTa: e.target.value})}
                     placeholder="தமிழில் செய்தி உள்ளடக்கத்தை எழுதவும்"
                     className="w-full border rounded p-2.5 leading-relaxed font-anek-tamil" />
@@ -3202,8 +3206,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 )}
 
                 <form onSubmit={handleCreateOpinion} className="space-y-3.5">
-                  <label className="block">Opinion Title (Tamil)<input lang="ta" required value={opinionForm.titleTa} onChange={e => setOpinionForm({...opinionForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
-                  <label className="block">Opinion Content (Tamil)<textarea lang="ta" required rows={5} value={opinionForm.contentTa} onChange={e => setOpinionForm({...opinionForm, contentTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  <label className="block">Opinion Title (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={opinionForm.titleTa} onChange={e => setOpinionForm({...opinionForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  <label className="block">Opinion Content (Tamil)<textarea lang="ta" required={!autoTranslateOnSubmit} rows={5} value={opinionForm.contentTa} onChange={e => setOpinionForm({...opinionForm, contentTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <div>
                     <label className="block text-slate-500 font-bold mb-1">Author Name / Expert credentials</label>
                     <input 
@@ -3364,8 +3368,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 </h3>
                 <form onSubmit={handleCreateEvent} className="space-y-3">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <label>Event Name (Tamil)<input lang="ta" required value={eventForm.titleTa} onChange={e => setEventForm({...eventForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
-                    <label>Event Venue (Tamil)<input lang="ta" required value={eventForm.locationTa} onChange={e => setEventForm({...eventForm, locationTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                    <label>Event Name (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={eventForm.titleTa} onChange={e => setEventForm({...eventForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                    <label>Event Venue (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={eventForm.locationTa} onChange={e => setEventForm({...eventForm, locationTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   </div>
                   <label className="block">Event Description (Tamil)<textarea lang="ta" value={eventForm.descriptionTa} onChange={e => setEventForm({...eventForm, descriptionTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <div className="grid grid-cols-2 gap-3">
@@ -5115,8 +5119,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   <Phone className="w-5 h-5 text-[#005689]" /> Register business / local service directory card
                 </h3>
                 <form onSubmit={handleCreateDirectory} className="space-y-3">
-                  <label className="block text-sm font-semibold">Vendor Name (Tamil)<input lang="ta" required value={dirForm.nameTa} onChange={e => setDirForm({...dirForm, nameTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
-<label className="block text-sm font-semibold">Location (Tamil)<input lang="ta" required value={dirForm.locationTa} onChange={e => setDirForm({...dirForm, locationTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  <label className="block text-sm font-semibold">Vendor Name (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={dirForm.nameTa} onChange={e => setDirForm({...dirForm, nameTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">Location (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={dirForm.locationTa} onChange={e => setDirForm({...dirForm, locationTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-slate-500 font-semibold mb-0.5">Vendor Name (En)</label>
@@ -5248,7 +5252,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   <AlertCircle className="w-5 h-5 text-red-650 shrink-0" /> Publish critical emergency helpline number
                 </h3>
                 <form onSubmit={handleCreateEmergency} className="space-y-3">
-                  <label className="block text-sm font-semibold">Service Name (Tamil)<input lang="ta" required value={emergForm.nameTa} onChange={e => setEmergForm({...emergForm, nameTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  <label className="block text-sm font-semibold">Service Name (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={emergForm.nameTa} onChange={e => setEmergForm({...emergForm, nameTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-slate-500 font-semibold mb-0.5">Service agency (En)</label>
@@ -5367,8 +5371,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   {editingId && editingType === "notice" ? "Modify existing notice announcement" : "Publish new notice announcement"}
                 </h3>
                 <form onSubmit={handleCreateNotice} className="space-y-4">
-                  <label className="block text-sm font-semibold">Notice Title (Tamil)<input lang="ta" required value={noticeForm.titleTa} onChange={e => setNoticeForm({...noticeForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
-<label className="block text-sm font-semibold">Notice Content (Tamil)<textarea lang="ta" required value={noticeForm.contentTa} onChange={e => setNoticeForm({...noticeForm, contentTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  <label className="block text-sm font-semibold">Notice Title (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={noticeForm.titleTa} onChange={e => setNoticeForm({...noticeForm, titleTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">Notice Content (Tamil)<textarea lang="ta" required={!autoTranslateOnSubmit} value={noticeForm.contentTa} onChange={e => setNoticeForm({...noticeForm, contentTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-slate-500 font-semibold mb-0.5">Notice Title (English)</label>

@@ -1844,8 +1844,12 @@ app.delete("/api/routes/:id", async (req, res) => {
 
 // 8. AI Assistants integration with Gemini Web API
 app.post("/api/admin/translate", async (req, res) => {
-  const { text, targetLang } = req.body;
-  if (!text) return res.status(400).json({ error: "No text supplied for translation" });
+  const { text, targetLang, sourceLang } = req.body;
+  if (typeof text !== "string" || !text.trim()) return res.status(400).json({ error: "No text supplied for translation" });
+  const languages: Record<string, string> = { en: "English", ml: "Malayalam", ta: "Tamil" };
+  if (!languages[targetLang]) return res.status(400).json({ error: "Unsupported target language" });
+  if (sourceLang && !languages[sourceLang]) return res.status(400).json({ error: "Unsupported source language" });
+  if (sourceLang === targetLang) return res.json({ translatedText: text.trim() });
 
   try {
     const apiKey = process.env.GEMINI_API_KEY;
@@ -1854,33 +1858,14 @@ app.post("/api/admin/translate", async (req, res) => {
     }
 
     const { GoogleGenAI } = await import("@google/genai");
-    const ai = new GoogleGenAI({
-      apiKey: apiKey,
-      httpOptions: {
-        headers: {
-          "User-Agent": "aistudio-build"
-        }
-      }
-    });
-
-    const isToMalayalam = targetLang === "ml";
-    const prompt = isToMalayalam 
-      ? `You are an expert translator for 'Attappadi Online' portal.
-         Translate the following English text into native, natural, clear, and culturally accurate Malayalam.
-         The translation MUST be completely natural in tone and generic in words, suitable for news articles, local shop directories, ad campaigns, notices, emergency alerts, or schedules.
-         Ensure perfect Malayalam grammar and phrasing. Avoid robotic or overly literal word-by-word translation.
-         Return ONLY the translated Malayalam text and nothing else. No introductions, explanations, or markdown block styling.
-         
-         Text to Translate:
-         ${text}`
-      : `You are an expert translator for 'Attappadi Online' portal.
-         Translate the following Malayalam text into clear, completely natural, error-free, and appropriate English.
-         The translation MUST be perfectly natural in tone, general-purpose/generic in phrasing, and appropriate for local directories, public boards, transit, or notices.
-         Keep place names accurate: Agali, Mukkali, Thavalam, Kottathara, Sholayur, Pudur, Anaikatty, etc.
-         Return ONLY the translated English text and nothing else. No introductions, explanations, or markdown block styling.
-         
-         Text to Translate:
-         ${text}`;
+    const ai = new GoogleGenAI({ apiKey, httpOptions: { headers: { "User-Agent": "aistudio-build" } } });
+    const sourceDescription = sourceLang ? languages[sourceLang] : "the language of the input";
+    const prompt = `You are a professional translator for Attappadi Online, a multilingual community news portal.
+Translate the text from ${sourceDescription} into fluent, culturally appropriate ${languages[targetLang]}.
+Preserve all facts, times, numbers, proper names, route names, and formatting. Do not invent or omit information.
+Use natural journalistic language appropriate for news, alerts, transport timetables, community directories, and advertisements.
+Return ONLY the translation without explanations, quotation marks, or markdown fences.
+Text:\n${text}`;
 
     const response = await ai.models.generateContent({
       model: "gemini-3.5-flash",
@@ -1893,8 +1878,8 @@ app.post("/api/admin/translate", async (req, res) => {
     
     // BACKUP FREE TRANSLATION ENGINE (MyMemory Translate API - completely free, no key required)
     try {
-      const isToMalayalam = targetLang === "ml";
-      const langpair = isToMalayalam ? "en|ml" : "ml|en";
+      const detectedSource = sourceLang || (/[஀-௿]/.test(text) ? "ta" : /[ഀ-ൿ]/.test(text) ? "ml" : "en");
+      const langpair = `${detectedSource}|${targetLang}`;
       const myMemoryUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${langpair}`;
       
       const backupResponse = await fetch(myMemoryUrl, {
