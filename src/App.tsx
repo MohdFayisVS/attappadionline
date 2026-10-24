@@ -11,6 +11,7 @@ import WeatherWidget from "./components/WeatherWidget";
 import CalendarWidget from "./components/CalendarWidget";
 import DirectoryWidget from "./components/DirectoryWidget";
 import OpinionsWidget from "./components/OpinionsWidget";
+import CitizenJournalism from "./components/CitizenJournalism";
 import NoticesWidget from "./components/NoticesWidget";
 import AdminDashboard from "./components/AdminDashboard";
 import ShareButtons from "./components/ShareButtons";
@@ -1722,7 +1723,10 @@ export default function App() {
                 Community discussions, reform outlooks, and civil insights submitted directly by local scholars, farmers, and social activists.
               </p>
             </div>
-            <OpinionsWidget lang={lang} />
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
+              <OpinionsWidget lang={lang} />
+              <CitizenJournalism lang={lang} />
+            </div>
           </div>
         </section>
       )}
