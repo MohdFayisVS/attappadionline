@@ -123,9 +123,16 @@ body {
   font-family: var(--font-anek-english);
 }
 
-/* Anek Tamil for Tamil language and all Tamil-script text, including mixed-language UI. */
-[lang="ta"], [lang="ta"] *, .ao-tamil-text {
+/* Apply Tamil fonts only to explicitly localized content, not every descendant of html[lang="ta"]. */
+[lang="ta"]:not(html), .ao-tamil-text {
   font-family: var(--font-anek-tamil);
+}
+.ao-localized-content[lang="ta"] * {
+  font-family: var(--font-anek-tamil);
+}
+/* Site chrome remains English regardless of the selected content language. */
+.ao-fixed-ui, .ao-primary-nav, .ao-region-choice, .ao-header-wordmark, footer {
+  font-family: var(--font-anek-english);
 }
 
 
