@@ -132,7 +132,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   });
   const [cultureForm, setCultureForm] = useState({
     type: "culture", titleEn: "", titleMl: "", titleTa: "", subtitleEn: "", subtitleMl: "", subtitleTa: "", image: "",
-    descEn: "", descMl: "", descTa: "", descTa: "", elementEn: "", elementMl: ""
+    descEn: "", descMl: "", descTa: "", elementEn: "", elementMl: ""
   });
   const [stayForm, setStayForm] = useState({
     nameEn: "", nameMl: "", nameTa: "", typeEn: "", typeMl: "", typeTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
@@ -279,7 +279,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     setCultureForm({
       type: "culture", titleEn: "", titleMl: "", titleTa: "", subtitleEn: "", subtitleMl: "", subtitleTa: "", image: "",
-      descEn: "", descMl: "", descTa: "", descTa: "", elementEn: "", elementMl: ""
+      descEn: "", descMl: "", descTa: "", elementEn: "", elementMl: ""
     });
     setStayForm({
       nameEn: "", nameMl: "", nameTa: "", typeEn: "", typeMl: "", typeTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
@@ -1274,7 +1274,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Culture item updated!" : "Culture item added!");
-      setCultureForm({ type: "culture", titleEn: "", titleMl: "", titleTa: "", subtitleEn: "", subtitleMl: "", subtitleTa: "", image: "", descEn: "", descMl: "", descTa: "", descTa: "", elementEn: "", elementMl: "" });
+      setCultureForm({ type: "culture", titleEn: "", titleMl: "", titleTa: "", subtitleEn: "", subtitleMl: "", subtitleTa: "", image: "", descEn: "", descMl: "", descTa: "", elementEn: "", elementMl: "" });
       setEditingId(null);
       setEditingType(null);
       fetchExploreCultures();
@@ -2123,14 +2123,14 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   // LOGIN SCREEN
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-slate-900 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-[#101d34] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden font-anek-english">
         <div className="sm:mx-auto sm:w-full sm:max-w-md space-y-4">
           <div className="flex justify-center">
             <span className="p-3 bg-[#ffe500] rounded-full text-slate-950 shadow-lg">
               <Lock className="w-8 h-8" />
             </span>
           </div>
-          <h2 className="text-center font-serif text-3xl font-extrabold text-white">
+          <h2 className="text-center font-anek-english text-3xl font-extrabold text-white tracking-tight">
             Attappadi Online Command Desk
           </h2>
           <p className="text-center text-xs text-slate-400">
@@ -2139,10 +2139,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
         </div>
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-slate-850 py-8 px-4 shadow-2xl rounded-lg sm:px-10 border border-slate-700/50">
+          <div className="bg-white py-9 px-6 shadow-2xl rounded-2xl sm:px-10 border border-white/30">
             <form className="space-y-6" onSubmit={handleLogin}>
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-350">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600">
                   Administrator Email
                 </label>
                 <div className="mt-1 relative rounded-md shadow-xs">
@@ -2154,14 +2154,14 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     required
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="block w-full pl-10 text-xs py-2.5 bg-slate-800 border border-slate-700 text-white rounded focus:ring-amber-400 focus:border-amber-400 focus:outline-hidden"
+                    className="block w-full pl-10 text-sm py-3 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl focus:ring-2 focus:ring-amber-400 focus:border-amber-400 focus:outline-none"
                     placeholder="admin@example.com"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-350">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600">
                   Command Password
                 </label>
                 <div className="mt-1 relative rounded-md shadow-xs">
@@ -2173,7 +2173,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full pl-10 text-xs py-2.5 bg-slate-800 border border-slate-700 text-white rounded focus:ring-amber-400 focus:border-amber-400"
+                    className="block w-full pl-10 text-sm py-3 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl focus:ring-2 focus:ring-amber-400 focus:border-amber-400 focus:outline-none"
                     placeholder="••••••••••••"
                   />
                 </div>
@@ -2189,7 +2189,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 <button
                   type="button"
                   onClick={onBack}
-                  className="text-xs text-[#ffe500] hover:underline"
+                  className="text-xs text-[#005689] hover:underline font-bold"
                 >
                   ← Leave Command
                 </button>
@@ -2198,7 +2198,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
               <div>
                 <button
                   type="submit"
-                  className="w-full py-2.5 px-4 bg-[#ffe500] hover:bg-[#ffd500] text-slate-950 font-bold rounded text-xs transition duration-200 shadow-md hover:shadow-lg"
+                  className="w-full py-3.5 px-4 bg-[#ffe500] hover:bg-[#ffd500] text-slate-950 font-bold rounded-xl text-sm transition duration-200 shadow-sm hover:shadow-md"
                 >
                   Verify Administrator Credential
                 </button>
@@ -2227,7 +2227,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -50 }}
-            className="fixed top-5 left-1/2 -translate-x-1/2 z-[999] bg-slate-900 text-emerald-400 border border-emerald-500 px-6 py-3.5 rounded-lg shadow-2xl flex items-center gap-3 text-xs font-bold"
+            role="status" aria-live="polite" className="fixed top-5 left-1/2 -translate-x-1/2 z-[999] max-w-[calc(100vw-2rem)] bg-[#101d34] text-emerald-300 border border-emerald-500/40 px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 text-sm font-semibold"
           >
             <Check className="w-5 h-5 text-emerald-400" />
             <span>{successMessage}</span>
@@ -6453,28 +6453,28 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       {/* Delete confirmation state modal backdrop */}
       <AnimatePresence>
         {deleteConfirm && (
-          <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 z-[999]">
+          <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 z-[999]">
             <motion.div 
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white rounded-lg shadow-2xl p-6 max-w-sm w-full border text-xs text-slate-800"
+              role="alertdialog" aria-modal="true" aria-labelledby="admin-delete-title" aria-describedby="admin-delete-description" className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-md w-full border border-slate-200 text-sm text-slate-800"
             >
               <div className="flex items-center gap-2.5 text-slate-900 border-b pb-1.5 font-bold text-sm mb-2">
                 <AlertCircle className="w-5 h-5 shrink-0 text-red-600" />
-                <span>{deleteConfirm.title}</span>
+                <span id="admin-delete-title">{deleteConfirm.title}</span>
               </div>
-              <p className="text-slate-600 leading-relaxed font-semibold mb-5">{deleteConfirm.message}</p>
+              <p id="admin-delete-description" className="text-slate-600 leading-relaxed mb-6">{deleteConfirm.message}</p>
               <div className="flex gap-2 justify-end">
                 <button
                   onClick={() => setDeleteConfirm(null)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded cursor-pointer transition"
+                  className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl cursor-pointer transition"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={deleteConfirm.onConfirm}
-                  className="px-4 py-2 bg-red-700 hover:bg-red-800 text-white font-bold rounded cursor-pointer transition flex items-center gap-1.5 shadow-md"
+                  className="px-4 py-2.5 bg-red-700 hover:bg-red-800 text-white font-bold rounded-xl cursor-pointer transition flex items-center gap-1.5 shadow-sm"
                 >
                   Delete Live Entry
                 </button>
