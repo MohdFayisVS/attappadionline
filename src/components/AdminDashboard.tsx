@@ -12,6 +12,7 @@ import {
   NoticeItem, LpgDelivery, LostAndFoundItem
 } from "../types";
 import SocialCardGenerator from "./SocialCardGenerator";
+import CitizenReportReview from "./CitizenReportReview";
 import ExploreAttappadi from "./ExploreAttappadi";
 import { adminAuth, adminFetch, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "../services/adminAuth";
 
@@ -3219,6 +3220,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
         {/* ==================== 2. OPINIONS / COLUMNS TAB ==================== */}
         {activeTab === "opinions" && (
           <div className="space-y-6 animate-fade-in text-xs">
+            <CitizenReportReview />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               
               {/* Creator block */}
