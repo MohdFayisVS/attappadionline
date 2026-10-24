@@ -3,7 +3,7 @@ import {
   Lock, KeyRound, Globe, FileText, PlusCircle, Check, Trash2, Pencil, XCircle,
   Sparkles, Languages, Eye, ArrowLeft, ArrowUpRight, Calendar, Phone, BookOpen, AlertCircle,
   Upload, Bus, MapPin, Compass, UtensilsCrossed, Hotel, Image as ImageIcon, Clock, Activity, ListOrdered,
-  Megaphone, Flame, Truck
+  Megaphone, Flame, Truck, Menu, Search, LayoutDashboard, ChevronRight, RefreshCw, LogOut, PanelLeftClose, PanelLeftOpen
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
@@ -22,6 +22,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
   const [activeTab, setActiveTab] = useState<"news" | "opinions" | "events" | "explore" | "buses" | "directory" | "emergency" | "notices" | "lpg" | "ads" | "card-generator" | "tickers" | "lostfound">("news");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [navSearch, setNavSearch] = useState("");
   const [exploreSubTab, setExploreSubTab] = useState<"destinations" | "cultures" | "stays" | "travelogues" | "photos">("destinations");
   const [lostFoundList, setLostFoundList] = useState<LostAndFoundItem[]>([]);
 
@@ -2232,103 +2235,63 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
         )}
       </AnimatePresence>
 
-      {/* Admin Command Sidebar */}
-      <aside className="w-full md:w-64 bg-[#0a3060] text-white shrink-0 flex flex-col justify-between shadow-xl">
-        <div className="p-6">
-          <div className="space-y-1">
-            <span className="text-[10px] bg-red-650 tracking-wider text-white px-2 py-0.5 rounded font-extrabold uppercase">
-              attappadi cms
-            </span>
-            <h1 className="text-xl font-serif font-extrabold tracking-tight">Command Desk</h1>
-            <p className="text-[10px] text-blue-200">Session Verified En-US | Ml-IN</p>
+      {/* Mobile navigation scrim */}
+      {sidebarOpen && <button aria-label="Close navigation" className="fixed inset-0 z-40 bg-slate-950/60 backdrop-blur-sm lg:hidden" onClick={() => setSidebarOpen(false)} />}
+      {/* Command center navigation: retains every existing module */}
+      <aside className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-[#101d34] text-white shadow-2xl transition-all duration-300 lg:sticky lg:top-0 lg:h-screen ${sidebarCollapsed ? "lg:w-[76px]" : "lg:w-[280px]"} w-[280px] ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
+        <div className="flex items-center justify-between gap-3 border-b border-white/10 px-5 py-5">
+          <div className={`min-w-0 ${sidebarCollapsed ? "lg:hidden" : ""}`}>
+            <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#ffe500]">ATTAPPADI ONLINE</span>
+            <h1 className="mt-1 text-xl font-extrabold tracking-tight font-anek-english">Admin Studio</h1>
+            <p className="mt-1 text-xs text-slate-400">Content management workspace</p>
           </div>
-
-          {/* Navigation Items */}
-          <nav className="mt-8 space-y-1">
-            {[
-              { id: "news", label: "📰 News (വാർത്തകൾ)" },
-              { id: "tickers", label: "🔴 Scroll Tickers (ടിക്കർ കൺട്രോൾ)" },
-              { id: "opinions", label: "✍️ Opinions & Columns" },
-              { id: "events", label: "📅 Events Calendar" },
-              { id: "explore", label: "🧭 Explore Attappadi" },
-              { id: "buses", label: "🚌 Bus Timetable" },
-              { id: "directory", label: "🗂️ Phone Directory" },
-              { id: "emergency", label: "🚨 Emergency Numbers" },
-              { id: "notices", label: "📢 Notices & Alerts (അറിയിപ്പുകൾ)" },
-              { id: "lpg", label: "🚚 LPG Gas Delivery (ഗ്യാസ് വിതരണം)" },
-              { id: "lostfound", label: "🔍 Lost & Found (നഷ്ടപ്പെട്ടവ)" },
-              { id: "ads", label: "📢 Side Ads (പരസ്യങ്ങൾ)" },
-              { id: "card-generator", label: "🎨 Social Card Maker (NEW)" }
-            ].map((item) => (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id as any)}
-                className={`w-full text-left px-3 py-2.5 rounded text-xs font-bold transition flex items-center justify-between cursor-pointer ${
-                  activeTab === item.id 
-                    ? "bg-[#005689] text-[#ffe500] border-l-4 border-[#ffe500]" 
-                    : "text-slate-250 hover:bg-white/5 hover:text-white"
-                }`}
-              >
-                <span>{item.label}</span>
-              </button>
-            ))}
-          </nav>
+          <button type="button" className="hidden lg:flex rounded-lg p-2 text-slate-300 hover:bg-white/10" aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"} onClick={() => setSidebarCollapsed(v => !v)}>{sidebarCollapsed ? <PanelLeftOpen size={19}/> : <PanelLeftClose size={19}/>}</button>
+          <button type="button" className="lg:hidden rounded-lg p-2 hover:bg-white/10" aria-label="Close menu" onClick={() => setSidebarOpen(false)}><XCircle size={20}/></button>
         </div>
-
-        <div className="p-6 space-y-4">
-          <button
-            onClick={onBack}
-            className="w-full py-2 bg-[#005689] hover:bg-slate-900 text-[#ffe500] font-bold text-xs rounded transition flex items-center justify-center gap-1.5 cursor-pointer"
-          >
-            <ArrowLeft className="w-4 h-4" /> Exit Command
-          </button>
-          
-          <button
-            onClick={handleLogout}
-            className="w-full py-2 bg-red-800 hover:bg-red-700 text-white font-bold text-xs rounded transition flex items-center justify-center gap-1.5 cursor-pointer"
-          >
-            🔐 Close Session (Logout)
-          </button>
+        <div className={`px-4 pt-5 ${sidebarCollapsed ? "lg:hidden" : ""}`}>
+          <label className="relative block">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16}/>
+            <input value={navSearch} onChange={e => setNavSearch(e.target.value)} placeholder="Find a module..." aria-label="Search admin modules" className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 pl-10 pr-3 text-sm text-white placeholder:text-slate-400 outline-none focus:border-[#ffe500]"/>
+          </label>
+        </div>
+        <nav aria-label="Admin modules" className="mt-4 flex-1 space-y-5 overflow-y-auto px-3 pb-5">
+          {[
+            { group: "Publishing", items: [{id:"news",label:"Newsroom",icon:FileText},{id:"tickers",label:"Breaking & Live Tickers",icon:Activity},{id:"opinions",label:"Opinions & Columns",icon:BookOpen},{id:"notices",label:"Notices & Alerts",icon:Megaphone},{id:"events",label:"Events Calendar",icon:Calendar}] },
+            { group: "Community", items: [{id:"explore",label:"Explore Attappadi",icon:Compass},{id:"buses",label:"Bus Timetable",icon:Bus},{id:"directory",label:"Phone Directory",icon:Phone},{id:"emergency",label:"Emergency Numbers",icon:AlertCircle},{id:"lpg",label:"LPG Delivery",icon:Truck},{id:"lostfound",label:"Lost & Found",icon:Search}] },
+            { group: "Creative & Revenue", items: [{id:"ads",label:"Advertising",icon:Megaphone},{id:"card-generator",label:"Social Card Maker",icon:ImageIcon}] }
+          ].map(section => {
+            const items = section.items.filter(item => (item.label + " " + item.id).toLowerCase().includes(navSearch.toLowerCase()));
+            if (!items.length) return null;
+            return <div key={section.group}>
+              <p className={`mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 ${sidebarCollapsed ? "lg:hidden" : ""}`}>{section.group}</p>
+              <div className="space-y-1">{items.map(item => {const Icon = item.icon; return <button type="button" key={item.id} title={item.label} onClick={() => {setActiveTab(item.id as typeof activeTab);setSidebarOpen(false);}} aria-current={activeTab === item.id ? "page" : undefined} className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#ffe500] ${activeTab === item.id ? "bg-[#ffe500] text-[#101d34] shadow-md" : "text-slate-300 hover:bg-white/10 hover:text-white"}`}><Icon className="h-[18px] w-[18px] shrink-0"/><span className={`flex-1 ${sidebarCollapsed ? "lg:hidden" : ""}`}>{item.label}</span>{activeTab === item.id && <ChevronRight className={`h-4 w-4 ${sidebarCollapsed ? "lg:hidden" : ""}`}/>}</button>})}</div>
+            </div>;
+          })}
+        </nav>
+        <div className="border-t border-white/10 p-3 space-y-1">
+          <button onClick={onBack} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-300 hover:bg-white/10"><ArrowLeft size={17}/><span className={sidebarCollapsed ? "lg:hidden" : ""}>View website</span></button>
+          <button onClick={handleLogout} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-rose-300 hover:bg-rose-500/10"><LogOut size={17}/><span className={sidebarCollapsed ? "lg:hidden" : ""}>Sign out securely</span></button>
         </div>
       </aside>
 
-      {/* Main CMS Work Canvas */}
-      <main className="flex-1 p-6 md:p-10 max-h-screen overflow-y-auto">
-        <header className="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center pb-4 border-b border-gray-200 gap-4">
-          <div>
-            <h2 className="text-2xl font-serif font-black text-[#0a3060] capitalize">
-              {activeTab} Management Module
-            </h2>
-            <p className="text-xs text-gray-500">Add, alter, approve, or purge system records live.</p>
-          </div>
-          <div className="flex flex-wrap items-center gap-3.5 select-none shrink-0">
-            {/* Auto-Translation Toggle Badge */}
-            <div className="flex bg-amber-50 border border-amber-200/50 px-3 py-1.5 rounded-md gap-2 items-center text-slate-700 font-bold text-xs shadow-xs">
-              <Sparkles className={`w-4 h-4 text-amber-500 shrink-0 ${activeLiveTranslationsCount > 0 ? "animate-spin" : ""}`} />
-              <span>Gemini Translation:</span>
-              <button
-                type="button"
-                onClick={() => setAutoTranslateOnSubmit(!autoTranslateOnSubmit)}
-                className={`text-[10px] uppercase font-extrabold px-2 py-0.5 rounded transition cursor-pointer ${
-                  autoTranslateOnSubmit ? "bg-[#052962] text-white" : "bg-gray-300 text-gray-600"
-                }`}
-                title="When ON, typing in Malayalam or English automatically translates the missing language upon publishing!"
-              >
-                {autoTranslateOnSubmit ? "ON (സജീവം)" : "OFF (നിഷ്‌ക്രിയം)"}
-              </button>
-              {activeLiveTranslationsCount > 0 && (
-                <span className="flex items-center gap-1 text-[9px] text-blue-800 animate-pulse font-mono font-black border-l pl-2 border-amber-250 shrink-0">
-                  <span className="w-1.5 h-1.5 bg-blue-800 rounded-full animate-ping"></span>
-                  TRANSLATING...
-                </span>
-              )}
+      {/* Workspace: all existing module forms and operations remain unchanged */}
+      <main className="min-w-0 flex-1 overflow-y-auto bg-[#f5f7fb] px-4 py-5 sm:px-7 lg:h-screen lg:px-10 lg:py-8">
+        <header className="mb-7 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="flex min-w-0 items-start gap-3">
+              <button type="button" onClick={() => setSidebarOpen(true)} aria-label="Open navigation" className="rounded-xl border border-slate-200 p-2.5 text-slate-700 lg:hidden"><Menu size={21}/></button>
+              <div><p className="mb-1 text-xs font-bold uppercase tracking-[0.16em] text-[#005689]">Admin Studio / Workspace</p><h2 className="text-2xl font-extrabold tracking-tight text-[#101d34] sm:text-3xl font-anek-english">{({news:"Newsroom",tickers:"Breaking & Live Tickers",opinions:"Opinions & Columns",events:"Events Calendar",explore:"Explore Attappadi",buses:"Bus Timetable",directory:"Phone Directory",emergency:"Emergency Numbers",notices:"Notices & Alerts",lpg:"LPG Delivery",lostfound:"Lost & Found",ads:"Advertising", "card-generator":"Social Card Maker"} as Record<typeof activeTab,string>)[activeTab]}</h2><p className="mt-2 text-sm text-slate-500">Manage and publish content to Attappadi Online.</p></div>
             </div>
-            <button 
-              onClick={refreshAllLists}
-              className="p-2 bg-white border rounded hover:bg-slate-50 text-slate-600 transition flex items-center gap-1 text-xs cursor-pointer shadow-xs"
-            >
-              🔄 Sync DB Status
-            </button>
+            <div className="flex flex-wrap items-center gap-2">
+              <button type="button" onClick={refreshAllLists} className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50"><RefreshCw size={15}/> Refresh data</button>
+              <button type="button" onClick={onBack} className="inline-flex items-center gap-2 rounded-xl bg-[#101d34] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#005689]"><Globe size={15}/> View site <ArrowUpRight size={14}/></button>
+            </div>
+          </div>
+          <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-slate-100 pt-4 text-xs">
+            <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 font-bold text-emerald-700"><Check size={13}/> Authenticated session</span>
+            <span className="text-slate-500">Automatic translation</span>
+            <button type="button" role="switch" aria-checked={autoTranslateOnSubmit} onClick={() => setAutoTranslateOnSubmit(v => !v)} className={`rounded-full px-3 py-1.5 font-bold ${autoTranslateOnSubmit ? "bg-[#ffe500] text-[#101d34]" : "bg-slate-200 text-slate-600"}`}>{autoTranslateOnSubmit ? "Enabled" : "Disabled"}</button>
+            {activeLiveTranslationsCount > 0 && <span className="font-bold text-blue-700">Translating {activeLiveTranslationsCount} item(s)…</span>}
           </div>
         </header>
 
