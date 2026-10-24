@@ -15,8 +15,8 @@ export default function CitizenJournalism({ lang }: { lang: Language }) {
   const upload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 950000) {
-      setMessage(t("Choose a JPEG, PNG or WebP photo under 950 KB.", "950 കെബിയിൽ താഴെയുള്ള JPEG, PNG അല്ലെങ്കിൽ WebP ചിത്രം തിരഞ്ഞെടുക്കുക.", "950 KB-க்குக் குறைவான JPEG, PNG அல்லது WebP படத்தைத் தேர்ந்தெடுக்கவும்."));
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 500000) {
+      setMessage(t("Choose a JPEG, PNG or WebP photo under 500 KB.", "500 കെബിയിൽ താഴെയുള്ള JPEG, PNG അല്ലെങ്കിൽ WebP ചിത്രം തിരഞ്ഞെടുക്കുക.", "500 KB-க்குக் குறைவான JPEG, PNG அல்லது WebP படத்தைத் தேர்ந்தெடுக்கவும்."));
       return;
     }
     const reader = new FileReader();
