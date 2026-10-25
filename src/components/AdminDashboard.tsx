@@ -3402,7 +3402,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   >
                     Schedule Live Event
                   </button>
-                </form>
+                
+<div className="space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-3"><label className="block">Event Description (Tamil)<textarea lang="ta" value={eventForm.descriptionTa} onChange={e => { const value = e.target.value; setEventForm(prev => ({ ...prev, descriptionTa: value })); autoTranslateField(value, "descriptionTa", "descriptionTa", setEventForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div></form>
               </div>
 
               {/* Event grid list */}
@@ -5014,7 +5015,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   >
                     {editingType === "busroutes" ? "Save Changes to Bus Timetable" : "Publish Bus Timetable"}
                   </button>
-                </form>
+                
+<div className="space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-3"><label className="block text-sm font-semibold">route (Tamil)<input lang="ta" value={busForm.routeTa} onChange={e => { const value = e.target.value; setBusForm(prev => ({ ...prev, routeTa: value })); autoTranslateField(value, "routeTa", "routeTa", setBusForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">runs (Tamil)<input lang="ta" value={busForm.runsTa} onChange={e => { const value = e.target.value; setBusForm(prev => ({ ...prev, runsTa: value })); autoTranslateField(value, "runsTa", "runsTa", setBusForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">Stop Name (Tamil)<input lang="ta" value={transitInput.typeTa} onChange={e => setTransitInput({...transitInput, typeTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label></div></form>
               </div>
 
               {/* Transit list display */}
