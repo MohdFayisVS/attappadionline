@@ -2307,9 +2307,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </h3>
                   
                   <form onSubmit={handleQuickCreateBreaking} className="space-y-4">
-                    <label className="block text-xs font-semibold">Headline (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={quickBreakingForm.titleTa} onChange={e => { const value = e.target.value; setQuickBreakingForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setQuickBreakingForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                    
 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <div>
+                      <div className="order-2">
                         <label className="block text-slate-500 font-semibold mb-0.5">Breaking Title (English)</label>
                         <input
                           type="text"
@@ -2320,7 +2320,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                           placeholder="e.g. Traffic blocked on Mannarkkad road"
                         />
                       </div>
-                      <div>
+                      <div className="order-1">
                         <label className="block text-slate-500 font-semibold mb-0.5">ബ്രേക്കിംഗ് ഹെഡ്‌ലൈൻ (Malayalam)</label>
                         <input
                           type="text"
@@ -2332,6 +2332,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         />
                       </div>
                     </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block text-xs font-semibold">Headline (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={quickBreakingForm.titleTa} onChange={e => { const value = e.target.value; setQuickBreakingForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setQuickBreakingForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                     <div className="text-[10px] text-amber-600 bg-amber-50 p-2 rounded">
                       💡 Tip: Leave one title completely blank, and the system auto-translates it using Gemini AI instantly upon publishing!
                     </div>
@@ -2411,10 +2412,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </h3>
 
                   <form onSubmit={handleQuickCreateNotice} className="space-y-4">
-                    <label className="block text-xs font-semibold">Headline (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={quickNoticeForm.titleTa} onChange={e => { const value = e.target.value; setQuickNoticeForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setQuickNoticeForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-<label className="block text-xs font-semibold">Details (Tamil)<textarea lang="ta" required={!autoTranslateOnSubmit} value={quickNoticeForm.contentTa} onChange={e => { const value = e.target.value; setQuickNoticeForm(prev => ({ ...prev, contentTa: value })); autoTranslateField(value, "contentTa", "contentTa", setQuickNoticeForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                    
+
 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <div>
+                      <div className="order-2">
                         <label className="block text-slate-500 font-semibold mb-0.5">Notice Title (English)</label>
                         <input
                           type="text"
@@ -2425,7 +2426,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                           placeholder="e.g. Vaccination camp at Agali CHC"
                         />
                       </div>
-                      <div>
+                      <div className="order-1">
                         <label className="block text-slate-500 font-semibold mb-0.5">അറിയിപ്പ് വിഷയം (Malayalam)</label>
                         <input
                           type="text"
@@ -2437,9 +2438,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         />
                       </div>
                     </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block text-xs font-semibold">Headline (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={quickNoticeForm.titleTa} onChange={e => { const value = e.target.value; setQuickNoticeForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setQuickNoticeForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <div>
+                      <div className="order-2">
                         <label className="block text-slate-500 font-semibold mb-0.5">Alert Details / Details (English)</label>
                         <textarea
                           rows={2}
@@ -2449,7 +2451,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                           placeholder="Times, locations, eligibility guidelines..."
                         />
                       </div>
-                      <div>
+                      <div className="order-1">
                         <label className="block text-slate-500 font-semibold mb-0.5">അറിയിപ്പ് വിവരങ്ങൾ (Malayalam)</label>
                         <textarea
                           rows={2}
@@ -2460,6 +2462,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         />
                       </div>
                     </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block text-xs font-semibold">Details (Tamil)<textarea lang="ta" required={!autoTranslateOnSubmit} value={quickNoticeForm.contentTa} onChange={e => { const value = e.target.value; setQuickNoticeForm(prev => ({ ...prev, contentTa: value })); autoTranslateField(value, "contentTa", "contentTa", setQuickNoticeForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
@@ -3131,8 +3134,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 )}
 
                 <form onSubmit={handleCreateOpinion} className="space-y-3.5">
-                  <label className="block">Opinion Title (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={opinionForm.titleTa} onChange={e => { const value = e.target.value; setOpinionForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setOpinionForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-                  <label className="block">Opinion Content (Tamil)<textarea lang="ta" required={!autoTranslateOnSubmit} rows={5} value={opinionForm.contentTa} onChange={e => { const value = e.target.value; setOpinionForm(prev => ({ ...prev, contentTa: value })); autoTranslateField(value, "contentTa", "contentTa", setOpinionForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  
+                  
                   <div>
                     <label className="block text-slate-500 font-bold mb-1">Author Name / Expert credentials</label>
                     <input 
@@ -3145,7 +3148,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-bold mb-1">Column Title (En)</label>
                       <input 
                         type="text" 
@@ -3161,7 +3164,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         className="w-full border rounded p-1.5 focus:ring-1"
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-bold mb-1">വിഷയം (Ml)</label>
                       <input 
                         type="text" 
@@ -3178,8 +3181,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block">Opinion Title (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={opinionForm.titleTa} onChange={e => { const value = e.target.value; setOpinionForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setOpinionForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
 
-                  <div>
+                  <div className="order-2">
                     <label className="block text-slate-500 font-bold mb-1">Column narrative copy (En)</label>
                     <textarea 
                       rows={4}
@@ -3196,7 +3200,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     />
                   </div>
 
-                  <div>
+                  <div className="order-1">
                     <label className="block text-slate-500 font-bold mb-1">നാടൻ വിവരണം (Ml)</label>
                     <textarea 
                       rows={4}
@@ -3212,6 +3216,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       className="w-full border rounded p-1.5 focus:ring-1 font-anek-malayalam"
                     />
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block">Opinion Content (Tamil)<textarea lang="ta" required={!autoTranslateOnSubmit} rows={5} value={opinionForm.contentTa} onChange={e => { const value = e.target.value; setOpinionForm(prev => ({ ...prev, contentTa: value })); autoTranslateField(value, "contentTa", "contentTa", setOpinionForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
 
                   <div className="flex gap-2">
                     {editingId && editingType === "opinions" && (
@@ -3293,12 +3298,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 </h3>
                 <form onSubmit={handleCreateEvent} className="space-y-3">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <label>Event Name (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={eventForm.titleTa} onChange={e => { const value = e.target.value; setEventForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setEventForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-                    <label>Event Venue (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={eventForm.locationTa} onChange={e => { const value = e.target.value; setEventForm(prev => ({ ...prev, locationTa: value })); autoTranslateField(value, "locationTa", "locationTa", setEventForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                    
+                    
                   </div>
-                  <label className="block">Event Description (Tamil)<textarea lang="ta" value={eventForm.descriptionTa} onChange={e => { const value = e.target.value; setEventForm(prev => ({ ...prev, descriptionTa: value })); autoTranslateField(value, "descriptionTa", "descriptionTa", setEventForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-bold mb-1">Event Name (En)</label>
                       <input 
                         type="text" 
@@ -3314,7 +3319,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         className="w-full border rounded p-1.5 focus:ring-1"
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-bold mb-1">പരിപാടി തലക്കെട്ട് (Ml)</label>
                       <input 
                         type="text" 
@@ -3331,6 +3336,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label>Event Name (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={eventForm.titleTa} onChange={e => { const value = e.target.value; setEventForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setEventForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
@@ -3355,7 +3361,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-bold mb-1">Location Venue (En)</label>
                       <input 
                         type="text" 
@@ -3371,7 +3377,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         className="w-full border rounded p-1.5 focus:ring-1"
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-bold mb-1">സ്ഥലപ്പേര് (Ml)</label>
                       <input 
                         type="text" 
@@ -3388,6 +3394,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label>Event Venue (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={eventForm.locationTa} onChange={e => { const value = e.target.value; setEventForm(prev => ({ ...prev, locationTa: value })); autoTranslateField(value, "locationTa", "locationTa", setEventForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
 
                   <button
                     type="submit"
@@ -3395,7 +3402,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   >
                     Schedule Live Event
                   </button>
-                </form>
+                
+<div className="space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-3"><label className="block">Event Description (Tamil)<textarea lang="ta" value={eventForm.descriptionTa} onChange={e => { const value = e.target.value; setEventForm(prev => ({ ...prev, descriptionTa: value })); autoTranslateField(value, "descriptionTa", "descriptionTa", setEventForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div></form>
               </div>
 
               {/* Event grid list */}
@@ -3461,15 +3469,15 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             {exploreSubTab === "destinations" && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <form onSubmit={handleCreateDestination} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5">
-                  <label className="block">Destination Name (Tamil)<input lang="ta" required={true} value={destForm.nameTa} onChange={e => { const value = e.target.value; setDestForm(prev => ({ ...prev, nameTa: value })); autoTranslateField(value, "nameTa", "nameTa", setDestForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-<label className="block">Location (Tamil)<input lang="ta" required={true} value={destForm.locationTa} onChange={e => { const value = e.target.value; setDestForm(prev => ({ ...prev, locationTa: value })); autoTranslateField(value, "locationTa", "locationTa", setDestForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-<label className="block">Description (Tamil)<textarea lang="ta" required={true} value={destForm.descriptionTa} onChange={e => { const value = e.target.value; setDestForm(prev => ({ ...prev, descriptionTa: value })); autoTranslateField(value, "descriptionTa", "descriptionTa", setDestForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-<label className="block">Highlights (Tamil, comma separated)<textarea lang="ta" required={false} value={destForm.highlightsTa} onChange={e => { const value = e.target.value; setDestForm(prev => ({ ...prev, highlightsTa: value })); autoTranslateField(value, "highlightsTa", "highlightsTa", setDestForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  
+
+
+
                   <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
                     <PlusCircle className="w-4 h-4 text-[#005689]" /> Add Destination Attraction
                   </h3>
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Destination Name (En)</label>
                       <input 
                         type="text" 
@@ -3486,7 +3494,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         placeholder="e.g. Mukkali Watchtower" 
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">സ്ഥലം പേര് (Ml)</label>
                       <input 
                         type="text" 
@@ -3504,8 +3512,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block">Destination Name (Tamil)<input lang="ta" required={true} value={destForm.nameTa} onChange={e => { const value = e.target.value; setDestForm(prev => ({ ...prev, nameTa: value })); autoTranslateField(value, "nameTa", "nameTa", setDestForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Location Hub (En)</label>
                       <input 
                         type="text" 
@@ -3521,7 +3530,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         placeholder="Mukkali Ranger Station" 
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">ദിശ വിവരണം (Ml)</label>
                       <input 
                         type="text" 
@@ -3538,6 +3547,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block">Location (Tamil)<input lang="ta" required={true} value={destForm.locationTa} onChange={e => { const value = e.target.value; setDestForm(prev => ({ ...prev, locationTa: value })); autoTranslateField(value, "locationTa", "locationTa", setDestForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                   {/* Photo selection targeting local files or links */}
                   <div className="bg-slate-50 rounded-lg p-3 border border-slate-200/50 space-y-2">
                     <div className="flex items-center justify-between">
@@ -3622,7 +3632,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       </div>
                     )}
                   </div>
-                  <div>
+                  <div className="order-2">
                     <label className="block text-slate-500 font-semibold mb-0.5">Analytical Description (En)</label>
                     <textarea 
                       rows={3} 
@@ -3637,7 +3647,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       className="w-full border rounded p-1.5" 
                     />
                   </div>
-                  <div>
+                  <div className="order-1">
                     <label className="block text-slate-500 font-semibold mb-0.5">നിർമ്മാണ വിവരണം അല്ലെങ്കിൽ യാത്രാ തനിമ (Ml)</label>
                     <textarea 
                       rows={3} 
@@ -3652,8 +3662,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       className="w-full border rounded p-1.5 font-anek-malayalam" 
                     />
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block">Description (Tamil)<textarea lang="ta" required={true} value={destForm.descriptionTa} onChange={e => { const value = e.target.value; setDestForm(prev => ({ ...prev, descriptionTa: value })); autoTranslateField(value, "descriptionTa", "descriptionTa", setDestForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Highlights En (comma separated list)</label>
                       <input 
                         type="text" 
@@ -3669,7 +3680,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         placeholder="Jeep Safari, Photography, Mist watching" 
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">സവിശേഷതകൾ Ml (കോമ ഉപയോഗിച്ച് തിരിക്കുക)</label>
                       <input 
                         type="text" 
@@ -3686,6 +3697,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block">Highlights (Tamil, comma separated)<textarea lang="ta" required={false} value={destForm.highlightsTa} onChange={e => { const value = e.target.value; setDestForm(prev => ({ ...prev, highlightsTa: value })); autoTranslateField(value, "highlightsTa", "highlightsTa", setDestForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                   <button type="submit" className="w-full py-2 bg-slate-900 hover:bg-[#0a3060] text-[#ffe500] font-bold rounded cursor-pointer">Register Destination</button>
                 </form>
 
@@ -3713,10 +3725,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             {exploreSubTab === "cultures" && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <form onSubmit={handleCreateCulture} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5">
-                  <label className="block">Culture Title (Tamil)<textarea lang="ta" value={cultureForm.titleTa} onChange={e => { const value = e.target.value; setCultureForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setCultureForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-<label className="block">Subtitle (Tamil)<textarea lang="ta" value={cultureForm.subtitleTa} onChange={e => { const value = e.target.value; setCultureForm(prev => ({ ...prev, subtitleTa: value })); autoTranslateField(value, "subtitleTa", "subtitleTa", setCultureForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-<label className="block">Description (Tamil)<textarea lang="ta" value={cultureForm.descTa} onChange={e => { const value = e.target.value; setCultureForm(prev => ({ ...prev, descTa: value })); autoTranslateField(value, "descTa", "descTa", setCultureForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-<label className="block">Element (Tamil)<textarea lang="ta" value={cultureForm.elementTa} onChange={e => { const value = e.target.value; setCultureForm(prev => ({ ...prev, elementTa: value })); autoTranslateField(value, "elementTa", "elementTa", setCultureForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  
+
+
+
                   <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
                     <PlusCircle className="w-4 h-4 text-[#005689]" /> Add Culture / Food Entry
                   </h3>
@@ -3728,7 +3740,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     </select>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Title (En)</label>
                       <input 
                         type="text" 
@@ -3744,7 +3756,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         className="w-full border rounded p-1.5" 
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">മലയാളം തനിമ (Ml)</label>
                       <input 
                         type="text" 
@@ -3761,8 +3773,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block">Culture Title (Tamil)<textarea lang="ta" value={cultureForm.titleTa} onChange={e => { const value = e.target.value; setCultureForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setCultureForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Subtitle (En)</label>
                       <input 
                         type="text" 
@@ -3777,7 +3790,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         className="w-full border rounded p-1.5" 
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">ഉപതലക്കെട്ട് (Ml)</label>
                       <input 
                         type="text" 
@@ -3793,6 +3806,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block">Subtitle (Tamil)<textarea lang="ta" value={cultureForm.subtitleTa} onChange={e => { const value = e.target.value; setCultureForm(prev => ({ ...prev, subtitleTa: value })); autoTranslateField(value, "subtitleTa", "subtitleTa", setCultureForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                   {/* Photo selection targeting local files or links */}
                   <div className="bg-slate-50 rounded-lg p-3 border border-slate-200/50 space-y-2">
                     <div className="flex items-center justify-between">
@@ -3877,7 +3891,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       </div>
                     )}
                   </div>
-                  <div>
+                  <div className="order-2">
                     <label className="block text-slate-500 font-semibold mb-0.5">Detailed Narrative (En)</label>
                     <textarea 
                       rows={3} 
@@ -3892,7 +3906,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       className="w-full border rounded p-1.5" 
                     />
                   </div>
-                  <div>
+                  <div className="order-1">
                     <label className="block text-slate-500 font-semibold mb-0.5">വിശദ വിവരണം (Ml)</label>
                     <textarea 
                       rows={3} 
@@ -3907,8 +3921,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       className="w-full border rounded p-1.5 font-anek-malayalam" 
                     />
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block">Description (Tamil)<textarea lang="ta" value={cultureForm.descTa} onChange={e => { const value = e.target.value; setCultureForm(prev => ({ ...prev, descTa: value })); autoTranslateField(value, "descTa", "descTa", setCultureForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Key instruments descriptor (En)</label>
                       <input 
                         type="text" 
@@ -3923,7 +3938,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         className="w-full border rounded p-1.5" 
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">പാരമ്പര്യ വിഭവങ്ങൾ / വാദ്യങ്ങൾ (Ml)</label>
                       <input 
                         type="text" 
@@ -3939,6 +3954,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block">Element (Tamil)<textarea lang="ta" value={cultureForm.elementTa} onChange={e => { const value = e.target.value; setCultureForm(prev => ({ ...prev, elementTa: value })); autoTranslateField(value, "elementTa", "elementTa", setCultureForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                   <button type="submit" className="w-full py-2 bg-slate-900 text-[#ffe500] font-bold rounded cursor-pointer">Add Culture Segment</button>
                 </form>
 
@@ -3965,16 +3981,16 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             {exploreSubTab === "stays" && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <form onSubmit={handleCreateStay} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5">
-                  <label className="block">name (Tamil)<input lang="ta" value={stayForm.nameTa} onChange={e => { const value = e.target.value; setStayForm(prev => ({ ...prev, nameTa: value })); autoTranslateField(value, "nameTa", "nameTa", setStayForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-<label className="block">type (Tamil)<input lang="ta" value={stayForm.typeTa} onChange={e => { const value = e.target.value; setStayForm(prev => ({ ...prev, typeTa: value })); autoTranslateField(value, "typeTa", "typeTa", setStayForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-<label className="block">location (Tamil)<input lang="ta" value={stayForm.locationTa} onChange={e => { const value = e.target.value; setStayForm(prev => ({ ...prev, locationTa: value })); autoTranslateField(value, "locationTa", "locationTa", setStayForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-<label className="block">price (Tamil)<input lang="ta" value={stayForm.priceTa} onChange={e => { const value = e.target.value; setStayForm(prev => ({ ...prev, priceTa: value })); autoTranslateField(value, "priceTa", "priceTa", setStayForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-<label className="block">features (Tamil)<input lang="ta" value={stayForm.featuresTa} onChange={e => { const value = e.target.value; setStayForm(prev => ({ ...prev, featuresTa: value })); autoTranslateField(value, "featuresTa", "featuresTa", setStayForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  
+
+
+
+
                   <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
                     <PlusCircle className="w-4 h-4 text-[#005689]" /> Add Eco Lodging stay option
                   </h3>
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Stay / Resort Name (En)</label>
                       <input 
                         type="text" 
@@ -3990,7 +4006,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         className="w-full border rounded p-1.5" 
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">റിസോർട്ട് മനോഹരമായ പേര് (Ml)</label>
                       <input 
                         type="text" 
@@ -4007,8 +4023,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block">name (Tamil)<input lang="ta" value={stayForm.nameTa} onChange={e => { const value = e.target.value; setStayForm(prev => ({ ...prev, nameTa: value })); autoTranslateField(value, "nameTa", "nameTa", setStayForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Accomodation Type (En)</label>
                       <input 
                         type="text" 
@@ -4024,7 +4041,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         placeholder="Govt-owned Lodge" 
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">താമസ വിഭാഗം (Ml)</label>
                       <input 
                         type="text" 
@@ -4041,8 +4058,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block">type (Tamil)<input lang="ta" value={stayForm.typeTa} onChange={e => { const value = e.target.value; setStayForm(prev => ({ ...prev, typeTa: value })); autoTranslateField(value, "typeTa", "typeTa", setStayForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Location VillageEn</label>
                       <input 
                         type="text" 
@@ -4057,7 +4075,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         className="w-full border rounded p-1.5" 
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">മൊത്ത വിവരങ്ങൾ ജംഗ്ഷൻ (Ml)</label>
                       <input 
                         type="text" 
@@ -4073,8 +4091,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block">location (Tamil)<input lang="ta" value={stayForm.locationTa} onChange={e => { const value = e.target.value; setStayForm(prev => ({ ...prev, locationTa: value })); autoTranslateField(value, "locationTa", "locationTa", setStayForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Price range En</label>
                       <input 
                         type="text" 
@@ -4090,7 +4109,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         placeholder="₹2,000 - ₹3,500 / night" 
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">നിരക്ക് വിവരണം (Ml)</label>
                       <input 
                         type="text" 
@@ -4107,6 +4126,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block">price (Tamil)<input lang="ta" value={stayForm.priceTa} onChange={e => { const value = e.target.value; setStayForm(prev => ({ ...prev, priceTa: value })); autoTranslateField(value, "priceTa", "priceTa", setStayForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                   {/* Photo selection targeting local files or links */}
                   <div className="bg-slate-50 rounded-lg p-3 border border-slate-200/50 space-y-2">
                     <div className="flex items-center justify-between">
@@ -4192,7 +4212,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     )}
                   </div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Features list En (comma split)</label>
                       <input 
                         type="text" 
@@ -4208,7 +4228,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         placeholder="Hot Water, Jeep trekking, Organic foods" 
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">റിസോർട്ട് സൗകര്യങ്ങൾ Ml (കോമ സ്പ്ലിറ്റ്)</label>
                       <input 
                         type="text" 
@@ -4225,6 +4245,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block">features (Tamil)<input lang="ta" value={stayForm.featuresTa} onChange={e => { const value = e.target.value; setStayForm(prev => ({ ...prev, featuresTa: value })); autoTranslateField(value, "featuresTa", "featuresTa", setStayForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                   <button type="submit" className="w-full py-2 bg-slate-900 text-[#ffe500] font-bold rounded cursor-pointer">Register Eco-lodging stay</button>
                 </form>
 
@@ -4251,15 +4272,15 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             {exploreSubTab === "travelogues" && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <form onSubmit={handleCreateTravelogue} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5">
-                  <label className="block text-sm font-semibold">title (Tamil)<input lang="ta" value={travelogueForm.titleTa} onChange={e => { const value = e.target.value; setTravelogueForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setTravelogueForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-                  <label className="block text-sm font-semibold">author (Tamil)<input lang="ta" value={travelogueForm.authorTa} onChange={e => { const value = e.target.value; setTravelogueForm(prev => ({ ...prev, authorTa: value })); autoTranslateField(value, "authorTa", "authorTa", setTravelogueForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-                  <label className="block text-sm font-semibold">snippet (Tamil)<textarea lang="ta" value={travelogueForm.snippetTa} onChange={e => { const value = e.target.value; setTravelogueForm(prev => ({ ...prev, snippetTa: value })); autoTranslateField(value, "snippetTa", "snippetTa", setTravelogueForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-                  <label className="block text-sm font-semibold">readTime (Tamil)<input lang="ta" value={travelogueForm.readTimeTa} onChange={e => { const value = e.target.value; setTravelogueForm(prev => ({ ...prev, readTimeTa: value })); autoTranslateField(value, "readTimeTa", "readTimeTa", setTravelogueForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  
+                  
+                  
+                  
                   <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
                     <PlusCircle className="w-4 h-4 text-[#005689]" /> Publish travel blog story / Column
                   </h3>
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Narrator nameEn</label>
                       <input 
                         type="text" 
@@ -4276,7 +4297,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         placeholder="e.g. Adv. Rajesh" 
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">എഴുത്തുകാരൻ പേര് (Ml)</label>
                       <input 
                         type="text" 
@@ -4294,8 +4315,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block text-sm font-semibold">author (Tamil)<input lang="ta" value={travelogueForm.authorTa} onChange={e => { const value = e.target.value; setTravelogueForm(prev => ({ ...prev, authorTa: value })); autoTranslateField(value, "authorTa", "authorTa", setTravelogueForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Title En</label>
                       <input 
                         type="text" 
@@ -4311,7 +4333,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         className="w-full border rounded p-1.5" 
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">വിഷയം / പേര് (Ml)</label>
                       <input 
                         type="text" 
@@ -4328,11 +4350,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block text-sm font-semibold">title (Tamil)<input lang="ta" value={travelogueForm.titleTa} onChange={e => { const value = e.target.value; setTravelogueForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setTravelogueForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                   <div>
                     <label className="block text-slate-500 font-semibold mb-0.5">Date of travel</label>
                     <input type="text" value={travelogueForm.date} onChange={e => setTravelogueForm({...travelogueForm, date: e.target.value})} className="w-full border rounded p-1.5" placeholder="June 2026" />
                   </div>
-                  <div>
+                  <div className="order-2">
                     <label className="block text-slate-500 font-semibold mb-0.5">Brief snippet (En)</label>
                     <textarea 
                       rows={3} 
@@ -4347,7 +4370,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       className="w-full border rounded p-1.5" 
                     />
                   </div>
-                  <div>
+                  <div className="order-1">
                     <label className="block text-slate-500 font-semibold mb-0.5">വിശദ വിവരണം കന്യാവനത്തിലൂടെയുള്ള അനുഭവം (Ml)</label>
                     <textarea 
                       rows={3} 
@@ -4362,8 +4385,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       className="w-full border rounded p-1.5 font-anek-malayalam" 
                     />
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block text-sm font-semibold">snippet (Tamil)<textarea lang="ta" value={travelogueForm.snippetTa} onChange={e => { const value = e.target.value; setTravelogueForm(prev => ({ ...prev, snippetTa: value })); autoTranslateField(value, "snippetTa", "snippetTa", setTravelogueForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Read time En</label>
                       <input 
                         type="text" 
@@ -4379,7 +4403,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         placeholder="5 min read" 
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">വായന സമയം വിവരണം (Ml)</label>
                       <input 
                         type="text" 
@@ -4396,6 +4420,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block text-sm font-semibold">readTime (Tamil)<input lang="ta" value={travelogueForm.readTimeTa} onChange={e => { const value = e.target.value; setTravelogueForm(prev => ({ ...prev, readTimeTa: value })); autoTranslateField(value, "readTimeTa", "readTimeTa", setTravelogueForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                   <button type="submit" className="w-full py-2 bg-slate-900 text-[#ffe500] font-bold rounded cursor-pointer">Register story</button>
                 </form>
 
@@ -4422,8 +4447,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             {exploreSubTab === "photos" && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <form onSubmit={handleCreatePhoto} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5">
-                  <label className="block text-sm font-semibold">title (Tamil)<input lang="ta" value={photoForm.titleTa} onChange={e => { const value = e.target.value; setPhotoForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setPhotoForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-                  <label className="block text-sm font-semibold">desc (Tamil)<textarea lang="ta" value={photoForm.descTa} onChange={e => { const value = e.target.value; setPhotoForm(prev => ({ ...prev, descTa: value })); autoTranslateField(value, "descTa", "descTa", setPhotoForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  
+                  
                   <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
                     <PlusCircle className="w-4 h-4 text-[#005689]" /> Register/Add Photo to Hub Frame
                   </h3>
@@ -4513,7 +4538,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     )}
                   </div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Captioned Title (En)</label>
                       <input 
                         type="text" 
@@ -4529,7 +4554,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         className="w-full border rounded p-1.5" 
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">ചിത്ര തലക്കെട്ട് (Ml)</label>
                       <input 
                         type="text" 
@@ -4546,8 +4571,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block text-sm font-semibold">title (Tamil)<input lang="ta" value={photoForm.titleTa} onChange={e => { const value = e.target.value; setPhotoForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setPhotoForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Desc (En)</label>
                       <input 
                         type="text" 
@@ -4562,7 +4588,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         className="w-full border rounded p-1.5" 
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">വിവരം (Ml)</label>
                       <input 
                         type="text" 
@@ -4578,6 +4604,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block text-sm font-semibold">desc (Tamil)<textarea lang="ta" value={photoForm.descTa} onChange={e => { const value = e.target.value; setPhotoForm(prev => ({ ...prev, descTa: value })); autoTranslateField(value, "descTa", "descTa", setPhotoForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                   <button type="submit" className="w-full py-2 bg-slate-900 text-[#ffe500] font-bold rounded cursor-pointer">Register Frame</button>
                 </form>
 
@@ -5044,10 +5071,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   <Phone className="w-5 h-5 text-[#005689]" /> Register business / local service directory card
                 </h3>
                 <form onSubmit={handleCreateDirectory} className="space-y-3">
-                  <label className="block text-sm font-semibold">Vendor Name (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={dirForm.nameTa} onChange={e => { const value = e.target.value; setDirForm(prev => ({ ...prev, nameTa: value })); autoTranslateField(value, "nameTa", "nameTa", setDirForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-<label className="block text-sm font-semibold">Location (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={dirForm.locationTa} onChange={e => { const value = e.target.value; setDirForm(prev => ({ ...prev, locationTa: value })); autoTranslateField(value, "locationTa", "locationTa", setDirForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  
+
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Vendor Name (En)</label>
                       <input 
                         type="text" 
@@ -5064,7 +5091,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         placeholder="e.g. Agali Auto Stand Desk" 
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">മലയാളത്തിൽ പേര് (Ml)</label>
                       <input 
                         type="text" 
@@ -5082,6 +5109,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block text-sm font-semibold">Vendor Name (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={dirForm.nameTa} onChange={e => { const value = e.target.value; setDirForm(prev => ({ ...prev, nameTa: value })); autoTranslateField(value, "nameTa", "nameTa", setDirForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
@@ -5105,7 +5133,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Service Area (En)</label>
                       <input 
                         type="text" 
@@ -5121,7 +5149,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         placeholder="Agali Area" 
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">സ്ഥലം വിവരണം (Ml)</label>
                       <input 
                         type="text" 
@@ -5138,6 +5166,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block text-sm font-semibold">Location (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={dirForm.locationTa} onChange={e => { const value = e.target.value; setDirForm(prev => ({ ...prev, locationTa: value })); autoTranslateField(value, "locationTa", "locationTa", setDirForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
 
                   <button type="submit" className="w-full py-2 bg-slate-900 text-[#ffe500] font-bold rounded cursor-pointer">Add directory registration</button>
                 </form>
@@ -5177,9 +5206,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   <AlertCircle className="w-5 h-5 text-red-650 shrink-0" /> Publish critical emergency helpline number
                 </h3>
                 <form onSubmit={handleCreateEmergency} className="space-y-3">
-                  <label className="block text-sm font-semibold">Service Name (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={emergForm.nameTa} onChange={e => { const value = e.target.value; setEmergForm(prev => ({ ...prev, nameTa: value })); autoTranslateField(value, "nameTa", "nameTa", setEmergForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Service agency (En)</label>
                       <input 
                         type="text" 
@@ -5195,7 +5224,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         className="w-full border rounded p-1.5" 
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">മലയാളം അലാറം വിവരങ്ങൾ (Ml)</label>
                       <input 
                         type="text" 
@@ -5212,6 +5241,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block text-sm font-semibold">Service Name (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={emergForm.nameTa} onChange={e => { const value = e.target.value; setEmergForm(prev => ({ ...prev, nameTa: value })); autoTranslateField(value, "nameTa", "nameTa", setEmergForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
@@ -5296,10 +5326,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   {editingId && editingType === "notice" ? "Modify existing notice announcement" : "Publish new notice announcement"}
                 </h3>
                 <form onSubmit={handleCreateNotice} className="space-y-4">
-                  <label className="block text-sm font-semibold">Notice Title (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={noticeForm.titleTa} onChange={e => { const value = e.target.value; setNoticeForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setNoticeForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-<label className="block text-sm font-semibold">Notice Content (Tamil)<textarea lang="ta" required={!autoTranslateOnSubmit} value={noticeForm.contentTa} onChange={e => { const value = e.target.value; setNoticeForm(prev => ({ ...prev, contentTa: value })); autoTranslateField(value, "contentTa", "contentTa", setNoticeForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  
+
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Notice Title (English)</label>
                       <input 
                         type="text" 
@@ -5316,7 +5346,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         placeholder="e.g. Landslide alert in Pudur"
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">അറിയിപ്പ് വിഷയം (Malayalam)</label>
                       <input 
                         type="text" 
@@ -5334,9 +5364,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block text-sm font-semibold">Notice Title (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={noticeForm.titleTa} onChange={e => { const value = e.target.value; setNoticeForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setNoticeForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Notice Content (English)</label>
                       <textarea 
                         required 
@@ -5353,7 +5384,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         placeholder="Write detailed statement..."
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">വിശദമായ വിവരങ്ങൾ (Malayalam)</label>
                       <textarea 
                         required 
@@ -5371,6 +5402,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block text-sm font-semibold">Notice Content (Tamil)<textarea lang="ta" required={!autoTranslateOnSubmit} value={noticeForm.contentTa} onChange={e => { const value = e.target.value; setNoticeForm(prev => ({ ...prev, contentTa: value })); autoTranslateField(value, "contentTa", "contentTa", setNoticeForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
 
                   <div className="grid grid-cols-3 gap-3">
                     <div>
@@ -5641,12 +5673,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   {editingId && editingType === "lpg" ? "Modify LPG scheduling details" : "Schedule new gas delivery route"}
                 </h3>
                 <form onSubmit={handleCreateLpg} className="space-y-4">
-                  <label className="block text-sm font-semibold">agencyName (Tamil)<input lang="ta" value={lpgForm.agencyNameTa} onChange={e => { const value = e.target.value; setLpgForm(prev => ({ ...prev, agencyNameTa: value })); autoTranslateField(value, "agencyNameTa", "agencyNameTa", setLpgForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-<label className="block text-sm font-semibold">areas (Tamil)<input lang="ta" value={lpgForm.areasTa} onChange={e => { const value = e.target.value; setLpgForm(prev => ({ ...prev, areasTa: value })); autoTranslateField(value, "areasTa", "areasTa", setLpgForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-<label className="block text-sm font-semibold">status (Tamil)<input lang="ta" value={lpgForm.statusTa} onChange={e => { const value = e.target.value; setLpgForm(prev => ({ ...prev, statusTa: value })); autoTranslateField(value, "statusTa", "statusTa", setLpgForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-<label className="block text-sm font-semibold">notes (Tamil)<input lang="ta" value={lpgForm.notesTa} onChange={e => { const value = e.target.value; setLpgForm(prev => ({ ...prev, notesTa: value })); autoTranslateField(value, "notesTa", "notesTa", setLpgForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
+                  
+
+
+
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Agency Name (English)</label>
                       <input 
                         type="text" 
@@ -5663,7 +5695,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         placeholder="e.g. Agali Indane Gas Agency"
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">ഏജൻസി പേര് (Malayalam)</label>
                       <input 
                         type="text" 
@@ -5681,9 +5713,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block text-sm font-semibold">agencyName (Tamil)<input lang="ta" value={lpgForm.agencyNameTa} onChange={e => { const value = e.target.value; setLpgForm(prev => ({ ...prev, agencyNameTa: value })); autoTranslateField(value, "agencyNameTa", "agencyNameTa", setLpgForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Delivering Areas (English)</label>
                       <textarea 
                         required 
@@ -5700,7 +5733,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         placeholder="e.g. Agali, Sholayur, Kottathara Road, Chavadiyur"
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">വിതരണം ചെയ്യുന്ന സ്ഥലങ്ങൾ (Malayalam)</label>
                       <textarea 
                         required 
@@ -5718,9 +5751,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block text-sm font-semibold">areas (Tamil)<input lang="ta" value={lpgForm.areasTa} onChange={e => { const value = e.target.value; setLpgForm(prev => ({ ...prev, areasTa: value })); autoTranslateField(value, "areasTa", "areasTa", setLpgForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
 
                   <div className="grid grid-cols-3 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Delivery Status (EN)</label>
                       <select 
                         value={lpgForm.statusEn} 
@@ -5739,7 +5773,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       </select>
                     </div>
 
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">സ്റ്റാറ്റസ് (ML)</label>
                       <input 
                         type="text"
@@ -5750,6 +5784,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         placeholder="ഇന്ന് വിതരണമുണ്ട്"
                       />
                     </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block text-sm font-semibold">status (Tamil)<input lang="ta" value={lpgForm.statusTa} onChange={e => { const value = e.target.value; setLpgForm(prev => ({ ...prev, statusTa: value })); autoTranslateField(value, "statusTa", "statusTa", setLpgForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
 
                     <div>
                       <label className="block text-slate-500 font-semibold mb-0.5">Delivery Date/Day Text</label>
@@ -5779,7 +5814,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
+                    <div className="order-2">
                       <label className="block text-slate-500 font-semibold mb-0.5">Additional Note (EN)</label>
                       <input 
                         type="text" 
@@ -5795,7 +5830,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         placeholder="e.g. Vehicle starts at 9:00 AM from Agali"
                       />
                     </div>
-                    <div>
+                    <div className="order-1">
                       <label className="block text-slate-500 font-semibold mb-0.5">അധിക വിവരങ്ങൾ (ML)</label>
                       <input 
                         type="text" 
@@ -5812,6 +5847,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       />
                     </div>
                   </div>
+<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block text-sm font-semibold">notes (Tamil)<input lang="ta" value={lpgForm.notesTa} onChange={e => { const value = e.target.value; setLpgForm(prev => ({ ...prev, notesTa: value })); autoTranslateField(value, "notesTa", "notesTa", setLpgForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
 
                   {/* Translation utility badge */}
                   {autoTranslateOnSubmit && (
