@@ -4729,11 +4729,11 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
                 <form onSubmit={handleCreateBusRoute} className="space-y-3">
                   <div className="text-xs text-slate-600">Every bus stop must have its Tamil name before it can be added to the schedule.</div>
-                  
-
-
-
-
+                  <label className="block text-sm font-semibold">route (Tamil)<input lang="ta" value={busForm.routeTa} onChange={e => { const value = e.target.value; setBusForm(prev => ({ ...prev, routeTa: value })); autoTranslateField(value, "routeTa", "routeTa", setBusForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">busType (Tamil)<input lang="ta" value={busForm.busTypeTa} onChange={e => { const value = e.target.value; setBusForm(prev => ({ ...prev, busTypeTa: value })); autoTranslateField(value, "busTypeTa", "busTypeTa", setBusForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">runs (Tamil)<input lang="ta" value={busForm.runsTa} onChange={e => { const value = e.target.value; setBusForm(prev => ({ ...prev, runsTa: value })); autoTranslateField(value, "runsTa", "runsTa", setBusForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">frequency (Tamil)<input lang="ta" value={busForm.frequencyTa} onChange={e => { const value = e.target.value; setBusForm(prev => ({ ...prev, frequencyTa: value })); autoTranslateField(value, "frequencyTa", "frequencyTa", setBusForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
+<label className="block text-sm font-semibold">timings (Tamil)<input lang="ta" value={busForm.timingsTa} onChange={e => { const value = e.target.value; setBusForm(prev => ({ ...prev, timingsTa: value })); autoTranslateField(value, "timingsTa", "timingsTa", setBusForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
                   
                   {/* ROUTE SELECT FROM REGISTRY */}
                   <div className="bg-blue-50/50 p-3 rounded-lg border border-blue-100/50 space-y-2">
@@ -4854,7 +4854,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   {busForm.type === "KSRTC" && (matchedOption ? matchedOption.value : "Others") === "Others" && (
                     <div className="bg-amber-50 border border-amber-100 p-2.5 rounded-lg space-y-1">
                       <label className="block text-amber-950 font-bold text-[11px]">Type in the custom Bus Type (En / Ml)</label>
-                      <div className="order-1 grid grid-cols-2 gap-1.5">
+                      <div className="grid grid-cols-2 gap-1.5">
                         <input 
                           type="text" 
                           required
@@ -4885,13 +4885,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         />
                       </div>
                     </div>
-<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block text-sm font-semibold">busType (Tamil)<input lang="ta" value={busForm.busTypeTa} onChange={e => { const value = e.target.value; setBusForm(prev => ({ ...prev, busTypeTa: value })); autoTranslateField(value, "busTypeTa", "busTypeTa", setBusForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                   )}
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-slate-500 font-semibold mb-0.5">Service Frequency (En / Ml)</label>
-                      <div className="order-1 grid grid-cols-2 gap-1.5">
+                      <div className="grid grid-cols-2 gap-1.5">
                         <input 
                           type="text" 
                           value={busForm.frequencyEn} 
@@ -4920,10 +4919,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         />
                       </div>
                     </div>
-<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block text-sm font-semibold">frequency (Tamil)<input lang="ta" value={busForm.frequencyTa} onChange={e => { const value = e.target.value; setBusForm(prev => ({ ...prev, frequencyTa: value })); autoTranslateField(value, "frequencyTa", "frequencyTa", setBusForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                     <div>
                       <label className="block text-slate-500 font-semibold mb-0.5">Operation Hours En / Ml</label>
-                      <div className="order-1 grid grid-cols-2 gap-1.5">
+                      <div className="grid grid-cols-2 gap-1.5">
                         <input 
                           type="text" 
                           value={busForm.timingsEn} 
@@ -4952,7 +4950,6 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         />
                       </div>
                     </div>
-<div className="rounded-lg border border-slate-200 bg-slate-50 p-3 mt-2"><label className="block text-sm font-semibold">timings (Tamil)<input lang="ta" value={busForm.timingsTa} onChange={e => { const value = e.target.value; setBusForm(prev => ({ ...prev, timingsTa: value })); autoTranslateField(value, "timingsTa", "timingsTa", setBusForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label></div>
                   </div>
 
                   {/* Add stops timeline sub-generator */}
@@ -4979,7 +4976,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                           className="w-full border rounded p-1 bg-white" 
                         />
                       </div>
-                      
+                      <label className="block text-sm font-semibold">Stop Name (Tamil)<input lang="ta" value={transitInput.typeTa} onChange={e => setTransitInput({...transitInput, typeTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label>
                       <div>
                         <span className="text-[9px] font-bold text-slate-400 block mb-0.5">Stop Name Ml</span>
                         <input 
@@ -5015,10 +5012,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   >
                     {editingType === "busroutes" ? "Save Changes to Bus Timetable" : "Publish Bus Timetable"}
                   </button>
-                
-<div className="space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-3"><label className="block text-sm font-semibold">route (Tamil)<input lang="ta" value={busForm.routeTa} onChange={e => { const value = e.target.value; setBusForm(prev => ({ ...prev, routeTa: value })); autoTranslateField(value, "routeTa", "routeTa", setBusForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-<label className="block text-sm font-semibold">runs (Tamil)<input lang="ta" value={busForm.runsTa} onChange={e => { const value = e.target.value; setBusForm(prev => ({ ...prev, runsTa: value })); autoTranslateField(value, "runsTa", "runsTa", setBusForm, "ta"); }} className="w-full border rounded p-2 font-anek-tamil" /></label>
-<label className="block text-sm font-semibold">Stop Name (Tamil)<input lang="ta" value={transitInput.typeTa} onChange={e => setTransitInput({...transitInput, typeTa: e.target.value})} className="w-full border rounded p-2 font-anek-tamil" /></label></div></form>
+                </form>
               </div>
 
               {/* Transit list display */}
