@@ -2950,7 +2950,13 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 </div>
 
                 <div>
-                  <label className="block text-slate-500 font-semibold mb-1">Headline (Tamil)</label>
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
+                    <label className="block text-slate-500 font-semibold">Headline (Tamil)</label>
+                    <div className="flex flex-wrap gap-2">
+                      <button type="button" disabled={isTranslatingForm} onClick={() => handleTranslateBlock(newsForm.titleEn, "ta", "title")} className="px-2.5 py-1 bg-[#ffe500] text-slate-950 rounded text-xs font-bold disabled:opacity-50">English → Tamil</button>
+                      <button type="button" disabled={isTranslatingForm} onClick={() => handleTranslateBlock(newsForm.titleMl, "ta", "title")} className="px-2.5 py-1 bg-slate-900 text-white rounded text-xs font-bold disabled:opacity-50">Malayalam → Tamil</button>
+                    </div>
+                  </div>
                   <input type="text" lang="ta" required={!autoTranslateOnSubmit} value={newsForm.titleTa}
                     onChange={(e) => setNewsForm({...newsForm, titleTa: e.target.value})}
                     placeholder="தமிழில் செய்தித் தலைப்பை எழுதவும்"
