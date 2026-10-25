@@ -327,89 +327,48 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   const liveTranslationTimers = useRef<Record<string, NodeJS.Timeout>>({});
   const [activeLiveTranslationsCount, setActiveLiveTranslationsCount] = useState(0);
 
+  // Debounced three-way translation. Never overwrite a populated destination field.
   const autoTranslateField = (
-    text: string,
-    sourceFieldPath: string, // e.g. "titleEn" or "leftAd.titleEn"
-    targetFieldPath: string, // e.g. "titleMl" or "leftAd.titleMl"
+    text: string, sourceFieldPath: string, targetFieldPath: string,
     setFormState: React.Dispatch<React.SetStateAction<any>>,
     targetLang: "en" | "ml" | "ta"
   ) => {
-    const trimmed = text.trim();
-    if (!trimmed) return;
-
-    if (liveTranslationTimers.current[sourceFieldPath]) {
-      clearTimeout(liveTranslationTimers.current[sourceFieldPath]);
-    }
-
-    // Determine the delay. If they finish a sentence, translate faster ("When I typed a sentence, without clicking a button")
-    const endsWithSentence = /[.!?\n\u0d3e-\u0d4d]\s*$/.test(text);
-    const delay = endsWithSentence ? 650 : 1500;
-
+    if (liveTranslationTimers.current[sourceFieldPath]) clearTimeout(liveTranslationTimers.current[sourceFieldPath]);
+    if (!autoTranslateOnSubmit || !text.trim()) return;
+    const sourceSuffix = sourceFieldPath.match(/(En|Ml|Ta)$/)?.[1];
+    const sourceLang = sourceSuffix === "Ml" ? "ml" : sourceSuffix === "Ta" ? "ta" : "en";
+    const targetFields = sourceSuffix
+      ? (["en", "ml", "ta"] as const).filter(lang => lang !== sourceLang).map(lang => ({
+          lang, path: sourceFieldPath.replace(/(En|Ml|Ta)$/, lang === "en" ? "En" : lang === "ml" ? "Ml" : "Ta")
+        }))
+      : [{ lang: targetLang, path: targetFieldPath }];
     liveTranslationTimers.current[sourceFieldPath] = setTimeout(async () => {
       setActiveLiveTranslationsCount(prev => prev + 1);
       try {
-        const response = await adminFetch("/api/admin/translate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: trimmed, targetLang, sourceLang: sourceFieldPath.endsWith("Ml") ? "ml" : "en" })
-        });
-        if (response.ok) {
-          const data = await response.json();
-          if (data.translatedText) {
-            setFormState((prev: any) => {
-              const isNested = sourceFieldPath.includes(".");
-              if (isNested) {
-                const [section, subkey] = sourceFieldPath.split(".");
-                if (!prev[section] || !prev[section][subkey] || prev[section][subkey].trim() === "") {
-                  return prev;
-                }
-                const targetParts = targetFieldPath.split(".");
-                return {
-                  ...prev,
-                  [targetParts[0]]: {
-                    ...prev[targetParts[0]],
-                    [targetParts[1]]: data.translatedText
-                  }
-                };
-              } else {
-                if (!prev[sourceFieldPath] || prev[sourceFieldPath].trim() === "") {
-                  return prev;
-                }
-                return {
-                  ...prev,
-                  [targetFieldPath]: data.translatedText
-                };
-              }
-            });
-          }
-        }
-        // Keep Tamil in sync while authoring; preserve any manually edited Tamil text.
-        if (targetLang !== "ta" && /(?:En|Ml)$/.test(sourceFieldPath)) {
-          const tamilPath = sourceFieldPath.replace(/(?:En|Ml)$/, "Ta");
-          const tamilResponse = await adminFetch("/api/admin/translate", {
+        await Promise.all(targetFields.map(async ({ lang, path }) => {
+          const response = await adminFetch("/api/admin/translate", {
             method: "POST", headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: trimmed, sourceLang: sourceFieldPath.endsWith("Ml") ? "ml" : "en", targetLang: "ta" })
+            body: JSON.stringify({ text: text.trim(), sourceLang, targetLang: lang })
           });
-          if (tamilResponse.ok) {
-            const tamilData = await tamilResponse.json();
-            if (tamilData.translatedText) setFormState((previous: any) => {
-              if (sourceFieldPath.includes(".")) {
-                const [section, key] = sourceFieldPath.split(".");
-                const targetKey = tamilPath.split(".")[1];
-                if (!previous[section] || previous[section][key] !== text || previous[section][targetKey]?.trim()) return previous;
-                return { ...previous, [section]: { ...previous[section], [targetKey]: tamilData.translatedText } };
-              }
-              if (previous[sourceFieldPath] !== text || previous[tamilPath]?.trim()) return previous;
-              return { ...previous, [tamilPath]: tamilData.translatedText };
-            });
-          }
-        }
-      } catch (err) {
-        console.error("Live translation error:", err);
-      } finally {
-        setActiveLiveTranslationsCount(prev => Math.max(0, prev - 1));
-      }
-    }, delay);
+          if (!response.ok) { console.warn("Live translation unavailable:", lang, response.status); return; }
+          const data = await response.json();
+          if (!data.translatedText?.trim()) return;
+          setFormState((previous: any) => {
+            const sourceParts = sourceFieldPath.split(".");
+            const targetParts = path.split(".");
+            if (sourceParts.length === 2 && targetParts.length === 2) {
+              const [section, sourceKey] = sourceParts;
+              const targetKey = targetParts[1];
+              if (previous[section]?.[sourceKey] !== text || previous[section]?.[targetKey]?.trim()) return previous;
+              return { ...previous, [section]: { ...previous[section], [targetKey]: data.translatedText.trim() } };
+            }
+            if (previous[sourceFieldPath] !== text || previous[path]?.trim()) return previous;
+            return { ...previous, [path]: data.translatedText.trim() };
+          });
+        }));
+      } catch (error) { console.error("Live translation failed:", error); }
+      finally { setActiveLiveTranslationsCount(prev => Math.max(0, prev - 1)); }
+    }, /[.!?\n]\s*$/.test(text) ? 650 : 1500);
   };
 
   // Fill missing translations in all three languages; never replace manually entered values.
