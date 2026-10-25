@@ -2873,54 +2873,42 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-slate-500 font-semibold mb-1">Headline (English)</label>
-                    <input 
-                      type="text" 
-                      value={newsForm.titleEn}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        setNewsForm({...newsForm, titleEn: val});
-                        if (autoTranslateOnSubmit) {
-                          autoTranslateField(val, "titleEn", "titleMl", setNewsForm, "ml");
-                        }
-                      }}
-                      placeholder="Enter headline in English" 
-                      className="w-full border rounded p-2 focus:ring-1 font-bold text-slate-800"
-                    />
+                <section className="space-y-3 rounded-xl border border-slate-200 bg-slate-50/70 p-4">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <h3 className="text-base font-bold text-[#0a3060]">News Headlines</h3>
+                    <span className="text-xs text-slate-500">Malayalam → English → Tamil · Auto-translate ${autoTranslateOnSubmit ? 'ON' : 'OFF'}</span>
                   </div>
-                  <div>
-                    <label className="block text-slate-500 font-semibold mb-1">മലയാളം വാർത്താ തലക്കെട്ട്</label>
-                    <input 
-                      type="text" 
-                      value={newsForm.titleMl}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        setNewsForm({...newsForm, titleMl: val});
-                        if (autoTranslateOnSubmit) {
-                          autoTranslateField(val, "titleMl", "titleEn", setNewsForm, "en");
-                        }
-                      }}
-                      placeholder="മലയാളത്തിൽ വാർത്ത നൽകുക" 
-                      className="w-full border rounded p-2 focus:ring-1 font-bold text-slate-800"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
-                    <label className="block text-slate-500 font-semibold">Headline (Tamil)</label>
-                    <div className="flex flex-wrap gap-2">
-                      <button type="button" disabled={isTranslatingForm} onClick={() => handleTranslateBlock(newsForm.titleEn, "ta", "title")} className="px-2.5 py-1 bg-[#ffe500] text-slate-950 rounded text-xs font-bold disabled:opacity-50">English → Tamil</button>
-                      <button type="button" disabled={isTranslatingForm} onClick={() => handleTranslateBlock(newsForm.titleMl, "ta", "title")} className="px-2.5 py-1 bg-slate-900 text-white rounded text-xs font-bold disabled:opacity-50">Malayalam → Tamil</button>
+                  <div className="rounded-lg border border-slate-200 bg-white p-3 space-y-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <label htmlFor="news-title-ml" className="font-bold text-sm text-slate-800">1. Headline (Malayalam)</label>
+                      <div className="flex flex-wrap gap-2"><button type="button" disabled={isTranslatingForm} onClick={() => handleTranslateBlock(newsForm.titleEn, "ml", "title")} className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-50">English → Malayalam</button>
+                    <button type="button" disabled={isTranslatingForm} onClick={() => handleTranslateBlock(newsForm.titleTa, "ml", "title")} className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-50">Tamil → Malayalam</button></div>
                     </div>
+                    <input id="news-title-ml" lang="ml" type="text" value={newsForm.titleMl}
+                      onChange={e => { const value = e.target.value; setNewsForm(prev => ({ ...prev, titleMl: value })); autoTranslateField(value, "titleMl", "titleMl", setNewsForm, "ml"); }}
+                      placeholder="മലയാളത്തിൽ വാർത്താ തലക്കെട്ട് എഴുതുക" className="w-full rounded-md border border-slate-300 p-3 font-semibold font-anek-malayalam" />
                   </div>
-                  <input type="text" lang="ta" required={!autoTranslateOnSubmit} value={newsForm.titleTa}
-                    onChange={(e) => setNewsForm({...newsForm, titleTa: e.target.value})}
-                    placeholder="தமிழில் செய்தித் தலைப்பை எழுதவும்"
-                    className="w-full border rounded p-2 focus:ring-1 font-bold font-anek-tamil" />
-                </div>
+                  <div className="rounded-lg border border-slate-200 bg-white p-3 space-y-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <label htmlFor="news-title-en" className="font-bold text-sm text-slate-800">2. Headline (English)</label>
+                      <div className="flex flex-wrap gap-2"><button type="button" disabled={isTranslatingForm} onClick={() => handleTranslateBlock(newsForm.titleMl, "en", "title")} className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-50">Malayalam → English</button>
+                    <button type="button" disabled={isTranslatingForm} onClick={() => handleTranslateBlock(newsForm.titleTa, "en", "title")} className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-50">Tamil → English</button></div>
+                    </div>
+                    <input id="news-title-en" lang="en" type="text" value={newsForm.titleEn}
+                      onChange={e => { const value = e.target.value; setNewsForm(prev => ({ ...prev, titleEn: value })); autoTranslateField(value, "titleEn", "titleEn", setNewsForm, "en"); }}
+                      placeholder="Enter the news headline" className="w-full rounded-md border border-slate-300 p-3 font-semibold font-anek-latin" />
+                  </div>
+                  <div className="rounded-lg border border-slate-200 bg-white p-3 space-y-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <label htmlFor="news-title-ta" className="font-bold text-sm text-slate-800">3. Headline (Tamil)</label>
+                      <div className="flex flex-wrap gap-2"><button type="button" disabled={isTranslatingForm} onClick={() => handleTranslateBlock(newsForm.titleMl, "ta", "title")} className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-50">Malayalam → Tamil</button>
+                    <button type="button" disabled={isTranslatingForm} onClick={() => handleTranslateBlock(newsForm.titleEn, "ta", "title")} className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-50">English → Tamil</button></div>
+                    </div>
+                    <input id="news-title-ta" lang="ta" type="text" value={newsForm.titleTa}
+                      onChange={e => { const value = e.target.value; setNewsForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setNewsForm, "ta"); }}
+                      placeholder="தமிழில் செய்தித் தலைப்பை எழுதவும்" className="w-full rounded-md border border-slate-300 p-3 font-semibold font-anek-tamil" />
+                  </div>
+                </section>
 
                 {/* News Photo Upload Selection directly targeting local files */}
                 <div className="bg-slate-50 rounded-lg p-4 border border-slate-200/50 space-y-3.5">
@@ -3009,73 +2997,45 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   )}
                 </div>
 
-                {/* English Content Area */}
-                <div className="space-y-1">
-                  <div className="flex justify-between items-center bg-slate-50 p-1.5 rounded-t border">
-                    <span className="font-bold text-slate-700 font-mono">1. Article Content (English)</span>
-                    <button
-                      type="button"
-                      onClick={() => handleTranslateBlock(newsForm.contentEn, "ml")}
-                      className="px-2.5 py-1 bg-[#ffe500] text-slate-950 rounded font-black text-[9px] hover:bg-amber-400 transition"
-                    >
-                      🗣️ translate into Malayalam below
-                    </button>
+                <section className="space-y-3 rounded-xl border border-slate-200 bg-slate-50/70 p-4">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <h3 className="text-base font-bold text-[#0a3060]">News Article Content</h3>
+                    <span className="text-xs text-slate-500">Write in any language; translate to the other two</span>
                   </div>
-                  <textarea
-                    rows={5}
-                    value={newsForm.contentEn}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setNewsForm({...newsForm, contentEn: val});
-                      if (autoTranslateOnSubmit) {
-                        autoTranslateField(val, "contentEn", "contentMl", setNewsForm, "ml");
-                      }
-                    }}
-                    placeholder="Type news story in English..."
-                    className="w-full border border-t-0 rounded-b p-2.5 focus:ring-1 focus:ring-[#005689] leading-relaxed"
-                  />
-                </div>
-
-                {/* Malayalam Content Area */}
-                <div className="space-y-1">
-                  <div className="flex justify-between items-center bg-slate-50 p-1.5 rounded-t border">
-                    <span className="font-bold text-slate-700 font-mono">2. മാതൃക വിവരണം (മലയാളം ഭാഗം)</span>
-                    <button
-                      type="button"
-                      onClick={() => handleTranslateBlock(newsForm.contentMl, "en")}
-                      className="px-2.5 py-1 bg-slate-900 text-[#ffe500] rounded font-black text-[9px] hover:bg-slate-850 transition"
-                    >
-                      🗣️ translate into English above
-                    </button>
-                  </div>
-                  <textarea
-                    rows={5}
-                    value={newsForm.contentMl}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setNewsForm({...newsForm, contentMl: val});
-                      if (autoTranslateOnSubmit) {
-                        autoTranslateField(val, "contentMl", "contentEn", setNewsForm, "en");
-                      }
-                    }}
-                    placeholder="മലയാളം വാർത്ത ഉള്ളടക്കം നൽകുക..."
-                    className="w-full border border-t-0 rounded-b p-2.5 focus:ring-1 focus:ring-[#005689] leading-relaxed font-anek-malayalam"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <div className="flex flex-wrap justify-between items-center gap-2 bg-slate-50 p-1.5 rounded-t border">
-                    <label className="font-bold text-slate-700 font-mono">3. Article Content (Tamil)</label>
-                    <div className="flex flex-wrap gap-2">
-                      <button type="button" disabled={isTranslatingForm} onClick={() => handleTranslateBlock(newsForm.contentEn, "ta")} className="px-2.5 py-1 bg-[#ffe500] text-slate-950 rounded font-bold text-xs disabled:opacity-50">Translate English → Tamil</button>
-                      <button type="button" disabled={isTranslatingForm} onClick={() => handleTranslateBlock(newsForm.contentMl, "ta")} className="px-2.5 py-1 bg-slate-900 text-white rounded font-bold text-xs disabled:opacity-50">Translate Malayalam → Tamil</button>
+                  <div className="rounded-lg border border-slate-200 bg-white p-3 space-y-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <label htmlFor="news-content-ml" className="font-bold text-sm text-slate-800">1. Article Content (Malayalam)</label>
+                      <div className="flex flex-wrap gap-2"><button type="button" disabled={isTranslatingForm} onClick={() => handleTranslateBlock(newsForm.contentEn, "ml", "content")} className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-50">English → Malayalam</button>
+                    <button type="button" disabled={isTranslatingForm} onClick={() => handleTranslateBlock(newsForm.contentTa, "ml", "content")} className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-50">Tamil → Malayalam</button></div>
                     </div>
+                    <textarea id="news-content-ml" lang="ml" rows={6} value={newsForm.contentMl}
+                      onChange={e => { const value = e.target.value; setNewsForm(prev => ({ ...prev, contentMl: value })); autoTranslateField(value, "contentMl", "contentMl", setNewsForm, "ml"); }}
+                      placeholder="മലയാളത്തിൽ വാർത്തയുടെ ഉള്ളടക്കം എഴുതുക"
+                      className="w-full rounded-md border border-slate-300 p-3 leading-relaxed font-anek-malayalam" />
                   </div>
-                  <textarea lang="ta" required={!autoTranslateOnSubmit} rows={5} value={newsForm.contentTa}
-                    onChange={(e) => setNewsForm({...newsForm, contentTa: e.target.value})}
-                    placeholder="தமிழில் செய்தி உள்ளடக்கத்தை எழுதவும்"
-                    className="w-full border border-t-0 rounded-b p-2.5 leading-relaxed font-anek-tamil" />
-                </div>
+                  <div className="rounded-lg border border-slate-200 bg-white p-3 space-y-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <label htmlFor="news-content-en" className="font-bold text-sm text-slate-800">2. Article Content (English)</label>
+                      <div className="flex flex-wrap gap-2"><button type="button" disabled={isTranslatingForm} onClick={() => handleTranslateBlock(newsForm.contentMl, "en", "content")} className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-50">Malayalam → English</button>
+                    <button type="button" disabled={isTranslatingForm} onClick={() => handleTranslateBlock(newsForm.contentTa, "en", "content")} className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-50">Tamil → English</button></div>
+                    </div>
+                    <textarea id="news-content-en" lang="en" rows={6} value={newsForm.contentEn}
+                      onChange={e => { const value = e.target.value; setNewsForm(prev => ({ ...prev, contentEn: value })); autoTranslateField(value, "contentEn", "contentEn", setNewsForm, "en"); }}
+                      placeholder="Write the news article in English"
+                      className="w-full rounded-md border border-slate-300 p-3 leading-relaxed font-anek-latin" />
+                  </div>
+                  <div className="rounded-lg border border-slate-200 bg-white p-3 space-y-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <label htmlFor="news-content-ta" className="font-bold text-sm text-slate-800">3. Article Content (Tamil)</label>
+                      <div className="flex flex-wrap gap-2"><button type="button" disabled={isTranslatingForm} onClick={() => handleTranslateBlock(newsForm.contentMl, "ta", "content")} className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-50">Malayalam → Tamil</button>
+                    <button type="button" disabled={isTranslatingForm} onClick={() => handleTranslateBlock(newsForm.contentEn, "ta", "content")} className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-50">English → Tamil</button></div>
+                    </div>
+                    <textarea id="news-content-ta" lang="ta" rows={6} value={newsForm.contentTa}
+                      onChange={e => { const value = e.target.value; setNewsForm(prev => ({ ...prev, contentTa: value })); autoTranslateField(value, "contentTa", "contentTa", setNewsForm, "ta"); }}
+                      placeholder="தமிழில் செய்தி உள்ளடக்கத்தை எழுதவும்"
+                      className="w-full rounded-md border border-slate-300 p-3 leading-relaxed font-anek-tamil" />
+                  </div>
+                </section>
 
                 <div className="pt-2 flex justify-end gap-2">
                   {editingId && editingType === "news" && (
