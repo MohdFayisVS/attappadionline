@@ -975,33 +975,24 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     }
   };
 
-  // AI Translation helper
-  const handleTranslateBlock = async (text: string, target: "ml" | "en") => {
-    if (!text) {
-      alert("Please enter content to translate first.");
-      return;
-    }
-    triggerToast("Initiating translation process...");
+  // Explicit translation controls for every news language, including Tamil.
+  const handleTranslateBlock = async (
+    text: string, target: "ml" | "en" | "ta", field: "title" | "content" = "content"
+  ) => {
+    if (!text.trim()) { alert("Please enter source text first."); return; }
+    setIsTranslatingForm(true);
     try {
       const response = await adminFetch("/api/admin/translate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text, targetLang: target })
       });
       const data = await response.json();
-      if (response.ok && data.translatedText) {
-        if (target === "ml") {
-          setNewsForm(prev => ({ ...prev, contentMl: data.translatedText }));
-        } else {
-          setNewsForm(prev => ({ ...prev, contentEn: data.translatedText }));
-        }
-        triggerToast("Translation loaded successfully!");
-      } else {
-        alert(data.error || "Translation API failed");
-      }
-    } catch (e: any) {
-      alert("Translation failed: " + e.message);
-    }
+      if (!response.ok || !data.translatedText?.trim()) throw new Error(data.error || "Translation service returned no text.");
+      const key = (field + target[0].toUpperCase() + target.slice(1)) as keyof typeof newsForm;
+      setNewsForm(prev => ({ ...prev, [key]: data.translatedText.trim() }));
+      triggerToast("Translation into " + ({ en: "English", ml: "Malayalam", ta: "Tamil" }[target]) + " completed.");
+    } catch (error: any) { alert("Translation failed: " + (error.message || "Please retry.")); }
+    finally { setIsTranslatingForm(false); }
   };
 
   // OPINION BOARD ACTIONS
@@ -3108,11 +3099,17 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="block text-slate-700 font-semibold">3. Article Content (Tamil)</label>
+                  <div className="flex flex-wrap justify-between items-center gap-2 bg-slate-50 p-1.5 rounded-t border">
+                    <label className="font-bold text-slate-700 font-mono">3. Article Content (Tamil)</label>
+                    <div className="flex flex-wrap gap-2">
+                      <button type="button" disabled={isTranslatingForm} onClick={() => handleTranslateBlock(newsForm.contentEn, "ta")} className="px-2.5 py-1 bg-[#ffe500] text-slate-950 rounded font-bold text-xs disabled:opacity-50">Translate English → Tamil</button>
+                      <button type="button" disabled={isTranslatingForm} onClick={() => handleTranslateBlock(newsForm.contentMl, "ta")} className="px-2.5 py-1 bg-slate-900 text-white rounded font-bold text-xs disabled:opacity-50">Translate Malayalam → Tamil</button>
+                    </div>
+                  </div>
                   <textarea lang="ta" required={!autoTranslateOnSubmit} rows={5} value={newsForm.contentTa}
                     onChange={(e) => setNewsForm({...newsForm, contentTa: e.target.value})}
                     placeholder="தமிழில் செய்தி உள்ளடக்கத்தை எழுதவும்"
-                    className="w-full border rounded p-2.5 leading-relaxed font-anek-tamil" />
+                    className="w-full border border-t-0 rounded-b p-2.5 leading-relaxed font-anek-tamil" />
                 </div>
 
                 <div className="pt-2 flex justify-end gap-2">
