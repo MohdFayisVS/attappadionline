@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import html2canvas from "html2canvas";
 import { Download, Image as ImageIcon, WandSparkles } from "lucide-react";
 
@@ -22,6 +22,14 @@ export default function AdMaker({ onUse, notify }: Props) {
   const [working, setWorking] = useState(false);
   const [language, setLanguage] = useState<"en"|"ml"|"ta">("en");
   const ref = useRef<HTMLDivElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
+  const [previewWidth, setPreviewWidth] = useState(600);
+  useEffect(() => {
+    if (!previewRef.current) return;
+    const observer = new ResizeObserver(entries => setPreviewWidth(Math.min(1200, Math.max(1, entries[0].contentRect.width))));
+    observer.observe(previewRef.current);
+    return () => observer.disconnect();
+  }, []);
   const current = themes[theme];
   const readImage = (file: File) => {
     if (!file.type.startsWith("image/") || file.size > 3 * 1024 * 1024) { notify("Choose an image smaller than 3 MB."); return; }
@@ -63,9 +71,9 @@ export default function AdMaker({ onUse, notify }: Props) {
       <label className="flex items-center gap-2 text-xs font-semibold"><input type="checkbox" checked={showBrand} onChange={e=>setShowBrand(e.target.checked)} /> Show Attappadi Online branding</label>
       <div className="grid grid-cols-2 gap-2"><button type="button" disabled={working} onClick={()=>exportImage(false)} className="flex items-center justify-center gap-2 rounded bg-slate-800 p-2.5 text-sm font-bold text-white disabled:opacity-50"><Download className="w-4 h-4"/> Download JPG</button><button type="button" disabled={working} onClick={()=>exportImage(true)} className="flex items-center justify-center gap-2 rounded bg-blue-700 p-2.5 text-sm font-bold text-white disabled:opacity-50"><ImageIcon className="w-4 h-4"/> Add to carousel</button></div>
     </div>
-    <div className="min-w-0 space-y-2"><h4 className="font-bold text-[#0a3060]">Live advertisement preview</h4><div className="w-full overflow-x-auto rounded-xl border bg-slate-100 p-2">
-      <div style={{width:600,height:200,position:"relative"}}>
-        <div ref={ref} lang={language} style={{width:1200,height:400,position:"absolute",left:0,top:0,transform:"scale(0.5)",transformOrigin:"top left",background:`linear-gradient(115deg, ${current.a}, ${current.b})`,color:current.ink,overflow:"hidden",fontFamily:language==="ml" ? '"Anek Malayalam", sans-serif' : language==="ta" ? '"Anek Tamil", sans-serif' : '"Anek Latin", sans-serif'}} className="ad-maker-canvas">
+    <div className="min-w-0 space-y-2"><h4 className="font-bold text-[#0a3060]">Live advertisement preview</h4><div ref={previewRef} className="w-full overflow-hidden rounded-xl border bg-slate-100 p-2">
+      <div style={{width:"100%",aspectRatio:"3 / 1",position:"relative"}}>
+        <div ref={ref} lang={language} style={{width:1200,height:400,position:"absolute",left:0,top:0,transform:`scale(${previewWidth / 1200})`,transformOrigin:"top left",background:`linear-gradient(115deg, ${current.a}, ${current.b})`,color:current.ink,overflow:"hidden",fontFamily:language==="ml" ? '"Anek Malayalam", sans-serif' : language==="ta" ? '"Anek Tamil", sans-serif' : '"Anek Latin", sans-serif'}} className="ad-maker-canvas">
           {image && <img src={image} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:imageOpacity/100}} />}
           <div style={{position:"absolute",inset:0,background:"linear-gradient(90deg, rgba(0,0,0,.38), transparent 85%)"}}/>
           <div style={{position:"absolute",inset:0,padding:"34px 55px",display:"flex",flexDirection:"column",justifyContent:"center",gap:10}}>
