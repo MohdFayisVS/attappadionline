@@ -3081,77 +3081,18 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-bold mb-1">Column Title (En)</label>
-                      <input 
-                        type="text" 
-                        value={opinionForm.titleEn}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          setOpinionForm({...opinionForm, titleEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "titleEn", "titleMl", setOpinionForm, "ml");
-                          }
-                        }}
-                        placeholder="Attappadi's Organic Revolution"
-                        className="w-full border rounded p-1.5 focus:ring-1"
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-bold mb-1">വിഷയം (Ml)</label>
-                      <input 
-                        type="text" 
-                        value={opinionForm.titleMl}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          setOpinionForm({...opinionForm, titleMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "titleMl", "titleEn", setOpinionForm, "en");
-                          }
-                        }}
-                        placeholder="അട്ടപ്പാടിയുടെ കാർഷിക വിപ്ലവം"
-                        className="w-full border rounded p-1.5 focus:ring-1"
-                      />
-                    </div>
+                  <label className="flex items-center gap-2 text-sm font-semibold text-slate-700"><input type="checkbox" checked={autoTranslateOnSubmit} onChange={e => setAutoTranslateOnSubmit(e.target.checked)} /> Auto Translate missing languages (Malayalam / English / Tamil)</label>
+                  <p className="text-xs text-slate-500">Enter text in any language. Empty translations are generated automatically; existing entries are preserved.</p>
+                  <div className="space-y-3"><h4 className="text-sm font-bold text-[#0a3060]">Column title</h4>
+                    <div><label className="block mb-1 font-semibold text-slate-600">Malayalam</label><input type="text" lang="ml" value={opinionForm.titleMl} onChange={e => { const value=e.target.value; setOpinionForm(prev => ({...prev, titleMl:value})); autoTranslateField(value,"titleMl","titleMl",setOpinionForm,"ml"); }} className="w-full min-w-0 rounded-md border border-slate-300 p-3 text-sm font-anek-malayalam focus:ring-2 focus:ring-blue-500" /> </div>
+                    <div><label className="block mb-1 font-semibold text-slate-600">English</label><input type="text" lang="en" value={opinionForm.titleEn} onChange={e => { const value=e.target.value; setOpinionForm(prev => ({...prev, titleEn:value})); autoTranslateField(value,"titleEn","titleEn",setOpinionForm,"en"); }} className="w-full min-w-0 rounded-md border border-slate-300 p-3 text-sm font-anek-latin focus:ring-2 focus:ring-blue-500" /> </div>
+                    <div><label className="block mb-1 font-semibold text-slate-600">Tamil</label><input type="text" lang="ta" value={opinionForm.titleTa} onChange={e => { const value=e.target.value; setOpinionForm(prev => ({...prev, titleTa:value})); autoTranslateField(value,"titleTa","titleTa",setOpinionForm,"ta"); }} className="w-full min-w-0 rounded-md border border-slate-300 p-3 text-sm font-anek-tamil focus:ring-2 focus:ring-blue-500" /> </div>
                   </div>
-<div className="mt-2 w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">Opinion Title (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={opinionForm.titleTa} onChange={e => { const value = e.target.value; setOpinionForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setOpinionForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-
-                  <div className="order-2">
-                    <label className="block text-slate-500 font-bold mb-1">Column narrative copy (En)</label>
-                    <textarea 
-                      rows={4}
-                      value={opinionForm.contentEn}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        setOpinionForm({...opinionForm, contentEn: val});
-                        if (autoTranslateOnSubmit) {
-                          autoTranslateField(val, "contentEn", "contentMl", setOpinionForm, "ml");
-                        }
-                      }}
-                      placeholder="Type opinion argument here..."
-                      className="w-full border rounded p-1.5 focus:ring-1"
-                    />
+                  <div className="space-y-3"><h4 className="text-sm font-bold text-[#0a3060]">Column narrative</h4>
+                    <div><label className="block mb-1 font-semibold text-slate-600">Malayalam</label><textarea rows={5} lang="ml" value={opinionForm.contentMl} onChange={e => { const value=e.target.value; setOpinionForm(prev => ({...prev, contentMl:value})); autoTranslateField(value,"contentMl","contentMl",setOpinionForm,"ml"); }} className="w-full min-w-0 rounded-md border border-slate-300 p-3 text-sm font-anek-malayalam focus:ring-2 focus:ring-blue-500" /> </div>
+                    <div><label className="block mb-1 font-semibold text-slate-600">English</label><textarea rows={5} lang="en" value={opinionForm.contentEn} onChange={e => { const value=e.target.value; setOpinionForm(prev => ({...prev, contentEn:value})); autoTranslateField(value,"contentEn","contentEn",setOpinionForm,"en"); }} className="w-full min-w-0 rounded-md border border-slate-300 p-3 text-sm font-anek-latin focus:ring-2 focus:ring-blue-500" /> </div>
+                    <div><label className="block mb-1 font-semibold text-slate-600">Tamil</label><textarea rows={5} lang="ta" value={opinionForm.contentTa} onChange={e => { const value=e.target.value; setOpinionForm(prev => ({...prev, contentTa:value})); autoTranslateField(value,"contentTa","contentTa",setOpinionForm,"ta"); }} className="w-full min-w-0 rounded-md border border-slate-300 p-3 text-sm font-anek-tamil focus:ring-2 focus:ring-blue-500" /> </div>
                   </div>
-
-                  <div className="order-1">
-                    <label className="block text-slate-500 font-bold mb-1">നാടൻ വിവരണം (Ml)</label>
-                    <textarea 
-                      rows={4}
-                      value={opinionForm.contentMl}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        setOpinionForm({...opinionForm, contentMl: val});
-                        if (autoTranslateOnSubmit) {
-                          autoTranslateField(val, "contentMl", "contentEn", setOpinionForm, "en");
-                        }
-                      }}
-                      placeholder="വിശദമായ വിവരണം നൽകുക..."
-                      className="w-full border rounded p-1.5 focus:ring-1 font-anek-malayalam"
-                    />
-                  </div>
-<div className="mt-2 w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">Opinion Content (Tamil)<textarea lang="ta" required={!autoTranslateOnSubmit} rows={5} value={opinionForm.contentTa} onChange={e => { const value = e.target.value; setOpinionForm(prev => ({ ...prev, contentTa: value })); autoTranslateField(value, "contentTa", "contentTa", setOpinionForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-
                   <div className="flex gap-2">
                     {editingId && editingType === "opinions" && (
                       <button
