@@ -4706,13 +4706,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 </div>
 
                 <form onSubmit={handleCreateBusRoute} className="space-y-3">
-                  <div className="text-xs text-slate-600">Every bus stop must have its Tamil name before it can be added to the schedule.</div>
-                  <label className="block text-sm font-semibold">route (Tamil)<input lang="ta" value={busForm.routeTa} onChange={e => { const value = e.target.value; setBusForm(prev => ({ ...prev, routeTa: value })); autoTranslateField(value, "routeTa", "routeTa", setBusForm, "ta"); }} className="block w-full min-w-0 max-w-full box-border rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm leading-relaxed font-anek-tamil focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 h-11" /></label>
-<label className="block text-sm font-semibold">busType (Tamil)<input lang="ta" value={busForm.busTypeTa} onChange={e => { const value = e.target.value; setBusForm(prev => ({ ...prev, busTypeTa: value })); autoTranslateField(value, "busTypeTa", "busTypeTa", setBusForm, "ta"); }} className="block w-full min-w-0 max-w-full box-border rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm leading-relaxed font-anek-tamil focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 h-11" /></label>
-<label className="block text-sm font-semibold">runs (Tamil)<input lang="ta" value={busForm.runsTa} onChange={e => { const value = e.target.value; setBusForm(prev => ({ ...prev, runsTa: value })); autoTranslateField(value, "runsTa", "runsTa", setBusForm, "ta"); }} className="block w-full min-w-0 max-w-full box-border rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm leading-relaxed font-anek-tamil focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 h-11" /></label>
-<label className="block text-sm font-semibold">frequency (Tamil)<input lang="ta" value={busForm.frequencyTa} onChange={e => { const value = e.target.value; setBusForm(prev => ({ ...prev, frequencyTa: value })); autoTranslateField(value, "frequencyTa", "frequencyTa", setBusForm, "ta"); }} className="block w-full min-w-0 max-w-full box-border rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm leading-relaxed font-anek-tamil focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 h-11" /></label>
-<label className="block text-sm font-semibold">timings (Tamil)<input lang="ta" value={busForm.timingsTa} onChange={e => { const value = e.target.value; setBusForm(prev => ({ ...prev, timingsTa: value })); autoTranslateField(value, "timingsTa", "timingsTa", setBusForm, "ta"); }} className="block w-full min-w-0 max-w-full box-border rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm leading-relaxed font-anek-tamil focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 h-11" /></label>
-                  
+                  <div className="rounded-lg border border-blue-100 bg-blue-50 px-4 py-3 text-xs text-[#0a3060]">Start by choosing a registered route. Complete the service details below in Malayalam, English and Tamil. Required translations are checked before publishing.</div>
                   {/* ROUTE SELECT FROM REGISTRY */}
                   <div className="bg-blue-50/50 p-3 rounded-lg border border-blue-100/50 space-y-2">
                     <div>
@@ -4756,6 +4750,23 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     )}
                   </div>
 
+                  <section className="space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <div><h4 className="text-sm font-extrabold text-[#0a3060]">Service details · 3 languages</h4><p className="text-xs text-slate-500">Language order: Malayalam → English → Tamil. Select the route above; its Malayalam and English names are filled automatically.</p></div>
+                    {([
+                      {label:"Route name",ml:"routeMl",en:"routeEn",ta:"routeTa"},
+                      {label:"Bus category",ml:"busTypeMl",en:"busTypeEn",ta:"busTypeTa"},
+                      {label:"Operating days",ml:"runsMl",en:"runsEn",ta:"runsTa"},
+                      {label:"Service frequency",ml:"frequencyMl",en:"frequencyEn",ta:"frequencyTa"},
+                      {label:"Operating hours",ml:"timingsMl",en:"timingsEn",ta:"timingsTa"}
+                    ] as const).map(field => <div key={field.label} className="rounded-lg border border-slate-200 bg-white p-3">
+                      <h5 className="mb-2 text-xs font-extrabold text-[#092b58]">{field.label}</h5>
+                      <div className="grid grid-cols-1 gap-2 xl:grid-cols-3">
+                        {([{key:field.ml,lang:"ml",label:"Malayalam",font:"font-anek-malayalam"},{key:field.en,lang:"en",label:"English",font:"font-anek-latin"},{key:field.ta,lang:"ta",label:"Tamil",font:"font-anek-tamil"}] as const).map(item => <label key={item.key} className="block min-w-0 text-xs font-bold text-slate-600">{item.label}
+                          <input lang={item.lang} value={busForm[item.key] || ""} readOnly={field.label === "Route name" && item.lang !== "ta"} onChange={e => setBusForm(prev => ({...prev,[item.key]:e.target.value}))} placeholder={field.label === "Route name" && item.lang !== "ta" ? "Select route above" : `Enter ${item.label}`} className={`mt-1 block h-11 w-full min-w-0 rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 ${item.font} ${field.label === "Route name" && item.lang !== "ta" ? "bg-slate-100" : "bg-white"}`} />
+                        </label>)}
+                      </div>
+                    </div>)}
+                  </section>
                   <div className="grid grid-cols-2 gap-3 pb-1">
                     <div>
                       <label className="block text-slate-500 font-semibold mb-0.5">Authority Type</label>
