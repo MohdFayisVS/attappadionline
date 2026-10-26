@@ -44,6 +44,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   const [traveloguesList, setTraveloguesList] = useState<TravelogueItem[]>([]);
   const [photosList, setPhotosList] = useState<PhotoItem[]>([]);
   const [busRoutesList, setBusRoutesList] = useState<BusRouteItem[]>([]);
+  const [busAdminView, setBusAdminView] = useState<"routes" | "timetables" | "map">("timetables");
+  const [busAdminSearch, setBusAdminSearch] = useState("");
   const [routesList, setRoutesList] = useState<{ id: string; routeEn: string; routeMl: string; }[]>([]);
   const [noticesList, setNoticesList] = useState<NoticeItem[]>([]);
   const [lpgList, setLpgList] = useState<LpgDelivery[]>([]);
@@ -4590,8 +4592,18 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
         {/* ==================== 5. BUS TIME TABLE CMS ==================== */}
         {activeTab === "buses" && (
-          <div className="space-y-8 animate-fade-in text-xs">
+          <div className="space-y-5 animate-fade-in text-sm">
+            <div className="rounded-2xl border border-slate-200 bg-gradient-to-r from-[#092b58] to-[#125e93] p-5 text-white shadow-sm">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-200">Transport administration</p>
+              <h2 className="mt-1 text-2xl font-black tracking-tight">Bus Timings & Route Management</h2>
+              <p className="mt-1 text-sm text-blue-100">Manage route paths, bus schedules and the public transit map in one organized workspace.</p>
+              <div className="mt-4 flex flex-wrap gap-2"><span className="rounded-lg bg-white/15 px-3 py-2 font-semibold">{routesList.length} Routes</span><span className="rounded-lg bg-white/15 px-3 py-2 font-semibold">{busRoutesList.length} Bus schedules</span></div>
+            </div>
+            <div className="grid grid-cols-1 gap-2 rounded-xl border border-slate-200 bg-white p-2 sm:grid-cols-3">
+              {([{id:"timetables",label:"Bus Timetables",icon:Bus},{id:"routes",label:"Route Registry",icon:Compass},{id:"map",label:"Transit Map",icon:MapPin}] as const).map(tab => <button key={tab.id} type="button" onClick={() => setBusAdminView(tab.id)} className={`flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-extrabold transition ${busAdminView === tab.id ? "bg-[#092b58] text-white shadow-sm" : "text-slate-600 hover:bg-slate-100"}`}><tab.icon className="h-4 w-4"/>{tab.label}</button>)}
+            </div>
             
+            {busAdminView === "routes" && (<>
             {/* ====== SUB MODULE 1: INDEPENDENT ROUTE REGISTRY ====== */}
             <div className="bg-slate-50 rounded-xl p-6 border border-slate-200 shadow-xs space-y-4">
               <div className="border-b pb-3">
@@ -4653,7 +4665,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 {/* List of Registered Routes */}
                 <div className="lg:col-span-7 bg-white p-4 rounded-lg border shadow-xs space-y-3">
                   <span className="font-bold text-slate-500 text-[10.5px] uppercase block pb-1 border-b">Currently Registered Route Paths ({routesList.length})</span>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[170px] overflow-y-auto pr-1">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[560px] overflow-y-auto pr-1">
                     {routesList.map((routeItem) => (
                       <div key={routeItem.id} className="p-2 border rounded bg-slate-50 hover:bg-slate-100/50 transition flex items-center justify-between gap-2">
                         <div className="min-w-0 flex-1">
@@ -4663,9 +4675,11 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         <button 
                           type="button" 
                           onClick={() => handleDeleteRoute(routeItem.id)} 
-                          className="p-1 bg-red-100 text-red-700 hover:bg-red-200 rounded shrink-0 transition duration-200"
+                          aria-label={`Delete route: ${routeItem.routeEn}`}
+                          title="Delete route"
+                          className="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs font-bold text-red-700 hover:bg-red-100 shrink-0 transition"
                         >
-                          <Trash2 className="w-3.5 h-3.5" />
+                          <Trash2 className="w-3.5 h-3.5" /> Delete
                         </button>
                       </div>
                     ))}
@@ -4677,9 +4691,11 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
               </div>
             </div>
 
+            </>)}
             {/* ====== SUB MODULE 2: INDIVIDUAL BUS TIMETABLE REGISTRY ====== */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
               
+              {busAdminView === "timetables" && (<>
               {/* Bus Form block */}
               <div className="bg-white rounded-lg p-6 border shadow-xs space-y-4">
                 <div className="border-b pb-2">
@@ -4982,9 +4998,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-2 flex items-center gap-1.5">
                   <Clock className="w-5 h-5 text-[#005689]" /> Trans-valley timetables ({busRoutesList.length})
                 </h3>
-                <div className="space-y-3.5 max-h-[500px] overflow-y-auto pr-2">
-                  {busRoutesList.map((route) => (
-                    <div key={route.id} className="p-3 border rounded bg-slate-50 flex items-center justify-between">
+                <input type="search" value={busAdminSearch} onChange={e => setBusAdminSearch(e.target.value)} placeholder="Search bus name, route or operator..." aria-label="Search bus schedules" className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none" />
+                <div className="space-y-3 max-h-[650px] overflow-y-auto pr-2">
+                  {busRoutesList.filter(route => !busAdminSearch.trim() || [route.routeEn,route.routeMl,route.privateBusName,route.type].some(value => String(value || "").toLowerCase().includes(busAdminSearch.toLowerCase()))).map((route) => (
+                    <div key={route.id} className="p-4 border border-slate-200 rounded-xl bg-white hover:border-blue-200 hover:shadow-sm transition flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div className="space-y-0.5 truncate flex-1">
                         <span className="text-[8px] bg-[#0a3060] text-white px-1.5 py-0.2 rounded font-black">
                           {route.type === "PRIVATE" && route.privateBusName ? `PRIVATE - ${route.privateBusName.toUpperCase()}` : route.type}
@@ -5002,6 +5019,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 </div>
               </div>
 
+              </>)}
+              {busAdminView === "map" && (<>
               {/* Interactive Transport Map & Transit Layout Editor Module */}
               <div className="bg-white rounded-xl p-6 border shadow-xs space-y-4 col-span-1 lg:col-span-12">
                 <div className="border-b pb-3">
@@ -5018,6 +5037,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 </div>
               </div>
 
+              </>)}
             </div>
           </div>
         )}
