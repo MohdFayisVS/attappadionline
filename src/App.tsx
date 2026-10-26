@@ -181,11 +181,10 @@ export default function App() {
     { image: "/attappadi-mark.svg", titleEn: "Local News • Community • Updates", subtitleEn: "Attappadi Online", titleMl: "പ്രാദേശിക വാർത്തകളും അറിയിപ്പുകളും", titleTa: "உள்ளூர் செய்திகள் மற்றும் அறிவிப்புகள்" },
     { image: "/attappadi-mark.svg", titleEn: "Discover Attappadi", subtitleEn: "Explore the hills with Attappadi Online", titleMl: "അട്ടപ്പാടിയെ അറിയാം", titleTa: "அட்டப்பாடியை அறிந்திடுங்கள்" }
   ];
-  const uploadedAds = [adConfig?.leftAd, adConfig?.rightAd].filter((ad: any) => typeof ad?.image === "string" && ad.image.trim());
-  const carouselAds = uploadedAds.length ? uploadedAds : sampleAds;
+  const carouselForSlot = (slot: number) => { const slides = slot === 0 ? adConfig?.leftSlides : adConfig?.rightSlides; const legacy = slot === 0 ? adConfig?.leftAd : adConfig?.rightAd; return Array.isArray(slides) && slides.length ? slides : legacy?.image || legacy?.titleEn ? [legacy] : sampleAds; };
   const renderCarouselAd = (ad: any) => (
     <div className="relative h-full min-h-[108px] sm:min-h-[140px] overflow-hidden rounded-xl bg-[#102e61] flex items-center justify-center" aria-label="Advertisement">
-      {uploadedAds.length ? (
+      {ad.image && ad.type !== "text" ? (
         <img src={ad.image} alt={ad.titleEn || "Advertisement"} className="w-full h-full absolute inset-0 object-contain" loading="lazy" />
       ) : (
         <div className="flex items-center justify-center gap-4 px-4 py-3 text-white text-center">
@@ -705,11 +704,11 @@ export default function App() {
               {[0, 1].map(slot => (
                 <div key={slot} className="relative min-w-0 overflow-hidden rounded-xl">
                   <AnimatePresence mode="wait" initial={false}>
-                    <motion.div key={String((adSlide + slot) % carouselAds.length) + "-" + slot}
+                    <motion.div key={String(adSlide % carouselForSlot(slot).length) + "-" + slot}
                       initial={{ opacity: 0, x: 28 }} animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -28 }} transition={{ duration: 0.55 }}
                       className="h-full">
-                      {renderCarouselAd(carouselAds[(adSlide + slot) % carouselAds.length])}
+                      {renderCarouselAd(carouselForSlot(slot)[adSlide % carouselForSlot(slot).length])}
                     </motion.div>
                   </AnimatePresence>
                 </div>
