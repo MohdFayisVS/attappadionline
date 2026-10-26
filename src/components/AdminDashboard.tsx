@@ -211,6 +211,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   });
 
   // 8b. Quick Tickers Form
+  const [editingQuickBreakingId, setEditingQuickBreakingId] = useState<string | null>(null);
   const [quickBreakingForm, setQuickBreakingForm] = useState({
     titleEn: "",
     titleMl: "",
@@ -1834,9 +1835,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     if (["contentEn","contentMl","contentTa"].some(key => String((translated as any)[key]).replace(/\r/g,"").split("\n").length > 4)) {
       alert("Ticker content is limited to four lines per language."); return;
     }
-    const response = await adminFetch("/api/quick-breaking", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(translated) });
+    const response = await adminFetch(editingQuickBreakingId ? "/api/quick-breaking/" + encodeURIComponent(editingQuickBreakingId) : "/api/quick-breaking", { method: editingQuickBreakingId ? "PUT" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(translated) });
     if (!response.ok) { const error = await response.json().catch(() => ({})); alert(error.error || "Ticker publishing failed"); return; }
-    triggerToast("Ticker-only breaking alert published; no news article created.");
+    triggerToast(editingQuickBreakingId ? "Running ticker alert updated." : "Ticker-only breaking alert published; no news article created.");
+    setEditingQuickBreakingId(null);
     setQuickBreakingForm({ titleMl:"", titleEn:"", titleTa:"", contentMl:"", contentEn:"", contentTa:"" });
     fetchQuickBreaking();
   };
@@ -2294,7 +2296,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </h3>
                   
                   <form onSubmit={handleQuickCreateBreaking} className="space-y-4">
-                    <p className="text-xs text-slate-600">Ticker-only alert: one headline slide followed by up to two content slides. No news article is created.</p>
+                    <p className="text-xs text-slate-600">{editingQuickBreakingId ? "Editing existing ticker alert. Changes will update the running item without creating a duplicate." : "Ticker-only alert: one headline slide followed by up to two content slides. No news article is created."}</p>
                     <div className="grid grid-cols-1 gap-3"><div className="min-w-0 space-y-2 rounded-lg border border-slate-200 p-3 bg-white">
   <label className="block text-sm font-bold text-slate-700" htmlFor="quick-breaking-title-ml">Headline (Malayalam)</label>
   <input id="quick-breaking-title-ml" lang="ml" value={quickBreakingForm.titleMl}
@@ -2325,7 +2327,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     onChange={e => { const value=e.target.value; setQuickBreakingForm(prev=>({...prev,contentTa:value})); autoTranslateField(value,"contentTa","contentTa",setQuickBreakingForm,"ta"); }}
     className="w-full min-w-0 rounded border border-slate-300 p-2 text-sm font-anek-tamil" />
 </div></div>
-                    <button type="submit" disabled={isTranslatingForm} className="w-full rounded-lg bg-red-700 px-4 py-3 text-sm font-bold text-white hover:bg-red-800 disabled:opacity-50">Publish Ticker-Only Breaking Alert</button>
+                    <div className="flex flex-wrap gap-2"><button type="submit" disabled={isTranslatingForm} className="flex-1 rounded-lg bg-red-700 px-4 py-3 text-sm font-bold text-white hover:bg-red-800 disabled:opacity-50">{editingQuickBreakingId ? "Save Ticker Changes" : "Publish Ticker-Only Breaking Alert"}</button>{editingQuickBreakingId && <button type="button" onClick={() => {setEditingQuickBreakingId(null);setQuickBreakingForm({titleMl:"",titleEn:"",titleTa:"",contentMl:"",contentEn:"",contentTa:""});}} className="rounded-lg border border-slate-300 px-4 py-3 text-sm font-bold">Cancel Edit</button>}</div>
                   </form>
                 </div>
 
@@ -2340,7 +2342,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     {quickBreakingItems.map(item => (
                       <div key={item.id} className="flex items-center justify-between gap-3 rounded border border-red-100 bg-red-50 p-2">
                         <div className="min-w-0"><p className="truncate font-semibold">{item.titleMl || item.titleEn}</p><p className="truncate text-xs text-slate-500">{item.contentMl || item.contentEn}</p></div>
-                        <button type="button" onClick={() => handleRemoveQuickBreaking(item.id)} className="shrink-0 rounded border border-red-300 px-2 py-1 text-xs font-semibold text-red-700">Remove</button>
+                        <div className="flex shrink-0 gap-2"><button type="button" onClick={() => {setEditingQuickBreakingId(item.id);setQuickBreakingForm({titleMl:item.titleMl || "",titleEn:item.titleEn || "",titleTa:item.titleTa || "",contentMl:item.contentMl || "",contentEn:item.contentEn || "",contentTa:item.contentTa || ""});document.getElementById("quick-breaking-title-ml")?.scrollIntoView({behavior:"smooth",block:"center"});}} className="rounded border border-blue-300 bg-white px-3 py-2 text-xs font-bold text-blue-800">Edit</button><button type="button" onClick={() => handleRemoveQuickBreaking(item.id)} className="rounded border border-red-300 px-3 py-2 text-xs font-semibold text-red-700">Remove</button></div>
                       </div>
                     ))}
                   </div>
