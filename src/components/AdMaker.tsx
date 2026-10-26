@@ -32,7 +32,12 @@ export default function AdMaker({ onUse, notify }: Props) {
     setWorking(true);
     try {
       await document.fonts.ready;
-      const canvas = await html2canvas(ref.current, { scale: 1, useCORS: true, backgroundColor: current.a, logging: false });
+      const node = ref.current;
+      const originalTransform = node.style.transform;
+      node.style.transform = "none";
+      let canvas: HTMLCanvasElement;
+      try { canvas = await html2canvas(node, { scale: 1, width: 1200, height: 400, useCORS: true, backgroundColor: current.a, logging: false }); }
+      finally { node.style.transform = originalTransform; }
       const data = canvas.toDataURL("image/jpeg", 0.86);
       if (attach) { onUse(data, title); notify("Ad design added as an image slide. Save Ad Configurations Live to publish."); }
       else {
@@ -59,8 +64,8 @@ export default function AdMaker({ onUse, notify }: Props) {
       <div className="grid grid-cols-2 gap-2"><button type="button" disabled={working} onClick={()=>exportImage(false)} className="flex items-center justify-center gap-2 rounded bg-slate-800 p-2.5 text-sm font-bold text-white disabled:opacity-50"><Download className="w-4 h-4"/> Download JPG</button><button type="button" disabled={working} onClick={()=>exportImage(true)} className="flex items-center justify-center gap-2 rounded bg-blue-700 p-2.5 text-sm font-bold text-white disabled:opacity-50"><ImageIcon className="w-4 h-4"/> Add to carousel</button></div>
     </div>
     <div className="min-w-0 space-y-2"><h4 className="font-bold text-[#0a3060]">Live advertisement preview</h4><div className="w-full overflow-x-auto rounded-xl border bg-slate-100 p-2">
-      <div style={{width:"100%",maxWidth:1200,aspectRatio:"3 / 1",position:"relative"}}>
-        <div ref={ref} lang={language} style={{width:1200,height:400,position:"absolute",left:0,top:0,transform:"scale(var(--ad-preview-scale, 0.5))",transformOrigin:"top left",background:`linear-gradient(115deg, ${current.a}, ${current.b})`,color:current.ink,overflow:"hidden",fontFamily:language==="ml" ? '"Anek Malayalam", sans-serif' : language==="ta" ? '"Anek Tamil", sans-serif' : '"Anek Latin", sans-serif'}} className="ad-maker-canvas">
+      <div style={{width:600,height:200,position:"relative"}}>
+        <div ref={ref} lang={language} style={{width:1200,height:400,position:"absolute",left:0,top:0,transform:"scale(0.5)",transformOrigin:"top left",background:`linear-gradient(115deg, ${current.a}, ${current.b})`,color:current.ink,overflow:"hidden",fontFamily:language==="ml" ? '"Anek Malayalam", sans-serif' : language==="ta" ? '"Anek Tamil", sans-serif' : '"Anek Latin", sans-serif'}} className="ad-maker-canvas">
           {image && <img src={image} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:imageOpacity/100}} />}
           <div style={{position:"absolute",inset:0,background:"linear-gradient(90deg, rgba(0,0,0,.38), transparent 85%)"}}/>
           <div style={{position:"absolute",inset:0,padding:"34px 55px",display:"flex",flexDirection:"column",justifyContent:"center",gap:10}}>
@@ -72,6 +77,5 @@ export default function AdMaker({ onUse, notify }: Props) {
         </div>
       </div>
     </div><p className="text-xs text-slate-500">Export size: 1200 × 400 pixels. Use the controls to adjust the design before saving.</p></div>
-    <style>{`@media(min-width:1px){.ad-maker-canvas{--ad-preview-scale:0.35}}@media(min-width:600px){.ad-maker-canvas{--ad-preview-scale:0.5}}@media(min-width:1200px){.ad-maker-canvas{--ad-preview-scale:0.53}}`}</style>
   </div>;
 }
