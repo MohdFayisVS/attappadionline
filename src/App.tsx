@@ -187,8 +187,8 @@ export default function App() {
     const subtitle = lang === "ml" ? (ad.subtitleMl || ad.subtitleEn) : lang === "ta" ? (ad.subtitleTa || ad.subtitleEn) : (ad.subtitleEn || ad.subtitleMl);
     const phone = String(ad.contact || "").replace(/[^0-9+]/g, "");
     const url = ad.actionType === "website" && /^https?:/.test(ad.externalUrl || "") ? ad.externalUrl : ad.actionType === "phone" && phone ? "tel:" + phone : ad.actionType === "whatsapp" && phone ? "https://wa.me/" + phone.replace(/[^0-9]/g, "") : "";
-    const body = <div className="relative h-full min-h-[108px] sm:min-h-[140px] overflow-hidden rounded-xl bg-[#102e61] flex items-center justify-center" aria-label="Advertisement">
-      {ad.image && ad.type !== "text" ? <img src={ad.image} alt={title || "Advertisement"} className="w-full h-full absolute inset-0 object-contain" loading="lazy" /> :
+    const body = <div className="relative w-full aspect-[3/1] overflow-hidden rounded-xl bg-[#102e61] flex items-center justify-center" aria-label="Advertisement">
+      {ad.image && ad.type !== "text" ? <img src={ad.image} alt={title || "Advertisement"} className="w-full h-full absolute inset-0 object-cover" loading="lazy" /> :
       <div lang={lang} className={`flex h-full items-center justify-center px-4 py-3 text-white text-center ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}><div><strong className="block text-lg sm:text-xl">{title}</strong><span className="block text-xs sm:text-sm text-yellow-200">{subtitle}</span></div></div>}</div>;
     return url ? <a className="block h-full" href={url} target={ad.actionType === "website" || ad.actionType === "whatsapp" ? "_blank" : undefined} rel="noopener noreferrer" aria-label={title || "Open advertisement"}>{body}</a> : body;
   };
@@ -700,12 +700,12 @@ export default function App() {
             </div>
             <div className="ao-edition-promos flex-1 min-w-0 grid grid-cols-1 md:grid-cols-2 gap-3 self-stretch" aria-label="Automatic advertisement carousel">
               {[0, 1].map(slot => (
-                <div key={slot} className="relative min-w-0 overflow-hidden rounded-xl">
+                <div key={slot} className="relative min-w-0 w-full aspect-[3/1] overflow-hidden rounded-xl">
                   <AnimatePresence mode="wait" initial={false}>
                     <motion.div key={String(adSlide % carouselForSlot(slot).length) + "-" + slot}
                       initial={{ opacity: 0, x: 28 }} animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -28 }} transition={{ duration: 0.55 }}
-                      className="h-full">
+                      className="h-full w-full">
                       {renderCarouselAd(carouselForSlot(slot)[adSlide % carouselForSlot(slot).length])}
                     </motion.div>
                   </AnimatePresence>
