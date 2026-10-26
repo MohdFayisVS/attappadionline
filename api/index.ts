@@ -633,6 +633,26 @@ app.post("/api/quick-breaking", async (req, res) => {
   res.status(201).json(item);
 });
 
+app.put("/api/quick-breaking/:id", async (req, res) => {
+  const { id } = req.params;
+  const existing = (await getCollectionData("quickBreaking")).find((item: any) => item.id === id);
+  if (!existing) return res.status(404).json({ error: "Ticker alert not found." });
+  const { titleEn, titleMl, titleTa, contentEn, contentMl, contentTa } = req.body || {};
+  const titles = [titleEn, titleMl, titleTa];
+  const contents = [contentEn, contentMl, contentTa];
+  if (titles.some(value => typeof value !== "string" || !value.trim()) ||
+      contents.some(value => typeof value !== "string" || !value.trim())) {
+    return res.status(400).json({ error: "Headlines and content in all three languages are required." });
+  }
+  if (contents.some(value => value.replace(/\\r/g, "").split("\\n").length > 4)) {
+    return res.status(400).json({ error: "Ticker content is limited to four lines per language." });
+  }
+  const updated = { ...existing, titleEn: titleEn.trim(), titleMl: titleMl.trim(), titleTa: titleTa.trim(), contentEn: contentEn.trim(), contentMl: contentMl.trim(), contentTa: contentTa.trim(), updatedAt: new Date().toISOString() };
+  try { await writeItemToFirestore("quickBreaking", id, updated); }
+  catch { return res.status(503).json({ error: "Unable to update ticker alert." }); }
+  res.json(updated);
+});
+
 app.delete("/api/quick-breaking/:id", async (req, res) => {
   try {
     await deleteItemFromFirestore("quickBreaking", req.params.id);
