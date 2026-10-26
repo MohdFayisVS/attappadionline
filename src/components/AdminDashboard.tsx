@@ -244,6 +244,13 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     }
   });
 
+  const blankCarouselSlide = () => ({ type: "text", image: "", titleMl: "", titleEn: "", titleTa: "", subtitleMl: "", subtitleEn: "", subtitleTa: "", actionType: "none", contact: "", externalUrl: "" });
+  const [adSlides, setAdSlides] = useState<{leftSlides: any[]; rightSlides: any[]}>({ leftSlides: [], rightSlides: [] });
+  const updateCarouselSlide = (side: "leftSlides" | "rightSlides", index: number, field: string, value: string) => setAdSlides(previous => ({...previous, [side]: previous[side].map((slide, i) => i === index ? {...slide, [field]: value} : slide)}));
+  const handleCarouselImage = (side: "leftSlides" | "rightSlides", index: number, file: File) => {
+    if (!file.type.startsWith("image/") || file.size > 2 * 1024 * 1024) { alert("Select an image under 2 MB."); return; }
+    const reader = new FileReader(); reader.onload = () => { if (typeof reader.result === "string") { updateCarouselSlide(side, index, "image", reader.result); updateCarouselSlide(side, index, "type", "image"); } }; reader.readAsDataURL(file);
+  };
   const [leftAdImgSourceMode, setLeftAdImgSourceMode] = useState<"upload" | "url">("url");
   const [leftAdDragging, setLeftAdDragging] = useState(false);
   const [rightAdImgSourceMode, setRightAdImgSourceMode] = useState<"upload" | "url">("url");
@@ -548,6 +555,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       .then(r => r.json())
       .then(data => {
         if (data) {
+          setAdSlides({ leftSlides: Array.isArray(data.leftSlides) ? data.leftSlides : [], rightSlides: Array.isArray(data.rightSlides) ? data.rightSlides : [] });
           setAdForm({
             leftAd: {
               titleEn: data.leftAd?.titleEn || "",
@@ -661,7 +669,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       const response = await adminFetch("/api/adconfig", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(finalAdForm)
+        body: JSON.stringify({ ...finalAdForm, ...adSlides })
       });
       if (response.ok) {
         triggerToast("📢 Side Banner Ads config saved successfully to server!");
@@ -5980,6 +5988,34 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
               </p>
             </div>
 
+            <section className="rounded-xl border border-blue-200 bg-white p-4 sm:p-6 space-y-4">
+              <h3 className="font-bold text-lg text-[#0a3060]">Advertising Carousel Studio</h3>
+              <p className="text-sm text-slate-600">Manage up to five independent slides in each advertisement window. Image and text-only slides can be mixed. Each slide may optionally open a website, phone dialer or WhatsApp when clicked; no visible button is added.</p>
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
+              {(["leftSlides", "rightSlides"] as const).map(side => (
+                <div key={side} className="min-w-0 space-y-3 rounded-lg border p-3">
+                  <div className="flex justify-between items-center gap-2"><h4 className="font-bold text-[#0a3060]">{side === "leftSlides" ? "Left Advertising Window" : "Right Advertising Window"} ({adSlides[side].length}/5)</h4>
+                  <button type="button" disabled={adSlides[side].length >= 5} onClick={() => setAdSlides(prev => ({...prev,[side]:[...prev[side],blankCarouselSlide()]}))} className="rounded bg-blue-700 px-3 py-1.5 text-xs font-bold text-white disabled:opacity-40">+ Add Slide</button></div>
+                  {adSlides[side].map((slide, index) => (
+                    <div key={index} className="space-y-3 rounded-lg border bg-slate-50 p-3">
+                      <div className="flex items-center justify-between"><strong className="text-sm">Slide {index + 1}</strong><div className="flex gap-1">
+                        <button type="button" disabled={index === 0} onClick={() => setAdSlides(prev => { const arr=[...prev[side]]; [arr[index-1],arr[index]]=[arr[index],arr[index-1]]; return {...prev,[side]:arr}; })} className="rounded border px-2 disabled:opacity-30">↑</button>
+                        <button type="button" disabled={index === adSlides[side].length - 1} onClick={() => setAdSlides(prev => { const arr=[...prev[side]]; [arr[index+1],arr[index]]=[arr[index],arr[index+1]]; return {...prev,[side]:arr}; })} className="rounded border px-2 disabled:opacity-30">↓</button>
+                        <button type="button" onClick={() => setAdSlides(prev => ({...prev,[side]:prev[side].filter((_,i)=>i!==index)}))} className="rounded border border-red-300 px-2 text-red-700">Remove</button>
+                      </div></div>
+                      <label className="block text-xs font-bold">Slide type<select value={slide.type} onChange={e => updateCarouselSlide(side,index,"type",e.target.value)} className="mt-1 block w-full rounded border p-2"><option value="image">Image banner</option><option value="text">Text-only banner</option></select></label>
+                      {slide.type === "image" && <div className="space-y-2"><label className="block text-xs font-bold">Upload image<input type="file" accept="image/*" onChange={e => { if(e.target.files?.[0]) handleCarouselImage(side,index,e.target.files[0]); }} className="mt-1 block w-full text-xs" /></label><input type="text" placeholder="Or paste image URL" value={slide.image || ""} onChange={e => updateCarouselSlide(side,index,"image",e.target.value)} className="w-full rounded border p-2 text-xs" />{slide.image && <img src={slide.image} alt="Slide preview" className="h-24 w-full rounded bg-slate-200 object-contain" />}</div>}
+                      {(["Ml","En","Ta"] as const).map(code => <div key={code} className="grid grid-cols-1 sm:grid-cols-2 gap-2"><label className="text-xs font-bold">Title ({code})<input lang={code === "Ml" ? "ml" : code === "Ta" ? "ta" : "en"} value={slide["title"+code] || ""} onChange={e => updateCarouselSlide(side,index,"title"+code,e.target.value)} className="mt-1 block w-full rounded border p-2" /></label><label className="text-xs font-bold">Subtitle ({code})<input lang={code === "Ml" ? "ml" : code === "Ta" ? "ta" : "en"} value={slide["subtitle"+code] || ""} onChange={e => updateCarouselSlide(side,index,"subtitle"+code,e.target.value)} className="mt-1 block w-full rounded border p-2" /></label></div>)}
+                      <label className="block text-xs font-bold">Hidden click action<select value={slide.actionType || "none"} onChange={e => updateCarouselSlide(side,index,"actionType",e.target.value)} className="mt-1 block w-full rounded border p-2"><option value="none">None (not clickable)</option><option value="website">Open website</option><option value="phone">Call number</option><option value="whatsapp">WhatsApp chat</option></select></label>
+                      {slide.actionType === "website" && <label className="block text-xs">Website URL<input type="url" value={slide.externalUrl || ""} onChange={e => updateCarouselSlide(side,index,"externalUrl",e.target.value)} className="mt-1 block w-full rounded border p-2" placeholder="https://example.com" /></label>}
+                      {(slide.actionType === "phone" || slide.actionType === "whatsapp") && <label className="block text-xs">Phone number (international format)<input type="tel" value={slide.contact || ""} onChange={e => updateCarouselSlide(side,index,"contact",e.target.value)} className="mt-1 block w-full rounded border p-2" placeholder="+919876543210" /></label>}
+                    </div>
+                  ))}
+                  {!adSlides[side].length && <p className="rounded border border-dashed p-4 text-center text-xs text-slate-500">No custom slides yet. Existing banner remains until a slide is added.</p>}
+                </div>
+              ))}</div>
+              <p className="text-xs text-amber-700">Save all changes using the Save Advertising Configuration button below. Slides rotate automatically on the homepage.</p>
+            </section>
             <form onSubmit={handleSaveAdConfig} className="space-y-8">
               <fieldset className="border rounded p-3 space-y-2"><legend className="font-semibold">Left advertisement Tamil text</legend><label className="block text-sm">Title (Tamil)<input lang="ta" value={adForm.leftAd.titleTa} onChange={e => setAdForm({...adForm, leftAd: {...adForm.leftAd, titleTa: e.target.value}})} className="block w-full min-w-0 max-w-full box-border rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm leading-relaxed font-anek-tamil focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 h-11" /></label><label className="block text-sm">Subtitle (Tamil)<input lang="ta" value={adForm.leftAd.subtitleTa} onChange={e => setAdForm({...adForm, leftAd: {...adForm.leftAd, subtitleTa: e.target.value}})} className="w-full border rounded p-2 font-anek-tamil" /></label></fieldset>
 <fieldset className="border rounded p-3 space-y-2"><legend className="font-semibold">Right advertisement Tamil text</legend><label className="block text-sm">Title (Tamil)<input lang="ta" value={adForm.rightAd.titleTa} onChange={e => setAdForm({...adForm, rightAd: {...adForm.rightAd, titleTa: e.target.value}})} className="block w-full min-w-0 max-w-full box-border rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm leading-relaxed font-anek-tamil focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 h-11" /></label><label className="block text-sm">Subtitle (Tamil)<input lang="ta" value={adForm.rightAd.subtitleTa} onChange={e => setAdForm({...adForm, rightAd: {...adForm.rightAd, subtitleTa: e.target.value}})} className="w-full border rounded p-2 font-anek-tamil" /></label></fieldset>
