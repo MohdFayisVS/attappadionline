@@ -12,6 +12,7 @@ import {
   NoticeItem, LpgDelivery, LostAndFoundItem
 } from "../types";
 import SocialCardGenerator from "./SocialCardGenerator";
+import AdMaker from "./AdMaker";
 import CitizenReportReview from "./CitizenReportReview";
 import ExploreAttappadi from "./ExploreAttappadi";
 import { adminAuth, adminFetch, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "../services/adminAuth";
@@ -245,6 +246,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   });
 
   const blankCarouselSlide = () => ({ type: "text", image: "", titleMl: "", titleEn: "", titleTa: "", subtitleMl: "", subtitleEn: "", subtitleTa: "", actionType: "none", contact: "", externalUrl: "" });
+  const [adStudioTab, setAdStudioTab] = useState<"manage" | "maker">("manage");
+  const [adMakerTarget, setAdMakerTarget] = useState<"leftSlides" | "rightSlides">("leftSlides");
   const [adSlides, setAdSlides] = useState<{leftSlides: any[]; rightSlides: any[]}>({ leftSlides: [], rightSlides: [] });
   const updateCarouselSlide = (side: "leftSlides" | "rightSlides", index: number, field: string, value: string) => setAdSlides(previous => ({...previous, [side]: previous[side].map((slide, i) => i === index ? {...slide, [field]: value} : slide)}));
   const handleCarouselImage = (side: "leftSlides" | "rightSlides", index: number, file: File) => {
@@ -5988,7 +5991,19 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
               </p>
             </div>
 
-            <section className="rounded-xl border border-blue-200 bg-white p-4 sm:p-6 space-y-4">
+            <div className="flex flex-wrap gap-2 rounded-lg bg-slate-100 p-2">
+              <button type="button" onClick={() => setAdStudioTab("manage")} className={`rounded-lg px-4 py-2 text-sm font-bold ${adStudioTab === "manage" ? "bg-[#0a3060] text-white" : "bg-white text-slate-700"}`}>Carousel Manager</button>
+              <button type="button" onClick={() => setAdStudioTab("maker")} className={`rounded-lg px-4 py-2 text-sm font-bold ${adStudioTab === "maker" ? "bg-[#0a3060] text-white" : "bg-white text-slate-700"}`}>Ad Maker</button>
+            </div>
+            {adStudioTab === "maker" && <div className="space-y-4">
+              <label className="block max-w-sm text-sm font-bold">Add finished design to<select value={adMakerTarget} onChange={e => setAdMakerTarget(e.target.value as "leftSlides" | "rightSlides")} className="mt-1 block w-full rounded border p-2"><option value="leftSlides">Left Advertising Window</option><option value="rightSlides">Right Advertising Window</option></select></label>
+              <AdMaker notify={triggerToast} onUse={(image, title) => {
+                if (adSlides[adMakerTarget].length >= 5) { triggerToast("This window already has five slides. Remove a slide first."); return; }
+                setAdSlides(previous => ({...previous, [adMakerTarget]: [...previous[adMakerTarget], {...blankCarouselSlide(), type: "image", image, titleEn: title}]}));
+                setAdStudioTab("manage");
+              }}/>
+            </div>}
+            {adStudioTab === "manage" && (            <section className="rounded-xl border border-blue-200 bg-white p-4 sm:p-6 space-y-4">
               <h3 className="font-bold text-lg text-[#0a3060]">Advertising Carousel Studio</h3>
               <p className="text-sm text-slate-600">Manage up to five independent slides in each advertisement window. Image and text-only slides can be mixed. Each slide may optionally open a website, phone dialer or WhatsApp when clicked; no visible button is added.</p>
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
@@ -6016,6 +6031,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
               ))}</div>
               <p className="text-xs text-amber-700">Save all changes using the Save Advertising Configuration button below. Slides rotate automatically on the homepage.</p>
             </section>
+            )}
             <form onSubmit={handleSaveAdConfig} className="space-y-8">
               <fieldset className="border rounded p-3 space-y-2"><legend className="font-semibold">Left advertisement Tamil text</legend><label className="block text-sm">Title (Tamil)<input lang="ta" value={adForm.leftAd.titleTa} onChange={e => setAdForm({...adForm, leftAd: {...adForm.leftAd, titleTa: e.target.value}})} className="block w-full min-w-0 max-w-full box-border rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm leading-relaxed font-anek-tamil focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 h-11" /></label><label className="block text-sm">Subtitle (Tamil)<input lang="ta" value={adForm.leftAd.subtitleTa} onChange={e => setAdForm({...adForm, leftAd: {...adForm.leftAd, subtitleTa: e.target.value}})} className="w-full border rounded p-2 font-anek-tamil" /></label></fieldset>
 <fieldset className="border rounded p-3 space-y-2"><legend className="font-semibold">Right advertisement Tamil text</legend><label className="block text-sm">Title (Tamil)<input lang="ta" value={adForm.rightAd.titleTa} onChange={e => setAdForm({...adForm, rightAd: {...adForm.rightAd, titleTa: e.target.value}})} className="block w-full min-w-0 max-w-full box-border rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm leading-relaxed font-anek-tamil focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 h-11" /></label><label className="block text-sm">Subtitle (Tamil)<input lang="ta" value={adForm.rightAd.subtitleTa} onChange={e => setAdForm({...adForm, rightAd: {...adForm.rightAd, subtitleTa: e.target.value}})} className="w-full border rounded p-2 font-anek-tamil" /></label></fieldset>
