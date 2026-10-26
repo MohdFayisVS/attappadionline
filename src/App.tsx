@@ -690,7 +690,7 @@ export default function App() {
               <div className="absolute inset-x-0 top-0 h-1.5 bg-[#c70000]" aria-hidden="true" />
               <div className="flex h-full min-h-[185px] flex-col justify-between">
                 <div className="flex items-center justify-between bg-[#092b58] px-3 pt-3 pb-2 text-white">
-                  <span className="font-anek-latin text-[10px] font-extrabold uppercase tracking-[0.18em]">Today's Edition</span>
+                  <span className="font-anek-latin text-[10px] font-extrabold uppercase tracking-[0.18em]" aria-hidden="true">&nbsp;</span>
                   <span className="text-[#ffe500] text-base" aria-hidden="true">▦</span>
                 </div>
                 <time dateTime={currentTime.toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit" })} className="flex flex-1 flex-col items-center justify-center px-2 py-2 text-[#092b58]">
