@@ -1885,53 +1885,17 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       return;
     }
 
-    let translatedForm = { ...quickNoticeForm };
-    if (quickNoticeForm.titleEn && !quickNoticeForm.titleMl) {
-      const mlRes = await adminFetch("/api/admin/translate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: quickNoticeForm.titleEn, targetLang: "ml" })
-      });
-      if (mlRes.ok) {
-        const tr = await mlRes.json();
-        translatedForm.titleMl = tr.translatedText;
-      }
-    } else if (quickNoticeForm.titleMl && !quickNoticeForm.titleEn) {
-      const enRes = await adminFetch("/api/admin/translate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: quickNoticeForm.titleMl, targetLang: "en" })
-      });
-      if (enRes.ok) {
-        const tr = await enRes.json();
-        translatedForm.titleEn = tr.translatedText;
-      }
+    const translatedForm = await performAutoTranslationForForm(quickNoticeForm, setQuickNoticeForm, [
+      { en: "titleEn", ml: "titleMl" },
+      { en: "contentEn", ml: "contentMl" }
+    ]);
+    if (!translatedForm.titleMl?.trim() || !translatedForm.titleEn?.trim() || !translatedForm.titleTa?.trim()) {
+      triggerToast("Complete all three notice titles or enable Auto Translate.");
+      return;
     }
-
-    if (quickNoticeForm.contentEn && !quickNoticeForm.contentMl) {
-      const mlRes = await adminFetch("/api/admin/translate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: quickNoticeForm.contentEn, targetLang: "ml" })
-      });
-      if (mlRes.ok) {
-        const tr = await mlRes.json();
-        translatedForm.contentMl = tr.translatedText;
-      }
-    } else if (quickNoticeForm.contentMl && !quickNoticeForm.contentEn) {
-      const enRes = await adminFetch("/api/admin/translate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: quickNoticeForm.contentMl, targetLang: "en" })
-      });
-      if (enRes.ok) {
-        const tr = await enRes.json();
-        translatedForm.contentEn = tr.translatedText;
-      }
-    }
-
-    if (!translatedForm.titleTa?.trim() || !translatedForm.contentTa?.trim()) {
-      alert("Tamil quick notice title and content are required.");
+    if ((translatedForm.contentMl?.trim() || translatedForm.contentEn?.trim() || translatedForm.contentTa?.trim()) &&
+      (!translatedForm.contentMl?.trim() || !translatedForm.contentEn?.trim() || !translatedForm.contentTa?.trim())) {
+      triggerToast("Complete all three notice details or enable Auto Translate.");
       return;
     }
     const res = await adminFetch("/api/notices", {
@@ -1952,7 +1916,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
         titleEn: "",
         titleMl: "", titleTa: "",
         contentEn: "",
-        contentMl: "",
+        contentMl: "", contentTa: "",
         type: "notice",
         severity: "medium",
         date: new Date().toISOString().split("T")[0],
@@ -2404,7 +2368,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 
                 {/* B1. Quick Add Notice / Warning Item */}
                 <div className="bg-white p-5 rounded-xl border shadow-xs space-y-4">
-                  <h3 className="font-serif font-bold text-emerald-800 text-sm border-b pb-2 flex items-center gap-2">
+                  <h3 className="font-anek-latin font-extrabold text-emerald-800 text-lg border-b pb-3 flex items-center gap-2">
                     <span className="bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded text-[10px]">📢</span>
                     Quick Add Official Notice Announcement
                   </h3>
@@ -2412,55 +2376,27 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   <form onSubmit={handleQuickCreateNotice} className="space-y-4">
                     
 
-<div className="grid grid-cols-1 md:grid-cols-1 md:grid-cols-3 gap-3">
-                      <div className="order-2">
-                        <label className="block text-slate-500 font-semibold mb-0.5">Notice Title (English)</label>
-                        <input
-                          type="text"
-                          required={!quickNoticeForm.titleMl}
-                          value={quickNoticeForm.titleEn}
-                          onChange={(e) => setQuickNoticeForm({ ...quickNoticeForm, titleEn: e.target.value })}
-                          className="w-full border rounded p-1.5 text-xs bg-white focus:ring-1 focus:ring-emerald-500"
-                          placeholder="e.g. Vaccination camp at Agali CHC"
-                        />
+<div className="rounded-xl border border-emerald-100 bg-emerald-50/60 p-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <p className="text-xs font-bold text-emerald-900">Malayalam → English → Tamil · Anek fonts</p>
+                        <button type="button" role="switch" aria-checked={autoTranslateOnSubmit} onClick={() => setAutoTranslateOnSubmit(v => !v)} className={`rounded-lg px-3 py-1.5 text-xs font-extrabold ${autoTranslateOnSubmit ? "bg-emerald-700 text-white" : "bg-slate-200 text-slate-700"}`}>Auto Translate: {autoTranslateOnSubmit ? "ON" : "OFF"}</button>
                       </div>
-                      <div className="order-1">
-                        <label className="block text-slate-500 font-semibold mb-0.5">അറിയിപ്പ് വിഷയം (Malayalam)</label>
-                        <input
-                          type="text"
-                          required={!quickNoticeForm.titleEn}
-                          value={quickNoticeForm.titleMl}
-                          onChange={(e) => setQuickNoticeForm({ ...quickNoticeForm, titleMl: e.target.value })}
-                          className="w-full border rounded p-1.5 text-xs bg-white font-anek-malayalam focus:ring-1 focus:ring-emerald-500"
-                          placeholder="ഉദാ: അഗളി സിഎച്ച്സിയിൽ വാക്സിനേഷൻ ക്യാമ്പ്"
-                        />
-                      </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">Headline (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={quickNoticeForm.titleTa} onChange={e => { const value = e.target.value; setQuickNoticeForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setQuickNoticeForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
+                      <p className="mt-1 text-xs text-slate-600">Write in any language. Missing translations are generated when you publish; manually entered text is preserved.</p>
                     </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-1 md:grid-cols-3 gap-3">
-                      <div className="order-2">
-                        <label className="block text-slate-500 font-semibold mb-0.5">Alert Details / Details (English)</label>
-                        <textarea
-                          rows={2}
-                          value={quickNoticeForm.contentEn}
-                          onChange={(e) => setQuickNoticeForm({ ...quickNoticeForm, contentEn: e.target.value })}
-                          className="w-full border rounded p-1.5 text-xs bg-white focus:ring-1 focus:ring-emerald-500"
-                          placeholder="Times, locations, eligibility guidelines..."
-                        />
-                      </div>
-                      <div className="order-1">
-                        <label className="block text-slate-500 font-semibold mb-0.5">അറിയിപ്പ് വിവരങ്ങൾ (Malayalam)</label>
-                        <textarea
-                          rows={2}
-                          value={quickNoticeForm.contentMl}
-                          onChange={(e) => setQuickNoticeForm({ ...quickNoticeForm, contentMl: e.target.value })}
-                          className="w-full border rounded p-1.5 text-xs bg-white font-anek-malayalam focus:ring-1 focus:ring-emerald-500"
-                          placeholder="സമയം, തീയതി, പങ്കെടുക്കേണ്ട നിയമങ്ങൾ..."
-                        />
-                      </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">Details (Tamil)<textarea lang="ta" required={!autoTranslateOnSubmit} value={quickNoticeForm.contentTa} onChange={e => { const value = e.target.value; setQuickNoticeForm(prev => ({ ...prev, contentTa: value })); autoTranslateField(value, "contentTa", "contentTa", setQuickNoticeForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {([{heading:"Notice headline",prefix:"title",multiline:false},{heading:"Announcement details",prefix:"content",multiline:true}] as const).map(group => (
+                      <section key={group.prefix} className="space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-3">
+                        <h4 className="text-sm font-extrabold text-[#092b58]">{group.heading}</h4>
+                        <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+                          {([{suffix:"Ml",lang:"ml",label:"Malayalam",font:"font-anek-malayalam"},{suffix:"En",lang:"en",label:"English",font:"font-anek-latin"},{suffix:"Ta",lang:"ta",label:"Tamil",font:"font-anek-tamil"}] as const).map(item => {
+                            const key = `${group.prefix}${item.suffix}` as keyof typeof quickNoticeForm;
+                            return <label key={item.lang} className="block min-w-0 text-xs font-bold text-slate-600">{item.label}
+                              {group.multiline ? <textarea lang={item.lang} rows={4} value={String(quickNoticeForm[key] || "")} onChange={e => { const value=e.target.value; setQuickNoticeForm(prev=>({...prev,[key]:value})); autoTranslateField(value,key,key,setQuickNoticeForm,item.lang); }} placeholder={`Enter details in ${item.label}`} className={`mt-1 block w-full min-w-0 resize-y rounded-lg border border-slate-300 bg-white p-3 text-sm focus:border-emerald-500 focus:outline-none ${item.font}`} /> : <input lang={item.lang} value={String(quickNoticeForm[key] || "")} onChange={e => { const value=e.target.value; setQuickNoticeForm(prev=>({...prev,[key]:value})); autoTranslateField(value,key,key,setQuickNoticeForm,item.lang); }} placeholder={`Enter headline in ${item.label}`} className={`mt-1 block h-11 w-full min-w-0 rounded-lg border border-slate-300 bg-white px-3 text-sm focus:border-emerald-500 focus:outline-none ${item.font}`} />}
+                            </label>;
+                          })}
+                        </div>
+                      </section>
+                    ))}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-slate-500 font-semibold mb-0.5">Notice Severity</label>
                         <select
@@ -2489,7 +2425,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     </div>
 
                     <div className="text-[10px] text-emerald-800 bg-emerald-50 p-2 rounded">
-                      💡 Tip: Leave either title or content translation blank and it will automatically translate into the missing language!
+                      💡 Auto Translate fills missing Malayalam, English and Tamil fields when enabled. Review translations before publication.
                     </div>
 
                     <button
