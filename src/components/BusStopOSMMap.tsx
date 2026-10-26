@@ -122,7 +122,8 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang 
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>',
         maxZoom: 19
       }).addTo(map);
-      map.scrollWheelZoom.enable();
+      // Disable scroll-wheel zoom to prevent accidental zoom while selecting stations.
+      // Users may still use the standard map zoom buttons and touch gestures.
       map.dragging.enable();
       mapRef.current = map;
       layerRef.current = L.layerGroup().addTo(map);
@@ -204,9 +205,8 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang 
       }).addTo(layer).bindTooltip(stop.en + (point.kind === "place" ? " (town center)" : ""), { direction: "top" })
         .on("click", () => onSelectRef.current(stop.id));
     });
-    const selected = positions[selectedStop];
-    if (selected) mapRef.current.setView([selected.lat, selected.lon], 12);
-    else if (available.length) mapRef.current.fitBounds(available.map(s => [positions[s.id].lat, positions[s.id].lon]), { padding: [24, 24], maxZoom: 11 });
+    // Keep the visitor’s current zoom and center unchanged when selecting a station.
+    // The map starts at a stable regional view; subsequent marker/data updates only redraw dots.
   }, [ready, positions, selectedStop, available]);
 
   return <section className="space-y-2" aria-label="OpenStreetMap bus stops">
