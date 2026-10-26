@@ -670,7 +670,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
 
   const [activeTab, setActiveTab] = useState<"destinations" | "food" | "stays" | "travelogues" | "photos" | "culture" | "busTimings">(initialTab);
 
-  const [mapNodes, setMapNodes] = useState<{ id: string; x: number; y: number; nameEn: string; nameMl: string }[]>(() => {
+  const [mapNodes, setMapNodes] = useState<{ id: string; x: number; y: number; nameEn: string; nameMl: string; nameTa?: string }[]>(() => {
     try {
       const saved = localStorage.getItem("attappadi_map_nodes2");
       return saved ? JSON.parse(saved) : DEFAULT_MAP_NODES;
@@ -678,6 +678,28 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
       return DEFAULT_MAP_NODES;
     }
   });
+
+  const [stationAutoTranslate, setStationAutoTranslate] = useState(true);
+  const [stationTranslationBusy, setStationTranslationBusy] = useState(false);
+  const translateStationNames = async (names: { nameEn: string; nameMl: string; nameTa?: string }, source: "en" | "ml" | "ta") => {
+    if (!stationAutoTranslate) return names;
+    const fields = { en: "nameEn", ml: "nameMl", ta: "nameTa" } as const;
+    const text = names[fields[source]]?.trim();
+    if (!text) return names;
+    setStationTranslationBusy(true);
+    try {
+      const translated = { ...names };
+      await Promise.all((["ml", "en", "ta"] as const).filter(lang => lang !== source).map(async lang => {
+        if (translated[fields[lang]]?.trim()) return;
+        const response = await fetch("/api/admin/translate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text, sourceLang: source, targetLang: lang }) });
+        if (!response.ok) return;
+        const result = await response.json();
+        if (result.translatedText?.trim()) translated[fields[lang]] = result.translatedText.trim();
+      }));
+      return translated;
+    } catch (error) { console.error("Station translation failed", error); return names; }
+    finally { setStationTranslationBusy(false); }
+  };
 
   const [mapLines, setMapLines] = useState<{ from: string; to: string }[]>(() => {
     try {
@@ -1786,38 +1808,16 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                     </button>
                                   </div>
 
-                                  <div className="grid grid-cols-2 gap-2 text-left">
-                                    <div>
-                                      <label className="block text-[9px] text-slate-400 font-bold mb-0.5">English Name:</label>
-                                      <input
-                                        type="text"
-                                        value={activeNode.nameEn}
-                                        onChange={(e) => {
-                                          const val = e.target.value;
-                                          setMapNodes(prev => prev.map(n => n.id === activeNode.id ? { ...n, nameEn: val } : n));
-                                          setTimeout(() => {
-                                            localStorage.setItem("attappadi_map_nodes2", JSON.stringify(mapNodes));
-                                          }, 50);
-                                        }}
-                                        className="w-full bg-slate-950 border border-slate-800 px-2 py-1 rounded text-slate-200 text-xs font-bold"
-                                      />
-                                    </div>
-                                    <div>
-                                      <label className="block text-[9px] text-slate-400 font-bold mb-0.5">Malayalam Name:</label>
-                                      <input
-                                        type="text"
-                                        value={activeNode.nameMl}
-                                        onChange={(e) => {
-                                          const val = e.target.value;
-                                          setMapNodes(prev => prev.map(n => n.id === activeNode.id ? { ...n, nameMl: val } : n));
-                                          setTimeout(() => {
-                                            localStorage.setItem("attappadi_map_nodes2", JSON.stringify(mapNodes));
-                                          }, 50);
-                                        }}
-                                        className="w-full bg-slate-950 border border-slate-800 px-2 py-1 rounded text-slate-200 text-xs font-bold"
-                                      />
-                                    </div>
+                                  <label className="flex items-center gap-2 text-[11px] text-slate-300"><input type="checkbox" checked={stationAutoTranslate} onChange={e => setStationAutoTranslate(e.target.checked)} /> Auto Translate missing station names</label>
+                                  <div className="grid grid-cols-1 gap-2 text-left">
+                                    {(["ml", "en", "ta"] as const).map(language => {
+                                      const field = language === "ml" ? "nameMl" : language === "en" ? "nameEn" : "nameTa";
+                                      return <div key={language}><label className="block text-[10px] text-slate-400 font-bold mb-1">{language === "ml" ? "Malayalam" : language === "en" ? "English" : "Tamil"} Name</label>
+                                        <input lang={language} value={activeNode[field] || ""} onChange={e => { const value = e.target.value; setMapNodes(prev => prev.map(n => n.id === activeNode.id ? { ...n, [field]: value } : n)); }} onBlur={async () => { const latest = mapNodes.find(n => n.id === activeNode.id); if (!latest) return; const translated = await translateStationNames(latest, language); setMapNodes(prev => { const updated = prev.map(n => n.id === activeNode.id ? { ...n, ...translated } : n); localStorage.setItem("attappadi_map_nodes2", JSON.stringify(updated)); return updated; }); }} className={`w-full bg-slate-950 border border-slate-800 px-2 py-2 rounded text-slate-200 text-xs font-bold ${language === "ml" ? "font-anek-malayalam" : language === "ta" ? "font-anek-tamil" : "font-anek-latin"}`} />
+                                      </div>;
+                                    })}
                                   </div>
+                                  {stationTranslationBusy && <p className="text-xs text-amber-400">Translating station names…</p>}
 
                                   {/* Coordinate Slider Inputs */}
                                   <div className="space-y-2 text-left">
@@ -1879,7 +1879,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                   <label className="block text-[9px] text-slate-400 font-semibold mb-0.5">Unique ID (e.g. THAVALAM_WEST):</label>
                                   <input id="new-hub-id" type="text" placeholder="e.g. PALOOR_EAST" className="w-full bg-slate-950 border border-slate-800 text-[11px] px-2 py-1 rounded text-slate-200 uppercase font-mono" />
                                 </div>
-                                <div className="grid grid-cols-2 gap-2">
+                                <div className="grid grid-cols-1 gap-2">
                                   <div className="space-y-1">
                                     <label className="block text-[9px] text-slate-400 font-semibold mb-0.5">English Name:</label>
                                     <input id="new-hub-en" type="text" placeholder="Paloor East" className="w-full bg-slate-950 border border-slate-800 text-[11px] px-2 py-1 rounded text-slate-200" />
@@ -1888,6 +1888,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                     <label className="block text-[9px] text-slate-400 font-semibold mb-0.5">Malayalam Name:</label>
                                     <input id="new-hub-ml" type="text" placeholder="പാലൂർ കിഴക്ക്" className="w-full bg-slate-950 border border-slate-800 text-[11px] px-2 py-1 rounded text-slate-200" />
                                   </div>
+                                  <div className="space-y-1"><label className="block text-[9px] text-slate-400 font-semibold mb-0.5">Tamil Name:</label><input id="new-hub-ta" lang="ta" type="text" placeholder="பாலூர் கிழக்கு" className="w-full bg-slate-950 border border-slate-800 text-[11px] px-2 py-1 rounded text-slate-200 font-anek-tamil" /></div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-2">
                                   <div className="space-y-1">
@@ -1901,20 +1902,22 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                 </div>
                                 <button
                                   type="button"
-                                  onClick={() => {
+                                  onClick={async () => {
                                     const idInput = document.getElementById("new-hub-id") as HTMLInputElement;
                                     const enInput = document.getElementById("new-hub-en") as HTMLInputElement;
                                     const mlInput = document.getElementById("new-hub-ml") as HTMLInputElement;
+                                    const taInput = document.getElementById("new-hub-ta") as HTMLInputElement;
                                     const xInput = document.getElementById("new-hub-x") as HTMLInputElement;
                                     const yInput = document.getElementById("new-hub-y") as HTMLInputElement;
 
                                     const id = idInput?.value.trim().toUpperCase();
                                     const nameEn = enInput?.value.trim();
                                     const nameMl = mlInput?.value.trim();
+                                    const nameTa = taInput?.value.trim();
                                     const xVal = xInput?.value ? parseInt(xInput.value) : 50;
                                     const yVal = yInput?.value ? parseInt(yInput.value) : 50;
 
-                                    if (!id || !nameEn || !nameMl) {
+                                    if (!id || !(nameEn || nameMl || nameTa)) {
                                       alert("Please fill in all layout fields to create a custom station.");
                                       return;
                                     }
@@ -1923,7 +1926,9 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                       return;
                                     }
 
-                                    const newNode = { id, x: xVal, y: yVal, nameEn, nameMl };
+                                    const translatedNames = await translateStationNames({ nameEn, nameMl, nameTa }, nameMl ? "ml" : nameEn ? "en" : "ta");
+                                    if (!translatedNames.nameEn || !translatedNames.nameMl || !translatedNames.nameTa) { alert("Please provide all three station names or enable Auto Translate."); return; }
+                                    const newNode = { id, x: xVal, y: yVal, ...translatedNames };
                                     const updated = [...mapNodes, newNode];
                                     setMapNodes(updated);
                                     localStorage.setItem("attappadi_map_nodes2", JSON.stringify(updated));
@@ -1933,6 +1938,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                     if (idInput) idInput.value = "";
                                     if (enInput) enInput.value = "";
                                     if (mlInput) mlInput.value = "";
+                                    if (taInput) taInput.value = "";
                                     if (xInput) xInput.value = "50";
                                     if (yInput) yInput.value = "50";
                                   }}
