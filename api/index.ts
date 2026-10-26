@@ -815,14 +815,36 @@ app.get("/api/adconfig", async (req, res) => {
   res.json(database.adConfig || defaultAdConfig);
 });
 
+type CarouselAdSlide = { type: "image" | "text"; image: string; titleEn: string; titleMl: string; titleTa: string; subtitleEn: string; subtitleMl: string; subtitleTa: string; actionType: "none" | "phone" | "whatsapp" | "website"; contact: string; externalUrl: string };
+function validateCarouselSlides(input: unknown): CarouselAdSlide[] {
+  if (!Array.isArray(input) || input.length > 5) throw new Error("Each advertising window supports a maximum of five slides.");
+  return input.map((entry: any) => {
+    if (!entry || !["image", "text"].includes(entry.type)) throw new Error("Invalid advertising slide type.");
+    const slide: CarouselAdSlide = {
+      type: entry.type, image: String(entry.image || ""),
+      titleEn: String(entry.titleEn || ""), titleMl: String(entry.titleMl || ""), titleTa: String(entry.titleTa || ""),
+      subtitleEn: String(entry.subtitleEn || ""), subtitleMl: String(entry.subtitleMl || ""), subtitleTa: String(entry.subtitleTa || ""),
+      actionType: ["none", "phone", "whatsapp", "website"].includes(entry.actionType) ? entry.actionType : "none",
+      contact: String(entry.contact || ""), externalUrl: String(entry.externalUrl || "")
+    };
+    if (slide.type === "image" && !slide.image) throw new Error("Image slide requires an image.");
+    if (slide.type === "text" && ![slide.titleEn, slide.titleMl, slide.titleTa].some(Boolean)) throw new Error("Text slide requires a title.");
+    if (slide.actionType === "website" && !/^https?:\/\//i.test(slide.externalUrl)) throw new Error("Website actions require an HTTP(S) URL.");
+    if (["phone", "whatsapp"].includes(slide.actionType) && !/^\+?[0-9\s()-]{7,22}$/.test(slide.contact)) throw new Error("Call and WhatsApp actions require a valid phone number.");
+    return slide;
+  });
+}
 app.put("/api/adconfig", async (req, res) => {
   const { leftAd, rightAd } = req.body;
-  
+  let leftSlides: CarouselAdSlide[], rightSlides: CarouselAdSlide[];
+  try { leftSlides = validateCarouselSlides(req.body.leftSlides || []); rightSlides = validateCarouselSlides(req.body.rightSlides || []); }
+  catch (error) { return res.status(400).json({ error: (error as Error).message }); }
   if (!leftAd || !rightAd) {
     return res.status(400).json({ error: "Missing leftAd or rightAd setup parameters" });
   }
 
   const updatedConfig = {
+    leftSlides, rightSlides,
     leftAd: {
       titleEn: leftAd.titleEn || "",
       titleMl: leftAd.titleMl || "",
