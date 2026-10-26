@@ -211,8 +211,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   const [quickBreakingForm, setQuickBreakingForm] = useState({
     titleEn: "",
     titleMl: "",
-    titleTa: ""
+    titleTa: "", contentMl: "", contentEn: "", contentTa: ""
   });
+  const [quickBreakingItems, setQuickBreakingItems] = useState<any[]>([]);
+  const fetchQuickBreaking = async () => { try { const response = await adminFetch("/api/quick-breaking"); if (response.ok) setQuickBreakingItems(await response.json()); } catch (error) { console.error(error); } };
   const [quickNoticeForm, setQuickNoticeForm] = useState({
     titleEn: "",
     titleMl: "", titleTa: "",
@@ -1798,65 +1800,28 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   };
 
   // ==================== CUSTOM TICKER CONTROL HANDLERS ====================
+  useEffect(() => { fetchQuickBreaking(); }, []);
   const handleQuickCreateBreaking = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!quickBreakingForm.titleEn && !quickBreakingForm.titleMl) {
-      triggerToast("⚠️ Please provide at least one title field.");
-      return;
+    const translated = await performAutoTranslationForForm(quickBreakingForm, setQuickBreakingForm, [
+      { en: "titleEn", ml: "titleMl" }, { en: "contentEn", ml: "contentMl" }
+    ]);
+    if (["titleEn","titleMl","titleTa","contentEn","contentMl","contentTa"].some(key => !String((translated as any)[key] || "").trim())) {
+      alert("Complete all three languages, or enable automatic translation."); return;
     }
-    
-    let translatedForm = { ...quickBreakingForm };
-    if (quickBreakingForm.titleEn && !quickBreakingForm.titleMl) {
-      const mlRes = await adminFetch("/api/admin/translate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: quickBreakingForm.titleEn, targetLang: "ml" })
-      });
-      if (mlRes.ok) {
-        const tr = await mlRes.json();
-        translatedForm.titleMl = tr.translatedText;
-      }
-    } else if (quickBreakingForm.titleMl && !quickBreakingForm.titleEn) {
-      const enRes = await adminFetch("/api/admin/translate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: quickBreakingForm.titleMl, targetLang: "en" })
-      });
-      if (enRes.ok) {
-        const tr = await enRes.json();
-        translatedForm.titleEn = tr.translatedText;
-      }
+    if (["contentEn","contentMl","contentTa"].some(key => String((translated as any)[key]).replace(/\r/g,"").split("\n").length > 4)) {
+      alert("Ticker content is limited to four lines per language."); return;
     }
-
-    if (!translatedForm.titleTa?.trim()) {
-      alert("Tamil breaking headline is required.");
-      return;
-    }
-    const payload = {
-      titleEn: translatedForm.titleEn || "Breaking Alert",
-      titleMl: translatedForm.titleMl || "ബ്രേക്കിംഗ് വാർത്ത",
-      contentEn: "Urgent Live Ticker Alert",
-      contentMl: "അടിയന്തിര തത്സമയ അലേർട്ട്",
-      titleTa: translatedForm.titleTa,
-      contentTa: "அவசர நேரடி செய்தி",
-      category: "breaking",
-      regions: [],
-      image: "",
-      isSlide: false,
-      isCard: false
-    };
-
-    const res = await adminFetch("/api/news", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-
-    if (res.ok) {
-      triggerToast("🔴 New Breaking Ticker item published live!");
-      setQuickBreakingForm({ titleEn: "", titleMl: "", titleTa: "" });
-      fetchNews();
-    }
+    const response = await adminFetch("/api/quick-breaking", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(translated) });
+    if (!response.ok) { const error = await response.json().catch(() => ({})); alert(error.error || "Ticker publishing failed"); return; }
+    triggerToast("Ticker-only breaking alert published; no news article created.");
+    setQuickBreakingForm({ titleMl:"", titleEn:"", titleTa:"", contentMl:"", contentEn:"", contentTa:"" });
+    fetchQuickBreaking();
+  };
+  const handleRemoveQuickBreaking = async (id: string) => {
+    if (!window.confirm("Remove this ticker-only alert?")) return;
+    const response = await adminFetch("/api/quick-breaking/" + encodeURIComponent(id), { method: "DELETE" });
+    if (response.ok) { triggerToast("Ticker alert removed."); fetchQuickBreaking(); }
   };
 
   const handleToggleNewsBreaking = async (item: NewsPost, makeBreaking: boolean) => {
@@ -2307,40 +2272,38 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </h3>
                   
                   <form onSubmit={handleQuickCreateBreaking} className="space-y-4">
-                    
-<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <div className="order-2">
-                        <label className="block text-slate-500 font-semibold mb-0.5">Breaking Title (English)</label>
-                        <input
-                          type="text"
-                          required={!quickBreakingForm.titleMl}
-                          value={quickBreakingForm.titleEn}
-                          onChange={(e) => setQuickBreakingForm({ ...quickBreakingForm, titleEn: e.target.value })}
-                          className="w-full border rounded p-1.5 text-xs bg-white focus:ring-1 focus:ring-red-500"
-                          placeholder="e.g. Traffic blocked on Mannarkkad road"
-                        />
-                      </div>
-                      <div className="order-1">
-                        <label className="block text-slate-500 font-semibold mb-0.5">ബ്രേക്കിംഗ് ഹെഡ്‌ലൈൻ (Malayalam)</label>
-                        <input
-                          type="text"
-                          required={!quickBreakingForm.titleEn}
-                          value={quickBreakingForm.titleMl}
-                          onChange={(e) => setQuickBreakingForm({ ...quickBreakingForm, titleMl: e.target.value })}
-                          className="w-full border rounded p-1.5 text-xs bg-white font-anek-malayalam focus:ring-1 focus:ring-red-500"
-                          placeholder="ഉദാ: മണ്ണാർക്കാട് റോഡിൽ ഗതാഗതം തടസ്സപ്പെട്ടു"
-                        />
-                      </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">Headline (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={quickBreakingForm.titleTa} onChange={e => { const value = e.target.value; setQuickBreakingForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setQuickBreakingForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                    </div>
-                    <div className="text-[10px] text-amber-600 bg-amber-50 p-2 rounded">
-                      💡 Tip: Leave one title completely blank, and the system auto-translates it using Gemini AI instantly upon publishing!
-                    </div>
-                    <button
-                      type="submit"
-                      className="w-full py-2 bg-gradient-to-r from-red-600 to-red-700 text-white font-black text-xs rounded-lg shadow-xs hover:from-red-700 hover:to-red-800 cursor-pointer transition"
-                    >
-                      🚀 Publish Breaking Ticker Alert
-                    </button>
+                    <p className="text-xs text-slate-600">Ticker-only alert: one headline slide followed by up to two content slides. No news article is created.</p>
+                    <div className="grid grid-cols-1 gap-3"><div className="min-w-0 space-y-2 rounded-lg border border-slate-200 p-3 bg-white">
+  <label className="block text-sm font-bold text-slate-700" htmlFor="quick-breaking-title-ml">Headline (Malayalam)</label>
+  <input id="quick-breaking-title-ml" lang="ml" value={quickBreakingForm.titleMl}
+    onChange={e => { const value=e.target.value; setQuickBreakingForm(prev=>({...prev,titleMl:value})); autoTranslateField(value,"titleMl","titleMl",setQuickBreakingForm,"ml"); }}
+    className="w-full min-w-0 rounded border border-slate-300 p-2 text-sm font-anek-malayalam" />
+  <label className="block text-sm font-bold text-slate-700" htmlFor="quick-breaking-content-ml">Ticker Content (Malayalam) · max 4 lines</label>
+  <textarea id="quick-breaking-content-ml" lang="ml" rows={4} value={quickBreakingForm.contentMl}
+    onChange={e => { const value=e.target.value; setQuickBreakingForm(prev=>({...prev,contentMl:value})); autoTranslateField(value,"contentMl","contentMl",setQuickBreakingForm,"ml"); }}
+    className="w-full min-w-0 rounded border border-slate-300 p-2 text-sm font-anek-malayalam" />
+</div>
+<div className="min-w-0 space-y-2 rounded-lg border border-slate-200 p-3 bg-white">
+  <label className="block text-sm font-bold text-slate-700" htmlFor="quick-breaking-title-en">Headline (English)</label>
+  <input id="quick-breaking-title-en" lang="en" value={quickBreakingForm.titleEn}
+    onChange={e => { const value=e.target.value; setQuickBreakingForm(prev=>({...prev,titleEn:value})); autoTranslateField(value,"titleEn","titleEn",setQuickBreakingForm,"en"); }}
+    className="w-full min-w-0 rounded border border-slate-300 p-2 text-sm font-anek-english" />
+  <label className="block text-sm font-bold text-slate-700" htmlFor="quick-breaking-content-en">Ticker Content (English) · max 4 lines</label>
+  <textarea id="quick-breaking-content-en" lang="en" rows={4} value={quickBreakingForm.contentEn}
+    onChange={e => { const value=e.target.value; setQuickBreakingForm(prev=>({...prev,contentEn:value})); autoTranslateField(value,"contentEn","contentEn",setQuickBreakingForm,"en"); }}
+    className="w-full min-w-0 rounded border border-slate-300 p-2 text-sm font-anek-english" />
+</div>
+<div className="min-w-0 space-y-2 rounded-lg border border-slate-200 p-3 bg-white">
+  <label className="block text-sm font-bold text-slate-700" htmlFor="quick-breaking-title-ta">Headline (Tamil)</label>
+  <input id="quick-breaking-title-ta" lang="ta" value={quickBreakingForm.titleTa}
+    onChange={e => { const value=e.target.value; setQuickBreakingForm(prev=>({...prev,titleTa:value})); autoTranslateField(value,"titleTa","titleTa",setQuickBreakingForm,"ta"); }}
+    className="w-full min-w-0 rounded border border-slate-300 p-2 text-sm font-anek-tamil" />
+  <label className="block text-sm font-bold text-slate-700" htmlFor="quick-breaking-content-ta">Ticker Content (Tamil) · max 4 lines</label>
+  <textarea id="quick-breaking-content-ta" lang="ta" rows={4} value={quickBreakingForm.contentTa}
+    onChange={e => { const value=e.target.value; setQuickBreakingForm(prev=>({...prev,contentTa:value})); autoTranslateField(value,"contentTa","contentTa",setQuickBreakingForm,"ta"); }}
+    className="w-full min-w-0 rounded border border-slate-300 p-2 text-sm font-anek-tamil" />
+</div></div>
+                    <button type="submit" disabled={isTranslatingForm} className="w-full rounded-lg bg-red-700 px-4 py-3 text-sm font-bold text-white hover:bg-red-800 disabled:opacity-50">Publish Ticker-Only Breaking Alert</button>
                   </form>
                 </div>
 
@@ -2350,6 +2313,15 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     <span>🎬</span> Running Ticker Items ({newsList.filter(n => n.category === "breaking").length})
                   </h3>
 
+                  <div className="space-y-2">
+                    <p className="text-xs font-bold text-red-700">Ticker-only alerts ({quickBreakingItems.length})</p>
+                    {quickBreakingItems.map(item => (
+                      <div key={item.id} className="flex items-center justify-between gap-3 rounded border border-red-100 bg-red-50 p-2">
+                        <div className="min-w-0"><p className="truncate font-semibold">{item.titleMl || item.titleEn}</p><p className="truncate text-xs text-slate-500">{item.contentMl || item.contentEn}</p></div>
+                        <button type="button" onClick={() => handleRemoveQuickBreaking(item.id)} className="shrink-0 rounded border border-red-300 px-2 py-1 text-xs font-semibold text-red-700">Remove</button>
+                      </div>
+                    ))}
+                  </div>
                   <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
                     {newsList.filter(n => n.category === "breaking").length === 0 ? (
                       <p className="text-slate-400 italic text-center py-4">No news articles with the "breaking" badge are currently scrolling.</p>

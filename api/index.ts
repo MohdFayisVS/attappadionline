@@ -602,6 +602,46 @@ app.post("/api/citizen-reports/:id/reject", async (req, res) => {
   res.json({ rejected: true });
 });
 
+// Standalone ticker-only alerts. These are NOT news articles and never enter /api/news.
+app.get("/api/quick-breaking", async (_req, res) => {
+  const items = await getCollectionData("quickBreaking");
+  res.json(items);
+});
+
+app.post("/api/quick-breaking", async (req, res) => {
+  const { titleEn, titleMl, titleTa, contentEn, contentMl, contentTa } = req.body || {};
+  const titles = [titleEn, titleMl, titleTa];
+  const contents = [contentEn, contentMl, contentTa];
+  if (titles.some(value => typeof value !== "string" || !value.trim()) ||
+      contents.some(value => typeof value !== "string" || !value.trim())) {
+    return res.status(400).json({ error: "Headlines and content in all three languages are required." });
+  }
+  if (contents.some(value => value.replace(/\r/g, "").split("\n").length > 4)) {
+    return res.status(400).json({ error: "Ticker content is limited to four lines per language." });
+  }
+  const item = {
+    id: "quickbreaking_" + Date.now().toString(),
+    titleEn: titleEn.trim(), titleMl: titleMl.trim(), titleTa: titleTa.trim(),
+    contentEn: contentEn.trim(), contentMl: contentMl.trim(), contentTa: contentTa.trim(),
+    publishedAt: new Date().toISOString()
+  };
+  try {
+    await writeItemToFirestore("quickBreaking", item.id, item);
+  } catch {
+    return res.status(503).json({ error: "Unable to save ticker alert." });
+  }
+  res.status(201).json(item);
+});
+
+app.delete("/api/quick-breaking/:id", async (req, res) => {
+  try {
+    await deleteItemFromFirestore("quickBreaking", req.params.id);
+    res.json({ success: true });
+  } catch {
+    res.status(503).json({ error: "Unable to remove ticker alert." });
+  }
+});
+
 app.get("/api/news", async (req, res) => {
   const data = await getCollectionData("news");
   res.json(data);

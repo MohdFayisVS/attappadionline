@@ -119,7 +119,6 @@ export default function App() {
   const tickerDemo = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("tickerDemo") === "1";
   const demoBreaking = { id: "ticker-demo-breaking", titleEn: "DEMO ONLY — Breaking news ticker test", titleMl: "പരീക്ഷണം മാത്രം — ബ്രേക്കിങ് ന്യൂസ് ടിക്കർ പരിശോധന", titleTa: "சோதனை மட்டும் — முக்கியச் செய்தி ஓட்டச் சோதனை" };
   const demoNotice = { id: "ticker-demo-notice", titleEn: "DEMO ONLY — Public notice and alert ticker test", titleMl: "പരീക്ഷണം മാത്രം — അറിയിപ്പ്, മുന്നറിയിപ്പ് ടിക്കർ പരിശോധന", titleTa: "சோதனை மட்டும் — அறிவிப்பு மற்றும் எச்சரிக்கை ஓட்டச் சோதனை" };
-  const [tickerMode, setTickerMode] = useState<"breaking" | "notice">("breaking");
   const [tickerIndex, setTickerIndex] = useState(0);
   const tamilMode = lang === "ta";
   const selectLanguage = (next: "en" | "ml" | "ta") => setLang(next);
@@ -138,22 +137,35 @@ export default function App() {
   const [breakingPosts, setBreakingPosts] = useState<NewsPost[]>([]);
   const [sliderPosts, setSliderPosts] = useState<NewsPost[]>([]);
   const [announcements, setAnnouncements] = useState<NoticeItem[]>([]);
+  const [quickBreakingItems, setQuickBreakingItems] = useState<Array<{id:string; titleEn:string; titleMl:string; titleTa:string; contentEn:string; contentMl:string; contentTa:string}>>([]);
+  useEffect(() => {
+    fetch("/api/quick-breaking").then(response => response.ok ? response.json() : []).then(items => setQuickBreakingItems(Array.isArray(items) ? items : [])).catch(console.error);
+  }, []);
   const tickerBreakingItems = tickerDemo ? [demoBreaking] : breakingPosts;
   const tickerNoticeItems = tickerDemo ? [demoNotice] : announcements;
-  const currentTickerItems = tickerMode === "breaking" ? tickerBreakingItems : tickerNoticeItems;
-  const currentTickerItem = currentTickerItems[tickerIndex % Math.max(1, currentTickerItems.length)];
+  const tickerSlides = [
+    ...tickerBreakingItems.map(item => ({ kind: "article" as const, mode: "breaking" as const, item, slide: 0 })),
+    ...(!tickerDemo ? quickBreakingItems.flatMap(item => {
+      const contentSlides = Math.min(2, Math.max(1, Math.ceil(Math.max(...[item.contentMl, item.contentEn, item.contentTa].map(text => text.split(/\n/).length)) / 2)));
+      return Array.from({ length: 1 + contentSlides }, (_, slide) => ({ kind: "quick" as const, mode: "breaking" as const, item, slide }));
+    }) : []),
+    ...tickerNoticeItems.map(item => ({ kind: "notice" as const, mode: "notice" as const, item, slide: 0 }))
+  ];
+  const activeTickerSlide = tickerSlides[tickerIndex % Math.max(1, tickerSlides.length)];
+  const tickerMode = activeTickerSlide?.mode || "breaking";
+  const currentTickerItem = activeTickerSlide?.item;
   useEffect(() => {
-    const hasBreaking = tickerBreakingItems.length > 0;
-    const hasNotice = tickerNoticeItems.length > 0;
-    if (!hasBreaking && !hasNotice) return;
-    if (!hasBreaking) setTickerMode("notice");
-    if (!hasNotice) setTickerMode("breaking");
-    const interval = window.setInterval(() => {
-      setTickerIndex(previous => previous + 1);
-      if (hasBreaking && hasNotice) setTickerMode(previous => previous === "breaking" ? "notice" : "breaking");
-    }, 7000);
+    if (!tickerSlides.length) return;
+    const interval = window.setInterval(() => setTickerIndex(previous => previous + 1), 7000);
     return () => window.clearInterval(interval);
-  }, [tickerDemo, breakingPosts.length, announcements.length]);
+  }, [tickerSlides.length]);
+  const quickTickerDisplayedText = (() => {
+    if (activeTickerSlide?.kind !== "quick") return "";
+    const item = activeTickerSlide.item;
+    if (activeTickerSlide.slide === 0) return lang === "ta" ? item.titleTa : lang === "ml" ? item.titleMl : item.titleEn;
+    const content = lang === "ta" ? item.contentTa : lang === "ml" ? item.contentMl : item.contentEn;
+    return content.split(/\n/).slice((activeTickerSlide.slide - 1) * 2, activeTickerSlide.slide * 2).join("\n");
+  })();
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<NoticeItem | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -887,7 +899,7 @@ export default function App() {
       </header>
 
       {/* Broadcast-style news channel ticker: one alternating slot below the header. */}
-      {activeSection === "news" && (tickerBreakingItems.length > 0 || tickerNoticeItems.length > 0) && (
+      {activeSection === "news" && (tickerSlides.length > 0) && (
         <section aria-label="Live news and alerts" className="relative flex h-[82px] min-[380px]:h-[88px] sm:h-[106px] overflow-hidden border-y-2 border-white/20 shadow-lg bg-[#052962]">
           <div className="relative z-20 flex w-[54px] min-[380px]:w-[66px] sm:w-[130px] shrink-0 flex-col items-center justify-center gap-0.5 bg-white px-1 py-1.5 sm:gap-1 sm:px-2 sm:py-2 shadow-[5px_0_15px_rgba(0,0,0,0.25)]">
             <img src="/attappadi-mark.svg" alt="Attappadi Online" className="h-7 w-7 min-[380px]:h-8 min-[380px]:w-8 sm:h-12 sm:w-12 object-contain" />
@@ -895,14 +907,14 @@ export default function App() {
           </div>
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
-              key={tickerMode}
+              key={tickerMode + "-" + (activeTickerSlide?.kind || "") + "-" + (activeTickerSlide?.slide || 0)}
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -18 }}
               transition={{ duration: 0.45, ease: "easeInOut" }}
-              className={`relative flex min-w-0 flex-1 items-stretch text-white ${tickerMode === "breaking" ? "bg-[#d60016]" : "bg-[#0754aa]"}`}
+              className={`relative flex min-w-0 flex-1 items-stretch ${activeTickerSlide?.kind === "quick" && activeTickerSlide.slide > 0 ? "bg-[#ffe4e6] text-[#b00018]" : tickerMode === "breaking" ? "bg-[#d60016] text-white" : "bg-[#0754aa] text-white"}`}
             >
-              <div className="z-10 flex w-[76px] min-[380px]:w-[94px] sm:w-[205px] shrink-0 items-center justify-center border-r border-white/25 px-1 min-[380px]:px-2 sm:px-4 text-center shadow-[4px_0_12px_rgba(0,0,0,0.16)]">
+              <div className="z-10 flex w-[76px] min-[380px]:w-[94px] sm:w-[205px] shrink-0 items-center justify-center border-r border-white/25 px-1 min-[380px]:px-2 sm:px-4 text-center shadow-[4px_0_12px_rgba(0,0,0,0.16)] bg-[#d60016] text-white">
                 <span lang="en" className="font-anek-english text-[11px] min-[380px]:text-[13px] sm:text-2xl md:text-[27px] font-black uppercase tracking-tight leading-none">
                   {tickerMode === "breaking" ? "BREAKING NEWS" : "NOTICE & ALERT"}
                 </span>
@@ -917,12 +929,13 @@ export default function App() {
                       animate={{ y: "0%", opacity: 1, filter: "blur(0px)" }}
                       exit={{ y: "-75%", opacity: 0, filter: "blur(5px)" }}
                       transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-                      onClick={() => { if (tickerDemo) return; tickerMode === "breaking" ? handleArticleClick(currentTickerItem as NewsPost) : setSelectedAnnouncement(currentTickerItem as NoticeItem); }}
+                      onClick={() => { if (tickerDemo || activeTickerSlide?.kind === "quick") return; tickerMode === "breaking" ? handleArticleClick(currentTickerItem as NewsPost) : setSelectedAnnouncement(currentTickerItem as NoticeItem); }}
                       lang={lang}
-                      className={`w-full px-2 min-[380px]:px-3 sm:px-7 py-2 text-left text-[13px] min-[380px]:text-[15px] sm:text-xl md:text-2xl font-bold leading-snug hover:underline focus-visible:outline-2 focus-visible:outline-white ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}
+                      disabled={activeTickerSlide?.kind === "quick"}
+                      className={`w-full px-2 min-[380px]:px-3 sm:px-7 py-2 text-left text-[13px] min-[380px]:text-[15px] sm:text-xl md:text-2xl font-bold leading-snug ${activeTickerSlide?.kind === "quick" ? "cursor-default hover:no-underline" : "hover:underline"} focus-visible:outline-2 focus-visible:outline-white ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}
                     >
-                      <span className="block overflow-hidden text-ellipsis line-clamp-2">
-                        {lang === "ta" ? (currentTickerItem.titleTa || currentTickerItem.titleEn || currentTickerItem.titleMl) : lang === "ml" ? (currentTickerItem.titleMl || currentTickerItem.titleEn || currentTickerItem.titleTa) : (currentTickerItem.titleEn || currentTickerItem.titleMl || currentTickerItem.titleTa)}
+                      <span className={activeTickerSlide?.kind === "quick" ? "block whitespace-pre-line line-clamp-2" : "block overflow-hidden text-ellipsis line-clamp-2"}>
+                        {activeTickerSlide?.kind === "quick" ? quickTickerDisplayedText : (lang === "ta" ? (currentTickerItem.titleTa || currentTickerItem.titleEn || currentTickerItem.titleMl) : lang === "ml" ? (currentTickerItem.titleMl || currentTickerItem.titleEn || currentTickerItem.titleTa) : (currentTickerItem.titleEn || currentTickerItem.titleMl || currentTickerItem.titleTa))}
                       </span>
                     </motion.button>
                   )}
