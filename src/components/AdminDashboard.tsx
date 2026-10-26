@@ -46,6 +46,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   const [busRoutesList, setBusRoutesList] = useState<BusRouteItem[]>([]);
   const [busAdminView, setBusAdminView] = useState<"routes" | "timetables" | "map">("timetables");
   const [busAdminSearch, setBusAdminSearch] = useState("");
+  const [busMapRevision, setBusMapRevision] = useState(0);
   const [routesList, setRoutesList] = useState<{ id: string; routeEn: string; routeMl: string; }[]>([]);
   const [noticesList, setNoticesList] = useState<NoticeItem[]>([]);
   const [lpgList, setLpgList] = useState<LpgDelivery[]>([]);
@@ -1581,8 +1582,12 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       onConfirm: async () => {
         const response = await adminFetch(`/api/busroutes/${id}`, { method: "DELETE" });
         if (response.ok) {
-          triggerToast("Route timetable removed.");
-          fetchBusRoutes();
+          triggerToast("Bus timetable deleted. Public station departures will update.");
+          await fetchBusRoutes();
+          setBusMapRevision(prev => prev + 1);
+        } else {
+          const result = await response.json().catch(() => ({}));
+          triggerToast(result.error || "Delete failed. The timetable has not been removed.");
         }
         setDeleteConfirm(null);
       }
@@ -5016,7 +5021,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </p>
                 </div>
                 <div className="p-1 border border-slate-200 rounded-xl overflow-hidden shadow-xs bg-slate-50">
-                  <ExploreAttappadi lang="ml" initialTab="busTimings" isAdmin={true} onEditBusRoute={(id) => {const route=busRoutesList.find(item=>item.id===id);if(route)handleStartEditBusRoute(route);}} onDeleteBusRoute={(id) => handleDeleteBusRoute(id)} />
+                  <ExploreAttappadi key={busMapRevision} lang="ml" initialTab="busTimings" isAdmin={true} onEditBusRoute={(id) => {const route=busRoutesList.find(item=>item.id===id);if(route)handleStartEditBusRoute(route);}} onDeleteBusRoute={(id) => handleDeleteBusRoute(id)} />
                 </div>
               </div>
 

@@ -720,7 +720,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
   const [staysList, setStaysList] = useState<StayItem[]>(defaultStays);
   const [traveloguesList, setTraveloguesList] = useState<TravelogueItem[]>(defaultTravelogues);
   const [photosList, setPhotosList] = useState<PhotoItem[]>(defaultPhotos);
-  const [busRoutesList, setBusRoutesList] = useState<BusRouteItem[]>(defaultBusRoutes);
+  const [busRoutesList, setBusRoutesList] = useState<BusRouteItem[]>([]);
 
   useEffect(() => {
     setActiveTab(initialTab);
@@ -765,7 +765,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
 
     fetch("/api/busroutes")
       .then(res => res.json())
-      .then(data => { if (Array.isArray(data) && data.length > 0) setBusRoutesList(data); })
+      .then(data => { if (Array.isArray(data)) setBusRoutesList(data); })
       .catch(err => console.error("Error loading bus routes:", err));
   };
 
