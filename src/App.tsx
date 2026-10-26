@@ -147,8 +147,7 @@ export default function App() {
   const tickerSlides = [
     ...tickerBreakingItems.map(item => ({ kind: "article" as const, mode: "breaking" as const, item, slide: 0 })),
     ...(!tickerDemo ? quickBreakingItems.flatMap(item => {
-      const lines = (item.contentMl || item.contentEn || item.contentTa).split(/\n/);
-      const contentSlides = Math.min(2, Math.max(1, Math.ceil(lines.length / 2)));
+      const contentSlides = Math.min(2, Math.max(1, Math.ceil(Math.max(...[item.contentMl, item.contentEn, item.contentTa].map(text => text.split(/\n/).length)) / 2)));
       return Array.from({ length: 1 + contentSlides }, (_, slide) => ({ kind: "quick" as const, mode: "breaking" as const, item, slide }));
     }) : []),
     ...tickerNoticeItems.map(item => ({ kind: "notice" as const, mode: "notice" as const, item, slide: 0 }))
@@ -914,9 +913,9 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -18 }}
               transition={{ duration: 0.45, ease: "easeInOut" }}
-              className={`relative flex min-w-0 flex-1 items-stretch text-white ${tickerMode === "breaking" ? "bg-[#d60016]" : "bg-[#0754aa]"}`}
+              className={`relative flex min-w-0 flex-1 items-stretch ${activeTickerSlide?.kind === "quick" && activeTickerSlide.slide > 0 ? "bg-[#ffe4e6] text-[#b00018]" : tickerMode === "breaking" ? "bg-[#d60016] text-white" : "bg-[#0754aa] text-white"}`}
             >
-              <div className="z-10 flex w-[76px] min-[380px]:w-[94px] sm:w-[205px] shrink-0 items-center justify-center border-r border-white/25 px-1 min-[380px]:px-2 sm:px-4 text-center shadow-[4px_0_12px_rgba(0,0,0,0.16)]">
+              <div className="z-10 flex w-[76px] min-[380px]:w-[94px] sm:w-[205px] shrink-0 items-center justify-center border-r border-white/25 px-1 min-[380px]:px-2 sm:px-4 text-center shadow-[4px_0_12px_rgba(0,0,0,0.16)] bg-[#d60016] text-white">
                 <span lang="en" className="font-anek-english text-[11px] min-[380px]:text-[13px] sm:text-2xl md:text-[27px] font-black uppercase tracking-tight leading-none">
                   {tickerMode === "breaking" ? "BREAKING NEWS" : "NOTICE & ALERT"}
                 </span>
