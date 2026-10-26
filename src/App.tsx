@@ -686,16 +686,26 @@ export default function App() {
         {/* Newspaper edition strip: date occupies the left-hand calendar block */}
         <div lang="en" className="ao-edition-strip bg-[#f8f7f3] text-[#052962] border-b border-slate-200">
           <div className="w-full mx-auto px-4 sm:px-6 py-3 flex flex-col md:flex-row gap-3 md:gap-5 items-stretch">
-            <div className="ao-edition-calendar flex-none w-full md:w-[172px] border border-slate-300 bg-white rounded-sm overflow-hidden shadow-sm" aria-label="Date and India local time">
-              <time dateTime={currentTime.toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit" })} className="flex flex-row md:flex-col items-center justify-center gap-2 md:gap-0 px-3 py-2 md:py-3 text-[#052962]">
-                <span className="font-serif-guardian font-black text-4xl md:text-5xl leading-none tabular-nums">{currentTime.toLocaleDateString("en-GB", { day: "2-digit", timeZone: "Asia/Kolkata" })}</span>
-                <span className="font-serif-guardian font-bold text-base md:text-lg leading-tight">{currentTime.toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "Asia/Kolkata" })}</span>
-                <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">{currentTime.toLocaleDateString("en-GB", { weekday: "long", timeZone: "Asia/Kolkata" })}</span>
-              </time>
-              <div className="ao-calendar-clock flex items-center justify-center gap-2 border-t border-slate-200 bg-slate-50 px-2 py-2 text-[#052962]">
-                <Clock className="w-4 h-4 text-[#c70000]" aria-hidden="true" />
-                <span className="font-sans text-sm sm:text-base font-bold tracking-wide tabular-nums">{currentTime.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true, timeZone: "Asia/Kolkata" })}</span>
-                <span className="text-[10px] font-extrabold tracking-widest text-slate-500">IST</span>
+            <div className="ao-edition-calendar relative flex-none w-full md:w-[190px] overflow-hidden rounded-xl border border-[#cbd7e6] bg-white shadow-sm" aria-label="Today's date and India Standard Time">
+              <div className="absolute inset-x-0 top-0 h-1.5 bg-[#c70000]" aria-hidden="true" />
+              <div className="flex h-full min-h-[185px] flex-col justify-between">
+                <div className="flex items-center justify-between bg-[#092b58] px-3 pt-3 pb-2 text-white">
+                  <span className="font-anek-latin text-[10px] font-extrabold uppercase tracking-[0.18em]">Today's Edition</span>
+                  <span className="text-[#ffe500] text-base" aria-hidden="true">▦</span>
+                </div>
+                <time dateTime={currentTime.toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit" })} className="flex flex-1 flex-col items-center justify-center px-2 py-2 text-[#092b58]">
+                  <span className="font-anek-latin text-[64px] font-extrabold leading-[0.95] tracking-[-0.055em] tabular-nums">{currentTime.toLocaleDateString("en-GB", { day: "2-digit", timeZone: "Asia/Kolkata" })}</span>
+                  <span className="mt-1 font-anek-latin text-[17px] font-extrabold leading-tight tracking-tight">{currentTime.toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "Asia/Kolkata" })}</span>
+                  <span className="mt-0.5 font-anek-latin text-[11px] font-bold uppercase tracking-[0.17em] text-[#c70000]">{currentTime.toLocaleDateString("en-GB", { weekday: "long", timeZone: "Asia/Kolkata" })}</span>
+                </time>
+                <div className="ao-calendar-clock flex flex-col items-center justify-center border-t border-[#dbe4ee] bg-[#f0f5fb] px-2 py-2 text-[#092b58]">
+                  <span className="font-anek-latin text-[9px] font-extrabold uppercase tracking-[0.17em] text-[#496583]">India Standard Time</span>
+                  <div className="mt-0.5 flex items-center gap-1.5">
+                    <Clock className="h-3.5 w-3.5 shrink-0 text-[#c70000]" aria-hidden="true" />
+                    <span className="font-anek-latin text-[18px] font-extrabold leading-none tracking-[-0.035em] tabular-nums">{currentTime.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false, timeZone: "Asia/Kolkata" })}</span>
+                    <span className="font-anek-latin text-[10px] font-black text-[#496583]">IST</span>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="ao-edition-promos flex-1 min-w-0 grid grid-cols-1 md:grid-cols-2 gap-3 self-stretch" aria-label="Automatic advertisement carousel">
