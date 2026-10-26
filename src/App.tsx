@@ -182,18 +182,16 @@ export default function App() {
     { image: "/attappadi-mark.svg", titleEn: "Discover Attappadi", subtitleEn: "Explore the hills with Attappadi Online", titleMl: "അട്ടപ്പാടിയെ അറിയാം", titleTa: "அட்டப்பாடியை அறிந்திடுங்கள்" }
   ];
   const carouselForSlot = (slot: number) => { const slides = slot === 0 ? adConfig?.leftSlides : adConfig?.rightSlides; const legacy = slot === 0 ? adConfig?.leftAd : adConfig?.rightAd; return Array.isArray(slides) && slides.length ? slides : legacy?.image || legacy?.titleEn ? [legacy] : sampleAds; };
-  const renderCarouselAd = (ad: any) => (
-    <div className="relative h-full min-h-[108px] sm:min-h-[140px] overflow-hidden rounded-xl bg-[#102e61] flex items-center justify-center" aria-label="Advertisement">
-      {ad.image && ad.type !== "text" ? (
-        <img src={ad.image} alt={ad.titleEn || "Advertisement"} className="w-full h-full absolute inset-0 object-contain" loading="lazy" />
-      ) : (
-        <div className="flex items-center justify-center gap-4 px-4 py-3 text-white text-center">
-          <img src="/attappadi-mark.svg" alt="" className="w-14 h-14 sm:w-20 sm:h-20 object-contain rounded-lg bg-white p-2 shrink-0" />
-          <div className="min-w-0"><strong className="block font-anek-english text-lg sm:text-xl">{ad.titleEn}</strong><span className="block text-xs sm:text-sm text-yellow-200">{ad.subtitleEn}</span></div>
-        </div>
-      )}
-    </div>
-  );
+  const renderCarouselAd = (ad: any) => {
+    const title = lang === "ml" ? (ad.titleMl || ad.titleEn) : lang === "ta" ? (ad.titleTa || ad.titleEn) : (ad.titleEn || ad.titleMl);
+    const subtitle = lang === "ml" ? (ad.subtitleMl || ad.subtitleEn) : lang === "ta" ? (ad.subtitleTa || ad.subtitleEn) : (ad.subtitleEn || ad.subtitleMl);
+    const phone = String(ad.contact || "").replace(/[^0-9+]/g, "");
+    const url = ad.actionType === "website" && /^https?:/.test(ad.externalUrl || "") ? ad.externalUrl : ad.actionType === "phone" && phone ? "tel:" + phone : ad.actionType === "whatsapp" && phone ? "https://wa.me/" + phone.replace(/[^0-9]/g, "") : "";
+    const body = <div className="relative h-full min-h-[108px] sm:min-h-[140px] overflow-hidden rounded-xl bg-[#102e61] flex items-center justify-center" aria-label="Advertisement">
+      {ad.image && ad.type !== "text" ? <img src={ad.image} alt={title || "Advertisement"} className="w-full h-full absolute inset-0 object-contain" loading="lazy" /> :
+      <div lang={lang} className={`flex h-full items-center justify-center px-4 py-3 text-white text-center ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}><div><strong className="block text-lg sm:text-xl">{title}</strong><span className="block text-xs sm:text-sm text-yellow-200">{subtitle}</span></div></div>}</div>;
+    return url ? <a className="block h-full" href={url} target={ad.actionType === "website" || ad.actionType === "whatsapp" ? "_blank" : undefined} rel="noopener noreferrer" aria-label={title || "Open advertisement"}>{body}</a> : body;
+  };
   const [activeAdDetail, setActiveAdDetail] = useState<{
     title: string;
     subtitle: string;
