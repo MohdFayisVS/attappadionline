@@ -9,6 +9,8 @@ interface ExploreAttappadiProps {
   initialTab?: "destinations" | "food" | "stays" | "travelogues" | "photos" | "culture" | "busTimings";
   isAdmin?: boolean;
   hideTabsSelection?: boolean;
+  onEditBusRoute?: (id: string) => void;
+  onDeleteBusRoute?: (id: string) => void;
 }
 
 // Default backup data lists
@@ -659,7 +661,7 @@ const DEFAULT_MAP_LINES = [
   { from: "COIMBATORE", to: "METTUPALAYAM" }
 ];
 
-export default function ExploreAttappadi({ lang, initialTab = "destinations", isAdmin = false, hideTabsSelection = false }: ExploreAttappadiProps) {
+export default function ExploreAttappadi({ lang, initialTab = "destinations", isAdmin = false, hideTabsSelection = false, onEditBusRoute, onDeleteBusRoute }: ExploreAttappadiProps) {
   const safeParseArray = (val: any): string[] => {
     if (Array.isArray(val)) return val;
     if (typeof val === "string") return val.split(",").map(x => x.trim()).filter(Boolean);
@@ -2186,6 +2188,11 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                     </span>
                                   </div>
 
+                                  {isAdmin && <div className="flex flex-wrap gap-2">
+                                    <button type="button" onClick={() => onEditBusRoute?.(item.routeId)} className="rounded-lg bg-blue-100 px-3 py-2 text-xs font-bold text-blue-900">Edit trip & stops</button>
+                                    <button type="button" onClick={() => onDeleteBusRoute?.(item.routeId)} className="rounded-lg bg-red-100 px-3 py-2 text-xs font-bold text-red-800">Delete trip</button>
+                                    <span className="self-center text-[10px] text-slate-500">Deleting removes the source timetable and its derived station cards.</span>
+                                  </div>}
                                   <div className="flex items-center justify-between bg-white px-3.5 py-2 rounded-lg border border-slate-150">
                                     <div className="text-[11px]">
                                       <span className="text-slate-400 font-bold block text-[9px] uppercase leading-none">DESTINATION TIMING</span>
