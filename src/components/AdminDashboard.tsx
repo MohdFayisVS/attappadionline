@@ -249,7 +249,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   const updateCarouselSlide = (side: "leftSlides" | "rightSlides", index: number, field: string, value: string) => setAdSlides(previous => ({...previous, [side]: previous[side].map((slide, i) => i === index ? {...slide, [field]: value} : slide)}));
   const handleCarouselImage = (side: "leftSlides" | "rightSlides", index: number, file: File) => {
     if (!file.type.startsWith("image/") || file.size > 2 * 1024 * 1024) { alert("Select an image under 2 MB."); return; }
-    const reader = new FileReader(); reader.onload = () => { if (typeof reader.result === "string") { updateCarouselSlide(side, index, "image", reader.result); updateCarouselSlide(side, index, "type", "image"); } }; reader.readAsDataURL(file);
+    const reader = new FileReader(); reader.onload = () => { if (typeof reader.result === "string") { setAdSlides(previous => ({...previous, [side]: previous[side].map((slide, i) => i === index ? {...slide, image: reader.result, type: "image"} : slide)})); } }; reader.readAsDataURL(file);
   };
   const [leftAdImgSourceMode, setLeftAdImgSourceMode] = useState<"upload" | "url">("url");
   const [leftAdDragging, setLeftAdDragging] = useState(false);
@@ -661,7 +661,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       }
     }
 
-    if (["leftAd", "rightAd"].some(side => !finalAdForm[side as "leftAd" | "rightAd"].titleTa?.trim() || !finalAdForm[side as "leftAd" | "rightAd"].subtitleTa?.trim())) {
+    if (["leftAd", "rightAd"].some(side => !adSlides[side === "leftAd" ? "leftSlides" : "rightSlides"].length && (!finalAdForm[side as "leftAd" | "rightAd"].titleTa?.trim() || !finalAdForm[side as "leftAd" | "rightAd"].subtitleTa?.trim()))) {
       alert("Both advertisements require Tamil titles and subtitles.");
       return;
     }
