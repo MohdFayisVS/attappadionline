@@ -12,6 +12,7 @@ import {
   NoticeItem, LpgDelivery, LostAndFoundItem
 } from "../types";
 import SocialCardGenerator from "./SocialCardGenerator";
+import NewsQuickArtMaker from "./NewsQuickArtMaker";
 import AdMaker from "./AdMaker";
 import CitizenReportReview from "./CitizenReportReview";
 import ExploreAttappadi from "./ExploreAttappadi";
@@ -81,7 +82,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     category: "latest" as "breaking" | "latest" | "updates", regions: [] as string[],
     image: "", isSlide: false, isCard: true
   });
-  const [imgSourceMode, setImgSourceMode] = useState<"upload" | "url">("upload");
+  const [imgSourceMode, setImgSourceMode] = useState<"upload" | "url" | "design">("upload");
   const [isDragging, setIsDragging] = useState(false);
 
   // LPG Form State
@@ -2876,10 +2877,11 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       >
                         Provide Web Link URL
                       </button>
+                      <button type="button" onClick={() => setImgSourceMode("design")} className={`px-3 py-1 text-[10px] font-black rounded transition ${imgSourceMode === "design" ? "bg-[#0a3060] text-white" : "bg-white text-slate-650 border hover:bg-slate-100"}`}>Design Quick Image</button>
                     </div>
                   </div>
 
-                  {imgSourceMode === "upload" ? (
+                  {imgSourceMode === "design" ? <NewsQuickArtMaker defaultHeadline={newsForm.titleMl || newsForm.titleEn || newsForm.titleTa} onApply={image => { setNewsForm(prev => ({ ...prev, image })); triggerToast("Custom news image ready to publish"); }} /> : {imgSourceMode === "upload" ? (
                     <div 
                       className={`border-2 border-dashed rounded-lg p-5 flex flex-col items-center justify-center transition ${
                         isDragging ? "border-amber-400 bg-amber-50" : "border-slate-300 bg-white hover:bg-slate-50"
