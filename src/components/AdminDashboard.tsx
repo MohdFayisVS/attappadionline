@@ -2881,7 +2881,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     </div>
                   </div>
 
-                  {imgSourceMode === "design" ? <NewsQuickArtMaker defaultHeadline={newsForm.titleMl || newsForm.titleEn || newsForm.titleTa} onApply={image => { setNewsForm(prev => ({ ...prev, image })); triggerToast("Custom news image ready to publish"); }} /> : {imgSourceMode === "upload" ? (
+                  {imgSourceMode === "design" ? <NewsQuickArtMaker defaultHeadline={newsForm.titleMl || newsForm.titleEn || newsForm.titleTa} onApply={image => { setNewsForm(prev => ({ ...prev, image })); triggerToast("Custom news image ready to publish"); }} /> : imgSourceMode === "upload" ? (
                     <div 
                       className={`border-2 border-dashed rounded-lg p-5 flex flex-col items-center justify-center transition ${
                         isDragging ? "border-amber-400 bg-amber-50" : "border-slate-300 bg-white hover:bg-slate-50"
