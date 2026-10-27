@@ -101,6 +101,8 @@ export default function SocialCardGenerator({
   // Core editable Card states
   const [cardType, setCardType] = useState("LATEST UPDATE");
   const [headlineEn, setHeadlineEn] = useState("Pudur Tribal Clinic Organizes Free Specialty Treatment Camp");
+  const [headlineTa, setHeadlineTa] = useState("");
+  const [summaryTa, setSummaryTa] = useState("");
   const [headlineMl, setHeadlineMl] = useState("പുതൂർ ക്ലിനിക്കിൽ സൗജന്യ സ്പെഷ്യാലിറ്റി മെഡിക്കൽ ക്യാമ്പ് സംഘടിപ്പിക്കുന്നു");
   const [summaryEn, setSummaryEn] = useState("Primary registration commences for specialized pediatric, cardiac and eco-wellness checkups. Free medicine and clinical assistance are provided.");
   const [summaryMl, setSummaryMl] = useState("പീഡിയാട്രിക്, കാർഡിയാക് പരിശോധനകൾക്കായി പ്രാഥമിക രജിസ്ട്രേഷൻ ആരംഭിപ്പിച്ചു. സൗജന്യ മരുന്നുകളും ക്ലിനിക്കൽ സഹായവും ലഭ്യമാണ്.");
@@ -110,7 +112,7 @@ export default function SocialCardGenerator({
 
   // Custom visual controls
   const [sizePreset, setSizePreset] = useState<"square" | "story" | "landscape">("square");
-  const [langMode, setLangMode] = useState<"both" | "ml" | "en">("both");
+  const [langMode, setLangMode] = useState<"both" | "ml" | "en" | "ta">("both");
   const [layoutMode, setLayoutMode] = useState<"scrim" | "split" | "sidebar" | "minimal">("scrim");
   
   // Custom color values
@@ -287,7 +289,7 @@ export default function SocialCardGenerator({
             {/* B. English Headline */}
             {(langMode === "both" || langMode === "en") && (
               <h2 
-                className="font-extrabold tracking-tight leading-snug font-anek-malayalam"
+                className="font-extrabold tracking-tight leading-snug font-anek-latin"
                 style={{ 
                   fontSize: `${titleFontSize - 8}px`,
                   color: customTxtPrimary,
@@ -297,6 +299,8 @@ export default function SocialCardGenerator({
                 {headlineEn}
               </h2>
             )}
+
+            {langMode === "ta" && <h1 lang="ta" className="font-extrabold tracking-tight leading-relaxed font-anek-tamil" style={{ fontFamily: '"Anek Tamil", sans-serif', fontSize: `${titleFontSize}px`, color: customTxtPrimary, textShadow: "0 2px 4px rgba(0,0,0,0.4)" }}>{headlineTa}</h1>}
 
             {/* C. Summaries block */}
             <div className="space-y-3 pt-2">
@@ -315,10 +319,12 @@ export default function SocialCardGenerator({
                 </p>
               )}
 
+              {langMode === "ta" && <p lang="ta" className="leading-relaxed font-anek-tamil" style={{ fontFamily: '"Anek Tamil", sans-serif', fontSize: `${summaryFontSize}px`, color: customTxtSecondary, opacity: 0.9 }}>{summaryTa}</p>}
+
               {/* English Summary paragraph */}
               {(langMode === "both" || langMode === "en") && (
                 <p 
-                  className="leading-relaxed font-medium font-anek-malayalam"
+                  className="leading-relaxed font-medium font-anek-latin"
                   style={{ 
                     fontSize: `${summaryFontSize - 2}px`,
                     color: customTxtSecondary,
@@ -481,6 +487,7 @@ export default function SocialCardGenerator({
 
     setHeadlineEn(item.titleEn || "");
     setHeadlineMl(item.titleMl || "");
+    setHeadlineTa(item.titleTa || "");
     
     // Truncate some content for short summary
     const tempEn = item.contentEn || "";
@@ -490,6 +497,8 @@ export default function SocialCardGenerator({
     const tempMl = item.contentMl || "";
     const cleanMl = tempMl.replace(/<[^>]*>/g, "");
     setSummaryMl(cleanMl.length > 150 ? cleanMl.substring(0, 150) + "..." : cleanMl);
+    const cleanTa = (item.contentTa || "").replace(/<[^>]*>/g, "");
+    setSummaryTa(cleanTa.length > 150 ? cleanTa.substring(0, 150) + "..." : cleanTa);
 
     setPublishedDate(item.date || "June 20, 2026");
     
@@ -508,6 +517,8 @@ export default function SocialCardGenerator({
     setCardType("LATEST BULLETIN");
     setHeadlineEn("Enter Custom Social Card Headline Here");
     setHeadlineMl("നിങ്ങളുടെ വാർത്താ തലക്കെട്ട് ഇവിടെ എഴുതുക");
+    setHeadlineTa("");
+    setSummaryTa("");
     setSummaryEn("Write a custom brief summary or announcement details that fit beautifully on WhatsApp Status or Instagram posters.");
     setSummaryMl("സമൂഹ മാധ്യമങ്ങളിൽ ആകർഷകമായി പങ്കുവെക്കാനായി വാർത്തയുടെയും അറിയിപ്പുകളുടെയും ചുരുക്കം ഇവിടെ ചേർക്കുക.");
     setPublishedDate("June 20, 2026");
@@ -562,7 +573,9 @@ export default function SocialCardGenerator({
     triggerToast("🎨 Baking high quality card... Please wait.");
     
     // Ensure fonts and images are fully loaded before rendering
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    await document.fonts.load('700 48px "Anek Tamil"');
+    await document.fonts.ready;
+    await new Promise((resolve) => setTimeout(resolve, 300));
 
     // Oklch & Oklab conversion helpers for accurate high-fidelity rendering
     const oklchToRgb = (lStr: string, cStr: string, hStr: string, aStr?: string): string => {
@@ -1176,6 +1189,8 @@ export default function SocialCardGenerator({
                 />
               </div>
 
+              <div><label className="block text-[10px] text-slate-500 font-bold mb-1 uppercase tracking-wide">Tamil Headline</label><textarea lang="ta" rows={2} value={headlineTa} onChange={e => setHeadlineTa(e.target.value)} className="w-full border border-slate-200 rounded p-2 text-xs font-bold font-anek-tamil" /></div>
+              <div><label className="block text-[10px] text-slate-500 font-bold mb-1 uppercase tracking-wide">Tamil Summary</label><textarea lang="ta" rows={3} value={summaryTa} onChange={e => setSummaryTa(e.target.value)} className="w-full border border-slate-200 rounded p-2 text-xs font-anek-tamil" /></div>
               <div>
                 <label className="block text-[10px] text-slate-500 font-bold mb-1 uppercase tracking-wide">Malayalam Headline (മലയാളം തലക്കെട്ട്)</label>
                 <textarea
@@ -1250,7 +1265,8 @@ export default function SocialCardGenerator({
                 {[
                   { id: "both", label: "Bilingual Stack", info: "Eng & Mal (Both)" },
                   { id: "ml", label: "Malayalam Only", info: "മലയാളത്തിൽ മാത്രം" },
-                  { id: "en", label: "English Only", info: "International font" }
+                  { id: "en", label: "English Only", info: "Anek Latin" },
+                  { id: "ta", label: "Tamil Only", info: "Anek Tamil" }
                 ].map((f) => (
                   <button
                     key={f.id}
