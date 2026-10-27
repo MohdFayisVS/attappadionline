@@ -48,7 +48,7 @@ export default function NewsQuickArtMaker({ defaultHeadline = "", onApply }: Pro
     ctx.fillText(symbol, w / 2, 215);
     const wrap = (value: string, maxWidth: number, font: string, maxLines: number) => {
       ctx.font = font;
-      const words = value.trim().split(/\\s+/).filter(Boolean);
+      const words = value.trim().split(/\s+/).filter(Boolean);
       const lines: string[] = [];
       let line = "";
       for (const word of words) {
