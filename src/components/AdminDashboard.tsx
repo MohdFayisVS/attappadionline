@@ -4841,104 +4841,20 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-2 flex items-center gap-1.5">
                   <Phone className="w-5 h-5 text-[#005689]" /> Register business / local service directory card
                 </h3>
-                <form onSubmit={handleCreateDirectory} className="space-y-3">
-                  
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Vendor Name (En)</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={dirForm.nameEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setDirForm({...dirForm, nameEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "nameEn", "nameMl", setDirForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                        placeholder="e.g. Agali Auto Stand Desk" 
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">മലയാളത്തിൽ പേര് (Ml)</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={dirForm.nameMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setDirForm({...dirForm, nameMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "nameMl", "nameEn", setDirForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                        placeholder="അഗളി ഓട്ടോ സ്റ്റാൻഡ്" 
-                      />
-                    </div>
-                  </div>
-<div className="mt-2 w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">Vendor Name (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={dirForm.nameTa} onChange={e => { const value = e.target.value; setDirForm(prev => ({ ...prev, nameTa: value })); autoTranslateField(value, "nameTa", "nameTa", setDirForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div>
-                      <label className="block text-slate-500 font-semibold mb-0.5">Category list</label>
-                      <select value={dirForm.category} onChange={e => setDirForm({...dirForm, category: e.target.value as any})} className="w-full border rounded p-1.5 bg-white cursor-pointer">
-                        <option value="hospital">Hospitals, Emergency health care</option>
-                        <option value="taxi">Jeep, Taxi, auto operators</option>
-                        <option value="plumber">Plumber assistance</option>
-                        <option value="electrician">Electrician assistance</option>
-                        <option value="government">Government offices & KSEB</option>
-                        <option value="schools">Schools & colleges</option>
-                        <option value="police">Police stations</option>
-                        <option value="fire">Fire force services</option>
-                        <option value="others_services">Others local utilities</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-slate-500 font-semibold mb-0.5">Phone Call Dial / contact Number</label>
-                      <input type="text" required value={dirForm.contact} onChange={e => setDirForm({...dirForm, contact: e.target.value})} className="w-full border rounded p-1.5" placeholder="04924-254XXX or 94979X..." />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Service Area (En)</label>
-                      <input 
-                        type="text" 
-                        value={dirForm.locationEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setDirForm({...dirForm, locationEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "locationEn", "locationMl", setDirForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                        placeholder="Agali Area" 
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">സ്ഥലം വിവരണം (Ml)</label>
-                      <input 
-                        type="text" 
-                        value={dirForm.locationMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setDirForm({...dirForm, locationMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "locationMl", "locationEn", setDirForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                        placeholder="അഗളി മേഖല" 
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">Location (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={dirForm.locationTa} onChange={e => { const value = e.target.value; setDirForm(prev => ({ ...prev, locationTa: value })); autoTranslateField(value, "locationTa", "locationTa", setDirForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
-
-                  <button type="submit" className="w-full py-2 bg-slate-900 text-[#ffe500] font-bold rounded cursor-pointer">Add directory registration</button>
+                <form onSubmit={handleCreateDirectory} className="space-y-4">
+                  <div className="rounded-md border border-blue-100 bg-blue-50/60 p-3 flex flex-wrap items-center justify-between gap-2"><label className="flex items-center gap-2 text-xs font-bold text-[#052962]"><input type="checkbox" checked={autoTranslateOnSubmit} onChange={e => setAutoTranslateOnSubmit(e.target.checked)} /> Auto Translate · Malayalam / English / Tamil</label><span className="text-xs text-slate-500">{activeLiveTranslationsCount ? "Translating…" : "Fill missing translations automatically"}</span></div>
+                  <section className="space-y-2"><h4 className="text-sm font-bold text-[#052962]">Vendor / Service Name</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input type="text" lang="ml" required={!autoTranslateOnSubmit} value={dirForm.nameMl} onChange={e => { const value=e.target.value; setDirForm(prev=>({...prev,nameMl:value})); autoTranslateField(value,"nameMl","nameMl",setDirForm,"ml"); }} className="block mt-1 w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /></label>
+                    <label className="block min-w-0 text-xs font-bold text-slate-600">English<input type="text" lang="en" required={!autoTranslateOnSubmit} value={dirForm.nameEn} onChange={e => { const value=e.target.value; setDirForm(prev=>({...prev,nameEn:value})); autoTranslateField(value,"nameEn","nameEn",setDirForm,"en"); }} className="block mt-1 w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /></label>
+                    <label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input type="text" lang="ta" required={!autoTranslateOnSubmit} value={dirForm.nameTa} onChange={e => { const value=e.target.value; setDirForm(prev=>({...prev,nameTa:value})); autoTranslateField(value,"nameTa","nameTa",setDirForm,"ta"); }} className="block mt-1 w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /></label>
+                  </div></section>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3"><label className="text-xs font-bold text-slate-600">Service Category<select value={dirForm.category} onChange={e=>setDirForm(prev=>({...prev,category:e.target.value as any}))} className="block mt-1 w-full rounded-md border border-slate-300 p-2 text-sm font-anek-latin"><option value="hospital">Hospitals / Emergency Healthcare</option><option value="taxi">Jeep / Taxi / Auto</option><option value="plumber">Plumber</option><option value="electrician">Electrician</option><option value="government">Government / KSEB</option><option value="schools">Schools / Colleges</option><option value="police">Police</option><option value="fire">Fire Services</option><option value="others_services">Other Local Services</option></select></label><label className="text-xs font-bold text-slate-600">Contact Number<input type="tel" required value={dirForm.contact} onChange={e=>setDirForm(prev=>({...prev,contact:e.target.value}))} className="block mt-1 w-full rounded-md border border-slate-300 p-2 text-sm font-anek-latin" placeholder="04924-254XXX" /></label></div>
+                  <section className="space-y-2"><h4 className="text-sm font-bold text-[#052962]">Service Area / Location</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input type="text" lang="ml" required={!autoTranslateOnSubmit} value={dirForm.locationMl} onChange={e => { const value=e.target.value; setDirForm(prev=>({...prev,locationMl:value})); autoTranslateField(value,"locationMl","locationMl",setDirForm,"ml"); }} className="block mt-1 w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /></label>
+                    <label className="block min-w-0 text-xs font-bold text-slate-600">English<input type="text" lang="en" required={!autoTranslateOnSubmit} value={dirForm.locationEn} onChange={e => { const value=e.target.value; setDirForm(prev=>({...prev,locationEn:value})); autoTranslateField(value,"locationEn","locationEn",setDirForm,"en"); }} className="block mt-1 w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /></label>
+                    <label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input type="text" lang="ta" required={!autoTranslateOnSubmit} value={dirForm.locationTa} onChange={e => { const value=e.target.value; setDirForm(prev=>({...prev,locationTa:value})); autoTranslateField(value,"locationTa","locationTa",setDirForm,"ta"); }} className="block mt-1 w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /></label>
+                  </div></section>
+                  <button type="submit" className="w-full rounded-md bg-slate-900 py-3 font-bold text-[#ffe500]">Add Directory Registration</button>
                 </form>
               </div>
 
