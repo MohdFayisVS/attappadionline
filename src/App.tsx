@@ -702,9 +702,7 @@ export default function App() {
                 <div className="ao-calendar-clock flex flex-col items-center justify-center border-t border-[#dbe4ee] bg-[#f0f5fb] px-2 py-2 text-[#092b58]">
                   <span className="font-anek-latin text-[9px] font-extrabold uppercase tracking-[0.17em] text-[#496583]">India Standard Time</span>
                   <div className="mt-0.5 flex items-center gap-1.5">
-                    <Clock className="h-3.5 w-3.5 shrink-0 text-[#c70000]" aria-hidden="true" />
                     <span className="font-anek-latin text-[18px] font-extrabold leading-none tracking-[-0.035em] tabular-nums">{currentTime.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false, timeZone: "Asia/Kolkata" })}</span>
-                    <span className="font-anek-latin text-[10px] font-black text-[#496583]">IST</span>
                   </div>
                 </div>
               </div>
