@@ -127,6 +127,10 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
           if (document.fonts) {
             await Promise.all([
               document.fonts.load("800 34px 'Anek Malayalam'"),
+              document.fonts.load("800 34px 'Anek Tamil'"),
+              document.fonts.load("700 22px 'Anek Tamil'"),
+              document.fonts.load("500 20px 'Anek Tamil'"),
+              document.fonts.load("800 34px 'Anek Latin'"),
               document.fonts.load("800 34px 'Playfair Display'"),
               document.fonts.load("bold 18px 'Anek Malayalam'"),
               document.fonts.load("bold 16px 'Anek Malayalam'"),
@@ -135,6 +139,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
               document.fonts.load("500 18px 'Anek Malayalam'"),
               document.fonts.load("500 18px system-ui")
             ]);
+            await document.fonts.ready;
           }
         } catch (e) {
           console.warn("Font pre-loading failed/interrupted but continuing:", e);
@@ -196,7 +201,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
           let newsY = 600; // Starts below image at 560
           newsY += 45; // Date banner
 
-          const titleFont = lang === "ml" ? "800 32px 'Anek Malayalam', sans-serif" : lang === "ta" ? "800 34px 'Anek Tamil', serif" : "800 34px 'Anek Latin', serif";
+          const titleFont = lang === "ml" ? "800 32px 'Anek Malayalam', sans-serif" : lang === "ta" ? "800 34px 'Anek Tamil', sans-serif" : "800 34px 'Anek Latin', sans-serif";
           const titleLineHeight = lang === "ml" ? 44 : 46;
           const titleLines = getLinesCount(title || "", titleFont, 800 - 96); // paddingX is 48 (x2 = 96)
           newsY += Math.min(titleLines, 3) * titleLineHeight + 25;
@@ -528,7 +533,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
 
         // 6. Draw Headline Title with elegant 'Playfair Display' / Serif font styling
         ctx.fillStyle = "#052962";
-        ctx.font = lang === "ml" ? "800 32px 'Anek Malayalam', sans-serif" : lang === "ta" ? "800 34px 'Anek Tamil', serif" : "800 34px 'Anek Latin', serif";
+        ctx.font = lang === "ml" ? "800 32px 'Anek Malayalam', sans-serif" : lang === "ta" ? "800 34px 'Anek Tamil', sans-serif" : "800 34px 'Anek Latin', sans-serif";
         const titleLineHeight = lang === "ml" ? 44 : 46;
         const maxTextWidth = canvas.width - (paddingX * 2);
 
@@ -710,7 +715,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
 
               return (
                 <div className={`w-full max-w-[360px] md:w-[360px] shadow-2xl rounded-lg overflow-hidden ${bgColorClass} text-slate-900 border border-t-[10px] ${borderTopClass} flex flex-col justify-between p-4 space-y-4`}>
-                  <div className={`space-y-3 ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
+                  <div className={`space-y-3 ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-latin"}`}>
                     {/* Official Banner Tag */}
                     <div className={`px-2.5 py-1.5 rounded-md ${headerBgClass} text-white text-[11px] font-extrabold text-center tracking-wider select-none`}>
                       {alertIcon} {badgeLabel}
