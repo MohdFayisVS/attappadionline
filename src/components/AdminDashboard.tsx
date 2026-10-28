@@ -3263,7 +3263,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             {/* Sub-tab 1: DESTINATIONS */}
             {exploreSubTab === "destinations" && (
               <div className="grid grid-cols-1 lg:grid-cols-1 md:grid-cols-3 gap-8">
-                <form onSubmit={handleCreateDestination} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5">
+                <form onSubmit={handleCreateDestination} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5"><div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-blue-100 bg-blue-50/60 p-3"><label className="flex items-center gap-2 text-xs font-bold text-[#052962]"><input type="checkbox" checked={autoTranslateOnSubmit} onChange={e=>setAutoTranslateOnSubmit(e.target.checked)} /> Auto Translate · Malayalam / English / Tamil</label><span className="text-xs text-slate-500">{isTranslatingForm ? "Translating…" : "Fill missing translations automatically"}</span></div>
                   
 
 
@@ -3271,76 +3271,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
                     <PlusCircle className="w-4 h-4 text-[#005689]" /> Add Destination Attraction
                   </h3>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Destination Name (En)</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={destForm.nameEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setDestForm({...destForm, nameEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "nameEn", "nameMl", setDestForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                        placeholder="e.g. Mukkali Watchtower" 
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">സ്ഥലം പേര് (Ml)</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={destForm.nameMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setDestForm({...destForm, nameMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "nameMl", "nameEn", setDestForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                        placeholder="മുക്കാലി വാച്ച് ടവർ" 
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">Destination Name (Tamil)<input lang="ta" required={true} value={destForm.nameTa} onChange={e => { const value = e.target.value; setDestForm(prev => ({ ...prev, nameTa: value })); autoTranslateField(value, "nameTa", "nameTa", setDestForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Location Hub (En)</label>
-                      <input 
-                        type="text" 
-                        value={destForm.locationEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setDestForm({...destForm, locationEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "locationEn", "locationMl", setDestForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                        placeholder="Mukkali Ranger Station" 
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">ദിശ വിവരണം (Ml)</label>
-                      <input 
-                        type="text" 
-                        value={destForm.locationMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setDestForm({...destForm, locationMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "locationMl", "locationEn", setDestForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                        placeholder="മുക്കാലി ഫോറസ്റ്റ് സ്റ്റേഷൻ റേഞ്ച്" 
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">Location (Tamil)<input lang="ta" required={true} value={destForm.locationTa} onChange={e => { const value = e.target.value; setDestForm(prev => ({ ...prev, locationTa: value })); autoTranslateField(value, "locationTa", "locationTa", setDestForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
+                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Destination Name</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={destForm.nameMl} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,nameMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"nameMl","nameMl",setDestForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={destForm.nameEn} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,nameEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"nameEn","nameEn",setDestForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={destForm.nameTa} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,nameTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"nameTa","nameTa",setDestForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
+                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Location</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={destForm.locationMl} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,locationMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"locationMl","locationMl",setDestForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={destForm.locationEn} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,locationEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"locationEn","locationEn",setDestForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={destForm.locationTa} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,locationTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"locationTa","locationTa",setDestForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
                   {/* Photo selection targeting local files or links */}
                   <div className="bg-slate-50 rounded-lg p-3 border border-slate-200/50 space-y-2">
                     <div className="flex items-center justify-between">
@@ -3456,40 +3388,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     />
                   </div>
 <div className="mt-2 w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">Description (Tamil)<textarea lang="ta" required={true} value={destForm.descriptionTa} onChange={e => { const value = e.target.value; setDestForm(prev => ({ ...prev, descriptionTa: value })); autoTranslateField(value, "descriptionTa", "descriptionTa", setDestForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Highlights En (comma separated list)</label>
-                      <input 
-                        type="text" 
-                        value={destForm.highlightsEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setDestForm({...destForm, highlightsEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "highlightsEn", "highlightsMl", setDestForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                        placeholder="Jeep Safari, Photography, Mist watching" 
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">സവിശേഷതകൾ Ml (കോമ ഉപയോഗിച്ച് തിരിക്കുക)</label>
-                      <input 
-                        type="text" 
-                        value={destForm.highlightsMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setDestForm({...destForm, highlightsMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "highlightsMl", "highlightsEn", setDestForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                        placeholder="ജീപ്പ് സഫാരി, മൂടൽമഞ്ഞ്, കാഴ്ച്ചകൾ" 
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">Highlights (Tamil, comma separated)<textarea lang="ta" required={false} value={destForm.highlightsTa} onChange={e => { const value = e.target.value; setDestForm(prev => ({ ...prev, highlightsTa: value })); autoTranslateField(value, "highlightsTa", "highlightsTa", setDestForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
+                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Highlights</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<textarea lang="ml" rows={4} value={destForm.highlightsMl} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,highlightsMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"highlightsMl","highlightsMl",setDestForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" ></textarea> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<textarea lang="en" rows={4} value={destForm.highlightsEn} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,highlightsEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"highlightsEn","highlightsEn",setDestForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" ></textarea> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<textarea lang="ta" rows={4} value={destForm.highlightsTa} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,highlightsTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"highlightsTa","highlightsTa",setDestForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" ></textarea> </label></div></section>
                   <button type="submit" className="w-full py-2 bg-slate-900 hover:bg-[#0a3060] text-[#ffe500] font-bold rounded cursor-pointer">Register Destination</button>
                 </form>
 
@@ -3516,7 +3415,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             {/* Sub-tab 2: CULTURE & HERITAGE */}
             {exploreSubTab === "cultures" && (
               <div className="grid grid-cols-1 lg:grid-cols-1 md:grid-cols-3 gap-8">
-                <form onSubmit={handleCreateCulture} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5">
+                <form onSubmit={handleCreateCulture} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5"><div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-blue-100 bg-blue-50/60 p-3"><label className="flex items-center gap-2 text-xs font-bold text-[#052962]"><input type="checkbox" checked={autoTranslateOnSubmit} onChange={e=>setAutoTranslateOnSubmit(e.target.checked)} /> Auto Translate · Malayalam / English / Tamil</label><span className="text-xs text-slate-500">{isTranslatingForm ? "Translating…" : "Fill missing translations automatically"}</span></div>
                   
 
 
@@ -3531,72 +3430,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       <option value="food">Tribal Gastronomy & Forest Food</option>
                     </select>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Title (En)</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={cultureForm.titleEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setCultureForm({...cultureForm, titleEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "titleEn", "titleMl", setCultureForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">മലയാളം തനിമ (Ml)</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={cultureForm.titleMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setCultureForm({...cultureForm, titleMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "titleMl", "titleEn", setCultureForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">Culture Title (Tamil)<textarea lang="ta" value={cultureForm.titleTa} onChange={e => { const value = e.target.value; setCultureForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setCultureForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Subtitle (En)</label>
-                      <input 
-                        type="text" 
-                        value={cultureForm.subtitleEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setCultureForm({...cultureForm, subtitleEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "subtitleEn", "subtitleMl", setCultureForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">ഉപതലക്കെട്ട് (Ml)</label>
-                      <input 
-                        type="text" 
-                        value={cultureForm.subtitleMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setCultureForm({...cultureForm, subtitleMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "subtitleMl", "subtitleEn", setCultureForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">Subtitle (Tamil)<textarea lang="ta" value={cultureForm.subtitleTa} onChange={e => { const value = e.target.value; setCultureForm(prev => ({ ...prev, subtitleTa: value })); autoTranslateField(value, "subtitleTa", "subtitleTa", setCultureForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
+                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Title</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<textarea lang="ml" rows={4} value={cultureForm.titleMl} onChange={e => { const value=e.target.value; setCultureForm(prev=>({...prev,titleMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"titleMl","titleMl",setCultureForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" ></textarea> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<textarea lang="en" rows={4} value={cultureForm.titleEn} onChange={e => { const value=e.target.value; setCultureForm(prev=>({...prev,titleEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"titleEn","titleEn",setCultureForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" ></textarea> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<textarea lang="ta" rows={4} value={cultureForm.titleTa} onChange={e => { const value=e.target.value; setCultureForm(prev=>({...prev,titleTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"titleTa","titleTa",setCultureForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" ></textarea> </label></div></section>
+                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Subtitle</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<textarea lang="ml" rows={4} value={cultureForm.subtitleMl} onChange={e => { const value=e.target.value; setCultureForm(prev=>({...prev,subtitleMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"subtitleMl","subtitleMl",setCultureForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" ></textarea> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<textarea lang="en" rows={4} value={cultureForm.subtitleEn} onChange={e => { const value=e.target.value; setCultureForm(prev=>({...prev,subtitleEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"subtitleEn","subtitleEn",setCultureForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" ></textarea> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<textarea lang="ta" rows={4} value={cultureForm.subtitleTa} onChange={e => { const value=e.target.value; setCultureForm(prev=>({...prev,subtitleTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"subtitleTa","subtitleTa",setCultureForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" ></textarea> </label></div></section>
                   {/* Photo selection targeting local files or links */}
                   <div className="bg-slate-50 rounded-lg p-3 border border-slate-200/50 space-y-2">
                     <div className="flex items-center justify-between">
@@ -3712,38 +3547,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     />
                   </div>
 <div className="mt-2 w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">Description (Tamil)<textarea lang="ta" value={cultureForm.descTa} onChange={e => { const value = e.target.value; setCultureForm(prev => ({ ...prev, descTa: value })); autoTranslateField(value, "descTa", "descTa", setCultureForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Key instruments descriptor (En)</label>
-                      <input 
-                        type="text" 
-                        value={cultureForm.elementEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setCultureForm({...cultureForm, elementEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "elementEn", "elementMl", setCultureForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">പാരമ്പര്യ വിഭവങ്ങൾ / വാദ്യങ്ങൾ (Ml)</label>
-                      <input 
-                        type="text" 
-                        value={cultureForm.elementMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setCultureForm({...cultureForm, elementMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "elementMl", "elementEn", setCultureForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">Element (Tamil)<textarea lang="ta" value={cultureForm.elementTa} onChange={e => { const value = e.target.value; setCultureForm(prev => ({ ...prev, elementTa: value })); autoTranslateField(value, "elementTa", "elementTa", setCultureForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
+                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Cultural Details</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<textarea lang="ml" rows={4} value={cultureForm.elementMl} onChange={e => { const value=e.target.value; setCultureForm(prev=>({...prev,elementMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"elementMl","elementMl",setCultureForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" ></textarea> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<textarea lang="en" rows={4} value={cultureForm.elementEn} onChange={e => { const value=e.target.value; setCultureForm(prev=>({...prev,elementEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"elementEn","elementEn",setCultureForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" ></textarea> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<textarea lang="ta" rows={4} value={cultureForm.elementTa} onChange={e => { const value=e.target.value; setCultureForm(prev=>({...prev,elementTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"elementTa","elementTa",setCultureForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" ></textarea> </label></div></section>
                   <button type="submit" className="w-full py-2 bg-slate-900 text-[#ffe500] font-bold rounded cursor-pointer">Add Culture Segment</button>
                 </form>
 
@@ -3769,7 +3573,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             {/* Sub-tab 3: NATURE STAYS */}
             {exploreSubTab === "stays" && (
               <div className="grid grid-cols-1 lg:grid-cols-1 md:grid-cols-3 gap-8">
-                <form onSubmit={handleCreateStay} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5">
+                <form onSubmit={handleCreateStay} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5"><div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-blue-100 bg-blue-50/60 p-3"><label className="flex items-center gap-2 text-xs font-bold text-[#052962]"><input type="checkbox" checked={autoTranslateOnSubmit} onChange={e=>setAutoTranslateOnSubmit(e.target.checked)} /> Auto Translate · Malayalam / English / Tamil</label><span className="text-xs text-slate-500">{isTranslatingForm ? "Translating…" : "Fill missing translations automatically"}</span></div>
                   
 
 
@@ -3778,140 +3582,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
                     <PlusCircle className="w-4 h-4 text-[#005689]" /> Add Eco Lodging stay option
                   </h3>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Stay / Resort Name (En)</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={stayForm.nameEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setStayForm({...stayForm, nameEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "nameEn", "nameMl", setStayForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">റിസോർട്ട് മനോഹരമായ പേര് (Ml)</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={stayForm.nameMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setStayForm({...stayForm, nameMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "nameMl", "nameEn", setStayForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">name (Tamil)<input lang="ta" value={stayForm.nameTa} onChange={e => { const value = e.target.value; setStayForm(prev => ({ ...prev, nameTa: value })); autoTranslateField(value, "nameTa", "nameTa", setStayForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Accomodation Type (En)</label>
-                      <input 
-                        type="text" 
-                        value={stayForm.typeEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setStayForm({...stayForm, typeEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "typeEn", "typeMl", setStayForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                        placeholder="Govt-owned Lodge" 
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">താമസ വിഭാഗം (Ml)</label>
-                      <input 
-                        type="text" 
-                        value={stayForm.typeMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setStayForm({...stayForm, typeMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "typeMl", "typeEn", setStayForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                        placeholder="വന കുടിൽ" 
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">type (Tamil)<input lang="ta" value={stayForm.typeTa} onChange={e => { const value = e.target.value; setStayForm(prev => ({ ...prev, typeTa: value })); autoTranslateField(value, "typeTa", "typeTa", setStayForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Location VillageEn</label>
-                      <input 
-                        type="text" 
-                        value={stayForm.locationEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setStayForm({...stayForm, locationEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "locationEn", "locationMl", setStayForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">മൊത്ത വിവരങ്ങൾ ജംഗ്ഷൻ (Ml)</label>
-                      <input 
-                        type="text" 
-                        value={stayForm.locationMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setStayForm({...stayForm, locationMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "locationMl", "locationEn", setStayForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">location (Tamil)<input lang="ta" value={stayForm.locationTa} onChange={e => { const value = e.target.value; setStayForm(prev => ({ ...prev, locationTa: value })); autoTranslateField(value, "locationTa", "locationTa", setStayForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Price range En</label>
-                      <input 
-                        type="text" 
-                        value={stayForm.priceEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setStayForm({...stayForm, priceEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "priceEn", "priceMl", setStayForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                        placeholder="₹2,000 - ₹3,500 / night" 
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">നിരക്ക് വിവരണം (Ml)</label>
-                      <input 
-                        type="text" 
-                        value={stayForm.priceMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setStayForm({...stayForm, priceMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "priceMl", "priceEn", setStayForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                        placeholder="പ്രതിദിനം ₹2000" 
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">price (Tamil)<input lang="ta" value={stayForm.priceTa} onChange={e => { const value = e.target.value; setStayForm(prev => ({ ...prev, priceTa: value })); autoTranslateField(value, "priceTa", "priceTa", setStayForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
+                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Stay Name</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={stayForm.nameMl} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,nameMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"nameMl","nameMl",setStayForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={stayForm.nameEn} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,nameEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"nameEn","nameEn",setStayForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={stayForm.nameTa} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,nameTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"nameTa","nameTa",setStayForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
+                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Stay Type</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={stayForm.typeMl} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,typeMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"typeMl","typeMl",setStayForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={stayForm.typeEn} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,typeEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"typeEn","typeEn",setStayForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={stayForm.typeTa} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,typeTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"typeTa","typeTa",setStayForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
+                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Location</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={stayForm.locationMl} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,locationMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"locationMl","locationMl",setStayForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={stayForm.locationEn} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,locationEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"locationEn","locationEn",setStayForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={stayForm.locationTa} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,locationTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"locationTa","locationTa",setStayForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
+                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Price Details</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={stayForm.priceMl} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,priceMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"priceMl","priceMl",setStayForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={stayForm.priceEn} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,priceEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"priceEn","priceEn",setStayForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={stayForm.priceTa} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,priceTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"priceTa","priceTa",setStayForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
                   {/* Photo selection targeting local files or links */}
                   <div className="bg-slate-50 rounded-lg p-3 border border-slate-200/50 space-y-2">
                     <div className="flex items-center justify-between">
@@ -3996,40 +3670,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       </div>
                     )}
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Features list En (comma split)</label>
-                      <input 
-                        type="text" 
-                        value={stayForm.featuresEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setStayForm({...stayForm, featuresEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "featuresEn", "featuresMl", setStayForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                        placeholder="Hot Water, Jeep trekking, Organic foods" 
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">റിസോർട്ട് സൗകര്യങ്ങൾ Ml (കോമ സ്പ്ലിറ്റ്)</label>
-                      <input 
-                        type="text" 
-                        value={stayForm.featuresMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setStayForm({...stayForm, featuresMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "featuresMl", "featuresEn", setStayForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                        placeholder="നാടൻ കഞ്ഞി വിഭവങ്ങൾ, ജീപ്പ് സവാരി" 
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">features (Tamil)<input lang="ta" value={stayForm.featuresTa} onChange={e => { const value = e.target.value; setStayForm(prev => ({ ...prev, featuresTa: value })); autoTranslateField(value, "featuresTa", "featuresTa", setStayForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
+                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Facilities</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={stayForm.featuresMl} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,featuresMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"featuresMl","featuresMl",setStayForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={stayForm.featuresEn} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,featuresEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"featuresEn","featuresEn",setStayForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={stayForm.featuresTa} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,featuresTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"featuresTa","featuresTa",setStayForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
                   <button type="submit" className="w-full py-2 bg-slate-900 text-[#ffe500] font-bold rounded cursor-pointer">Register Eco-lodging stay</button>
                 </form>
 
@@ -4055,7 +3696,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             {/* Sub-tab 4: TRAVELOGUES */}
             {exploreSubTab === "travelogues" && (
               <div className="grid grid-cols-1 lg:grid-cols-1 md:grid-cols-3 gap-8">
-                <form onSubmit={handleCreateTravelogue} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5">
+                <form onSubmit={handleCreateTravelogue} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5"><div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-blue-100 bg-blue-50/60 p-3"><label className="flex items-center gap-2 text-xs font-bold text-[#052962]"><input type="checkbox" checked={autoTranslateOnSubmit} onChange={e=>setAutoTranslateOnSubmit(e.target.checked)} /> Auto Translate · Malayalam / English / Tamil</label><span className="text-xs text-slate-500">{isTranslatingForm ? "Translating…" : "Fill missing translations automatically"}</span></div>
                   
                   
                   
@@ -4063,76 +3704,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
                     <PlusCircle className="w-4 h-4 text-[#005689]" /> Publish travel blog story / Column
                   </h3>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Narrator nameEn</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={travelogueForm.authorEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setTravelogueForm({...travelogueForm, authorEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "authorEn", "authorMl", setTravelogueForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                        placeholder="e.g. Adv. Rajesh" 
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">എഴുത്തുകാരൻ പേര് (Ml)</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={travelogueForm.authorMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setTravelogueForm({...travelogueForm, authorMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "authorMl", "authorEn", setTravelogueForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                        placeholder="അഡ്വ. രാജേഷ് സുഹൃത്ത്" 
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">author (Tamil)<input lang="ta" value={travelogueForm.authorTa} onChange={e => { const value = e.target.value; setTravelogueForm(prev => ({ ...prev, authorTa: value })); autoTranslateField(value, "authorTa", "authorTa", setTravelogueForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Title En</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={travelogueForm.titleEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setTravelogueForm({...travelogueForm, titleEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "titleEn", "titleMl", setTravelogueForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">വിഷയം / പേര് (Ml)</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={travelogueForm.titleMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setTravelogueForm({...travelogueForm, titleMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "titleMl", "titleEn", setTravelogueForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">title (Tamil)<input lang="ta" value={travelogueForm.titleTa} onChange={e => { const value = e.target.value; setTravelogueForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setTravelogueForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
+                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Author</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={travelogueForm.authorMl} onChange={e => { const value=e.target.value; setTravelogueForm(prev=>({...prev,authorMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"authorMl","authorMl",setTravelogueForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={travelogueForm.authorEn} onChange={e => { const value=e.target.value; setTravelogueForm(prev=>({...prev,authorEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"authorEn","authorEn",setTravelogueForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={travelogueForm.authorTa} onChange={e => { const value=e.target.value; setTravelogueForm(prev=>({...prev,authorTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"authorTa","authorTa",setTravelogueForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
+                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Story Title</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={travelogueForm.titleMl} onChange={e => { const value=e.target.value; setTravelogueForm(prev=>({...prev,titleMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"titleMl","titleMl",setTravelogueForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={travelogueForm.titleEn} onChange={e => { const value=e.target.value; setTravelogueForm(prev=>({...prev,titleEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"titleEn","titleEn",setTravelogueForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={travelogueForm.titleTa} onChange={e => { const value=e.target.value; setTravelogueForm(prev=>({...prev,titleTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"titleTa","titleTa",setTravelogueForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
                   <div>
                     <label className="block text-slate-500 font-semibold mb-0.5">Date of travel</label>
                     <input type="text" value={travelogueForm.date} onChange={e => setTravelogueForm({...travelogueForm, date: e.target.value})} className="w-full border rounded p-1.5" placeholder="June 2026" />
@@ -4168,40 +3741,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     />
                   </div>
 <div className="mt-2 w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">snippet (Tamil)<textarea lang="ta" value={travelogueForm.snippetTa} onChange={e => { const value = e.target.value; setTravelogueForm(prev => ({ ...prev, snippetTa: value })); autoTranslateField(value, "snippetTa", "snippetTa", setTravelogueForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Read time En</label>
-                      <input 
-                        type="text" 
-                        value={travelogueForm.readTimeEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setTravelogueForm({...travelogueForm, readTimeEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "readTimeEn", "readTimeMl", setTravelogueForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                        placeholder="5 min read" 
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">വായന സമയം വിവരണം (Ml)</label>
-                      <input 
-                        type="text" 
-                        value={travelogueForm.readTimeMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setTravelogueForm({...travelogueForm, readTimeMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "readTimeMl", "readTimeEn", setTravelogueForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                        placeholder="5 മിനുട്ട് വായന" 
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">readTime (Tamil)<input lang="ta" value={travelogueForm.readTimeTa} onChange={e => { const value = e.target.value; setTravelogueForm(prev => ({ ...prev, readTimeTa: value })); autoTranslateField(value, "readTimeTa", "readTimeTa", setTravelogueForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
+                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Reading Time</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={travelogueForm.readTimeMl} onChange={e => { const value=e.target.value; setTravelogueForm(prev=>({...prev,readTimeMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"readTimeMl","readTimeMl",setTravelogueForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={travelogueForm.readTimeEn} onChange={e => { const value=e.target.value; setTravelogueForm(prev=>({...prev,readTimeEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"readTimeEn","readTimeEn",setTravelogueForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={travelogueForm.readTimeTa} onChange={e => { const value=e.target.value; setTravelogueForm(prev=>({...prev,readTimeTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"readTimeTa","readTimeTa",setTravelogueForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
                   <button type="submit" className="w-full py-2 bg-slate-900 text-[#ffe500] font-bold rounded cursor-pointer">Register story</button>
                 </form>
 
@@ -4227,7 +3767,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             {/* Sub-tab 5: PHOTO GALLERY */}
             {exploreSubTab === "photos" && (
               <div className="grid grid-cols-1 lg:grid-cols-1 md:grid-cols-3 gap-8">
-                <form onSubmit={handleCreatePhoto} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5">
+                <form onSubmit={handleCreatePhoto} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5"><div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-blue-100 bg-blue-50/60 p-3"><label className="flex items-center gap-2 text-xs font-bold text-[#052962]"><input type="checkbox" checked={autoTranslateOnSubmit} onChange={e=>setAutoTranslateOnSubmit(e.target.checked)} /> Auto Translate · Malayalam / English / Tamil</label><span className="text-xs text-slate-500">{isTranslatingForm ? "Translating…" : "Fill missing translations automatically"}</span></div>
                   
                   
                   <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
@@ -4318,72 +3858,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       </div>
                     )}
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Captioned Title (En)</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={photoForm.titleEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setPhotoForm({...photoForm, titleEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "titleEn", "titleMl", setPhotoForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">ചിത്ര തലക്കെട്ട് (Ml)</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={photoForm.titleMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setPhotoForm({...photoForm, titleMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "titleMl", "titleEn", setPhotoForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">title (Tamil)<input lang="ta" value={photoForm.titleTa} onChange={e => { const value = e.target.value; setPhotoForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setPhotoForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Desc (En)</label>
-                      <input 
-                        type="text" 
-                        value={photoForm.descEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setPhotoForm({...photoForm, descEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "descEn", "descMl", setPhotoForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">വിവരം (Ml)</label>
-                      <input 
-                        type="text" 
-                        value={photoForm.descMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setPhotoForm({...photoForm, descMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "descMl", "descEn", setPhotoForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">desc (Tamil)<textarea lang="ta" value={photoForm.descTa} onChange={e => { const value = e.target.value; setPhotoForm(prev => ({ ...prev, descTa: value })); autoTranslateField(value, "descTa", "descTa", setPhotoForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
+                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Photo Title</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={photoForm.titleMl} onChange={e => { const value=e.target.value; setPhotoForm(prev=>({...prev,titleMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"titleMl","titleMl",setPhotoForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={photoForm.titleEn} onChange={e => { const value=e.target.value; setPhotoForm(prev=>({...prev,titleEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"titleEn","titleEn",setPhotoForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={photoForm.titleTa} onChange={e => { const value=e.target.value; setPhotoForm(prev=>({...prev,titleTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"titleTa","titleTa",setPhotoForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
+                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Description</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<textarea lang="ml" rows={4} value={photoForm.descMl} onChange={e => { const value=e.target.value; setPhotoForm(prev=>({...prev,descMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"descMl","descMl",setPhotoForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" ></textarea> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<textarea lang="en" rows={4} value={photoForm.descEn} onChange={e => { const value=e.target.value; setPhotoForm(prev=>({...prev,descEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"descEn","descEn",setPhotoForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" ></textarea> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<textarea lang="ta" rows={4} value={photoForm.descTa} onChange={e => { const value=e.target.value; setPhotoForm(prev=>({...prev,descTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"descTa","descTa",setPhotoForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" ></textarea> </label></div></section>
                   <button type="submit" className="w-full py-2 bg-slate-900 text-[#ffe500] font-bold rounded cursor-pointer">Register Frame</button>
                 </form>
 
