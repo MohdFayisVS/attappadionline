@@ -3173,112 +3173,32 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-2 flex items-center gap-1.5">
                   <Calendar className="w-5 h-5 text-[#005689]" /> Register/Schedule Event
                 </h3>
-                <form onSubmit={handleCreateEvent} className="space-y-3">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    
-                    
+                <form onSubmit={handleCreateEvent} className="space-y-5">
+                  <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-blue-100 bg-blue-50/60 p-3">
+                    <label className="flex items-center gap-2 text-xs font-bold text-[#052962]"><input type="checkbox" checked={autoTranslateOnSubmit} onChange={e => setAutoTranslateOnSubmit(e.target.checked)} /> Auto Translate · Malayalam / English / Tamil</label>
+                    <span className="text-xs text-slate-500">{activeLiveTranslationsCount ? "Translating…" : "Enter any language; existing text is preserved."}</span>
                   </div>
-                  
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-bold mb-1">Event Name (En)</label>
-                      <input 
-                        type="text" 
-                        value={eventForm.titleEn}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          setEventForm({...eventForm, titleEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "titleEn", "titleMl", setEventForm, "ml");
-                          }
-                        }}
-                        placeholder="Farming conclave assembly"
-                        className="w-full border rounded p-1.5 focus:ring-1"
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-bold mb-1">പരിപാടി തലക്കെട്ട് (Ml)</label>
-                      <input 
-                        type="text" 
-                        value={eventForm.titleMl}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          setEventForm({...eventForm, titleMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "titleMl", "titleEn", setEventForm, "en");
-                          }
-                        }}
-                        placeholder="കർഷക സംഗമം"
-                        className="w-full border rounded p-1.5 focus:ring-1"
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">Event Name (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={eventForm.titleTa} onChange={e => { const value = e.target.value; setEventForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setEventForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
+                  <section className="space-y-2"><h4 className="text-sm font-bold text-[#052962]">Event Name</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" required={!autoTranslateOnSubmit} value={eventForm.titleMl} onChange={e => { const value = e.target.value; setEventForm(prev => ({...prev, titleMl: value})); autoTranslateField(value, "titleMl", "titleMl", setEventForm, "ml"); }} className="block mt-1 w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam focus:ring-2 focus:ring-blue-500" /></label>
+                    <label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" required={!autoTranslateOnSubmit} value={eventForm.titleEn} onChange={e => { const value = e.target.value; setEventForm(prev => ({...prev, titleEn: value})); autoTranslateField(value, "titleEn", "titleEn", setEventForm, "en"); }} className="block mt-1 w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin focus:ring-2 focus:ring-blue-500" /></label>
+                    <label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" required={!autoTranslateOnSubmit} value={eventForm.titleTa} onChange={e => { const value = e.target.value; setEventForm(prev => ({...prev, titleTa: value})); autoTranslateField(value, "titleTa", "titleTa", setEventForm, "ta"); }} className="block mt-1 w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil focus:ring-2 focus:ring-blue-500" /></label>
+                  </div></section>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <label className="block text-xs font-bold text-slate-600">Event Date<input type="date" required value={eventForm.date} onChange={e => setEventForm(prev => ({...prev, date:e.target.value}))} className="block w-full mt-1 rounded-md border border-slate-300 p-2 text-sm font-anek-latin" /></label>
+                    <label className="block text-xs font-bold text-slate-600">Scheduled Time<input type="text" value={eventForm.time} onChange={e => setEventForm(prev => ({...prev, time:e.target.value}))} placeholder="11:00 AM - 04:00 PM" className="block w-full mt-1 rounded-md border border-slate-300 p-2 text-sm font-anek-latin" /></label>
                   </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div>
-                      <label className="block text-slate-500 font-bold mb-1">Event Date</label>
-                      <input 
-                        type="date" 
-                        value={eventForm.date}
-                        onChange={(e) => setEventForm({...eventForm, date: e.target.value})}
-                        className="w-full border rounded p-1.5 focus:ring-1"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-slate-500 font-bold mb-1">Scheduled Time duration</label>
-                      <input 
-                        type="text" 
-                        value={eventForm.time}
-                        onChange={(e) => setEventForm({...eventForm, time: e.target.value})}
-                        placeholder="11:00 AM - 04:00 PM"
-                        className="w-full border rounded p-1.5 focus:ring-1"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-bold mb-1">Location Venue (En)</label>
-                      <input 
-                        type="text" 
-                        value={eventForm.locationEn}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          setEventForm({...eventForm, locationEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "locationEn", "locationMl", setEventForm, "ml");
-                          }
-                        }}
-                        placeholder="Mukkali forest town hall"
-                        className="w-full border rounded p-1.5 focus:ring-1"
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-bold mb-1">സ്ഥലപ്പേര് (Ml)</label>
-                      <input 
-                        type="text" 
-                        value={eventForm.locationMl}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          setEventForm({...eventForm, locationMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "locationMl", "locationEn", setEventForm, "en");
-                          }
-                        }}
-                        placeholder="മുക്കാലി ടൗൺ ഹാൾ"
-                        className="w-full border rounded p-1.5 focus:ring-1"
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">Event Venue (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={eventForm.locationTa} onChange={e => { const value = e.target.value; setEventForm(prev => ({ ...prev, locationTa: value })); autoTranslateField(value, "locationTa", "locationTa", setEventForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full py-2 bg-[#005689] hover:bg-[#0a3060] text-white font-bold rounded transition shadow cursor-pointer"
-                  >
-                    Schedule Live Event
-                  </button>
-                
-<div className="space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-3"><label className="block">Event Description (Tamil)<textarea lang="ta" value={eventForm.descriptionTa} onChange={e => { const value = e.target.value; setEventForm(prev => ({ ...prev, descriptionTa: value })); autoTranslateField(value, "descriptionTa", "descriptionTa", setEventForm, "ta"); }} className="block w-full min-w-0 max-w-full box-border rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm leading-relaxed font-anek-tamil focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 min-h-28 resize-y" /></label></div></form>
+                  <section className="space-y-2"><h4 className="text-sm font-bold text-[#052962]">Event Venue</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" required={!autoTranslateOnSubmit} value={eventForm.locationMl} onChange={e => { const value = e.target.value; setEventForm(prev => ({...prev, locationMl: value})); autoTranslateField(value, "locationMl", "locationMl", setEventForm, "ml"); }} className="block mt-1 w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam focus:ring-2 focus:ring-blue-500" /></label>
+                    <label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" required={!autoTranslateOnSubmit} value={eventForm.locationEn} onChange={e => { const value = e.target.value; setEventForm(prev => ({...prev, locationEn: value})); autoTranslateField(value, "locationEn", "locationEn", setEventForm, "en"); }} className="block mt-1 w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin focus:ring-2 focus:ring-blue-500" /></label>
+                    <label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" required={!autoTranslateOnSubmit} value={eventForm.locationTa} onChange={e => { const value = e.target.value; setEventForm(prev => ({...prev, locationTa: value})); autoTranslateField(value, "locationTa", "locationTa", setEventForm, "ta"); }} className="block mt-1 w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil focus:ring-2 focus:ring-blue-500" /></label>
+                  </div></section>
+                  <section className="space-y-2"><h4 className="text-sm font-bold text-[#052962]">Event Description</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<textarea lang="ml" rows={4} required={false} value={eventForm.descriptionMl} onChange={e => { const value = e.target.value; setEventForm(prev => ({...prev, descriptionMl: value})); autoTranslateField(value, "descriptionMl", "descriptionMl", setEventForm, "ml"); }} className="block mt-1 w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam focus:ring-2 focus:ring-blue-500" ></textarea></label>
+                    <label className="block min-w-0 text-xs font-bold text-slate-600">English<textarea lang="en" rows={4} required={false} value={eventForm.descriptionEn} onChange={e => { const value = e.target.value; setEventForm(prev => ({...prev, descriptionEn: value})); autoTranslateField(value, "descriptionEn", "descriptionEn", setEventForm, "en"); }} className="block mt-1 w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin focus:ring-2 focus:ring-blue-500" ></textarea></label>
+                    <label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<textarea lang="ta" rows={4} required={false} value={eventForm.descriptionTa} onChange={e => { const value = e.target.value; setEventForm(prev => ({...prev, descriptionTa: value})); autoTranslateField(value, "descriptionTa", "descriptionTa", setEventForm, "ta"); }} className="block mt-1 w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil focus:ring-2 focus:ring-blue-500" ></textarea></label>
+                  </div></section>
+                  <button type="submit" className="w-full rounded-md bg-[#005689] px-4 py-3 font-bold text-white hover:bg-[#0a3060]">Schedule Live Event</button>
+                </form>
               </div>
 
               {/* Event grid list */}
