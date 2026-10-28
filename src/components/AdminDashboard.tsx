@@ -5523,7 +5523,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   Community Listings
                 </span>
                 <h2 className="font-serif font-extrabold text-[#052962] text-xl mt-1">
-                  Lost & Found Reports (നഷ്ടപ്പെട്ടവ & ലഭിച്ചവ)
+                  Lost & Found Reports
                 </h2>
                 <p className="text-[10px] text-slate-500 mt-1">
                   Manage the public reported items board. Delete listings that are resolved, outdated, or violate guidelines.
@@ -5566,16 +5566,23 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                           </span>
                         </div>
                         
-                        <h4 className="font-extrabold text-slate-900 text-xs">
-                          {item.itemTitleEn} <span className="text-slate-400 font-normal">| {item.itemTitleMl}</span>
-                        </h4>
-                        <p className="text-[11px] text-slate-600 leading-tight">
-                          <strong className="text-slate-700">Description:</strong> {item.descriptionEn} 
-                          <span className="block text-slate-400 text-[10px] font-medium font-sans">({item.descriptionMl})</span>
-                        </p>
-                        <p className="text-[10px] text-slate-500">
-                          📍 Place: {item.locationEn} ({item.locationMl})
-                        </p>
+                        <div className="space-y-1 rounded-md bg-white p-2 border border-slate-100">
+                          <p lang="ml" className="font-anek-malayalam font-bold text-sm text-slate-900">{item.itemTitleMl || "—"}</p>
+                          <p lang="en" className="font-anek-latin font-semibold text-sm text-slate-800">{item.itemTitleEn || "—"}</p>
+                          <p lang="ta" className="font-anek-tamil font-semibold text-sm text-slate-800">{item.itemTitleTa || "Tamil translation pending"}</p>
+                        </div>
+                        <div className="space-y-1 text-xs text-slate-600">
+                          <strong className="font-anek-latin text-slate-700">Description</strong>
+                          <p lang="ml" className="font-anek-malayalam">{item.descriptionMl || "—"}</p>
+                          <p lang="en" className="font-anek-latin">{item.descriptionEn || "—"}</p>
+                          <p lang="ta" className="font-anek-tamil">{item.descriptionTa || "Tamil translation pending"}</p>
+                        </div>
+                        <div className="space-y-1 text-xs text-slate-600">
+                          <strong className="font-anek-latin text-slate-700">Location</strong>
+                          <p lang="ml" className="font-anek-malayalam">{item.locationMl || "—"}</p>
+                          <p lang="en" className="font-anek-latin">{item.locationEn || "—"}</p>
+                          <p lang="ta" className="font-anek-tamil">{item.locationTa || "Tamil translation pending"}</p>
+                        </div>
                         <p className="text-[10px] text-slate-500 font-bold">
                           Reporter: {item.reporterName} ({item.contactNumber})
                         </p>
