@@ -1,3 +1,4 @@
+import AdvancedNewsDesignStudio from "./AdvancedNewsDesignStudio";
 import React, { useState, useEffect, useRef } from "react";
 import html2canvas from "html2canvas";
 import { 
@@ -1007,8 +1008,12 @@ export default function SocialCardGenerator({
   // Container height for outer preview visual box to reserve correct space because of absolute scaling
   const heightRem = `${wrapperHeight}px`;
 
+  const [advancedMode, setAdvancedMode] = useState(true);
   return (
     <div className="bg-[#f8fafc] rounded-xl border border-slate-200/80 p-6 space-y-6 shadow-sm">
+      <div className="flex flex-wrap gap-2"><button type="button" onClick={()=>setAdvancedMode(true)} className={`rounded px-4 py-2 text-sm font-bold ${advancedMode?"bg-[#052962] text-white":"bg-slate-200 text-slate-800"}`}>Advanced Design Studio</button><button type="button" onClick={()=>setAdvancedMode(false)} className={`rounded px-4 py-2 text-sm font-bold ${!advancedMode?"bg-[#052962] text-white":"bg-slate-200 text-slate-800"}`}>Classic Card Maker</button></div>
+      {advancedMode ? <AdvancedNewsDesignStudio images={newsList.map(n=>n.image).filter((v):v is string=>Boolean(v))} /> : <React.Fragment>
+
       
       {/* Upper header section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-100 pb-4 gap-4">
@@ -1976,6 +1981,7 @@ export default function SocialCardGenerator({
         </div>
       )}
 
+      </React.Fragment>}
     </div>
   );
 }
