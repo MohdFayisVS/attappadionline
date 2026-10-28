@@ -4891,61 +4891,15 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-2 flex items-center gap-1.5">
                   <AlertCircle className="w-5 h-5 text-red-650 shrink-0" /> Publish critical emergency helpline number
                 </h3>
-                <form onSubmit={handleCreateEmergency} className="space-y-3">
-                  
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Service agency (En)</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={emergForm.nameEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setEmergForm({...emergForm, nameEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "nameEn", "nameMl", setEmergForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">മലയാളം അലാറം വിവരങ്ങൾ (Ml)</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={emergForm.nameMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setEmergForm({...emergForm, nameMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "nameMl", "nameEn", setEmergForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5" 
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">Service Name (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={emergForm.nameTa} onChange={e => { const value = e.target.value; setEmergForm(prev => ({ ...prev, nameTa: value })); autoTranslateField(value, "nameTa", "nameTa", setEmergForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div>
-                      <label className="block text-slate-500 font-semibold mb-0.5">Helpline dial number</label>
-                      <input type="text" required value={emergForm.number} onChange={e => setEmergForm({...emergForm, number: e.target.value})} className="w-full border rounded p-1.5" />
-                    </div>
-                    <div>
-                      <label className="block text-slate-500 font-semibold mb-0.5">Category emergency type</label>
-                      <select value={emergForm.type} onChange={e => setEmergForm({...emergForm, type: e.target.value as any})} className="w-full border rounded p-1.5 bg-white cursor-pointer select-none">
-                        <option value="ambulance">Ambulance desk</option>
-                        <option value="police">Police patrol operations</option>
-                        <option value="fire">Fire force rescuers</option>
-                        <option value="hospital">Taluk medical center hospitals</option>
-                        <option value="forest">Forest rescue guards</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <button type="submit" className="w-full py-2 bg-red-800 text-white font-bold rounded cursor-pointer">Register Critical line</button>
+                <form onSubmit={handleCreateEmergency} className="space-y-4">
+                  <div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-blue-100 bg-blue-50/60 p-3"><label className="flex items-center gap-2 text-xs font-bold text-[#052962]"><input type="checkbox" checked={autoTranslateOnSubmit} onChange={e=>setAutoTranslateOnSubmit(e.target.checked)} /> Auto Translate · Malayalam / English / Tamil</label><span className="text-xs text-slate-500">{activeLiveTranslationsCount ? "Translating…" : "Missing translations filled automatically"}</span></div>
+                  <section className="space-y-2"><h4 className="text-sm font-bold text-[#052962]">Emergency Service / Agency Name</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input type="text" lang="ml" required={!autoTranslateOnSubmit} value={emergForm.nameMl} onChange={e=>{const value=e.target.value;setEmergForm(prev=>({...prev,nameMl:value}));autoTranslateField(value,"nameMl","nameMl",setEmergForm,"ml");}} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /></label>
+                    <label className="block min-w-0 text-xs font-bold text-slate-600">English<input type="text" lang="en" required={!autoTranslateOnSubmit} value={emergForm.nameEn} onChange={e=>{const value=e.target.value;setEmergForm(prev=>({...prev,nameEn:value}));autoTranslateField(value,"nameEn","nameEn",setEmergForm,"en");}} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /></label>
+                    <label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input type="text" lang="ta" required={!autoTranslateOnSubmit} value={emergForm.nameTa} onChange={e=>{const value=e.target.value;setEmergForm(prev=>({...prev,nameTa:value}));autoTranslateField(value,"nameTa","nameTa",setEmergForm,"ta");}} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /></label>
+                  </div></section>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3"><label className="text-xs font-bold text-slate-600">Emergency Helpline Number<input type="tel" required value={emergForm.number} onChange={e=>setEmergForm(prev=>({...prev,number:e.target.value}))} className="mt-1 block w-full rounded-md border border-slate-300 p-2 text-sm font-anek-latin" /></label><label className="text-xs font-bold text-slate-600">Emergency Category<select value={emergForm.type} onChange={e=>setEmergForm(prev=>({...prev,type:e.target.value as any}))} className="mt-1 block w-full rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin"><option value="ambulance">Ambulance</option><option value="police">Police</option><option value="fire">Fire & Rescue</option><option value="hospital">Hospital / Medical Centre</option><option value="forest">Forest Rescue</option></select></label></div>
+                  <button type="submit" className="w-full rounded-md bg-red-800 py-3 font-bold text-white">Register Critical Line</button>
                 </form>
               </div>
 
