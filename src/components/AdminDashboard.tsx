@@ -1971,7 +1971,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       statusMl: item.statusMl || "ഇന്ന് വിതരണമുണ്ട്",
       contact: item.contact || "",
       notesEn: item.notesEn || "",
-      notesMl: item.notesMl || ""
+      notesMl: item.notesMl || "", notesTa: item.notesTa || ""
     });
     setEditingId(item.id);
     setEditingType("lpg");
@@ -5214,7 +5214,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   Local Services & Deliveries
                 </span>
                 <h2 className="font-serif font-extrabold text-[#052962] text-xl mt-1">
-                  LPG Gas Delivery Today (ഇന്നത്തെ ഗ്യാസ് വിതരണം)
+                  LPG Gas Delivery Today
                 </h2>
                 <p className="text-[10px] text-slate-500 mt-1">
                   Create, update, and manage the daily gas cylinder shipping routes and agency hotline contacts for deep tribal villages across Attappadi.
@@ -5231,7 +5231,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       agencyNameEn: "", agencyNameMl: "", agencyNameTa: "", areasEn: "", areasMl: "", areasTa: "",
                       date: new Date().toLocaleDateString("en-US", { weekday: "long", day: "numeric", month: "long" }),
                       statusEn: "Delivering Today", statusMl: "ഇന്ന് വിതരണമുണ്ട്", statusTa: "இன்று விநியோகம்",
-                      contact: "", notesEn: "", notesMl: ""
+                      contact: "", notesEn: "", notesMl: "", notesTa: ""
                     });
                   }}
                   className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-lg transition text-[10px] cursor-pointer"
@@ -5249,198 +5249,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   <PlusCircle className="w-5 h-5 text-amber-600 shrink-0" /> 
                   {editingId && editingType === "lpg" ? "Modify LPG scheduling details" : "Schedule new gas delivery route"}
                 </h3>
-                <form onSubmit={handleCreateLpg} className="space-y-4">
-                  
-
-
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Agency Name (English)</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={lpgForm.agencyNameEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setLpgForm({...lpgForm, agencyNameEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "agencyNameEn", "agencyNameMl", setLpgForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5 text-xs focus:ring-1 focus:ring-amber-500 font-bold" 
-                        placeholder="e.g. Agali Indane Gas Agency"
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">ഏജൻസി പേര് (Malayalam)</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={lpgForm.agencyNameMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setLpgForm({...lpgForm, agencyNameMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "agencyNameMl", "agencyNameEn", setLpgForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5 text-xs font-bold" 
-                        placeholder="e.g. അഗളി ഇൻഡെയ്ൻ ഗ്യാസ് ഏജൻസി"
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">agencyName (Tamil)<input lang="ta" value={lpgForm.agencyNameTa} onChange={e => { const value = e.target.value; setLpgForm(prev => ({ ...prev, agencyNameTa: value })); autoTranslateField(value, "agencyNameTa", "agencyNameTa", setLpgForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Delivering Areas (English)</label>
-                      <textarea 
-                        required 
-                        rows={2}
-                        value={lpgForm.areasEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setLpgForm({...lpgForm, areasEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "areasEn", "areasMl", setLpgForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5 text-xs font-semibold" 
-                        placeholder="e.g. Agali, Sholayur, Kottathara Road, Chavadiyur"
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">വിതരണം ചെയ്യുന്ന സ്ഥലങ്ങൾ (Malayalam)</label>
-                      <textarea 
-                        required 
-                        rows={2}
-                        value={lpgForm.areasMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setLpgForm({...lpgForm, areasMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "areasMl", "areasEn", setLpgForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5 text-xs" 
-                        placeholder="e.g. അഗളി, ഷോളയൂർ, കോട്ടത്തറ റോഡ്, ചാവടിയൂർ"
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">areas (Tamil)<input lang="ta" value={lpgForm.areasTa} onChange={e => { const value = e.target.value; setLpgForm(prev => ({ ...prev, areasTa: value })); autoTranslateField(value, "areasTa", "areasTa", setLpgForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Delivery Status (EN)</label>
-                      <select 
-                        value={lpgForm.statusEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          let associatedMl = "ഇന്ന് വിതരണമുണ്ട്";
-                          if (val === "Delivering Tomorrow") associatedMl = "നാളെ വിതരണമുണ്ട്";
-                          if (val === "Delayed") associatedMl = "വൈകുന്നു";
-                          setLpgForm({...lpgForm, statusEn: val, statusMl: associatedMl});
-                        }} 
-                        className="w-full border rounded p-1.5 bg-white cursor-pointer"
-                      >
-                        <option value="Delivering Today">🟢 Delivering Today</option>
-                        <option value="Delivering Tomorrow">🔵 Delivering Tomorrow</option>
-                        <option value="Delayed">🔴 Delayed</option>
-                      </select>
-                    </div>
-
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">സ്റ്റാറ്റസ് (ML)</label>
-                      <input 
-                        type="text"
-                        required
-                        value={lpgForm.statusMl} 
-                        onChange={e => setLpgForm({...lpgForm, statusMl: e.target.value})} 
-                        className="w-full border rounded p-1.5 text-xs focus:ring-1 focus:ring-amber-500 bg-white" 
-                        placeholder="ഇന്ന് വിതരണമുണ്ട്"
-                      />
-                    </div>
-<div className="mt-2 w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">status (Tamil)<input lang="ta" value={lpgForm.statusTa} onChange={e => { const value = e.target.value; setLpgForm(prev => ({ ...prev, statusTa: value })); autoTranslateField(value, "statusTa", "statusTa", setLpgForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-
-                    <div>
-                      <label className="block text-slate-500 font-semibold mb-0.5">Delivery Date/Day Text</label>
-                      <input 
-                        type="text" 
-                        required
-                        value={lpgForm.date} 
-                        onChange={e => setLpgForm({...lpgForm, date: e.target.value})} 
-                        className="w-full border rounded p-1.5 text-xs" 
-                        placeholder="e.g. Today or Monday, 22 June"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 gap-3">
-                    <div>
-                      <label className="block text-slate-500 font-semibold mb-0.5">Contact Hotline (Driver/Agency)</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={lpgForm.contact} 
-                        onChange={e => setLpgForm({...lpgForm, contact: e.target.value})} 
-                        className="w-full border rounded p-1.5 text-xs font-mono font-bold" 
-                        placeholder="e.g. 9445123450"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Additional Note (EN)</label>
-                      <input 
-                        type="text" 
-                        value={lpgForm.notesEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setLpgForm({...lpgForm, notesEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "notesEn", "notesMl", setLpgForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5 text-xs" 
-                        placeholder="e.g. Vehicle starts at 9:00 AM from Agali"
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">അധിക വിവരങ്ങൾ (ML)</label>
-                      <input 
-                        type="text" 
-                        value={lpgForm.notesMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setLpgForm({...lpgForm, notesMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "notesMl", "notesEn", setLpgForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5 text-xs" 
-                        placeholder="e.g. അഗളിയിൽ നിന്ന് രാവിലെ 9 മണിക്ക് വാഹനം പുറപ്പെടും"
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">notes (Tamil)<input lang="ta" value={lpgForm.notesTa} onChange={e => { const value = e.target.value; setLpgForm(prev => ({ ...prev, notesTa: value })); autoTranslateField(value, "notesTa", "notesTa", setLpgForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
-
-                  {/* Translation utility badge */}
-                  {autoTranslateOnSubmit && (
-                    <div className="bg-emerald-50 text-emerald-800 text-[10px] p-2.5 rounded-lg border border-emerald-200/50 flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <div>
-                        <strong>Smart Auto-Translation (Gemini-Engine):</strong> Any fields left empty in Kerala local language (Malayalam) will be automatically translated using state-of-the-art Deep Learning models on submit!
-                      </div>
-                    </div>
-                  )}
-
-                  <button
-                    type="submit"
-                    disabled={isTranslatingForm}
-                    className="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black rounded-lg transition font-mono uppercase tracking-widest text-[11px] shadow-sm cursor-pointer disabled:opacity-50"
-                  >
-                    {isTranslatingForm ? "Translating form fields..." : editingId && editingType === "lpg" ? "💾 Update LPG Schedule" : "🚀 Publish LPG Schedule"}
-                  </button>
-                </form>
+                <form onSubmit={handleCreateLpg} className="space-y-5"><div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-blue-100 bg-blue-50/60 p-3"><label className="flex items-center gap-2 text-xs font-bold text-[#052962]"><input type="checkbox" checked={autoTranslateOnSubmit} onChange={e=>setAutoTranslateOnSubmit(e.target.checked)} /> Auto Translation · Malayalam / English / Tamil</label><span className="text-xs text-slate-500">{isTranslatingForm ? "Translating…" : "Missing language fields translate on publish"}</span></div><section className="space-y-2"><h4 className="text-sm font-bold text-[#052962]">Agency Name</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={lpgForm.agencyNameMl} onChange={e=>{const value=e.target.value;setLpgForm(prev=>({...prev,agencyNameMl:value}));}} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /></label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={lpgForm.agencyNameEn} onChange={e=>{const value=e.target.value;setLpgForm(prev=>({...prev,agencyNameEn:value}));}} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /></label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={lpgForm.agencyNameTa} onChange={e=>{const value=e.target.value;setLpgForm(prev=>({...prev,agencyNameTa:value}));}} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /></label></div></section><section className="space-y-2"><h4 className="text-sm font-bold text-[#052962]">Delivery Areas</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<textarea lang="ml" rows={3} value={lpgForm.areasMl} onChange={e=>{const value=e.target.value;setLpgForm(prev=>({...prev,areasMl:value}));}} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /></label><label className="block min-w-0 text-xs font-bold text-slate-600">English<textarea lang="en" rows={3} value={lpgForm.areasEn} onChange={e=>{const value=e.target.value;setLpgForm(prev=>({...prev,areasEn:value}));}} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /></label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<textarea lang="ta" rows={3} value={lpgForm.areasTa} onChange={e=>{const value=e.target.value;setLpgForm(prev=>({...prev,areasTa:value}));}} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /></label></div></section><section className="space-y-2"><h4 className="text-sm font-bold text-[#052962]">Delivery Status</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block text-xs font-bold text-slate-600">Malayalam<input lang="ml" value={lpgForm.statusMl} onChange={e=>setLpgForm(prev=>({...prev,statusMl:e.target.value}))} className="mt-1 w-full rounded border border-slate-300 p-2 text-sm font-anek-malayalam" /></label><label className="block text-xs font-bold text-slate-600">English<input lang="en" value={lpgForm.statusEn} onChange={e=>setLpgForm(prev=>({...prev,statusEn:e.target.value}))} className="mt-1 w-full rounded border border-slate-300 p-2 text-sm font-anek-latin" /></label><label className="block text-xs font-bold text-slate-600">Tamil<input lang="ta" value={lpgForm.statusTa} onChange={e=>setLpgForm(prev=>({...prev,statusTa:e.target.value}))} className="mt-1 w-full rounded border border-slate-300 p-2 text-sm font-anek-tamil" /></label></div></section><section className="space-y-2"><h4 className="text-sm font-bold text-[#052962]">Additional Notes</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<textarea lang="ml" rows={3} value={lpgForm.notesMl} onChange={e=>{const value=e.target.value;setLpgForm(prev=>({...prev,notesMl:value}));}} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /></label><label className="block min-w-0 text-xs font-bold text-slate-600">English<textarea lang="en" rows={3} value={lpgForm.notesEn} onChange={e=>{const value=e.target.value;setLpgForm(prev=>({...prev,notesEn:value}));}} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /></label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<textarea lang="ta" rows={3} value={lpgForm.notesTa} onChange={e=>{const value=e.target.value;setLpgForm(prev=>({...prev,notesTa:value}));}} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /></label></div></section><div className="grid grid-cols-1 md:grid-cols-2 gap-3"><label className="block text-xs font-bold text-slate-600">Delivery Date / Day<input type="text" value={lpgForm.date} onChange={e=>setLpgForm(prev=>({...prev,date:e.target.value}))} className="mt-1 w-full rounded border border-slate-300 p-2 text-sm" /></label><label className="block text-xs font-bold text-slate-600">Contact Hotline<input type="tel" value={lpgForm.contact} onChange={e=>setLpgForm(prev=>({...prev,contact:e.target.value}))} className="mt-1 w-full rounded border border-slate-300 p-2 text-sm" /></label></div><button type="submit" disabled={isTranslatingForm} className="w-full rounded-lg bg-amber-500 px-4 py-3 font-bold text-slate-950 hover:bg-amber-600 disabled:opacity-50">{isTranslatingForm?"Translating…":editingId&&editingType==="lpg"?"Update LPG Schedule":"Publish LPG Schedule"}</button></form>
               </div>
 
               {/* List block */}
