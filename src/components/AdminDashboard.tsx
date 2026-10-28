@@ -1789,8 +1789,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       { en: "contentEn", ml: "contentMl" }
     ]);
 
-    if (!translatedNotice.titleTa?.trim() || !translatedNotice.contentTa?.trim()) {
-      alert("Tamil translation fields are required before publishing.");
+    if (["titleMl", "titleEn", "titleTa", "contentMl", "contentEn", "contentTa"].some(key => !String((translatedNotice as any)[key] || "").trim())) {
+      alert("Complete all three languages, or enable automatic translation.");
       return;
     }
     const isEdit = typeof editingId === "string" && editingType === "notice";
@@ -5177,80 +5177,20 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                 <form onSubmit={handleCreateNotice} className="space-y-4">
                   
 
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Notice Title (English)</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={noticeForm.titleEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setNoticeForm({...noticeForm, titleEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "titleEn", "titleMl", setNoticeForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5 text-xs focus:ring-1 focus:ring-blue-500" 
-                        placeholder="e.g. Landslide alert in Pudur"
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">അറിയിപ്പ് വിഷയം (Malayalam)</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={noticeForm.titleMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setNoticeForm({...noticeForm, titleMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "titleMl", "titleEn", setNoticeForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5 text-xs" 
-                        placeholder="e.g. പുതൂരിൽ ഉരുൾപൊട്ടൽ ജാഗ്രത"
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">Notice Title (Tamil)<input lang="ta" required={!autoTranslateOnSubmit} value={noticeForm.titleTa} onChange={e => { const value = e.target.value; setNoticeForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setNoticeForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
+                  <div className="rounded-md border border-blue-100 bg-blue-50/60 px-3 py-2 flex flex-wrap items-center justify-between gap-2">
+                    <label className="flex items-center gap-2 text-xs font-bold text-[#052962]"><input type="checkbox" checked={autoTranslateOnSubmit} onChange={e => setAutoTranslateOnSubmit(e.target.checked)} /> Auto Translate (Malayalam / English / Tamil)</label>
+                    <span className="text-[11px] text-slate-500">{activeLiveTranslationsCount > 0 ? "Translating…" : "Enter any language; existing translations are preserved."}</span>
                   </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div className="order-2">
-                      <label className="block text-slate-500 font-semibold mb-0.5">Notice Content (English)</label>
-                      <textarea 
-                        required 
-                        rows={3}
-                        value={noticeForm.contentEn} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setNoticeForm({...noticeForm, contentEn: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "contentEn", "contentMl", setNoticeForm, "ml");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5 text-xs font-semibold" 
-                        placeholder="Write detailed statement..."
-                      />
-                    </div>
-                    <div className="order-1">
-                      <label className="block text-slate-500 font-semibold mb-0.5">വിശദമായ വിവരങ്ങൾ (Malayalam)</label>
-                      <textarea 
-                        required 
-                        rows={3}
-                        value={noticeForm.contentMl} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          setNoticeForm({...noticeForm, contentMl: val});
-                          if (autoTranslateOnSubmit) {
-                            autoTranslateField(val, "contentMl", "contentEn", setNoticeForm, "en");
-                          }
-                        }} 
-                        className="w-full border rounded p-1.5 text-xs" 
-                        placeholder="വിവരണങ്ങൾ എഴുതുക..."
-                      />
-                    </div><div className="w-full min-w-0"><label className="block text-slate-500 font-bold mb-1 text-sm">Notice Content (Tamil)<textarea lang="ta" required={!autoTranslateOnSubmit} value={noticeForm.contentTa} onChange={e => { const value = e.target.value; setNoticeForm(prev => ({ ...prev, contentTa: value })); autoTranslateField(value, "contentTa", "contentTa", setNoticeForm, "ta"); }} className="w-full border border-slate-300 rounded p-1.5 text-sm font-anek-tamil focus:ring-1 focus:ring-blue-500" /></label></div>
-                  </div>
-
+                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Notice Title</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div className="min-w-0"><label htmlFor="notice-titleMl" className="block text-xs font-bold text-slate-600 mb-1">Malayalam</label><input id="notice-titleMl" lang="ml" type="text" required={!autoTranslateOnSubmit} value={noticeForm.titleMl} onChange={e => { const value = e.target.value; setNoticeForm(prev => ({ ...prev, titleMl: value })); autoTranslateField(value, "titleMl", "titleMl", setNoticeForm, "ml"); }} className="w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam focus:ring-2 focus:ring-blue-500" /> </div>
+                    <div className="min-w-0"><label htmlFor="notice-titleEn" className="block text-xs font-bold text-slate-600 mb-1">English</label><input id="notice-titleEn" lang="en" type="text" required={!autoTranslateOnSubmit} value={noticeForm.titleEn} onChange={e => { const value = e.target.value; setNoticeForm(prev => ({ ...prev, titleEn: value })); autoTranslateField(value, "titleEn", "titleEn", setNoticeForm, "en"); }} className="w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin focus:ring-2 focus:ring-blue-500" /> </div>
+                    <div className="min-w-0"><label htmlFor="notice-titleTa" className="block text-xs font-bold text-slate-600 mb-1">Tamil</label><input id="notice-titleTa" lang="ta" type="text" required={!autoTranslateOnSubmit} value={noticeForm.titleTa} onChange={e => { const value = e.target.value; setNoticeForm(prev => ({ ...prev, titleTa: value })); autoTranslateField(value, "titleTa", "titleTa", setNoticeForm, "ta"); }} className="w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil focus:ring-2 focus:ring-blue-500" /> </div>
+                  </div></section>
+                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Notice Content</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div className="min-w-0"><label htmlFor="notice-contentMl" className="block text-xs font-bold text-slate-600 mb-1">Malayalam</label><textarea id="notice-contentMl" lang="ml" rows={4} required={!autoTranslateOnSubmit} value={noticeForm.contentMl} onChange={e => { const value = e.target.value; setNoticeForm(prev => ({ ...prev, contentMl: value })); autoTranslateField(value, "contentMl", "contentMl", setNoticeForm, "ml"); }} className="w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam focus:ring-2 focus:ring-blue-500" ></textarea> </div>
+                    <div className="min-w-0"><label htmlFor="notice-contentEn" className="block text-xs font-bold text-slate-600 mb-1">English</label><textarea id="notice-contentEn" lang="en" rows={4} required={!autoTranslateOnSubmit} value={noticeForm.contentEn} onChange={e => { const value = e.target.value; setNoticeForm(prev => ({ ...prev, contentEn: value })); autoTranslateField(value, "contentEn", "contentEn", setNoticeForm, "en"); }} className="w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin focus:ring-2 focus:ring-blue-500" ></textarea> </div>
+                    <div className="min-w-0"><label htmlFor="notice-contentTa" className="block text-xs font-bold text-slate-600 mb-1">Tamil</label><textarea id="notice-contentTa" lang="ta" rows={4} required={!autoTranslateOnSubmit} value={noticeForm.contentTa} onChange={e => { const value = e.target.value; setNoticeForm(prev => ({ ...prev, contentTa: value })); autoTranslateField(value, "contentTa", "contentTa", setNoticeForm, "ta"); }} className="w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil focus:ring-2 focus:ring-blue-500" ></textarea> </div>
+                  </div></section>
                   <div className="grid grid-cols-3 gap-3">
                     <div>
                       <label className="block text-slate-500 font-semibold mb-0.5">Display Notice Type</label>
