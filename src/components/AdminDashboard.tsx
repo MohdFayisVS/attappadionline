@@ -48,7 +48,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   const [busAdminView, setBusAdminView] = useState<"routes" | "timetables" | "map">("timetables");
   const [busAdminSearch, setBusAdminSearch] = useState("");
   const [busMapRevision, setBusMapRevision] = useState(0);
-  const [routesList, setRoutesList] = useState<{ id: string; routeEn: string; routeMl: string; }[]>([]);
+  const [routesList, setRoutesList] = useState<{ id: string; routeEn: string; routeMl: string; routeTa?: string; }[]>([]);
   const [noticesList, setNoticesList] = useState<NoticeItem[]>([]);
   const [lpgList, setLpgList] = useState<LpgDelivery[]>([]);
 
@@ -187,7 +187,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     timingsEn: "", timingsMl: "", timingsTa: "", privateBusName: ""
   });
   const [busTransitList, setBusTransitList] = useState<BusStopTransit[]>([]);
-  const [routeForm, setRouteForm] = useState({ routeEn: "", routeMl: "" });
+  const [routeForm, setRouteForm] = useState({ routeEn: "", routeMl: "", routeTa: "" });
   const [transitInput, setTransitInput] = useState({
     time: "", typeEn: "", typeMl: "", typeTa: "", viaCodeEn: "", viaCodeMl: "", viaCodeTa: ""
   });
@@ -1598,7 +1598,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
   const handleCreateRoute = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!routeForm.routeEn && !routeForm.routeMl) {
+    if (!routeForm.routeEn && !routeForm.routeMl && !routeForm.routeTa) {
       alert("Please provide at least one route description.");
       return;
     }
@@ -1614,7 +1614,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       });
       if (response.ok) {
         triggerToast("🗺️ Route added to independent registry!");
-        setRouteForm({ routeEn: "", routeMl: "" });
+        setRouteForm({ routeEn: "", routeMl: "", routeTa: "" });
         fetchRoutes();
       }
     } catch (err) {
@@ -3810,7 +3810,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
               <div className="border-b pb-3">
                 <h3 className="font-serif font-bold text-[#0a3060] text-sm flex items-center gap-2">
                   <Compass className="w-5 h-5 text-[#005689]" /> 
-                  1. Independent Route Registry (ബസ് റൂട്ട് രജിസ്ട്രി)
+                  1. Independent Route Registry
                 </h3>
                 <p className="text-[10px] text-slate-500 mt-1">
                   Define standard route lines first. These registered paths will then be selectable when adding individual bus schedules.
@@ -3819,48 +3819,15 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 {/* Create Route Form */}
-                <form onSubmit={handleCreateRoute} className="lg:col-span-5 bg-white p-4 rounded-lg border shadow-xs space-y-3">
-                  <span className="font-bold text-[#0a3060] text-[10.5px] uppercase block pb-1 border-b">🗺️ New Route Generator</span>
-                  <div>
-                    <label className="block text-slate-500 font-semibold mb-0.5">Route Description (En)</label>
-                    <input 
-                      type="text" 
-                      required 
-                      value={routeForm.routeEn} 
-                      onChange={e => {
-                        const val = e.target.value;
-                        setRouteForm({...routeForm, routeEn: val});
-                        if (autoTranslateOnSubmit) {
-                          autoTranslateField(val, "routeEn", "routeMl", setRouteForm, "ml");
-                        }
-                      }} 
-                      className="w-full border rounded p-1.5" 
-                      placeholder="e.g. Coimbatore - Anaikatty - Agali" 
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-slate-500 font-semibold mb-0.5 font-anek-malayalam">ബസ് റൂട്ട് വിവരണം (Ml)</label>
-                    <input 
-                      type="text" 
-                      required 
-                      value={routeForm.routeMl} 
-                      onChange={e => {
-                        const val = e.target.value;
-                        setRouteForm({...routeForm, routeMl: val});
-                        if (autoTranslateOnSubmit) {
-                          autoTranslateField(val, "routeMl", "routeEn", setRouteForm, "en");
-                        }
-                      }} 
-                      className="w-full border rounded p-1.5 font-anek-malayalam" 
-                      placeholder="ഉദാ: കോയമ്പത്തൂർ - ആനക്കട്ടി - അഗളി" 
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="w-full py-1.5 bg-[#005689] hover:bg-slate-900 text-white font-bold rounded transition cursor-pointer"
-                  >
-                    Register New Route (റൂട്ട് ചേർക്കുക)
-                  </button>
+                <form onSubmit={handleCreateRoute} className="lg:col-span-5 bg-white p-4 rounded-lg border shadow-xs space-y-4">
+                  <h4 className="font-bold text-[#0a3060] text-sm border-b pb-2">New Route Generator</h4>
+                  <label className="flex flex-wrap items-center gap-2 text-xs font-semibold text-[#052962]"><input type="checkbox" checked={autoTranslateOnSubmit} onChange={e=>setAutoTranslateOnSubmit(e.target.checked)} /> Auto Translate · Malayalam / English / Tamil</label>
+                  <p className="text-xs text-slate-500">{isTranslatingForm ? "Translating…" : "Enter a route in any language; missing translations will be filled on registration."}</p>
+                  <div className="grid grid-cols-1 gap-3">
+                    <label className="block text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={routeForm.routeMl} placeholder="കോയമ്പത്തൂർ - ആനക്കട്ടി - അഗളി" onChange={e=>{const value=e.target.value;setRouteForm(prev=>({...prev,routeMl:value}));if(autoTranslateOnSubmit)autoTranslateField(value,"routeMl","routeMl",setRouteForm,"ml");}} className="mt-1 w-full min-w-0 rounded-md border border-slate-300 p-2 text-sm font-anek-malayalam" /></label>
+                    <label className="block text-xs font-bold text-slate-600">English<input lang="en" type="text" value={routeForm.routeEn} placeholder="Coimbatore - Anaikatty - Agali" onChange={e=>{const value=e.target.value;setRouteForm(prev=>({...prev,routeEn:value}));if(autoTranslateOnSubmit)autoTranslateField(value,"routeEn","routeEn",setRouteForm,"en");}} className="mt-1 w-full min-w-0 rounded-md border border-slate-300 p-2 text-sm font-anek-latin" /></label>
+                    <label className="block text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={routeForm.routeTa} placeholder="கோயம்புத்தூர் - ஆனைகட்டி - அகளி" onChange={e=>{const value=e.target.value;setRouteForm(prev=>({...prev,routeTa:value}));if(autoTranslateOnSubmit)autoTranslateField(value,"routeTa","routeTa",setRouteForm,"ta");}} className="mt-1 w-full min-w-0 rounded-md border border-slate-300 p-2 text-sm font-anek-tamil" /></label>
+                  </div><button type="submit" className="w-full rounded-md bg-[#005689] py-2.5 font-bold text-white hover:bg-[#052962]">Register New Route</button>
                 </form>
 
                 {/* List of Registered Routes */}
@@ -3871,7 +3838,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       <div key={routeItem.id} className="p-2 border rounded bg-slate-50 hover:bg-slate-100/50 transition flex items-center justify-between gap-2">
                         <div className="min-w-0 flex-1">
                           <p className="font-bold text-slate-800 font-anek-malayalam truncate">{routeItem.routeMl}</p>
-                          <p className="text-[9px] text-slate-400 font-bold uppercase truncate">{routeItem.routeEn}</p>
+                          <p lang="en" className="text-xs text-slate-600 font-anek-latin truncate">{routeItem.routeEn}</p><p lang="ta" className="text-xs text-slate-600 font-anek-tamil truncate">{routeItem.routeTa || "Tamil translation pending"}</p>
                         </div>
                         <button 
                           type="button" 
