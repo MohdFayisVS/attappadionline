@@ -11,7 +11,8 @@
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
     "test:security": "node --import tsx --test tests/*.test.ts",
-    "backup:firestore": "tsx scripts/backup-firestore.ts"
+    "backup:firestore": "tsx scripts/backup-firestore.ts",
+    "migrate:prepare-d1": "tsx scripts/firestore-to-d1.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
