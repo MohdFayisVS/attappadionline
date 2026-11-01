@@ -1,6 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 250" role="img" aria-label="Attappadi Online logo">
-  <path fill="#FFCC32" d="M24 109 104 29 184 109 104 189Z"/>
-  <path fill="#FFCC32" d="M176 109 256 29 336 109 256 189Z"/>
-  <path fill="#000" stroke="#fff" stroke-width="5" d="M104 109 180 33 256 109 180 185Z"/>
-  <path fill="#000" stroke="#fff" stroke-width="4" d="M145 156 180 121 215 156 180 240Z"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Attappadi Online"><defs><linearGradient id="charcoal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#333333"/><stop offset="1" stop-color="#090909"/></linearGradient></defs><circle cx="50" cy="50" r="49" fill="url(#charcoal)"/><path d="M50 19 64 34H36Z" fill="#A3F000"/><path d="M35 39H65L80 61 68 75 50 52 32 75 20 61Z" fill="#fff"/></svg>
