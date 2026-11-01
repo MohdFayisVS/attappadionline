@@ -775,16 +775,11 @@ export default function App() {
 
             </div>
 
-            <div className="ao-masthead-brand text-center xl:text-right min-w-0 py-3 px-4 sm:px-5 flex items-center justify-center xl:justify-start gap-3 sm:gap-4 rounded-[22px] bg-gradient-to-br from-white via-[#f6f9ff] to-[#e8f0fb] border border-[#d8e4f4] shadow-[0_8px_24px_rgba(0,0,0,0.12)]">
-              <span className="shrink-0 flex items-center justify-center w-[3.75rem] h-[3.75rem] sm:w-[5.25rem] sm:h-[5.25rem] lg:w-[6.5rem] lg:h-[6.5rem] rounded-2xl bg-[#e9f1fd] border border-[#d8e4f4] shadow-sm"><img src="/attappadi-mark.svg" alt="Attappadi Online brand mark" className="ao-brand-mark w-[85%] h-[85%] object-contain" /></span>
-              <div className="min-w-0">
-              <h1 
-                onClick={() => { setActiveSection("news"); setActiveRegion("all"); setSearchQuery(""); }}
-                className="ao-header-wordmark text-[#052962] text-[clamp(2.1rem,4.4vw,4.5rem)] font-serif-guardian font-black tracking-tighter italic cursor-pointer transition select-none hover:opacity-95 leading-tight"
-              >
-                Attappadi<span className="text-[#ffe500]">Online</span>
-              </h1>
-              <p className="text-[10px] sm:text-xs text-[#536b8e] mt-1.5 font-semibold uppercase tracking-[0.15em] sm:tracking-widest font-sans">ALL AROUND THE ATTAPPADI HILLS</p>
+            <div className="ao-masthead-brand min-w-0 py-3 px-4 sm:px-5 flex items-center justify-center xl:justify-start gap-3 sm:gap-4 rounded-[22px] bg-gradient-to-br from-white via-[#f7f9f7] to-[#eef4e8] border border-[#dce8d3] shadow-[0_8px_24px_rgba(0,0,0,0.12)]">
+              <span className="shrink-0 flex items-center justify-center w-[3.75rem] h-[3.75rem] sm:w-[5.25rem] sm:h-[5.25rem] lg:w-[6.5rem] lg:h-[6.5rem]"><img src="/attappadi-mark.svg" alt="Attappadi Online brand mark" className="ao-brand-mark w-full h-full object-contain" /></span>
+              <div className="min-w-0 text-left">
+                <h1 onClick={() => { setActiveSection("news"); setActiveRegion("all"); setSearchQuery(""); }} className="ao-header-wordmark text-[#202020] text-[clamp(1.65rem,4.2vw,4.1rem)] font-extrabold not-italic cursor-pointer transition select-none hover:opacity-95 leading-none whitespace-nowrap">attappadi <span className="text-[#83c900]">online</span></h1>
+                <p className="text-[10px] sm:text-xs text-[#505c50] mt-2 font-semibold uppercase tracking-[0.12em] sm:tracking-widest font-sans">ALL AROUND THE ATTAPPADI HILLS</p>
               </div>
             </div>
           </div>
