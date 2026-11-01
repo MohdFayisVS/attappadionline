@@ -2269,11 +2269,11 @@ export default function App() {
       </AnimatePresence>
 
       {/* FOOTER */}
-      <footer lang="en" className="bg-[#052962] text-gray-300 py-12 px-6 md:px-12 border-t-4 border-[#ffe500] font-anek-english">
+      <footer lang="en" className="bg-[#171717] text-gray-300 py-12 px-6 md:px-12 border-t-4 border-[#a3f000] font-anek-english">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
           
           <div className="space-y-3">
-            <h4 className="text-xl font-serif-guardian font-extrabold text-[#ffe500]">ATTAPPADI ONLINE</h4>
+            <div className="flex items-center gap-3"><img src="/attappadi-mark.svg" alt="" className="h-12 w-12 grayscale brightness-0 invert" /><span className="ao-brand-wordmark text-xl sm:text-2xl font-extrabold text-white">attappadi online</span></div>
             <p className="text-xs leading-relaxed text-gray-400">
               Reliable Malayalam & English journalism representing Mukkali, Thavalam, Agali, Kottathara, Sholayur, Pudur, Anaikatty, Jellippara, and Chittur. Elevating the tribal block’s native voice.
             </p>
@@ -2282,15 +2282,15 @@ export default function App() {
           <div className="space-y-3">
             <h5 className="text-sm font-bold text-[#fcfcfb] uppercase tracking-wider">Quick Geographical Desks</h5>
             <div className="grid grid-cols-2 gap-x-2 gap-y-1.5 text-xs text-slate-300 font-semibold uppercase">
-              <button onClick={() => handleRegionClick("agali")} className="hover:text-[#ffe500] text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> Agali</button>
-              <button onClick={() => handleRegionClick("mukkali")} className="hover:text-[#ffe500] text-[#ffe500]/90 text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-[#ffe500] shrink-0" /> Mukkali</button>
-              <button onClick={() => handleRegionClick("thavalam")} className="hover:text-[#ffe500] text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> Thavalam</button>
-              <button onClick={() => handleRegionClick("kottathara")} className="hover:text-[#ffe500] text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> Kottathara</button>
-              <button onClick={() => handleRegionClick("sholayur")} className="hover:text-[#ffe500] text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> Sholayur</button>
-              <button onClick={() => handleRegionClick("pudur")} className="hover:text-[#ffe500] text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> Pudur</button>
-              <button onClick={() => handleRegionClick("anaikkatty")} className="hover:text-[#ffe500] text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> Anaikatty</button>
-              <button onClick={() => handleRegionClick("jellippara")} className="hover:text-[#ffe500] text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> Jellippara</button>
-              <button onClick={() => handleRegionClick("chittur")} className="hover:text-[#ffe500] text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> Chittur</button>
+              <button onClick={() => handleRegionClick("agali")} className="hover:text-[#a3f000] text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> Agali</button>
+              <button onClick={() => handleRegionClick("mukkali")} className="hover:text-[#a3f000] text-[#a3f000]/90 text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-[#a3f000] shrink-0" /> Mukkali</button>
+              <button onClick={() => handleRegionClick("thavalam")} className="hover:text-[#a3f000] text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> Thavalam</button>
+              <button onClick={() => handleRegionClick("kottathara")} className="hover:text-[#a3f000] text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> Kottathara</button>
+              <button onClick={() => handleRegionClick("sholayur")} className="hover:text-[#a3f000] text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> Sholayur</button>
+              <button onClick={() => handleRegionClick("pudur")} className="hover:text-[#a3f000] text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> Pudur</button>
+              <button onClick={() => handleRegionClick("anaikkatty")} className="hover:text-[#a3f000] text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> Anaikatty</button>
+              <button onClick={() => handleRegionClick("jellippara")} className="hover:text-[#a3f000] text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> Jellippara</button>
+              <button onClick={() => handleRegionClick("chittur")} className="hover:text-[#a3f000] text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> Chittur</button>
             </div>
           </div>
 
@@ -2307,7 +2307,7 @@ export default function App() {
           <p>
             © <span 
               onDoubleClick={() => { window.location.hash = "#admin-portal-attappadi"; }} 
-              className="cursor-default select-none hover:text-[#ffe500] transition-colors font-medium"
+              className="cursor-default select-none hover:text-[#a3f000] transition-colors font-medium"
               title="Editorial Desk"
             >2026</span> Attappadi Online. All rights reserved by the respective communities.
           </p>
