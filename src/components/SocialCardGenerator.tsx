@@ -227,8 +227,8 @@ export default function SocialCardGenerator({
             {logoToggle && (
               <div className="flex items-center gap-3 shrink-0">
                 <img src="/attappadi-mark.svg" alt="Attappadi Online" crossOrigin="anonymous" className="w-16 h-16 object-contain shrink-0" />
-                <div className="font-extrabold italic tracking-tighter" style={{ fontSize: "40px", color: customTxtPrimary, letterSpacing: "-2px", fontFamily: '"Anek Latin", sans-serif' }}>
-                  Attappadi<span style={{ color: customAccent }}>Online</span>
+                <div className="font-extrabold italic tracking-tighter" style={{ fontSize: "40px", color: customTxtPrimary, letterSpacing: "-2px", fontFamily: '"Playfair Display", Georgia, serif' }}>
+                  attappadi <span style={{ color: customAccent }}>online</span>
                 </div>
               </div>
             )}
