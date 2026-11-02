@@ -1331,18 +1331,18 @@ export default function App() {
               />
             </div>
           ) : activeSection === "events" ? (
-            <div className="bg-white border border-gray-100 rounded-lg shadow-xs p-5 md:p-6 space-y-6 animate-fade-in">
+            <div lang={lang} className={`bg-white border border-gray-100 rounded-lg shadow-xs p-5 md:p-6 space-y-6 animate-fade-in ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
               <div className="border-b pb-4">
                 <span className="text-[10px] bg-[#052962] text-white font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">
-                  {lang === "en" ? "Interactive Timeline" : "സമയക്രമം"}
+                  INTERACTIVE TIMELINE
                 </span>
-                <h2 className="font-serif-guardian font-extrabold text-[#052962] text-2xl mt-1">
-                  {lang === "en" ? "Community Events & Calendars" : "പ്രാദേശിക പരിപാടികൾ"}
+                <h2 className="font-anek-english font-extrabold text-[#052962] text-2xl mt-1" lang="en">
+                  Community Events & Calendars
                 </h2>
-                <p className="text-xs text-gray-400 mt-1 hover:text-gray-500 transition">
+                <p className="text-sm leading-relaxed text-gray-500 mt-1">
                   {lang === "en" 
                     ? "Dates of local health camps, tribal festivals, agricultural melas, and regional updates."
-                    : "അട്ടപ്പാടി മേഖലയിലെ കൃഷി മേളകൾ, പൊതു സമ്പർക്ക പരിപാടികൾ, സൗജന്യ ചികിൽസാ ക്യാമ്പുകൾ എന്നിവയുടെ വിവരങ്ങൾ."}
+                    : lang === "ta" ? "அட்டப்பாடியில் நடைபெறும் உள்ளூர் சுகாதார முகாம்கள், பழங்குடியினர் திருவிழாக்கள், விவசாயக் கண்காட்சிகள் மற்றும் சமூக நிகழ்வுகளின் விவரங்கள்." : "അട്ടപ്പാടി മേഖലയിലെ കൃഷി മേളകൾ, പൊതു സമ്പർക്ക പരിപാടികൾ, സൗജന്യ ചികിൽസാ ക്യാമ്പുകൾ എന്നിവയുടെ വിവരങ്ങൾ."}
                 </p>
               </div>
 
@@ -1350,17 +1350,17 @@ export default function App() {
 
               <div className="bg-[#052962]/5 border-l-4 border-[#052962] p-4 rounded-r mt-4">
                 <h4 className="text-xs font-bold text-[#052962] uppercase mb-1">
-                  {lang === "en" ? "Host a community event?" : "നാട്ടിൽ ഒരു പരിപാടി നടക്കുന്നുണ്ടോ?"}
+                  {lang === "en" ? "Host a community event?" : lang === "ta" ? "சமூக நிகழ்வை நடத்துகிறீர்களா?" : "നാട്ടിൽ ഒരു പരിപാടി നടക്കുന്നുണ്ടോ?"}
                 </h4>
                 <p className="text-[11px] text-gray-500 leading-relaxed mb-3">
                   {lang === "en" 
                     ? "Submit notices of assemblies, agricultural exhibitions, health camps, or festivals to publish on our bulletin board for free."
-                    : "നിങ്ങളുടെ തദ്ദേശ പൊതുപരിപാടികളും സാമൂഹ്യ നോട്ടിസുകളും ഇവിടെ സൗജന്യമായി പരസ്യപ്പെടുത്താൻ അഡ്മിൻ ഡെസ്ക്കുമായി ബന്ധപ്പെടുക."}
+                    : lang === "ta" ? "உங்கள் உள்ளூர் நிகழ்வுகள், விவசாயக் கண்காட்சிகள், சுகாதார முகாம்கள் அல்லது விழாக்கள் பற்றிய அறிவிப்புகளை இலவசமாக வெளியிட நிர்வாகக் குழுவைத் தொடர்புகொள்ளுங்கள்." : "നിങ്ങളുടെ തദ്ദേശ പൊതുപരിപാടികളും സാമൂഹ്യ നോട്ടിസുകളും ഇവിടെ സൗജന്യമായി പരസ്യപ്പെടുത്താൻ അഡ്മിൻ ഡെസ്ക്കുമായി ബന്ധപ്പെടുക."}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   <a href="tel:+914912245353" className="bg-[#052962] hover:bg-slate-900 text-white text-[10px] font-bold px-3 py-1.5 rounded transition inline-flex items-center gap-1 uppercase">
                     <Phone className="w-3.5 h-3.5" />
-                    <span>Call Desk Manager</span>
+                    <span>{lang === "ta" ? "நிர்வாகக் குழுவை அழைக்கவும்" : lang === "ml" ? "അഡ്മിൻ ഡെസ്കിനെ വിളിക്കുക" : "Call Desk Manager"}</span>
                   </a>
                 </div>
               </div>

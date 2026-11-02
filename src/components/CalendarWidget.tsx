@@ -326,7 +326,7 @@ export default function CalendarWidget({ lang, onDownloadCard }: { lang: "en" | 
                   <Calendar className="w-5 h-5" />
                 </div>
                 <div className="space-y-0.5 text-xs text-slate-400">
-                  <p className="font-extrabold font-anek-malayalam text-slate-700">
+                  <p className="font-extrabold text-slate-700">
                     {lang === "ta" ? "நிகழ்வுகள் எதுவும் இல்லை" : lang === "ml" ? "പരിപാടികൾ ഒന്നും നിശ്ചയിച്ചിട്ടില്ല" : "No Events Scheduled"}
                   </p>
                   <p className="text-[10px] leading-tight font-semibold">
