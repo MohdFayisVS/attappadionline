@@ -131,7 +131,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
               document.fonts.load("700 22px 'Anek Tamil'"),
               document.fonts.load("500 20px 'Anek Tamil'"),
               document.fonts.load("800 34px 'Anek Latin'"),
-              document.fonts.load("800 34px 'Syne'"),
+              document.fonts.load("italic 800 34px 'Playfair Display'"),
               document.fonts.load("bold 18px 'Anek Malayalam'"),
               document.fonts.load("bold 16px 'Anek Malayalam'"),
               document.fonts.load("bold 18px system-ui"),
@@ -427,7 +427,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
           // Draw Branding Wordmark on Right
           ctx.textAlign = "right";
           ctx.textBaseline = "middle";
-          ctx.font = "800 32px 'Syne', sans-serif";
+          ctx.font = "italic 800 32px 'Playfair Display', Georgia, serif";
 
           const textPartOnline = "online";
           const textPartAttapadi = "attappadi";
@@ -490,7 +490,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
 
             // Large abstract news brand monogram in center
             ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
-            ctx.font = "800 120px 'Syne', sans-serif";
+            ctx.font = "italic 800 120px 'Playfair Display', Georgia, serif";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.fillText("attappadi", canvas.width / 2, 280);
@@ -755,7 +755,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
                     <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wide font-mono">
                       {isLpgItem ? "LPG GAS DISTRIBUTION" : "NOTICE/ALERTS"}
                     </span>
-                    <span className="ao-brand-wordmark font-extrabold not-italic text-sm text-[#202020] tracking-tight">
+                    <span className="ao-brand-wordmark font-extrabold italic text-sm text-[#202020] tracking-tight">
                       attappadi<span className="text-[#83c900]"> online</span>
                     </span>
                   </div>
@@ -809,7 +809,7 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
                 </span>
 
                 {/* BRAND LABEL: same serif-guardian font of header title */}
-                <span className="ao-brand-wordmark font-extrabold not-italic text-sm text-[#202020] tracking-tight">
+                <span className="ao-brand-wordmark font-extrabold italic text-sm text-[#202020] tracking-tight">
                   attappadi<span className="text-[#83c900]"> online</span>
                 </span>
 

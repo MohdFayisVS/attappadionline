@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Anek+Latin:wght@300;400;500;600;700;800&family=Anek+Malayalam:wght@300;400;500;600;700;800&family=Anek+Tamil:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
@@ -437,3 +438,6 @@ header[lang="en"], footer[lang="en"], .ao-edition-strip[lang="en"] {
 
 /* Attappadi Online identity: Syne is restricted to the brand wordmark. */
 .ao-brand-wordmark, .ao-header-wordmark { font-family: 'Syne', sans-serif !important; text-transform: lowercase; letter-spacing: -.055em; }
+
+/* Brand wordmark only: preserve all site language fonts and original colors. */
+.ao-brand-wordmark,.ao-header-wordmark { font-family: 'Playfair Display', Georgia, serif !important; font-style: italic !important; font-weight: 800 !important; font-stretch: normal; letter-spacing: -0.035em !important; text-transform: lowercase !important; }
