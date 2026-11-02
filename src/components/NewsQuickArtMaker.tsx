@@ -22,6 +22,13 @@ export default function NewsQuickArtMaker({ defaultHeadline = "", onApply }: Pro
   const [size, setSize] = useState(58);
   const [showBrand, setShowBrand] = useState(true);
   const [status, setStatus] = useState("");
+  const brandMarkRef = useRef<HTMLImageElement | null>(null);
+  useEffect(() => {
+    const mark = new Image();
+    mark.onload = () => { brandMarkRef.current = mark; draw(); };
+    mark.src = "/attappadi-mark.svg";
+    return () => { mark.onload = null; };
+  }, []);
   const draw = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -39,9 +46,12 @@ export default function NewsQuickArtMaker({ defaultHeadline = "", onApply }: Pro
     }
     ctx.fillStyle = accent; ctx.fillRect(0, 0, 18, h);
     if (showBrand) {
+      if (brandMarkRef.current) ctx.drawImage(brandMarkRef.current, 42, 27, 56, 56);
       ctx.font = "italic 800 26px Playfair Display, Georgia, serif"; ctx.fillStyle = foreground;
-      ctx.fillText("attappadi online", 62, 65);
-      ctx.fillStyle = accent; ctx.fillRect(62, 82, 210, 5);
+      ctx.fillText("attappadi", 112, 65);
+      const brandWidth = ctx.measureText("attappadi ").width;
+      ctx.fillStyle = accent; ctx.fillText("online", 112 + brandWidth, 65);
+      ctx.fillRect(112, 82, 210, 5);
     }
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.font = "145px 'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif";
@@ -72,6 +82,7 @@ export default function NewsQuickArtMaker({ defaultHeadline = "", onApply }: Pro
   };
   useEffect(() => { draw(); }, [themeIndex, background, foreground, accent, headline, subtitle, symbol, style, size, showBrand]);
   const apply = async () => {
+    await document.fonts.load("italic 800 26px Playfair Display");
     await document.fonts.ready;
     draw();
     const image = canvasRef.current?.toDataURL("image/png");
