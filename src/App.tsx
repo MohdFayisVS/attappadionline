@@ -2273,7 +2273,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
           
           <div className="space-y-3">
-            <div className="flex items-center gap-3"><img src="/attappadi-mark.svg" alt="" className="h-12 w-12 grayscale brightness-0 invert" /><span className="ao-brand-wordmark text-xl sm:text-2xl font-extrabold text-white">attappadi online</span></div>
+            <div className="flex items-center gap-3"><img src="/attappadi-mark.svg" alt="" className="h-14 w-14 shrink-0 object-contain rounded-full bg-white p-1 ring-1 ring-white/30" /><span className="ao-brand-wordmark text-xl sm:text-2xl font-extrabold text-white">attappadi <span className="text-[#94d900]">online</span></span></div>
             <p className="text-xs leading-relaxed text-gray-400">
               Reliable Malayalam & English journalism representing Mukkali, Thavalam, Agali, Kottathara, Sholayur, Pudur, Anaikatty, Jellippara, and Chittur. Elevating the tribal block’s native voice.
             </p>

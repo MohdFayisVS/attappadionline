@@ -755,9 +755,9 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
                     <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wide font-mono">
                       {isLpgItem ? "LPG GAS DISTRIBUTION" : "NOTICE/ALERTS"}
                     </span>
-                    <span className="ao-brand-wordmark font-extrabold italic text-sm text-[#202020] tracking-tight">
+                    <span className="inline-flex items-center gap-1.5"><img src="/attappadi-mark.svg" alt="" className="w-7 h-7 object-contain shrink-0" /><span className="ao-brand-wordmark font-extrabold italic text-sm text-[#202020] tracking-tight">
                       attappadi<span className="text-[#83c900]"> online</span>
-                    </span>
+                    </span></span>
                   </div>
                 </div>
               );
@@ -809,9 +809,9 @@ export default function ShareCardModal({ isOpen, onClose, data, lang: defaultLan
                 </span>
 
                 {/* BRAND LABEL: same serif-guardian font of header title */}
-                <span className="ao-brand-wordmark font-extrabold italic text-sm text-[#202020] tracking-tight">
+                <span className="inline-flex items-center gap-1.5"><img src="/attappadi-mark.svg" alt="" className="w-7 h-7 object-contain shrink-0" /><span className="ao-brand-wordmark font-extrabold italic text-sm text-[#202020] tracking-tight">
                   attappadi<span className="text-[#83c900]"> online</span>
-                </span>
+                </span></span>
 
               </div>
 
