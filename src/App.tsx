@@ -1366,152 +1366,23 @@ export default function App() {
               </div>
             </div>
           ) : activeSection === "videos" ? (
-            <div className="bg-white border border-gray-100 rounded-lg shadow-xs p-5 md:p-6 space-y-6 animate-fade-in">
+            <section lang={lang} className={`bg-white border border-gray-100 rounded-lg shadow-xs p-5 md:p-6 space-y-6 animate-fade-in ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
               <div className="border-b pb-4">
-                <span className="text-[10px] bg-red-600 text-white font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">
-                  {lang === "en" ? "Visual Stories" : "വീഡിയോ വാർത്തകൾ"}
-                </span>
-                <h2 className="font-serif-guardian font-extrabold text-[#052962] text-2xl mt-1">
-                  {lang === "en" ? "Attappadi Documentary & Video Hub" : "കാഴ്ചകളിലൂടെ അട്ടപ്പാടി..."}
-                </h2>
-                <p className="text-xs text-gray-400 mt-1">
-                  {lang === "en" 
-                    ? "HD video essays, field journals, and local visual reporting tracking the valleys."
-                    : "അട്ടപ്പാടിയുടെ മനോഹർ ദൃശ്യങ്ങളും, വന്യജീവി വൈവിധ്യവും, തനത് ഗാനങ്ങളും ഉൾപ്പെടുത്തിയ വീഡിയോകൾ."}
-                </p>
+                <span lang="en" className="font-anek-english text-[10px] bg-red-600 text-white font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">VISUAL STORIES</span>
+                <h2 lang="en" className="font-anek-english font-extrabold text-[#052962] text-2xl mt-1">Attappadi Documentary & Video Hub</h2>
+                <p className="text-sm leading-relaxed text-gray-500 mt-2">{lang === "ta" ? "அட்டப்பாடியின் ஆவணப்படங்கள், களச் செய்திகள் மற்றும் காணொளிகள் நிர்வாகக் குழு வெளியிட்ட பிறகு இங்கே தோன்றும்." : lang === "ml" ? "അട്ടപ്പാടിയിലെ ഡോക്യുമെന്ററികളും ദൃശ്യവാർത്തകളും അഡ്മിൻ പ്രസിദ്ധീകരിച്ച ശേഷം ഇവിടെ ലഭ്യമാകും." : "Documentaries, field reports and videos will appear here when published by the editorial team."}</p>
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {[
-                  {
-                    titleEn: "Silent Valley National Park: Journey Through Time",
-                    titleMl: "സൈലന്റ് വാലി: നിഗൂഢ വനങ്ങളിലൂടെയുള്ള യാത്രാവിവരണം",
-                    duration: "12:40",
-                    image: "https://images.unsplash.com/photo-1549221194-4fa7a41413f4?w=800&auto=format&fit=crop",
-                    descEn: "Explore the ancient rain forests, evergreen giant trees, and the native birds singing deep along the Kunthi River.",
-                    descMl: "കുന്തിപ്പുഴയുടെ ഇരമ്പലിനൊപ്പം പാടുന്ന മലമുഴക്കി വേഴാമ്പലുകളും ചോലവനങ്ങളും നിറയുന്ന അതിമനോഹര ചിത്രം."
-                  },
-                  {
-                    titleEn: "The Rhythm of the Soil: Traditional Tribal Dances",
-                    titleMl: "തുടിതാളം: പരമ്പരാഗത അട്ടപ്പാടി പണിയ, കുറുമ്പ നൃത്തങ്ങൾ",
-                    duration: "08:15",
-                    image: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=800&auto=format&fit=crop",
-                    descEn: "An intimate field presentation of the Elelakkaradi dance, capturing native songs with local instrumental rhythms.",
-                    descMl: "ഏലേലക്കരടി താളത്തിൽ ഇവിടുത്തെ മലനിരകളെയും പ്രകൃതിയെയും വണങ്ങുന്ന ഗോത്ര നൃത്ത ദൃശ്യങ്ങൾ."
-                  },
-                  {
-                    titleEn: "Vanya Ragi: Revival of Indigenous Farming in Pudur",
-                    titleMl: "വനസംസ്കാരം: പുതൂരിലെ പരമ്പരാഗത റാഗി കൃഷിയുടെ തിരിച്ചുപിടിക്കൽ",
-                    duration: "10:30",
-                    image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=800&auto=format&fit=crop",
-                    descEn: "Witness how local community farmers collaborate to preserve organic grains and millets without chemicals.",
-                    descMl: "മേഖലയിലെ കർഷകർ ഒത്തുകൂടി തനത് റാഗി, വൻപയർ കൃഷികൾ വീണ്ടെടുക്കുന്നതിൻ്റെ കഥകൾ."
-                  },
-                  {
-                    titleEn: "Gorge Waters: The Sweets of Siruvani Rivers",
-                    titleMl: "ശിരുവാണി തേനൊഴുക്ക്: വിശ്വപ്രസിദ്ധമായ കുടിവെള്ള താഴ്വാരം",
-                    duration: "06:50",
-                    image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&auto=format&fit=crop",
-                    descEn: "A visual essay tracking sweet streams of Siruvani hills and how they are protected inside Nilgiri biozones.",
-                    descMl: "പ്രകൃത്യാൽ ശുദ്ധീകരിക്കപ്പെട്ട് ഒഴുകിയെത്തുന്ന ലോകത്തിലെ അമൃതുപോലുള്ള ശിരുവാണി ജലപാത."
-                  }
-                ].map((vid, vIdx) => (
-                  <div key={vIdx} className="bg-[#fcfcfb] border border-gray-100 rounded-lg overflow-hidden group hover:shadow-md transition duration-300">
-                    <div className="relative aspect-video bg-slate-900 flex items-center justify-center">
-                      <img src={vid.image} alt={vid.titleEn} className="w-full h-full object-cover opacity-85 group-hover:scale-102 transition duration-500" referrerPolicy="no-referrer" />
-                      <div className="absolute inset-0 bg-black/25 flex items-center justify-center">
-                        <button className="p-3 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg transition duration-200 group-hover:scale-110 cursor-pointer flex items-center justify-center">
-                          <svg className="w-4 h-4 ml-0.5 fill-current" viewBox="0 0 24 24">
-                            <path d="M8 5v14l11-7z" stroke="none" />
-                          </svg>
-                        </button>
-                      </div>
-                      <span className="absolute bottom-2 right-2 bg-slate-950/80 text-white font-mono text-[9px] px-1.5 py-0.5 rounded shadow-sm">
-                        {vid.duration}
-                      </span>
-                    </div>
-                    <div className="p-4 space-y-1 text-slate-800">
-                      <h4 className="font-serif-guardian font-extrabold text-sm text-[#052962] leading-tight group-hover:text-red-700 transition duration-200">
-                        {lang === "ml" ? vid.titleMl : lang === "ta" ? (vid.titleTa || vid.titleEn) : vid.titleEn}
-                      </h4>
-                      <p className="text-[11px] text-gray-500 font-light leading-relaxed">
-                        {lang === "ml" ? vid.descMl : lang === "ta" ? (vid.descTa || vid.descEn) : vid.descEn}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+              <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center text-sm text-slate-600">{lang === "ta" ? "இதுவரை காணொளிகள் வெளியிடப்படவில்லை." : lang === "ml" ? "വീഡിയോകൾ ഇതുവരെ പ്രസിദ്ധീകരിച്ചിട്ടില്ല." : "No videos have been published yet."}</div>
+            </section>
           ) : activeSection === "column" ? (
-            <div className="bg-white border border-gray-100 rounded-lg shadow-xs p-5 md:p-6 space-y-6 animate-fade-in">
+            <section lang={lang} className={`bg-white border border-gray-100 rounded-lg shadow-xs p-5 md:p-6 space-y-6 animate-fade-in ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
               <div className="border-b pb-4">
-                <span className="text-[10px] bg-[#052962] text-[#ffe500] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">
-                  {lang === "en" ? "Editorial Desk" : "പത്രാധിപരുടെ കോളം"}
-                </span>
-                <h2 className="font-serif-guardian font-extrabold text-[#052962] text-2xl mt-1 leading-tight">
-                  {lang === "en" ? "Valley Columns & Commentary" : "പംക്തികൾ"}
-                </h2>
-                <p className="text-xs text-gray-400 mt-1">
-                  {lang === "en" 
-                    ? "In-depth investigative reports and developmental journalism written by native scholars."
-                    : "പ്രാദേശിക വികസനം, ഗോത്ര ഭാഷാ പദ്ധതികൾ, പ്രകൃതി കൃഷി എന്നിവ സംബന്ധിച്ച ലേഖന പരമ്പരകൾ."}
-                </p>
+                <span lang="en" className="font-anek-english text-[10px] bg-[#052962] text-[#ffe500] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">EDITORIAL DESK</span>
+                <h2 lang="en" className="font-anek-english font-extrabold text-[#052962] text-2xl mt-1">Valley Columns & Commentary</h2>
+                <p className="text-sm leading-relaxed text-gray-500 mt-2">{lang === "ta" ? "அட்டப்பாடி பற்றிய ஆய்வுக் கட்டுரைகளும் கருத்துப் பதிவுகளும் ஆசிரியர் குழு வெளியிட்ட பிறகு இங்கே தோன்றும்." : lang === "ml" ? "അട്ടപ്പാടിയെക്കുറിച്ചുള്ള ലേഖനങ്ങളും വിശകലനങ്ങളും എഡിറ്റോറിയൽ ടീം പ്രസിദ്ധീകരിച്ച ശേഷം ഇവിടെ ലഭ്യമാകും." : "Editorial articles and commentary will appear here after publication."}</p>
               </div>
-
-              <div className="space-y-6">
-                {[
-                  {
-                    titleEn: "Millet Sovereignty: Pudur's Path to Native Nutritional Revival",
-                    titleMl: "ചാമയും റാഗിയും: ഭക്ഷ്യസ്വയംപര്യാപ്തതയിലെ പുതൂരിലെ മുന്നേറ്റങ്ങൾ",
-                    authorEn: "Prof. Sivaraman Nair, Agro-historian",
-                    authorMl: "പ്രൊഫ. ശിവരാമൻ നായർ, അഗ്രോ ഹിസ്റ്റോറിയൻ",
-                    roleEn: "Former Advisor, National Biodiversity Authority",
-                    roleMl: "മുൻ ഉപദേഷ്ടാവ്, ദേശീയ ജൈവ വൈവിധ്യ സമിതി",
-                    date: "June 15, 2026",
-                    excerptEn: "The transition back to organic millets inside Pudur is not just about nostalgia—it represents our direct path to secure native nutrient channels for generations to come, fighting malnutrition at the soil roots...",
-                    excerptMl: "സംസ്‌കരിച്ച ധാന്യങ്ങളിൽ നിന്ന് ഈ നാട്ടിലെ പരമ്പരാഗത റാഗിയിലേക്കും ചാമയിലേക്കുമുള്ള മടക്കം കേവലമൊരു ഭക്ഷണ ശീലമല്ല—അതൊരു ഭക്ഷ്യസ്വാതന്ത്ര്യത്തിന്റെ പ്രഖ്യാപനമാണ്..."
-                  },
-                  {
-                    titleEn: "The Silence of Silent Valley: Protecting the Rain Forests Canopy",
-                    titleMl: "നിശബ്ദതയുടെ താലോലം: സൈലന്റ് വാലി മഴക്കാടുകളുടെ ജൈവ സുരക്ഷ",
-                    authorEn: "Dr. Arundhati Roy, Ecologist",
-                    authorMl: "ഡോ. അരുന്ധതി റോയ്, ഫോറസ്റ്റ് ഇക്കോളജിസ്റ്റ്",
-                    roleEn: "Forum for Biosphere Protection Chair",
-                    roleMl: "ബയോസ്ഫിയർ സംരക്ഷണ ഫോറം ചെയർപേഴ്സൺ",
-                    date: "May 29, 2026",
-                    excerptEn: "Silent Valley remains the final undisturbed evergreen canopy in India. We must enforce strict eco-tourism boundaries to protect watershed tables feeding the Kunthi River from microclimatic variations...",
-                    excerptMl: "സൈലന്റ് വാലി ഈ ഉപഭൂഖണ്ഡത്തിലെ അവസാന കന്യകാവനമാണെന്ന് നാം ഓർക്കണം. കുന്തിപ്പുഴ കാത്തുസൂക്ഷിക്കാൻ ടൂറിസം നിയന്ത്രണങ്ങൾ കൂടുതൽ കർശനമാക്കേണ്ടതുണ്ട്..."
-                  }
-                ].map((col, cIdx) => (
-                  <article key={cIdx} className="space-y-3 pb-6 border-b border-gray-100 last:border-b-0 last:pb-0">
-                    <div className="flex justify-between items-center text-[10px]">
-                      <span className="bg-slate-100 text-slate-700 font-bold px-1.5 py-0.5 rounded">
-                        🗓️ {col.date}
-                      </span>
-                    </div>
-                    <h3 className="font-serif-guardian font-extrabold text-[#052962] text-base leading-snug">
-                      {lang === "ml" ? col.titleMl : lang === "ta" ? (col.titleTa || col.titleEn) : col.titleEn}
-                    </h3>
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-[#052962] text-yellow-300 flex items-center justify-center font-bold text-[10px] shrink-0">
-                        {col.authorEn.charAt(0)}
-                      </div>
-                      <div>
-                        <p className="text-[10px] font-bold text-gray-800 leading-none">
-                          {lang === "ml" ? col.authorMl : lang === "ta" ? (col.authorTa || col.authorEn) : col.authorEn}
-                        </p>
-                        <p className="text-[8px] text-gray-400">
-                          {lang === "ml" ? col.roleMl : lang === "ta" ? (col.roleTa || col.roleEn) : col.roleEn}
-                        </p>
-                      </div>
-                    </div>
-                    <p className="text-xs text-slate-600 bg-slate-50 border-l-2 border-[#052962] p-2.5 rounded-r select-none italic leading-relaxed">
-                      "{lang === "ml" ? col.excerptMl : lang === "ta" ? (col.excerptTa || col.excerptEn) : col.excerptEn}"
-                    </p>
-                  </article>
-                ))}
-              </div>
-            </div>
+              <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center text-sm text-slate-600">{lang === "ta" ? "இதுவரை கட்டுரைகள் வெளியிடப்படவில்லை." : lang === "ml" ? "ലേഖനങ്ങൾ ഇതുവരെ പ്രസിദ്ധീകരിച്ചിട്ടില്ല." : "No columns have been published yet."}</div>
+            </section>
           ) : activeSection === "readers-column" ? (
             <div className="bg-white border border-gray-100 rounded-lg shadow-xs p-5 md:p-6 space-y-6 animate-fade-in">
               <div className="border-b pb-4">

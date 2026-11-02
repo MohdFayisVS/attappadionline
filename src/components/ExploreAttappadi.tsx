@@ -14,267 +14,15 @@ interface ExploreAttappadiProps {
 }
 
 // Default backup data lists
-const defaultDestinations: DestinationItem[] = [
-  {
-    id: "dest_1",
-    nameTa: "சைலண்ட் வேலி தேசியப் பூங்கா",
-    locationTa: "முக்காலி வனச்சரக அலுவலகம்",
-    descriptionTa: "இந்தியாவில் எஞ்சியுள்ள பாதுகாக்கப்பட்ட மழைக்காடுகளில் ஒன்று. நீலகிரி உயிர்க்கோளக் காப்பகத்தின் ஒரு பகுதியாக உள்ள இப்பகுதி, பசுமையான காடுகள், ஆறுகள் மற்றும் சிங்கவால் குரங்கு உள்ளிட்ட அரிய வனவிலங்குகளுக்குப் பெயர் பெற்றது.",
-    highlightsTa: ["முக்காலியிலிருந்து ஜீப் சவாரி","காட்டுப் பாதைகளில் நடைபயணம்","கண்காணிப்புக் கோபுரக் காட்சிகள்"],
-    nameEn: "Silent Valley National Park",
-    nameMl: "സൈലന്റ് വാലി ദേശീയോദ്യാനം",
-    locationEn: "Mukkali Ranger Station",
-    locationMl: "മുക്കാലി ഫോറസ്റ്റ് റേഞ്ച് ഓഫീസ്",
-    image: "https://images.unsplash.com/photo-1549221194-4fa7a41413f4?w=800&auto=format&fit=crop&q=80",
-    descriptionEn: "One of the last undisturbed rain forests in India. Protected under the Nilgiri Biosphere Reserve, it is famous for its evergreen canopy, pristine wild rivers, and rare wildlife like the Lion-tailed Macaque.",
-    descriptionMl: "ഇന്ത്യയിലെ അവശേഷിക്കുന്ന ഏക കന്യകാവനങ്ങളിലൊന്ന്. നീലഗിരി ബയോസ്ഫിയർ റിസർവിന്റെ ഭാഗമായ ഇവിടെ നിത്യഹരിത വനനിരകളും, തെളിഞ്ഞ വന്യ നദികളും, സിംഹവാലൻ കുരങ്ങുകൾ ഉൾപ്പെടെയുള്ള അപൂർവ വന്യജീവി സമ്പത്തുമുണ്ട്.",
-    highlightsEn: ["Jeep Safari from Mukkali", "Sylvan Trekking Trails", "Beautiful Watchtower views"],
-    highlightsMl: ["മുക്കാലിയിൽ നിന്നുള്ള ജീപ്പ് സഫാരി", "പ്രകൃതിദത്ത ട്രെക്കിങ് പാതകൾ", "വാച്ച് ടവർ വ്യൂ പോയിന്റുകൾ"]
-  },
-  {
-    id: "dest_2",
-    nameTa: "மல்லேஸ்வரன் மலைச்சிகரம்",
-    locationTa: "அகளி அருகில்",
-    descriptionTa: "அட்டப்பாடியின் உயரமான மலைச்சிகரங்களில் ஒன்றான மல்லேஸ்வரன் மலை, உள்ளூர் பழங்குடியின மக்களால் சிவபெருமானுடன் தொடர்புடைய புனித இடமாக மதிக்கப்படுகிறது. மேகமூட்டமான மலைக்காட்சிகளுக்கும் சிவராத்திரி வழிபாட்டுக்கும் பெயர் பெற்றது.",
-    highlightsTa: ["பண்பாட்டுச் சிறப்புமிக்க புனிதப் பயணம்","மலை நடைபயணம்","மூடுபனி சூழ்ந்த காட்சிகள்"],
-    nameEn: "Malleswara Peak",
-    nameMl: "മല്ലേശ്വരൻ മുടി",
-    locationEn: "Near Agali",
-    locationMl: "അഗളിക്ക് സമീപം",
-    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&auto=format&fit=crop&q=80",
-    descriptionEn: "The tallest vertical mountain peak in Attappadi, revered as a deity (Lord Shiva) by the native tribal groups. Swathed in majestic clouds, it is the center of the massive annual Shivratri celebrations.",
-    descriptionMl: "അട്ടപ്പാടിയിലെ ഏറ്റവും ഉയരം കൂടിയ കൊടുമുടി. മല്ലേശ്വരൻ മുടിയെ ഇവിടുത്തെ ആദിവാസി ജനവിഭാഗങ്ങൾ പരമശിവനായി പൂജിച്ച് ആരാധിക്കുന്നു. മനോഹരമായ മഞ്ഞുമൂടിയ മലനിരകളും പ്രശസ്തമായ ശിവരാത്രി കൊടിയേറ്റും ഇവിടുത്തെ പ്രത്യേകതയാണ്.",
-    highlightsEn: ["Cultural Pilgrimage", "Spiritual Trekking", "Mist-shrouded viewpoints"],
-    highlightsMl: ["ആത്മീയ തീർത്ഥാടനം", "വിശുദ്ധ ട്രെക്കിങ് പാത", "മഞ്ഞുമൂടിയ വ്യൂ പോയിന്റുകൾ"]
-  },
-  {
-    id: "dest_3",
-    nameTa: "சிறுவாணி ஆறும் அணை நீர்த்தேக்கமும்",
-    locationTa: "சிங்கம்பட்டி நீர்ப்பிடிப்புப் பகுதி",
-    descriptionTa: "இனிமையான குடிநீருக்குப் பெயர் பெற்ற சிறுவாணி நீர்த்தேக்கம் அடர்ந்த காடுகளாலும் மலைப்பள்ளத்தாக்குகளாலும் சூழப்பட்டுள்ளது. கேரளா மற்றும் தமிழ்நாடு இடையிலான முக்கிய நீர்வளப் பகுதிகளில் இதுவும் ஒன்று.",
-    highlightsTa: ["இயற்கை எழில் மிக்க நீர்வீழ்ச்சிகள்","புகைப்படம் எடுக்கும் இடங்கள்","காட்டின் இயற்கை ஒலிகள்"],
-    nameEn: "Siruvani River & Dam Reservoir",
-    nameMl: "ശിരുവാണി പുഴയും ഡാമും",
-    locationEn: "Singampatti Catchments",
-    locationMl: "സിംഗംപെട്ടി വൃഷ്ടിപ്രദേശം",
-    image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&auto=format&fit=crop&q=80",
-    descriptionEn: "Renowned globally for generating water of unmatched sweetness. The Siruvani reservoir is surrounded by dense forests, deep gorges, and serves as a vital cross-border water network between Kerala and Tamil Nadu.",
-    descriptionMl: "ലോകത്തിലെ ഏറ്റവും സ്വാദുള്ള കുടിവെള്ള സ്രോതസ്സുകളിലൊന്നായി അറിയപ്പെടുന്നു. ശിരുവാണി റിസർവോയർ നിബിഡ വനങ്ങളാലും മലയിടുക്കുകളാലും ചുറ്റപ്പെട്ടിരിക്കുന്നു. കേരളത്തിന്റെയും തമിഴ്‌നാടിന്റെയും അതിർത്തി പങ്കിടുന്ന ജലപാതയാണിത്.",
-    highlightsEn: ["Scenic Waterfalls", "Silent Photography Spots", "Pristine nature sounds"],
-    highlightsMl: ["മനോഹരമായ വെള്ളച്ചാട്ടങ്ങൾ", "ഫോട്ടോഗ്രാഫി സ്പോട്ടുകൾ", "വന്യമായ ശബ്‍ദാനുഭവം"]
-  },
-  {
-    id: "dest_4",
-    nameTa: "பவானி ஆறும் தொங்குபாலமும்",
-    locationTa: "தாவளம் சந்திப்பு",
-    descriptionTa: "தமிழ்நாட்டை நோக்கிக் கிழக்கே பாயும் பவானி ஆற்றின் அருகில் தாவளத்தில் அமைந்துள்ள தொங்குபாலம், ஆற்றின் அழகிய காட்சிகளை ரசிக்க உதவும் உள்ளூர் சுற்றுலா இடமாகும்.",
-    highlightsTa: ["ஆற்றங்கரையில் ஓய்வு","தொங்குபாலத்தில் நடைபயணம்","பறவைகளைக் கவனித்தல்"],
-    nameEn: "Bhavani River & Suspension Bridge",
-    nameMl: "ഭവാനി പുഴയും തൂക്കുപാലവും",
-    locationEn: "Thavalam Nodal",
-    locationMl: "താവളം ജംഗ്ഷൻ",
-    image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&auto=format&fit=crop&q=80",
-    descriptionEn: "A major perennial river flowing eastward into neighboring Tamil Nadu. The hanging suspension bridge at Thavalam is a popular local engineering marvel offering panoramic snapshots over the flowing currents.",
-    descriptionMl: "കിഴക്കോട്ട് ഒഴുകുന്ന അപൂർവ്വം നദികളിലൊന്ന്. താവളത്തിലുള്ള മനോഹരമായ തൂക്കുപാലം പ്രദേശവാസികൾക്കും സഞ്ചാരികൾക്കും ആകർഷകമായ കാഴ്ചാനുഭവവും ഭവാനിപ്പുഴയുടെ വിശാലമായ ദൃശ്യവും സമ്മാനിക്കുന്നു.",
-    highlightsEn: ["Riverbanks Relaxation", "Traditional Suspension Bridge", "Bird Watching spots"],
-    highlightsMl: ["പുഴയോര വിശ്രമം", "തൂക്കുപാലത്തിലൂടെയുള്ള നടത്തം", "പക്ഷി നിരീക്ഷണം"]
-  }
-];
+const defaultDestinations: DestinationItem[] = [];
 
-const defaultCultures: CultureItem[] = [
-  {
-    id: "cult_1",
-    titleTa: "பழங்குடியின நடனங்களும் இசைக்கலைகளும்",
-    subtitleTa: "இருளர், முதுவர் மற்றும் குறும்பர் மரபுகள்",
-    descTa: "அட்டப்பாடியின் பண்பாட்டு அடையாளத்தில் பாரம்பரியப் பழங்குடியின இசைக்கும் நடனத்துக்கும் முக்கிய இடமுண்டு. காக்க கரும்பன், ஏலேலக்கரடி போன்ற நடனங்கள் இயற்கை, அறுவடை மற்றும் சமூக மரபுகளுடன் தொடர்புடையவை.",
-    elementTa: "முக்கிய இசைக்கருவிகள்: குழல், தவி மற்றும் பறை.",
-    type: "culture",
-    titleEn: "Tribal Dances & Instrumental Arts",
-    titleMl: "ഗോത്രവർഗ്ഗ നൃത്തങ്ങളും സംഗീതവും",
-    subtitleEn: "Irula, Muduga, & Kurumba Traditions",
-    subtitleMl: "ഇരുള, മുഡുക, കുറുമ്പ പാരമ്പര്യം",
-    image: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=800&auto=format&fit=crop&q=80",
-    descEn: "Attappadi's identity beats to the rhythm of traditional tribal folk music and dances. The 'Kakka Karumban' and 'Elelakkaradi' represent spirited dance rituals depicting wild creatures, harvest cycles, and ancestral spirits performed around glowing community campfires.",
-    descMl: "പരമ്പരാഗത ഗോത്ര സംഗീതത്തിന്റെയും നൃത്ത രൂപങ്ങളുടെയും താളങ്ങളിലാണ് അട്ടപ്പാടിയുടെ ആത്മാവ് പടരുന്നത്. കാട്ടുമൃഗങ്ങളുടെ ചലനങ്ങളും വിതക്കൊയ്ത്തുകളും വർണ്ണിക്കുന്ന 'കാക്ക കറുമ്പൻ', 'ഏലേലക്കരടി' നൃത്തങ്ങൾ ഗ്രാമീണ കൂട്ടായ്മകളുടെ പ്രതീകങ്ങളാണ്.",
-    elementEn: "Key Instruments: Kozhal (pipe), Thavi, & Para drum beats.",
-    elementMl: "പ്രധാന വാദ്യങ്ങൾ: കുഴൽ, തവി, തകിൽ, പറ മേളങ്ങൾ."
-  },
-  {
-    id: "cult_2",
-    titleTa: "சிறுதானிய உணவுகளும் பாரம்பரியப் பானங்களும்",
-    subtitleTa: "ராகி, சாமை மற்றும் மூங்கில் அரிசி",
-    descTa: "அட்டப்பாடியின் பாரம்பரிய உணவில் ராகிக் கூழ், சாமை அரிசி மற்றும் மூலிகைகள் சேர்த்த பானங்கள் இடம்பெறுகின்றன. மூங்கில் அரிசியால் செய்யப்படும் பாயசமும் சிறப்பு உணவாகக் கருதப்படுகிறது.",
-    elementTa: "சுவைத்துப் பாருங்கள்: காட்டுத் தேன் மற்றும் மூங்கில் அரிசிப் பாயசம்.",
-    type: "food",
-    titleEn: "Millet-centric Gastronomy & Forest Teas",
-    titleMl: "പാരമ്പര്യ ധാന്യ വിഭവങ്ങളും കാട്ടുതേനും",
-    subtitleEn: "Vanya Ragi, Chama, & Bamboo Rice",
-    subtitleMl: "റാഗി, ചാമ, മുളയരി കഞ്ഞി",
-    image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=800&auto=format&fit=crop&q=80",
-    descEn: "Nutrition in the valley traces back to ancient millets. Standard meals center around nourishing Ragi Porridge, Chama rice, and steaming forest tea mixed with immune-boosting country roots. Native bamboo rice payasam made during winter seasons is an absolute sweet delicacy.",
-    descMl: "പ്രകൃതിയോടിണങ്ങിയ പരമ്പരാഗത തനിമയാണ് അട്ടപ്പാടിയിലെ ഭക്ഷണരീതിക്ക്. പോഷകഗുണമേറിയ റാഗി കുറുക്ക്, ചാമച്ചോറ്, ഔഷധവേരുകൾ ചേർത്ത കാട്ടുചായ എന്നിവ ഊരുകളിലെ നിത്യഭക്ഷണമാണ്. കൂടാതെ മുളയരി പായസം പ്രത്യേക ഉത്സവങ്ങളിലെ മധുരവിഭവമാണ്.",
-    elementEn: "Try: Organic Wild Honey & Bamboo Seed Payasam.",
-    elementMl: "രുചിച്ചുനോക്കൂ: ശുദ്ധമായ കാട്ടുതേൻ, മുളയരി പായസം."
-  }
-];
+const defaultCultures: CultureItem[] = [];
 
-const defaultStays: StayItem[] = [
-  {
-    id: "stay_1",
-    nameTa: "சைலண்ட் வேலி சுற்றுச்சூழல் வன விடுதி",
-    typeTa: "அரசு நிர்வகிக்கும் இயற்கை விடுதி",
-    locationTa: "முக்காலி கிராமம்",
-    priceTa: "ஒரு இரவுக்கு ₹2,500 – ₹4,500",
-    featuresTa: ["வனத்துறை நிர்வாகம்","உள்ளூர் வழிகாட்டிகள்","பாரம்பரிய உணவகம்"],
-    nameEn: "Silent Valley Eco Forest Lodge",
-    nameMl: "സൈലന്റ് വാലി ഇക്കോ ലോഗ് ഹൗസ്",
-    typeEn: "Govt-owned Eco Haven",
-    typeMl: "സർക്കാർ ഉടമസ്ഥതയിലുള്ള വനം കുടിലുകൾ",
-    locationEn: "Mukkali Nodal",
-    locationMl: "മുക്കാലി വില്ലേജ്",
-    image: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=800&auto=format&fit=crop&q=80",
-    priceEn: "₹2,500 - ₹4,500 per night",
-    priceMl: "പ്രതിദിനം ₹2,500 - ₹4,500",
-    featuresEn: ["Owned by Forest Department", "Authentic native guides", "Organic food mess"],
-    featuresMl: ["വനം വകുപ്പ് നിയന്ത്രണത്തിൽ", "തദ്ദേശീയരായ ഗൈഡുകൾ", "നാടൻ ഭക്ഷണശാല"]
-  },
-  {
-    id: "stay_2",
-    nameTa: "பவானி ஆற்றங்கரை இயற்கை விடுதி",
-    typeTa: "தனியார் தங்கும் விடுதி",
-    locationTa: "அகளி மலைப்பகுதி",
-    priceTa: "ஒரு இரவுக்கு ₹4,000 – ₹7,000",
-    featuresTa: ["ஆற்றங்கரைக் காட்சி","நட்சத்திரங்களின் கீழ் முகாம் நெருப்பு","ஜீப் பயண வாய்ப்புகள்"],
-    nameEn: "Bhavani Riverside Nature Estate",
-    nameMl: "ഭവാനി റിവർസൈഡ് നേച്ചർ എസ്റ്റേറ്റ്",
-    typeEn: "Premium Private Lodge",
-    typeMl: "പ്രീമിയം പ്രൈവറ്റ് റിസോർട്ട്",
-    locationEn: "Agali Hills",
-    locationMl: "അഗളി കുന്നുകൾ",
-    image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&auto=format&fit=crop&q=80",
-    priceEn: "₹4,000 - ₹7,000 per night",
-    priceMl: "പ്രതിദിനം ₹4,000 - ₹7,000",
-    featuresEn: ["Panoramic river frontage", "Campfire under stars", "Jeep trekking options"],
-    featuresMl: ["ഭവാനിപ്പുഴയുടെ സുന്ദരമായ കാഴ്ച", "നിവേദ്യമായ ക്യാമ്പ്ഫയർ", "ഓഫ്-റോഡ് ജീപ്പ് സവാരി"]
-  },
-  {
-    id: "stay_3",
-    nameTa: "அகளி பள்ளத்தாக்கு வீட்டு விடுதிகள்",
-    typeTa: "சமூகப் பண்ணைத் தங்குமிடம்",
-    locationTa: "தாவளம் – அகளி சாலை",
-    priceTa: "ஒரு இரவுக்கு ₹1,200 – ₹2,000",
-    featuresTa: ["விவசாயக் குடும்பங்களுடன் தங்குதல்","மசாலாத் தோட்ட நடைபயணம்","வீட்டுச் சமையல் உணவுகள்"],
-    nameEn: "Agali Valley HomeStays",
-    nameMl: "അഗളി വാലി ഹോംസ്റ്റേകൾ",
-    typeEn: "Community Farm Stay",
-    typeMl: "തദ്ദേശീയ കർഷക ഭവനങ്ങൾ",
-    locationEn: "Thavalam-Agali corridor",
-    locationMl: "താവളം-അഗളി റോഡ്",
-    image: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800&auto=format&fit=crop&q=80",
-    priceEn: "₹1,200 - ₹2,000 per night",
-    priceMl: "പ്രതിദിനം ₹1,200 - ₹2,000",
-    featuresEn: ["Hosted by farming families", "Spice garden walking tour", "Home-cooked traditional dishes"],
-    featuresMl: ["നാടൻ കർഷക കുടുംബങ്ങളോടൊപ്പം", "സുഗന്ധവ്യഞ്ജന തോട്ട സന്ദർശനം", "രുചികരമായ നാടൻ കഞ്ഞി വിഭവങ്ങൾ"]
-  }
-];
+const defaultStays: StayItem[] = [];
 
-const defaultTravelogues: TravelogueItem[] = [
-  {
-    id: "trav_1",
-    titleTa: "மழைக்கால மாயம்: சைலண்ட் வேலியின் நீர்ப்பிடிப்புப் பகுதியில் நடைபயணம்",
-    authorTa: "ஃபாயிஸ் முகமது, பயணக் கட்டுரையாளர்",
-    snippetTa: "உயர்ந்த மரங்களின் மேல் அடர்ந்த பனிமூட்டம் படர்கிறது. பழமையான மரங்களிலிருந்து மழைத்துளிகள் விழுகின்றன; தொலைவில் சிறுவாணி ஓடைகளின் ஓசை கேட்கிறது. முக்காலியின் ஈரமான காட்டுப்பாதைகளில் நடப்பது இயற்கையைப் புதிய பார்வையில் காணச் செய்கிறது...",
-    readTimeTa: "5 நிமிட வாசிப்பு",
-    titleEn: "Monsoon Magic: Walking Through Silent Valley Catchments",
-    titleMl: "വർഷകാലത്തെ പ്രകൃതി വസന്തം: സൈലന്റ് വാലിയിലൂടെ ഒരു കാൽനട യാത്ര",
-    authorEn: "Fayis Mohammed, Travel Columnist",
-    authorMl: "ഫായിസ് മുഹമ്മദ്, യാത്രാവിവരണ ചരിത്രകാരൻ",
-    date: "June 2026",
-    snippetEn: "Heavy mist envelops the towering teak canopies. Droplets fall from ancient moss-laden trees as the wild Siruvani streams hum a distant lullaby. Walking on the damp orange leaf litter of Mukkali ranger trails resets your perspective completely...",
-    snippetMl: "കനത്ത കോടമഞ്ഞ് ഉയരമുള്ള നിത്യഹരിത മരങ്ങളെ തഴുകിപ്പോകുന്നു. വൃക്ഷത്തലപ്പുകളിൽ നിന്ന് വീഴുന്ന ഓരോ മഴത്തുള്ളിയും ശിരുവാണിപ്പുഴയുടെ ഹൃദയതാളങ്ങൾക്ക് മാറ്റുകൂട്ടുന്നു. മുക്കാലിയിലെ ഈ അടിപ്പാതയിലൂടെയുള്ള നടത്തം പ്രകൃതിയുടെ മറ്റൊരു ലോകത്തേക്ക് നമ്മെ കൊണ്ടുപോകും...",
-    readTimeEn: "5 min read",
-    readTimeMl: "5 മിനുട്ട് വായന"
-  },
-  {
-    id: "trav_2",
-    titleTa: "மல்லேஸ்வரன் மலையடிவாரத்தில் ஒரு ஆன்மிகப் பயணம்",
-    authorTa: "வழக்கறிஞர் ராஜேஷ் கே., அகளி",
-    snippetTa: "அட்டப்பாடியின் பழங்குடியின மக்கள் மல்லேஸ்வரன் மலையை ஆழ்ந்த மரியாதையுடன் பார்க்கிறார்கள். சிவராத்திரி இரவில் மலை உச்சியில் தீபம் ஏற்றப்படும் வேளையில் பள்ளத்தாக்குகளில் ஒலிக்கும் பாரம்பரிய மேளங்களும் அந்தச் சூழலும் மறக்க முடியாத அனுபவத்தைத் தருகின்றன...",
-    readTimeTa: "4 நிமிட வாசிப்பு",
-    titleEn: "Reverence & Height: Gaining Perspective at the base of deity peak Malleswara",
-    titleMl: "കരുത്തിന്റെ പ്രതീകം: മല്ലേശ്വരൻ മുടിയുടെ താഴ്വാരങ്ങളിലൂടെയുള്ള അനുഭവം",
-    authorEn: "Adv. Rajesh K., Agali",
-    authorMl: "അഡ്വ. രാജേഷ് കെ., അഗളി",
-    date: "May 2026",
-    snippetEn: "Every tribal community member elders look up to Malleswaram peak with sheer silence and respect. Trekking to the perimeter during the Shivratri night when giant beacons are lit atop is an otherworldly experience where drum beats echo along valleys...",
-    snippetMl: "അട്ടപ്പാടിയിലെ ഓരോ ജനവിഭാഗത്തിനും മല്ലേശ്വരൻ മുടി കേവലമൊരു പർവ്വതമല്ല; വലിയൊരു വിശ്വാസമാണ്. ശിവരാത്രി ദിനത്തിൽ മലമുകളിൽ മല്ലേശ്വരൻ ദീപം പ്രകാശിക്കുമ്പോൾ അതിർത്തികളിൽ മുഴങ്ങുന്ന തുടിമേളങ്ങളുടെ ശബ്ദം നാടിൻ്റെ ഐക്യത്തിൻ്റെ പ്രതീകമാണ്...",
-    readTimeEn: "4 min read",
-    readTimeMl: "4 മിനുട്ട് വായന"
-  }
-];
+const defaultTravelogues: TravelogueItem[] = [];
 
-const defaultPhotos: PhotoItem[] = [
-  {
-    id: "photo_1",
-    titleTa: "மூடுபனியில் சைலண்ட் வேலியின் பசுமைக் காடுகள்",
-    descTa: "அடர்ந்த மழைக்காட்டின் அதிகாலை இயற்கைக் காட்சி.",
-    url: "https://images.unsplash.com/photo-1549221194-4fa7a41413f4?w=1000&auto=format&fit=crop",
-    titleEn: "Misty Evergreen Canopies of Silent Valley",
-    titleMl: "കോടമഞ്ഞിൽ മൂടിയ സൈലന്റ് വാലി നിബിഡവനങ്ങൾ",
-    descEn: "A pristine early morning viewpoint inside the deep core rainforest.",
-    descMl: "പ്രഭാതത്തിൽ സൈലന്റ് വാലി ദേശീയോദ്യാനത്തിനുള്ളിൽ നിന്നുള്ള വന്യമായ ദൃശ്യം."
-  },
-  {
-    id: "photo_2",
-    titleTa: "மேகங்களால் சூழப்பட்ட மல்லேஸ்வரன் மலைச்சிகரம்",
-    descTa: "பழங்குடியின மக்களால் புனிதமாக மதிக்கப்படும் மலைச்சிகரம்.",
-    url: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1000&auto=format&fit=crop",
-    titleEn: "Malleswara Peak Shrouded in Silken Clouds",
-    titleMl: "മല്ലേശ്വരൻ മുടിയെ തഴുകുന്ന മേഘജാലം",
-    descEn: "Revered vertical peak holding sacred importance for native tribal hamlets.",
-    descMl: "ആദിവാസി ഊരുകൾ പവിത്രമായി കാണുന്ന അട്ടപ്പാടിയുടെ കാവൽ ദൈവം."
-  },
-  {
-    id: "photo_3",
-    titleTa: "இனிய நீர் பாயும் சிறுவாணி ஓடைகள்",
-    descTa: "அடர்ந்த காடுகளின் வழியாகப் பாயும் சிறுவாணி நீரோடைகள்.",
-    url: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1000&auto=format&fit=crop",
-    titleEn: "Primal Siruvani Streams Carrying Sweet Water",
-    titleMl: "മലനിരകളിൽ നിന്നൊഴുകിയെത്തുന്ന ശിരുവാണി പുഴ",
-    descEn: "Purest, famously sweet water reservoir streams flowing through deep blocks.",
-    descMl: "വിഖ്യാതമായ മധുരമേറിയ ഈ കുടിവെള്ള നദി കാടുകളുടെ ഹൃദയം തൊട്ടൊഴുകുന്നു."
-  },
-  {
-    id: "photo_4",
-    titleTa: "பவானி ஆற்றங்கரையின் பழமையான மூங்கில் காடுகள்",
-    descTa: "உள்ளூர் பறவைகளும் வன உயிரினங்களும் வாழும் இயற்கைச் சூழல்.",
-    url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1000&auto=format&fit=crop",
-    titleEn: "Ancient Bamboo Thickets near Bhavani Banks",
-    titleMl: "ഭവാനിപ്പുഴയോരത്തെ പുരാതന മുളങ്കാടുകൾ",
-    descEn: "Home to beautiful indigenous birds and natural wilderness vibes.",
-    descMl: "അപൂർവ പക്ഷികൾക്ക് താവളമൊരുക്കുന്ന താവളത്തിലെ നിബിഡമായ ഈ മുളങ്കാടുകൾ."
-  },
-  {
-    id: "photo_5",
-    titleTa: "புதூர் ஊராட்சியின் ராகி மற்றும் சிறுதானிய வயல்கள்",
-    descTa: "பாரம்பரிய உணவுப் பாதுகாப்புக்கும் விவசாய வாழ்வாதாரத்துக்கும் துணைபுரியும் வயல்கள்.",
-    url: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=1000&auto=format&fit=crop",
-    titleEn: "Ragi and Millet Farmlands of Pudur Grama Panchayat",
-    titleMl: "പുതൂരിലെ മനോഹരമായ പരമ്പരാഗത റാഗി കൃഷിയിടം",
-    descEn: "Ensuring deep nutrition and historic self-reliance across block boundaries.",
-    descMl: "അട്ടപ്പാടിക്ക് തനതായ ആരോഗ്യസുരക്ഷ പകരുന്ന പുരാതന ധാന്യ വിള നിലങ്ങൾ."
-  },
-  {
-    id: "photo_6",
-    titleTa: "முக்காலி பாதுகாப்புப் பகுதியில் மர நடைபாதை",
-    descTa: "சைலண்ட் வேலியின் பசுமையான வன எல்லையை அண்மையில் காணும் பாதை.",
-    url: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1000&auto=format&fit=crop",
-    titleEn: "Rustic Wooden Walkway in Mukkali Buffer Zone",
-    titleMl: "മുക്കാലി ബഫർ സോണിലെ പ്രകൃതിദത്ത നടപ്പാത",
-    descEn: "Step closer to untouched, moss-covered wilderness of Silent Valley.",
-    descMl: "സൈലന്റ് വാലിയുടെ അതിർത്തി വനങ്ങളിൽ സഞ്ചാരികൾക്കായി ഒരുക്കിയ സുന്ദരമായ കാട്ടുപാത."
-  }
-];
+const defaultPhotos: PhotoItem[] = [];
 
 const defaultBusRoutes: BusRouteItem[] = [
   {
@@ -762,27 +510,27 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
   const refreshDynamicContent = () => {
     fetch("/api/destinations")
       .then(res => res.json())
-      .then(data => { if (Array.isArray(data) && data.length > 0) setDestinationsList(data); })
+      .then(data => { if (Array.isArray(data)) setDestinationsList(data); })
       .catch(err => console.error("Error loading destinations:", err));
 
     fetch("/api/cultures")
       .then(res => res.json())
-      .then(data => { if (Array.isArray(data) && data.length > 0) setCulturesList(data); })
+      .then(data => { if (Array.isArray(data)) setCulturesList(data); })
       .catch(err => console.error("Error loading cultures:", err));
 
     fetch("/api/stays")
       .then(res => res.json())
-      .then(data => { if (Array.isArray(data) && data.length > 0) setStaysList(data); })
+      .then(data => { if (Array.isArray(data)) setStaysList(data); })
       .catch(err => console.error("Error loading stays:", err));
 
     fetch("/api/travelogues")
       .then(res => res.json())
-      .then(data => { if (Array.isArray(data) && data.length > 0) setTraveloguesList(data); })
+      .then(data => { if (Array.isArray(data)) setTraveloguesList(data); })
       .catch(err => console.error("Error loading travelogues:", err));
 
     fetch("/api/photos")
       .then(res => res.json())
-      .then(data => { if (Array.isArray(data) && data.length > 0) setPhotosList(data); })
+      .then(data => { if (Array.isArray(data)) setPhotosList(data); })
       .catch(err => console.error("Error loading photos:", err));
 
     fetch("/api/busroutes")
