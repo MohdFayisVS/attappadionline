@@ -574,7 +574,7 @@ export default function SocialCardGenerator({
     triggerToast("🎨 Baking high quality card... Please wait.");
     
     // Ensure fonts and images are fully loaded before rendering
-    await document.fonts.load('700 48px "Anek Tamil"');
+    await Promise.all([document.fonts.load('700 48px "Anek Tamil"'), document.fonts.load('italic 800 40px "Playfair Display"')]);
     await document.fonts.ready;
     await new Promise((resolve) => setTimeout(resolve, 300));
 
