@@ -39,8 +39,8 @@ export default function NewsQuickArtMaker({ defaultHeadline = "", onApply }: Pro
     }
     ctx.fillStyle = accent; ctx.fillRect(0, 0, 18, h);
     if (showBrand) {
-      ctx.font = "bold 26px Arial, sans-serif"; ctx.fillStyle = foreground;
-      ctx.fillText("ATTAPPADI ONLINE", 62, 65);
+      ctx.font = "italic 800 26px Playfair Display, Georgia, serif"; ctx.fillStyle = foreground;
+      ctx.fillText("attappadi online", 62, 65);
       ctx.fillStyle = accent; ctx.fillRect(62, 82, 210, 5);
     }
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
