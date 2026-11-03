@@ -16,6 +16,7 @@ import NewsQuickArtMaker from "./NewsQuickArtMaker";
 import AdMaker from "./AdMaker";
 import CitizenReportReview from "./CitizenReportReview";
 import ExploreAttappadi from "./ExploreAttappadi";
+import ShopManager from "./ShopManager";
 import { adminAuth, adminFetch, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "../services/adminAuth";
 
 export default function AdminDashboard({ onBack }: { onBack: () => void }) {
@@ -23,7 +24,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
-  const [activeTab, setActiveTab] = useState<"news" | "opinions" | "events" | "explore" | "buses" | "directory" | "emergency" | "notices" | "lpg" | "ads" | "card-generator" | "tickers" | "lostfound">("news");
+  const [activeTab, setActiveTab] = useState<"news" | "opinions" | "events" | "explore" | "buses" | "directory" | "emergency" | "notices" | "lpg" | "ads" | "card-generator" | "tickers" | "lostfound" | "shops">("news");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [navSearch, setNavSearch] = useState("");
@@ -2174,7 +2175,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
         <nav aria-label="Admin modules" className="mt-4 flex-1 space-y-5 overflow-y-auto px-3 pb-5">
           {[
             { group: "Publishing", items: [{id:"news",label:"Newsroom",icon:FileText},{id:"tickers",label:"Breaking & Live Tickers",icon:Activity},{id:"opinions",label:"Opinions & Columns",icon:BookOpen},{id:"notices",label:"Notices & Alerts",icon:Megaphone},{id:"events",label:"Events Calendar",icon:Calendar}] },
-            { group: "Community", items: [{id:"explore",label:"Explore Attappadi",icon:Compass},{id:"buses",label:"Bus Timetable",icon:Bus},{id:"directory",label:"Phone Directory",icon:Phone},{id:"emergency",label:"Emergency Numbers",icon:AlertCircle},{id:"lpg",label:"LPG Delivery",icon:Truck},{id:"lostfound",label:"Lost & Found",icon:Search}] },
+            { group: "Community", items: [{id:"explore",label:"Explore Attappadi",icon:Compass},{id:"buses",label:"Bus Timetable",icon:Bus},{id:"directory",label:"Phone Directory",icon:Phone},{id:"emergency",label:"Emergency Numbers",icon:AlertCircle},{id:"lpg",label:"LPG Delivery",icon:Truck},{id:"lostfound",label:"Lost & Found",icon:Search},{id:"shops",label:"Local Shopping",icon:UtensilsCrossed}] },
             { group: "Creative & Revenue", items: [{id:"ads",label:"Advertising",icon:Megaphone},{id:"card-generator",label:"Social Card Maker",icon:ImageIcon}] }
           ].map(section => {
             const items = section.items.filter(item => (item.label + " " + item.id).toLowerCase().includes(navSearch.toLowerCase()));
@@ -2197,7 +2198,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="flex min-w-0 items-start gap-3">
               <button type="button" onClick={() => setSidebarOpen(true)} aria-label="Open navigation" className="rounded-xl border border-slate-200 p-2.5 text-slate-700 lg:hidden"><Menu size={21}/></button>
-              <div><p className="mb-1 text-xs font-bold uppercase tracking-[0.16em] text-[#005689]">Admin Studio / Workspace</p><h2 className="text-2xl font-extrabold tracking-tight text-[#101d34] sm:text-3xl font-anek-english">{({news:"Newsroom",tickers:"Breaking & Live Tickers",opinions:"Opinions & Columns",events:"Events Calendar",explore:"Explore Attappadi",buses:"Bus Timetable",directory:"Phone Directory",emergency:"Emergency Numbers",notices:"Notices & Alerts",lpg:"LPG Delivery",lostfound:"Lost & Found",ads:"Advertising", "card-generator":"Social Card Maker"} as Record<typeof activeTab,string>)[activeTab]}</h2><p className="mt-2 text-sm text-slate-500">Manage and publish content to Attappadi Online.</p></div>
+              <div><p className="mb-1 text-xs font-bold uppercase tracking-[0.16em] text-[#005689]">Admin Studio / Workspace</p><h2 className="text-2xl font-extrabold tracking-tight text-[#101d34] sm:text-3xl font-anek-english">{({news:"Newsroom",tickers:"Breaking & Live Tickers",opinions:"Opinions & Columns",events:"Events Calendar",explore:"Explore Attappadi",buses:"Bus Timetable",directory:"Phone Directory",emergency:"Emergency Numbers",notices:"Notices & Alerts",lpg:"LPG Delivery",lostfound:"Lost & Found",shops:"Local Shopping",ads:"Advertising", "card-generator":"Social Card Maker"} as Record<typeof activeTab,string>)[activeTab]}</h2><p className="mt-2 text-sm text-slate-500">Manage and publish content to Attappadi Online.</p></div>
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <button type="button" onClick={refreshAllLists} className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50"><RefreshCw size={15}/> Refresh data</button>
@@ -4678,6 +4679,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
         )}
 
         {/* ==================== 9b. LOST & FOUND BOARD MANAGEMENT ==================== */}
+        {activeTab === "shops" && <ShopManager />}
         {activeTab === "lostfound" && (
           <div className="space-y-6 animate-fade-in text-xs text-gray-800">
             <div className="border-b pb-4 flex justify-between items-center bg-white p-4 rounded-lg shadow-2xs border">
