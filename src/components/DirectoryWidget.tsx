@@ -536,7 +536,7 @@ export default function DirectoryWidget({
               className={`relative flex min-h-[86px] sm:min-h-[94px] flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 px-2 sm:px-3 py-3 text-center transition-colors border-b-[3px] cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[#052962] ${currTab === id ? active + " shadow-inner" : "bg-white text-[#052962] border-transparent hover:bg-slate-50"}`}
             >
               <span className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${icon}`}><Icon aria-hidden="true" className="h-5 w-5" strokeWidth={2.2} /></span>
-              <span className="font-anek-english text-[13px] sm:text-[14px] lg:text-[15px] font-extrabold leading-tight tracking-[0.01em]">{title}</span>
+              <span className="text-[13px] sm:text-[14px] lg:text-[15px] font-extrabold leading-tight tracking-[0.01em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>{title}</span>
             </button>
           ))}
         </div>
