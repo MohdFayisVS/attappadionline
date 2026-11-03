@@ -82,33 +82,12 @@ export default function App() {
     });
   };
   
-  const [theme, setTheme] = useState<"light" | "dark">(() => {
-    try {
-      const stored = localStorage.getItem("attappadi_theme");
-      if (stored === "dark" || stored === "light") return stored;
-      return "light"; // Default to light theme
-    } catch (_) {
-      return "light";
-    }
-  });
-
+  // Dark mode is temporarily disabled. Reset persisted preference to light on every visit.
   useEffect(() => {
-    try {
-      localStorage.setItem("attappadi_theme", theme);
-    } catch (_) {}
-    
-    const root = window.document.documentElement;
-    if (theme === "dark") {
-       root.classList.add("dark");
-    } else {
-       root.classList.remove("dark");
-    }
-  }, [theme]);
+    try { localStorage.setItem("attappadi_theme", "light"); } catch (_) {}
+    document.documentElement.classList.remove("dark");
+  }, []);
 
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
-  };
-  
   // Language control
   const [lang, setLang] = useState<"en" | "ml" | "ta">(() => {
     try {
@@ -664,23 +643,6 @@ export default function App() {
             <span className="opacity-40">|</span>
             <button onClick={() => selectLanguage("ta")} aria-pressed={tamilMode} className={`font-anek-tamil hover:text-[#ffe500] transition cursor-pointer ${tamilMode ? "text-[#ffe500] font-bold" : ""}`} lang="ta">தமிழ்</button>
             <span className="opacity-40">|</span>
-            <button
-              onClick={toggleTheme}
-              className="flex items-center gap-1.5 hover:text-[#ffe500] transition cursor-pointer text-slate-300 bg-white/5 active:bg-white/10 py-1 px-2 rounded-md hover:scale-102"
-              title={theme === "light" ? (true ? "Switch to Dark Mode" : "ഡാർക്ക് മോഡിലേക്ക് മാറ്റുക") : (true ? "Switch to Light Mode" : "ലൈറ്റ് മോഡിലേക്ക് മാറ്റുക")}
-            >
-              {theme === "light" ? (
-                <>
-                  <Moon className="w-3.5 h-3.5 text-yellow-100" />
-                  <span>{true ? "Dark Theme" : "ഡാർക്ക്"}</span>
-                </>
-              ) : (
-                <>
-                  <Sun className="w-3.5 h-3.5 text-[#ffe500]" />
-                  <span>{true ? "Light Theme" : "ലൈറ്റ്"}</span>
-                </>
-              )}
-            </button>
           </div>
         </div>
 
