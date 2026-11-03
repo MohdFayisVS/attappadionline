@@ -1322,7 +1322,7 @@ export default function DirectoryWidget({
                 <p className="text-[11px] text-rose-800/90 leading-snug">
                   {lang === "en" 
                     ? "Report lost or found objects in the Attappadi area to notify others, or search lists to help recover items."
-                    : "അട്ടപ്പാടിയിൽ എവിടെയെങ്കിലും വെച്ച് സാധനങ്ങൾ നഷ്ടപ്പെടുകയോ ലഭിക്കുകയോ ചെയ്താൽ ഇവിടെ വിവരങ്ങൾ പങ്കുവെക്കാം."}
+                    : lang === "ta" ? "அட்டப்பாடியில் பொருள் தொலைந்தாலோ கண்டெடுக்கப்பட்டாலோ அதன் விவரங்களை இங்கே பகிர்ந்து மற்றவர்கள் உதவும்படி செய்யலாம்." : "അട്ടപ്പാടിയിൽ എവിടെയെങ്കിലും വെച്ച് സാധനങ്ങൾ നഷ്ടപ്പെടുകയോ ലഭിക്കുകയോ ചെയ്താൽ ഇവിടെ വിവരങ്ങൾ പങ്കുവെക്കാം."}
                 </p>
               </div>
 
