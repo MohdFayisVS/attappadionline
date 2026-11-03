@@ -1457,7 +1457,7 @@ export default function App() {
                 
                 {activeRegion !== "all" && (
                   <span className="text-xs font-bold text-[#052962] bg-sky-50 px-2.5 py-1 rounded border border-sky-100 uppercase">
-                    🏷️ {lang === "ml" ? `തിരഞ്ഞെടുത്ത പ്രദേശം: ${activeRegion}` : lang === "ta" ? `தேர்ந்தெடுத்த பகுதி: ${activeRegion}` : `Filtered by ${activeRegion}`}
+                    {activeRegion}
                   </span>
                 )}
               </div>
