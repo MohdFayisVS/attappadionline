@@ -1190,6 +1190,26 @@ app.delete("/api/directory/:id", async (req, res) => {
   res.json({ success: true, id });
 });
 
+// Translate community submissions on the server; reject rather than publish mixed-language fields.
+async function translateCommunitySubmission(sourceLang: "en" | "ml" | "ta", fields: Record<string,string>) {
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) throw new Error("Translation not configured");
+  const { GoogleGenAI } = await import("@google/genai");
+  const ai = new GoogleGenAI({ apiKey: key });
+  const languages = { en: "English", ml: "Malayalam", ta: "Tamil" };
+  const result: Record<string, Record<string,string>> = { en: {}, ml: {}, ta: {} };
+  for (const lang of ["en", "ml", "ta"] as const) {
+    for (const [field, value] of Object.entries(fields)) {
+      if (!value.trim() || lang === sourceLang) { result[lang][field] = value.trim(); continue; }
+      const response = await ai.models.generateContent({ model: "gemini-3.5-flash",
+        contents: `Translate from ${languages[sourceLang]} to ${languages[lang]} for an Attappadi community portal. Preserve names, places, numbers and meaning. Output translation only.\n${value}` });
+      if (!response.text?.trim()) throw new Error("Empty translation");
+      result[lang][field] = response.text.trim();
+    }
+  }
+  return result;
+}
+
 // 5b. Lost & Found Section
 app.get("/api/lostfound", async (req, res) => {
   const data = await getCollectionData("lostFound");
@@ -1197,34 +1217,23 @@ app.get("/api/lostfound", async (req, res) => {
 });
 
 app.post("/api/lostfound", async (req, res) => {
-  const { type, itemTitleEn, itemTitleMl, itemTitleTa, descriptionEn, descriptionMl, descriptionTa, reporterName, contactNumber, locationEn, locationMl, locationTa } = req.body;
-  if (!type || (!itemTitleEn && !itemTitleMl) || !reporterName || !contactNumber) {
-    return res.status(400).json({ error: "Missing required fields for Lost & Found reporting" });
-  }
-
-  const finalTitleEn = itemTitleEn || itemTitleMl || "";
-  const finalTitleMl = itemTitleMl || itemTitleEn || "";
-  const finalDescEn = descriptionEn || descriptionMl || "";
-  const finalDescMl = descriptionMl || descriptionEn || "";
-  const finalLocEn = locationEn || locationMl || "Attappadi";
-  const finalLocMl = locationMl || locationEn || "അട്ടപ്പാടി";
-
+  const { type, reporterName, contactNumber, sourceLang } = req.body;
+  if (!["en","ml","ta"].includes(sourceLang) || !["lost","found"].includes(type) || !reporterName?.trim() || !contactNumber?.trim()) return res.status(400).json({ error: "Invalid submission" });
+  const suffix = sourceLang[0].toUpperCase() + sourceLang.slice(1);
+  const title = req.body["itemTitle" + suffix];
+  const description = req.body["description" + suffix] || "";
+  const location = req.body["location" + suffix];
+  if (!title?.trim() || !location?.trim()) return res.status(400).json({ error: "Title and location required" });
+  let t;
+  try { t = await translateCommunitySubmission(sourceLang, { title, description, location }); }
+  catch (error) { console.error("Lost & Found translation failed:", error); return res.status(503).json({ error: "Translation unavailable; report not saved. Please retry." }); }
   const newItem = {
-    id: "lf_" + Date.now().toString(),
-    type, // "lost" | "found"
-    itemTitleEn: finalTitleEn,
-    itemTitleMl: finalTitleMl,
-    itemTitleTa: typeof itemTitleTa === "string" ? itemTitleTa.trim() : "",
-    descriptionEn: finalDescEn,
-    descriptionMl: finalDescMl,
-    descriptionTa: typeof descriptionTa === "string" ? descriptionTa.trim() : "",
-    reporterName,
-    contactNumber,
-    locationEn: finalLocEn,
-    locationMl: finalLocMl,
-    locationTa: typeof locationTa === "string" ? locationTa.trim() : "",
-    dateReported: new Date().toISOString(),
-    status: "active"
+    id: "lf_" + Date.now().toString(), type,
+    itemTitleEn: t.en.title, itemTitleMl: t.ml.title, itemTitleTa: t.ta.title,
+    descriptionEn: t.en.description, descriptionMl: t.ml.description, descriptionTa: t.ta.description,
+    locationEn: t.en.location, locationMl: t.ml.location, locationTa: t.ta.location,
+    reporterName: reporterName.trim(), contactNumber: contactNumber.trim(),
+    dateReported: new Date().toISOString(), status: "active"
   };
 
   try {
@@ -1543,21 +1552,21 @@ app.get("/api/autos", async (req, res) => {
 });
 
 app.post("/api/autos", async (req, res) => {
-  const { driverNameEn, driverNameMl, driverNameTa, autoNumber, contact, locationEn, locationMl, locationTa, isAvailable } = req.body;
-  if (!driverNameEn || !driverNameMl || !autoNumber || !contact || !locationEn || !locationMl) {
-    return res.status(400).json({ error: "Missing required fields for Autorikshaw Service" });
-  }
-
+  const { sourceLang, autoNumber, contact, locationEn, isAvailable } = req.body;
+  if (!["en","ml","ta"].includes(sourceLang) || !autoNumber?.trim() || !contact?.trim() || !locationEn?.trim()) return res.status(400).json({ error: "Invalid registration" });
+  const suffix = sourceLang[0].toUpperCase() + sourceLang.slice(1);
+  const driverName = req.body["driverName" + suffix];
+  if (!driverName?.trim()) return res.status(400).json({ error: "Driver name required" });
+  let t;
+  try { t = await translateCommunitySubmission(sourceLang, { name: driverName });
+    const places = await translateCommunitySubmission("en", { location: locationEn });
+    t.en.location = places.en.location; t.ml.location = places.ml.location; t.ta.location = places.ta.location; }
+  catch (error) { console.error("Auto registration translation failed:", error); return res.status(503).json({ error: "Translation unavailable; registration not saved. Please retry." }); }
   const newAuto = {
     id: "auto_" + Date.now().toString(),
-    driverNameEn,
-    driverNameMl,
-    driverNameTa: typeof driverNameTa === "string" ? driverNameTa.trim() : "",
-    autoNumber,
-    contact,
-    locationEn,
-    locationMl,
-    locationTa: typeof locationTa === "string" ? locationTa.trim() : "",
+    driverNameEn: t.en.name, driverNameMl: t.ml.name, driverNameTa: t.ta.name,
+    autoNumber: autoNumber.trim().toUpperCase(), contact: contact.trim(),
+    locationEn: t.en.location, locationMl: t.ml.location, locationTa: t.ta.location,
     isAvailable: isAvailable !== undefined ? Boolean(isAvailable) : true,
     registeredDate: new Date().toISOString().split("T")[0]
   };
