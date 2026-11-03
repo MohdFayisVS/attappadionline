@@ -622,7 +622,7 @@ export default function DirectoryWidget({
             <p className="text-[11px] text-red-800 bg-red-50 p-2 rounded leading-tight border border-red-100">
               {lang === "en" 
                 ? "Immediate relief, police patrol, wild elephant/snake captures, and specialty tribal hospital contacts in Attappadi block."
-                : "അട്ടപ്പാടി മേഖലയിലെ അടിയന്തര സഹായങ്ങൾക്കും കാട്ടാന ശല്യം തടയാൻ ഫോറസ്റ്റ് ഡിപ്പാർട്ട്മെന്റിനും വിളിക്കേണ്ട ഫോൺ നമ്പറുകൾ."}
+                : lang === "ta" ? "அட்டப்பாடியில் அவசர உதவி, காவல்துறை, வனவிலங்கு மீட்பு மற்றும் மருத்துவச் சேவைகளுக்கான முக்கிய தொலைபேசி எண்கள்." : "അട്ടപ്പാടി മേഖലയിലെ അടിയന്തര സഹായങ്ങൾക്കും കാട്ടാന ശല്യം തടയാൻ ഫോറസ്റ്റ് ഡിപ്പാർട്ട്മെന്റിനും വിളിക്കേണ്ട ഫോൺ നമ്പറുകൾ."}
             </p>
 
             <div className="space-y-2 max-h-[340px] overflow-y-auto pr-0.5">
