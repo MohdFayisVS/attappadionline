@@ -1112,6 +1112,37 @@ app.delete("/api/events/:id", async (req, res) => {
   res.json({ success: true, id });
 });
 
+// Admin-managed Local Shopping: public reads, authenticated admin writes.
+app.get("/api/shops", async (_req, res) => {
+  const items = await getCollectionData("localShops");
+  res.json(items.filter((shop: any) => shop.published === true));
+});
+app.get("/api/admin/shops", async (_req, res) => {
+  res.json(await getCollectionData("localShops"));
+});
+app.post("/api/shops", async (req, res) => {
+  const { nameEn, nameMl, nameTa, category, contact, locationEn, locationMl, locationTa, itemsEn, itemsMl, itemsTa, deliveryEn, deliveryMl, deliveryTa, published } = req.body || {};
+  if (![nameEn, nameMl, nameTa, category, contact, locationEn, locationMl, locationTa].every((v: unknown) => typeof v === "string" && v.trim())) return res.status(400).json({ error: "Shop names, category, contact and locations are required in all three languages." });
+  const item = { id: "shop_" + Date.now() + "_" + Math.random().toString(36).slice(2,7), nameEn, nameMl, nameTa, category, contact, locationEn, locationMl, locationTa, itemsEn: itemsEn || "", itemsMl: itemsMl || "", itemsTa: itemsTa || "", deliveryEn: deliveryEn || "", deliveryMl: deliveryMl || "", deliveryTa: deliveryTa || "", published: published === true };
+  try { await writeItemToFirestore("localShops", item.id, item); } catch (error) { console.error(error); return res.status(503).json({ error: "Shop was not saved to Firestore." }); }
+  res.status(201).json(item);
+});
+app.put("/api/shops/:id", async (req, res) => {
+  const id = req.params.id;
+  const existing = (await getCollectionData("localShops")).find((shop: any) => shop.id === id);
+  if (!existing) return res.status(404).json({ error: "Shop not found" });
+  const allowed = ["nameEn","nameMl","nameTa","category","contact","locationEn","locationMl","locationTa","itemsEn","itemsMl","itemsTa","deliveryEn","deliveryMl","deliveryTa","published"];
+  const update: any = { ...existing };
+  for (const key of allowed) if (Object.prototype.hasOwnProperty.call(req.body || {}, key)) update[key] = key === "published" ? req.body[key] === true : req.body[key];
+  if (!["nameEn","nameMl","nameTa","category","contact","locationEn","locationMl","locationTa"].every(key => typeof update[key] === "string" && update[key].trim())) return res.status(400).json({ error: "Required shop fields missing" });
+  try { await writeItemToFirestore("localShops", id, update); } catch (error) { console.error(error); return res.status(503).json({ error: "Shop update failed" }); }
+  res.json(update);
+});
+app.delete("/api/shops/:id", async (req, res) => {
+  try { await deleteItemFromFirestore("localShops", req.params.id); } catch (error) { console.error(error); return res.status(503).json({ error: "Shop deletion failed" }); }
+  res.json({ success: true });
+});
+
 // 5. Local Services Directory
 app.get("/api/directory", async (req, res) => {
   const data = await getCollectionData("directory");
