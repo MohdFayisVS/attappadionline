@@ -30,7 +30,7 @@ try {
   // Discover root collections instead of relying on a hardcoded app collection list.
   const collections = await db.listCollections();
   await out.writeFile('{"format":"attappadi-firestore-export-v1","projectId":' + JSON.stringify(projectId)
-    + ',"databaseId":"(default)","exportedAt":' + JSON.stringify(new Date().toISOString()) + ',"documents":[');
+    + ',"databaseId":' + JSON.stringify(databaseId) + ',"exportedAt":' + JSON.stringify(new Date().toISOString()) + ',"documents":[');
   let first = true;
   async function exportCollection(ref: FirebaseFirestore.CollectionReference) {
     const docs = await ref.get();
