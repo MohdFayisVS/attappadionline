@@ -1384,13 +1384,13 @@ export default function App() {
               <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center text-sm text-slate-600">{lang === "ta" ? "இதுவரை கட்டுரைகள் வெளியிடப்படவில்லை." : lang === "ml" ? "ലേഖനങ്ങൾ ഇതുവരെ പ്രസിദ്ധീകരിച്ചിട്ടില്ല." : "No columns have been published yet."}</div>
             </section>
           ) : activeSection === "readers-column" ? (
-            <div lang={lang} className={`bg-white border border-gray-100 rounded-lg shadow-xs p-5 md:p-6 space-y-6 animate-fade-in ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>6 animate-fade-in">
+            <div lang={lang} className={`bg-white border border-gray-100 rounded-lg shadow-xs p-5 md:p-6 space-y-6 animate-fade-in ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
               <div className="border-b pb-4">
                 <span className="text-[10px] bg-emerald-600 text-white font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">
                   PUBLIC DOMAIN
                 </span>
                 <h2 lang="en" className="font-anek-english font-extrabold text-[#052962] text-2xl mt-1 leading-tight">
-                  {lang === "en" ? "Beyond The Desk: Readers' Columns" : "വായനക്കാരുടെ എഴുത്തുകൾ"}
+                  Beyond The Desk: Readers' Columns
                 </h2>
                 <p className="text-xs text-gray-400 mt-1">
                   {lang === "en" 
@@ -1402,7 +1402,7 @@ export default function App() {
               <OpinionsWidget lang={lang} />
             </div>
           ) : activeSection === "local-services" ? (
-            <div lang={lang} className={`bg-white border border-gray-100 rounded-lg shadow-xs p-5 md:p-6 space-y-6 animate-fade-in ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>6 animate-fade-in">
+            <div lang={lang} className={`bg-white border border-gray-100 rounded-lg shadow-xs p-5 md:p-6 space-y-6 animate-fade-in ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
               <div className="border-b pb-4">
                 <span className="text-[10px] bg-red-600 text-white font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">
                   HELPLINES & SERVICES
@@ -1420,7 +1420,7 @@ export default function App() {
               <DirectoryWidget lang={lang} onDownloadCard={setShareCardTarget} initialTab={localServicesTab} />
             </div>
           ) : activeSection === "bookmarks" ? (
-            <div lang={lang} className={`bg-white border border-gray-100 rounded-lg shadow-xs p-5 md:p-6 space-y-6 animate-fade-in ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>6 animate-fade-in">
+            <div lang={lang} className={`bg-white border border-gray-100 rounded-lg shadow-xs p-5 md:p-6 space-y-6 animate-fade-in ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
               <div className="border-b pb-4 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                 <div>
                   <span className="text-[10px] bg-amber-500 text-slate-900 font-extrabold px-2.5 py-1 rounded-sm uppercase tracking-wider">
