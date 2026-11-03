@@ -1558,7 +1558,9 @@ app.post("/api/autos", async (req, res) => {
   const driverName = req.body["driverName" + suffix];
   if (!driverName?.trim()) return res.status(400).json({ error: "Driver name required" });
   let t;
-  try { t = await translateCommunitySubmission(sourceLang, { name: driverName, location: locationEn }); }
+  try { t = await translateCommunitySubmission(sourceLang, { name: driverName });
+    const places = await translateCommunitySubmission("en", { location: locationEn });
+    t.en.location = places.en.location; t.ml.location = places.ml.location; t.ta.location = places.ta.location; }
   catch (error) { console.error("Auto registration translation failed:", error); return res.status(503).json({ error: "Translation unavailable; registration not saved. Please retry." }); }
   const newAuto = {
     id: "auto_" + Date.now().toString(),
