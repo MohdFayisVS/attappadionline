@@ -749,14 +749,12 @@ export default function DirectoryWidget({
             {/* Header / Intro banner */}
             <div className="bg-emerald-50 border border-emerald-100 rounded-md p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-emerald-950">
               <div className="space-y-0.5">
-                <h4 className="text-xs font-black flex items-center gap-1.5 text-emerald-800">
+                <h4 lang="en" className="font-anek-english text-xs font-black flex items-center gap-1.5 text-emerald-800">
                   <span className="p-1 bg-emerald-100 rounded text-base animate-bounce">🛺</span>
-                  {lang === "ta" ? "ஆட்டோ டாக்ஸி தேடல்" : lang !== "ml" ? "Autorikshaw Taxi Finder" : "പ്രാദേശിക ഓട്ടോ ടാക്സി ഡയറക്ടറി"}
+                  Autorikshaw Taxi Finder
                 </h4>
                 <p className="text-[11px] text-emerald-800/90 leading-snug">
-                  {lang === "en" 
-                    ? "Hire nearby regional autorikshaw drivers easily. If you are a driver, register your service today!"
-                    : "അട്ടപ്പാടിയിലെ പ്രദേശങ്ങൾ കേന്ദ്രീകരിച്ച് പ്രവർത്തിക്കുന്ന വിശ്വസ്തരായ ഓട്ടോ ഡ്രൈവർമാരെ ഇവിടെ ബന്ധപ്പെടാം. ഡ്രൈവർമാർക്ക് സ്വന്തം സർവീസ് ഇവിടെ ചേർക്കാവുന്നതാണ്."}
+                  {lang === "ta" ? "அட்டப்பாடியில் அருகிலுள்ள ஆட்டோ ஓட்டுநர்களை எளிதாகத் தொடர்புகொண்டு பயணம் செய்யலாம். நீங்கள் ஆட்டோ ஓட்டுநராக இருந்தால், உங்கள் சேவையை இங்கே பதிவு செய்யலாம்." : lang === "ml" ? "അട്ടപ്പാടിയിലെ പ്രദേശങ്ങൾ കേന്ദ്രീകരിച്ച് പ്രവർത്തിക്കുന്ന വിശ്വസ്തരായ ഓട്ടോ ഡ്രൈവർമാരെ ഇവിടെ ബന്ധപ്പെടാം. ഡ്രൈവർമാർക്ക് സ്വന്തം സർവീസ് ഇവിടെ ചേർക്കാവുന്നതാണ്." : "Hire nearby regional autorikshaw drivers easily. If you are a driver, register your service today!"}
                 </p>
               </div>
 
