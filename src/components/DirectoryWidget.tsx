@@ -518,37 +518,27 @@ export default function DirectoryWidget({
   return (
     <div lang={lang} className={`${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"} ${hideHeaderTabs ? "bg-white text-gray-800" : "bg-white border-t-2 border-[#052962] rounded-lg shadow overflow-hidden text-gray-800"}`}>
       
-      {/* Tab Switcher */}
+      {/* Consistent English-only tab headings in every language; localized panel content below. */}
       {!hideHeaderTabs && (
-        <div lang="en" className="font-anek-english flex border-b border-gray-150 font-bold text-[11px] sm:text-xs bg-slate-50 overflow-x-auto select-none scrollbar-none">
-          <button
-            onClick={() => setCurrTab("lpg")}
-            className={`flex-1 min-w-[90px] py-3 text-center transition flex justify-center items-center gap-1 border-r cursor-pointer ${currTab === "lpg" ? "bg-amber-50 text-amber-800 border-b-2 border-amber-500 font-extrabold" : "text-gray-500 hover:bg-gray-100"}`}
-          >
-            <Flame className="w-3.5 h-3.5 text-amber-600 animate-pulse shrink-0" />
-            <span className="truncate">LPG TODAY</span>
-          </button>
-          <button
-            onClick={() => setCurrTab("emergency")}
-            className={`flex-1 min-w-[90px] py-3 text-center transition flex justify-center items-center gap-1 border-r cursor-pointer ${currTab === "emergency" ? "bg-red-50 text-red-700 border-b-2 border-red-600 font-extrabold" : "text-gray-500 hover:bg-gray-100"}`}
-          >
-            <AlertOctagon className="w-3.5 h-3.5 text-red-600 shrink-0" />
-            <span className="truncate">EMERGENCY</span>
-          </button>
-          <button
-            onClick={() => setCurrTab("commercial")}
-            className={`flex-1 min-w-[90px] py-3 text-center transition flex justify-center items-center gap-1 border-r cursor-pointer ${currTab === "commercial" ? "bg-sky-50 text-sky-800 border-b-2 border-sky-600 font-extrabold" : "text-gray-500 hover:bg-gray-100"}`}
-          >
-            <Phone className="w-3.5 h-3.5 text-sky-700 shrink-0" />
-            <span className="truncate">DIRECTORY</span>
-          </button>
-          <button
-            onClick={() => setCurrTab("lostfound")}
-            className={`flex-1 min-w-[90px] py-3 text-center transition flex justify-center items-center gap-1 cursor-pointer ${currTab === "lostfound" ? "bg-rose-50 text-rose-800 border-b-2 border-rose-600 font-extrabold" : "text-gray-500 hover:bg-gray-100"}`}
-          >
-            <HelpCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
-            <span className="truncate">LOST & FOUND</span>
-          </button>
+        <div lang="en" role="tablist" aria-label="Local services" className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-slate-200 border-b border-slate-200 font-anek-english">
+          {([
+            { id: "lpg", title: "LPG TODAY", Icon: Flame, active: "bg-amber-50 text-amber-900 border-amber-500", icon: "text-amber-600 bg-amber-100" },
+            { id: "emergency", title: "EMERGENCY", Icon: ShieldAlert, active: "bg-red-50 text-red-900 border-red-600", icon: "text-red-600 bg-red-100" },
+            { id: "commercial", title: "DIRECTORY", Icon: IdCard, active: "bg-sky-50 text-sky-900 border-sky-600", icon: "text-sky-700 bg-sky-100" },
+            { id: "lostfound", title: "LOST & FOUND", Icon: Search, active: "bg-rose-50 text-rose-900 border-rose-600", icon: "text-rose-600 bg-rose-100" },
+          ] as const).map(({ id, title, Icon, active, icon }) => (
+            <button
+              key={id}
+              type="button"
+              role="tab"
+              aria-selected={currTab === id}
+              onClick={() => setCurrTab(id)}
+              className={`relative flex min-h-[86px] sm:min-h-[94px] flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 px-2 sm:px-3 py-3 text-center transition-colors border-b-[3px] cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[#052962] ${currTab === id ? active + " shadow-inner" : "bg-white text-[#052962] border-transparent hover:bg-slate-50"}`}
+            >
+              <span className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${icon}`}><Icon aria-hidden="true" className="h-5 w-5" strokeWidth={2.2} /></span>
+              <span className="font-anek-english text-[13px] sm:text-[14px] lg:text-[15px] font-extrabold leading-tight tracking-[0.01em]">{title}</span>
+            </button>
+          ))}
         </div>
       )}
 
