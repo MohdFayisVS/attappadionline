@@ -82,6 +82,7 @@ export default function App() {
     });
   };
   
+  const theme: "light" = "light"; // Keep WeatherWidget theme prop defined while dark mode is disabled.
   // Dark mode is temporarily disabled. Reset persisted preference to light on every visit.
   useEffect(() => {
     try { localStorage.setItem("attappadi_theme", "light"); } catch (_) {}
