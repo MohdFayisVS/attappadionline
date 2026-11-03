@@ -7,99 +7,6 @@ import {
 import { DirectoryItem, EmergencyContact, LpgDelivery, AutoTaxi, LocalShop, LostAndFoundItem } from "../types";
 import { ShoppingBag, Store, Send } from "lucide-react";
 
-const PRE_SEEDED_SHOPS: LocalShop[] = [
-  {
-    id: "shop-1",
-    nameEn: "Hill Range Organic Groceries",
-    nameMl: "ഹിൽ റേഞ്ച് ഓർഗാനിക് ഗ്രോസറി",
-    category: "grocery",
-    contact: "9447471224",
-    locationEn: "Agali",
-    locationMl: "അഗളി",
-    deliveryEn: "Home Delivery Available (Free above ₹500)",
-    deliveryMl: "ഹോം ഡെലിവറി ലഭ്യമാണ് (₹500 ന് മുകളിൽ സൌജന്യം)",
-    itemsEn: "Organic Honey, Local Ragi Flour, Attappadi Spices, Pure Coconut Oil, Cardamom",
-    itemsMl: "വന തേൻ, മുത്താറി പൊടി (രhost), അട്ടപ്പാടി സുഗന്ധവ്യഞ്ജനങ്ങൾ, വെളിച്ചെണ്ണ, ഏലം"
-  },
-  {
-    id: "shop-2",
-    nameEn: "Attappadi Bakers & Cafe",
-    nameMl: "അട്ടപ്പാടി ബേക്കേഴ്സ് & കഫേ",
-    category: "bakery",
-    contact: "9447471224",
-    locationEn: "Goolikkadavu",
-    locationMl: "ഗൂളിക്കടവ്",
-    deliveryEn: "Delivery within Goolikkadavu & Agali",
-    deliveryMl: "ഗൂളിക്കടവ്, അഗളി പരിസരങ്ങളിൽ ഡെലിവറി",
-    itemsEn: "Fresh Banana Chips, Karikku Halwa, Ela Ada, Cream Bun, Hot Samosa, Black Forest Cake",
-    itemsMl: "ഉപ്പേരി (കായ വറുത്തത്), കരിക്കിൻ ഹൽവ, ഇല അട, ക്രീം ബൺ, ചൂട് സമോസ, കേക്കുകൾ"
-  },
-  {
-    id: "shop-3",
-    nameEn: "Mukkali Eco Supermarket",
-    nameMl: "മുക്കാലി എക്കോ സൂപ്പർമാർക്കറ്റ്",
-    category: "grocery",
-    contact: "9447471224",
-    locationEn: "Mukkali",
-    locationMl: "മുക്കാലി",
-    deliveryEn: "Delivery to Silent Valley checkpost & Mukkali",
-    deliveryMl: "മുക്കാലി, സൈലന്റ് വാലി ചെക്ക്പോസ്റ്റ് പരിസരങ്ങളിൽ",
-    itemsEn: "Tribal Forest Honey, Wild Arrowroot Powder, Local Tea Leaves, Pure Ghee, Millets",
-    itemsMl: "കാട്ടുതേൻ, കൂവപ്പൊടി, നാടൻ ചായപ്പൊടി, നെയ്യ്, ചെറുധാന്യങ്ങൾ"
-  },
-  {
-    id: "shop-4",
-    nameEn: "Valluvanad Medicals",
-    nameMl: "വള്ളുവനാട് മെഡിക്കൽസ്",
-    category: "medical",
-    contact: "9447471224",
-    locationEn: "Agali",
-    locationMl: "അഗളി",
-    deliveryEn: "Urgent medicine delivery inside Agali town",
-    deliveryMl: "അഗളി ടൗണിൽ അടിയന്തര മരുന്ന് ഡെലിവറി",
-    itemsEn: "Prescription Medicines, First Aid Kits, Baby Care Needs, Thermal Scanner, Oximeter",
-    itemsMl: "പ്രിസ്ക്രിപ്ഷൻ മരുന്നുകൾ, ഫസ്റ്റ് എയ്ഡ് ബോക്സ്, ബേബി കെയർ ഉൽപ്പന്നങ്ങൾ, മാസ്ക്"
-  },
-  {
-    id: "shop-5",
-    nameEn: "Modern Mobiles & Electronics",
-    nameMl: "മോഡേൺ മൊബൈൽസ് & ഇലക്ട്രോണിക്സ്",
-    category: "electronics",
-    contact: "9447471224",
-    locationEn: "Anakatti",
-    locationMl: "ആനക്കട്ടി",
-    deliveryEn: "Delivery around Anakatti border / Sholayur",
-    deliveryMl: "ആനക്കട്ടി അതിർത്തി, ഷോളയൂർ പരിസരങ്ങളിൽ",
-    itemsEn: "Fast Chargers, OTG Cables, Bluetooth Earphones, Tempered Glass, Power Banks",
-    itemsMl: "ഫാസ്റ്റ് ചാർജർ, ഡാറ്റ കേബിൾ, ബ്ലൂടൂത്ത് ഹെഡ്സെറ്റ്, ടെമ്പർഡ് ഗ്ലാസ്, പവർ ബാങ്ക്"
-  },
-  {
-    id: "shop-6",
-    nameEn: "Vandanam Textiles & Readymades",
-    nameMl: "വന്ദനം ടെക്സ്റ്റൈൽസ് & റെഡിമെയ്ഡ്സ്",
-    category: "clothing",
-    contact: "9447471224",
-    locationEn: "Sholayur",
-    locationMl: "ഷോളയൂർ",
-    deliveryEn: "No-contact pickup or home delivery",
-    deliveryMl: "ഹോം ഡെലിവറി അല്ലെങ്കിൽ കടയിൽ നിന്നും നേരിട്ട് വാങ്ങാം",
-    itemsEn: "Kerala Kasavu Mundu, Traditional Sarees, Kids Wear, Raincoats, Umbrellas",
-    itemsMl: "കേരള കസവ് മുണ്ട്, കുർത്തകൾ, കുട്ടികളുടെ വസ്ത്രങ്ങൾ, കുടകൾ, റെയിൻകോട്ട്"
-  },
-  {
-    id: "shop-7",
-    nameEn: "Farmers Green Vegetables",
-    nameMl: "ഫാർമേഴ്‌സ് പച്ചക്കറി കട",
-    category: "vegetables",
-    contact: "9447471224",
-    locationEn: "Pudur",
-    locationMl: "പുതൂർ",
-    deliveryEn: "Fresh farm vegetables delivered daily",
-    deliveryMl: "പച്ചക്കറികൾ ദിവസേന വീട്ടിലെത്തിക്കുന്നു",
-    itemsEn: "Fresh Tapioca, Farm Tomatoes, Organic Bananas, Elephant Foot Yam, Drumsticks",
-    itemsMl: "നാടൻ മരച്ചീനി, തക്കാളി, കായ്കൾ, ചേന, മുരിങ്ങക്കായ, അട്ടപ്പാടി പച്ചക്കറികൾ"
-  }
-];
 
 const TOWN_LOCATIONS = [
   { en: "Agali", ml: "അഗളി" },
@@ -159,6 +66,7 @@ export default function DirectoryWidget({
   // Sub-tabs filters for Lost & Found
   const [lfFilterTab, setLfFilterTab] = useState<"all" | "lost" | "found">("all");
 
+  const [shops, setShops] = useState<LocalShop[]>([]);
   // Local Shopping states
   const [selectedShopTown, setSelectedShopTown] = useState("all");
   const [selectedShopCat, setSelectedShopCat] = useState("all");
@@ -194,6 +102,7 @@ export default function DirectoryWidget({
     fetchLpg();
     fetchAutos();
     fetchLostFound();
+    fetchShops();
 
     const savedId = localStorage.getItem("my_registered_auto_id");
     if (savedId) {
@@ -317,6 +226,11 @@ export default function DirectoryWidget({
     } catch (err: any) {
       setResolveError(err.message || "Incorrect number");
     }
+  };
+
+  const fetchShops = async () => {
+    try { const response = await fetch("/api/shops"); if (!response.ok) throw new Error("Shop listing unavailable"); const items = await response.json(); setShops(Array.isArray(items) ? items : []); }
+    catch (error) { console.error("Unable to load shops:", error); setShops([]); }
   };
 
   const fetchDirectory = async () => {
@@ -1140,7 +1054,7 @@ export default function DirectoryWidget({
 
             {/* List of filtered shops */}
             <div className="space-y-3.5 max-h-[380px] overflow-y-auto pr-0.5">
-              {PRE_SEEDED_SHOPS.filter(shop => {
+              {shops.filter(shop => {
                 const query = searchQuery.toLowerCase();
                 const matchesSearch = searchQuery === "" ||
                   shop.nameEn.toLowerCase().includes(query) ||
@@ -1158,7 +1072,7 @@ export default function DirectoryWidget({
                   {lang === "ta" ? "பொருத்தமான உள்ளூர் கடைகள் இல்லை." : lang !== "ml" ? "No local shops match your filters." : "തിരഞ്ഞെടുത്ത വിഭാഗത്തിൽ വ്യാപാരശാലകൾ ലഭ്യമല്ല."}
                 </div>
               ) : (
-                PRE_SEEDED_SHOPS.filter(shop => {
+                shops.filter(shop => {
                   const query = searchQuery.toLowerCase();
                   const matchesSearch = searchQuery === "" ||
                     shop.nameEn.toLowerCase().includes(query) ||
