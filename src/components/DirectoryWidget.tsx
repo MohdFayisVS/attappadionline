@@ -830,13 +830,11 @@ export default function DirectoryWidget({
                 </button>
 
                 <div>
-                  <h4 className="font-serif-guardian font-extrabold text-[#052962] text-sm">
-                    {lang === "ta" ? "உங்கள் ஆட்டோ டாக்ஸியைப் பதிவு செய்க" : lang !== "ml" ? "Register Your Autorikshaw Taxi" : "ഡ്രൈവർമാരുടെ രജിസ്ട്രേഷൻ"}
+                  <h4 lang="en" className="font-anek-english font-extrabold text-[#052962] text-sm">
+                    Register Your Autorikshaw Taxi
                   </h4>
                   <p className="text-[10px] text-gray-400">
-                    {lang === "en" 
-                      ? "Submit your mobile and auto details to get localized trip requests from native travelers."
-                      : "യാത്രക്കാരുമായി നേരിട്ട് ബന്ധപ്പെടാൻ നിങ്ങളുടെ മൊബൈൽ നമ്പറും മറ്റ് വിവരങ്ങളും ചേർക്കുക."}
+                    {lang === "ta" ? "பயணிகள் உங்களை நேரடியாகத் தொடர்புகொள்ள உங்கள் கைப்பேசி எண் மற்றும் ஆட்டோ விவரங்களைப் பதிவு செய்யுங்கள்." : lang === "ml" ? "യാത്രക്കാരുമായി നേരിട്ട് ബന്ധപ്പെടാൻ നിങ്ങളുടെ മൊബൈൽ നമ്പറും മറ്റ് വിവരങ്ങളും ചേർക്കുക." : "Submit your mobile and auto details to get localized trip requests from native travelers."}
                   </p>
                 </div>
 
