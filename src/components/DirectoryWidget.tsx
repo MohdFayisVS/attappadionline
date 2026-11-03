@@ -228,8 +228,8 @@ export default function DirectoryWidget({
     e.preventDefault();
     setRegError("");
     setRegSuccess("");
-    if (!lfTitleTa.trim() || !lfDescTa.trim() || !lfLocationTa.trim()) {
-      setRegError(lang === "ta" ? "தமிழ் தலைப்பு, விவரம் மற்றும் இடத்தை நிரப்பவும்." : lang === "ml" ? "തമിഴ് തലക്കെട്ടും വിവരണവും സ്ഥലവും നൽകുക." : "Please provide the Tamil title, description and location.");
+    if (!(lang === "ta" ? lfTitleTa : lang === "ml" ? lfTitleMl : lfTitleEn).trim() || !(lang === "ta" ? lfLocationTa : lang === "ml" ? lfLocationMl : lfLocationEn).trim()) {
+      setRegError(lang === "ta" ? "பொருளின் பெயரும் இடமும் நிரப்பவும்." : lang === "ml" ? "സാധനത്തിന്റെ പേരും സ്ഥലവും നൽകുക." : "Please enter the item title and location.");
       return;
     }
     setLfSubmitting(true);
@@ -240,6 +240,7 @@ export default function DirectoryWidget({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type: lfType,
+          sourceLang: lang,
           itemTitleEn: lfTitleEn,
           itemTitleMl: lfTitleMl,
           itemTitleTa: lfTitleTa,
@@ -272,6 +273,7 @@ export default function DirectoryWidget({
       setLfContact("");
       setLfLocationEn("Agali");
       setLfLocationMl("അഗളി");
+      setLfLocationTa("");
 
       fetchLostFound();
 
@@ -376,7 +378,7 @@ export default function DirectoryWidget({
     setRegError("");
     setRegSuccess("");
 
-    if (!regNameEn.trim() || !regNameMl.trim() || !regNameTa.trim() || !regLocationTa.trim() || !regNumber.trim() || !regContact.trim()) {
+    if (!(lang === "ta" ? regNameTa : lang === "ml" ? regNameMl : regNameEn).trim() || !regNumber.trim() || !regContact.trim()) {
       setRegError(lang === "ta" ? "அனைத்து விவரங்களையும் நிரப்பவும்" : lang === "ml" ? "ദയവായി എല്ലാ വിവരങ്ങളും നൽകുക" : "Please fill all fields");
       return;
     }
@@ -389,6 +391,7 @@ export default function DirectoryWidget({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          sourceLang: lang,
           driverNameEn: regNameEn.trim(),
           driverNameMl: regNameMl.trim(),
           driverNameTa: regNameTa.trim(),
@@ -855,48 +858,12 @@ export default function DirectoryWidget({
                 )}
 
                 <form onSubmit={handleRegisterAutoSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                  {/* Name English */}
-                  <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">
-                      {lang === "ta" ? "ஓட்டுநர் பெயர் (ஆங்கிலம்)*" : lang !== "ml" ? "Driver Name (English)*" : "ഡ്രൈവർ പേര് (ഇംഗ്ലീഷിൽ)*"}
-                    </label>
-                    <input 
-                      type="text"
-                      required
-                      placeholder="e.g., Ramesh Kumar"
-                      value={regNameEn}
-                      onChange={(e) => setRegNameEn(e.target.value)}
-                      className="w-full border border-gray-200 p-2 rounded focus:ring-1 focus:ring-emerald-500 focus:outline-none placeholder-gray-400 bg-white"
-                    />
+                  <div className="space-y-1 sm:col-span-2">
+                    <label className="block text-[11px] font-bold text-slate-700">{lang === "ta" ? "ஓட்டுநர் பெயர்*" : lang === "ml" ? "ഡ്രൈവറുടെ പേര്*" : "Driver name*"}</label>
+                    <input required lang={lang} value={lang === "ta" ? regNameTa : lang === "ml" ? regNameMl : regNameEn}
+                      onChange={e => lang === "ta" ? setRegNameTa(e.target.value) : lang === "ml" ? setRegNameMl(e.target.value) : setRegNameEn(e.target.value)}
+                      className="w-full border border-gray-200 p-2 rounded bg-white" />
                   </div>
-
-                  {/* Name Malayalam with AI Translation Assistance */}
-                  <div className="space-y-1">
-                    <div className="flex justify-between items-center">
-                      <label className="block text-[11px] font-bold text-slate-700">
-                        {lang === "ta" ? "ஓட்டுநர் பெயர் (மலையாளம்)*" : lang !== "ml" ? "Driver Name (Malayalam)*" : "ഡ്രൈവർ പേര് (മലയാളത്തിൽ)*"}
-                      </label>
-                      <button
-                        type="button"
-                        onClick={handleAutoTranslateName}
-                        disabled={isTranslating}
-                        className="text-[9px] font-black text-emerald-700 hover:text-emerald-900 bg-emerald-100/55 px-1.5 py-0.5 rounded flex items-center gap-0.5 border border-emerald-200"
-                      >
-                        <Sparkles className="w-2.5 h-2.5 text-emerald-600" />
-                        {isTranslating ? "..." : (lang === "ta" ? "மலையாளத்தைத் தானாக நிரப்பு" : lang !== "ml" ? "AUTO FILL ML" : "ഓട്ടോ ഫിൽ")}
-                      </button>
-                    </div>
-                    <input 
-                      type="text"
-                      required
-                      placeholder="ഉദാ: രമേശ് കുമാർ"
-                      value={regNameMl}
-                      onChange={(e) => setRegNameMl(e.target.value)}
-                      className="w-full border border-gray-200 p-2 rounded focus:ring-1 focus:ring-emerald-500 focus:outline-none placeholder-gray-400 bg-white"
-                    />
-                  </div>
-                  <div className="space-y-1"><label className="block text-[11px] font-bold text-slate-700">Driver name (Tamil)*</label><input required lang="ta" value={regNameTa} onChange={e => setRegNameTa(e.target.value)} className="w-full border border-gray-200 p-2 rounded font-anek-tamil" /></div>
-
                   {/* Auto Number */}
                   <div className="space-y-1">
                     <label className="block text-[11px] font-bold text-slate-700">
@@ -939,12 +906,12 @@ export default function DirectoryWidget({
                     >
                       {TOWN_LOCATIONS.map((town) => (
                         <option key={town.en} value={town.en}>
-                          {town.en} ({town.ml})
+                          {lang === "ml" ? town.ml : town.en}
                         </option>
                       ))}
                     </select>
                   </div>
-                  <div className="space-y-1"><label className="block text-[11px] font-bold text-slate-700">Location (Tamil)*</label><input required lang="ta" value={regLocationTa} onChange={e => setRegLocationTa(e.target.value)} className="w-full border border-gray-200 p-2 rounded font-anek-tamil" /></div>
+
 
                   {/* Buttons */}
                   <div className="flex gap-2 sm:col-span-2 pt-2">
@@ -1367,85 +1334,24 @@ export default function DirectoryWidget({
                     </div>
                   </div>
 
-                  {/* Title En */}
                   <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">{lang === "ta" ? "பொருளின் பெயர் (ஆங்கிலம்)*" : lang !== "ml" ? "Item Name / Title (English)*" : "സാധനത്തിന്റെ പേര് (ഇംഗ്ലീഷ്)*"}</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Wallet with ID, Black bag, keys..."
-                      value={lfTitleEn}
-                      onChange={(e) => setLfTitleEn(e.target.value)}
-                      className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white"
-                    />
+                    <label className="block text-[11px] font-bold text-slate-700">{lang === "ta" ? "பொருளின் பெயர்*" : lang === "ml" ? "സാധനത്തിന്റെ പേര്*" : "Item title*"}</label>
+                    <input required lang={lang} value={lang === "ta" ? lfTitleTa : lang === "ml" ? lfTitleMl : lfTitleEn}
+                      onChange={e => lang === "ta" ? setLfTitleTa(e.target.value) : lang === "ml" ? setLfTitleMl(e.target.value) : setLfTitleEn(e.target.value)}
+                      className="w-full border border-gray-250 p-2 rounded bg-white" />
                   </div>
-
-                  {/* Title Ml */}
                   <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">{lang === "ta" ? "பொருளின் பெயர் (மலையாளம்)*" : lang !== "ml" ? "Item Name / Title (Malayalam)*" : "സാധനത്തിന്റെ പേര് (മലയാളം)*"}</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="ഉദാ: ബാഗ്, പഴ്‌സ്, താക്കോൽ..."
-                      value={lfTitleMl}
-                      onChange={(e) => setLfTitleMl(e.target.value)}
-                      className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white font-semibold"
-                    />
+                    <label className="block text-[11px] font-bold text-slate-700">{lang === "ta" ? "இடம்*" : lang === "ml" ? "സ്ഥലം*" : "Location*"}</label>
+                    <input required lang={lang} value={lang === "ta" ? lfLocationTa : lang === "ml" ? lfLocationMl : lfLocationEn}
+                      onChange={e => lang === "ta" ? setLfLocationTa(e.target.value) : lang === "ml" ? setLfLocationMl(e.target.value) : setLfLocationEn(e.target.value)}
+                      className="w-full border border-gray-250 p-2 rounded bg-white" />
                   </div>
-                  <div className="space-y-1"><label className="block text-[11px] font-bold text-slate-700">Item title (Tamil)</label><input lang="ta" value={lfTitleTa} onChange={e => setLfTitleTa(e.target.value)} className="w-full border border-gray-250 p-2 rounded font-anek-tamil" /></div>
-
-                  {/* Description En */}
-                  <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">{lang === "ta" ? "விவரம் (ஆங்கிலம்)" : lang !== "ml" ? "Description (English)" : "വിശദാംശങ്ങൾ (ഇംഗ്ലീഷ്)"}</label>
-                    <textarea
-                      rows={2}
-                      placeholder="e.g. Lost near Agali stand around 4 PM..."
-                      value={lfDescEn}
-                      onChange={(e) => setLfDescEn(e.target.value)}
-                      className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white"
-                    />
+                  <div className="space-y-1 sm:col-span-2">
+                    <label className="block text-[11px] font-bold text-slate-700">{lang === "ta" ? "விவரம்" : lang === "ml" ? "വിവരണം" : "Description"}</label>
+                    <textarea rows={3} lang={lang} value={lang === "ta" ? lfDescTa : lang === "ml" ? lfDescMl : lfDescEn}
+                      onChange={e => lang === "ta" ? setLfDescTa(e.target.value) : lang === "ml" ? setLfDescMl(e.target.value) : setLfDescEn(e.target.value)}
+                      className="w-full border border-gray-250 p-2 rounded bg-white" />
                   </div>
-
-                  {/* Description Ml */}
-                  <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">{lang === "ta" ? "விவரம் (மலையாளம்)" : lang !== "ml" ? "Description (Malayalam)" : "വിശദാംശങ്ങൾ (മലയാളം)"}</label>
-                    <textarea
-                      rows={2}
-                      placeholder="ഉദാ: അഗളി സ്റ്റാൻഡിന് സമീപം വെച്ച് നഷ്ടപ്പെട്ടു..."
-                      value={lfDescMl}
-                      onChange={(e) => setLfDescMl(e.target.value)}
-                      className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white font-semibold"
-                    />
-                  </div>
-                  <div className="space-y-1"><label className="block text-[11px] font-bold text-slate-700">Description (Tamil)</label><input lang="ta" value={lfDescTa} onChange={e => setLfDescTa(e.target.value)} className="w-full border border-gray-250 p-2 rounded font-anek-tamil" /></div>
-
-                  {/* Location En */}
-                  <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">{lang === "ta" ? "இடம் (ஆங்கிலம்)*" : lang !== "ml" ? "Location / Place (English)*" : "സ്ഥലം (ഇംഗ്ലീഷ്)*"}</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Agali, Mukkali, Sholayur..."
-                      value={lfLocationEn}
-                      onChange={(e) => setLfLocationEn(e.target.value)}
-                      className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white"
-                    />
-                  </div>
-
-                  {/* Location Ml */}
-                  <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">{lang === "ta" ? "இடம் (மலையாளம்)*" : lang !== "ml" ? "Location / Place (Malayalam)*" : "സ്ഥലം (മലയാളം)*"}</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="ഉദാ: അഗളി, മുക്കാലി..."
-                      value={lfLocationMl}
-                      onChange={(e) => setLfLocationMl(e.target.value)}
-                      className="w-full border border-gray-250 p-2 rounded focus:ring-1 focus:ring-rose-500 focus:outline-none bg-white font-semibold"
-                    />
-                  </div>
-                  <div className="space-y-1"><label className="block text-[11px] font-bold text-slate-700">Location (Tamil)</label><input lang="ta" value={lfLocationTa} onChange={e => setLfLocationTa(e.target.value)} className="w-full border border-gray-250 p-2 rounded font-anek-tamil" /></div>
-
                   {/* Reporter Name */}
                   <div className="space-y-1">
                     <label className="block text-[11px] font-bold text-slate-700">{lang === "ta" ? "உங்கள் பெயர்*" : lang !== "ml" ? "Your Name*" : "നിങ്ങളുടെ പേര്*"}</label>
