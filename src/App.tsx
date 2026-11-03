@@ -1384,56 +1384,56 @@ export default function App() {
               <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center text-sm text-slate-600">{lang === "ta" ? "இதுவரை கட்டுரைகள் வெளியிடப்படவில்லை." : lang === "ml" ? "ലേഖനങ്ങൾ ഇതുവരെ പ്രസിദ്ധീകരിച്ചിട്ടില്ല." : "No columns have been published yet."}</div>
             </section>
           ) : activeSection === "readers-column" ? (
-            <div className="bg-white border border-gray-100 rounded-lg shadow-xs p-5 md:p-6 space-y-6 animate-fade-in">
+            <div lang={lang} className={`bg-white border border-gray-100 rounded-lg shadow-xs p-5 md:p-6 space-y-6 animate-fade-in ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
               <div className="border-b pb-4">
                 <span className="text-[10px] bg-emerald-600 text-white font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">
-                  {lang === "en" ? "Public Domain" : "വായനക്കാരുടെ അഭിപ്രായങ്ങൾ"}
+                  PUBLIC DOMAIN
                 </span>
-                <h2 className="font-serif-guardian font-extrabold text-[#052962] text-2xl mt-1 leading-tight">
-                  {lang === "en" ? "Beyond The Desk: Readers' Columns" : "വായനക്കാരുടെ എഴുത്തുകൾ"}
+                <h2 lang="en" className="font-anek-english font-extrabold text-[#052962] text-2xl mt-1 leading-tight">
+                  Beyond The Desk: Readers' Columns
                 </h2>
                 <p className="text-xs text-gray-400 mt-1">
                   {lang === "en" 
                     ? "Community views, essay letters, and local concerns submitted directly by local farmers, youth and activists."
-                    : "അട്ടപ്പാടിയിലെ ജനങ്ങളും കർഷകരും പരിസ്ഥിതി പ്രവർത്തകരും തങ്ങളുടെ കാഴ്ചപ്പാടുകൾ നേരിട്ട് സമർപ്പിക്കുന്ന തുറന്ന വേദി."}
+                    : lang === "ta" ? "அட்டப்பாடி மக்கள், விவசாயிகள் மற்றும் சமூக ஆர்வலர்கள் தங்கள் கருத்துகளை நேரடியாகப் பகிரும் திறந்த தளம்." : "അട്ടപ്പാടിയിലെ ജനങ്ങളും കർഷകരും പരിസ്ഥിതി പ്രവർത്തകരും തങ്ങളുടെ കാഴ്ചപ്പാടുകൾ നേരിട്ട് സമർപ്പിക്കുന്ന തുറന്ന വേദി."}
                 </p>
               </div>
 
               <OpinionsWidget lang={lang} />
             </div>
           ) : activeSection === "local-services" ? (
-            <div className="bg-white border border-gray-100 rounded-lg shadow-xs p-5 md:p-6 space-y-6 animate-fade-in">
+            <div lang={lang} className={`bg-white border border-gray-100 rounded-lg shadow-xs p-5 md:p-6 space-y-6 animate-fade-in ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
               <div className="border-b pb-4">
                 <span className="text-[10px] bg-red-600 text-white font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">
-                  {lang === "en" ? "HELPLINES & SERVICES" : "സഹായങ്ങൾ & സേവനങ്ങൾ"}
+                  HELPLINES & SERVICES
                 </span>
-                <h2 className="font-serif-guardian font-extrabold text-[#052962] text-2xl mt-1 leading-tight">
-                  {lang === "en" ? "Local Services & Emergency Directory" : "പ്രാദേശിക സേവനങ്ങളും ഡയറക്ടറിയും"}
+                <h2 lang="en" className="font-anek-english font-extrabold text-[#052962] text-2xl mt-1 leading-tight">
+                  Local Services & Emergency Directory
                 </h2>
                 <p className="text-xs text-gray-400 mt-1">
                   {lang === "en" 
                     ? "Quick emergency hotlines, essential tribal healthcare desks, forest department patrols, and verified regional services."
-                    : "അടിയന്തര സഹായ നമ്പറുകൾ, ആരോഗ്യ കേന്ദ്രങ്ങൾ, കാട്ടാന/വനപാലക വിഭാഗം, പ്രാദേശിക ടെക്നീഷ്യൻമാരുടെയും ജിപ്പുകളുടെയും ഡയറക്ടറി വിവരങ്ങൾ."}
+                    : lang === "ta" ? "அவசர உதவி எண்கள், சுகாதார மையங்கள், வனத்துறை உதவி மற்றும் உள்ளூர் சேவைகளின் தொடர்பு விவரங்கள்." : "അടിയന്തര സഹായ നമ്പറുകൾ, ആരോഗ്യ കേന്ദ്രങ്ങൾ, കാട്ടാന/വനപാലക വിഭാഗം, പ്രാദേശിക ടെക്നീഷ്യൻമാരുടെയും ജിപ്പുകളുടെയും ഡയറക്ടറി വിവരങ്ങൾ."}
                 </p>
               </div>
 
               <DirectoryWidget lang={lang} onDownloadCard={setShareCardTarget} initialTab={localServicesTab} />
             </div>
           ) : activeSection === "bookmarks" ? (
-            <div className="bg-white border border-gray-100 rounded-lg shadow-xs p-5 md:p-6 space-y-6 animate-fade-in">
+            <div lang={lang} className={`bg-white border border-gray-100 rounded-lg shadow-xs p-5 md:p-6 space-y-6 animate-fade-in ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
               <div className="border-b pb-4 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                 <div>
                   <span className="text-[10px] bg-amber-500 text-slate-900 font-extrabold px-2.5 py-1 rounded-sm uppercase tracking-wider">
-                    {lang === "en" ? "Your Library" : "ലൈബ്രറി"}
+                    YOUR LIBRARY
                   </span>
-                  <h2 className="font-serif-guardian font-extrabold text-[#052962] text-2xl mt-1 leading-tight flex items-center gap-2">
+                  <h2 lang="en" className="font-anek-english font-extrabold text-[#052962] text-2xl mt-1 leading-tight flex items-center gap-2">
                     <Bookmark className="w-5 h-5 fill-amber-500 text-amber-500" />
-                    {lang === "en" ? "Bookmarked Stories" : "സൂക്ഷിച്ചുവെച്ച വാർത്തകൾ"}
+                    Bookmarked Stories
                   </h2>
                   <p className="text-xs text-gray-400 mt-1">
                     {lang === "en" 
                       ? "Saved articles kept on this device for offline or delayed reading."
-                      : "നിങ്ങൾ പിന്നീട് വായിക്കാനായി ഈ ഉപകരണത്തിൽ മാത്രം സൂക്ഷിച്ചുവെച്ച പ്രധാന വാർത്തകൾ."}
+                      : lang === "ta" ? "பின்னர் படிப்பதற்காக இந்தச் சாதனத்தில் சேமிக்கப்பட்ட செய்திகள்." : "നിങ്ങൾ പിന്നീട് വായിക്കാനായി ഈ ഉപകരണത്തിൽ മാത്രം സൂക്ഷിച്ചുവെച്ച പ്രധാന വാർത്തകൾ."}
                   </p>
                 </div>
                 {bookmarks.length > 0 && (
@@ -1457,7 +1457,7 @@ export default function App() {
                   </div>
                   <div className="space-y-1">
                     <h3 className="font-serif-guardian font-bold text-base text-gray-800">
-                      {lang === "en" ? "Your saved list is empty" : "ലിസ്റ്റ് ശൂന്യമാണ്"}
+                      {lang === "ta" ? "சேமிக்கப்பட்ட செய்திகள் எதுவும் இல்லை" : lang === "ml" ? "ലിസ്റ്റ് ശൂന്യമാണ്" : "Your saved list is empty"}
                     </h3>
                     <p className="text-xs text-gray-400 max-w-md mx-auto leading-relaxed">
                       {lang === "en" 

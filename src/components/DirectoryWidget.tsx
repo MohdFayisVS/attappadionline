@@ -516,41 +516,38 @@ export default function DirectoryWidget({
   });
 
   return (
-    <div className={hideHeaderTabs 
-      ? "bg-white text-gray-800" 
-      : "bg-white border-t-2 border-[#052962] rounded-lg shadow overflow-hidden text-gray-800"
-    }>
+    <div lang={lang} className={`${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"} ${hideHeaderTabs ? "bg-white text-gray-800" : "bg-white border-t-2 border-[#052962] rounded-lg shadow overflow-hidden text-gray-800"}`}>
       
       {/* Tab Switcher */}
       {!hideHeaderTabs && (
-        <div className="flex border-b border-gray-150 font-bold text-[11px] sm:text-xs bg-slate-50 overflow-x-auto select-none scrollbar-none">
+        <div lang="en" className="font-anek-english flex border-b border-gray-150 font-bold text-[11px] sm:text-xs bg-slate-50 overflow-x-auto select-none scrollbar-none">
           <button
             onClick={() => setCurrTab("lpg")}
             className={`flex-1 min-w-[90px] py-3 text-center transition flex justify-center items-center gap-1 border-r cursor-pointer ${currTab === "lpg" ? "bg-amber-50 text-amber-800 border-b-2 border-amber-500 font-extrabold" : "text-gray-500 hover:bg-gray-100"}`}
           >
             <Flame className="w-3.5 h-3.5 text-amber-600 animate-pulse shrink-0" />
-            <span className="truncate">{lang !== "ml" ? "LPG TODAY" : "ഇന്നത്തെ ഗ്യാസ്"}</span>
+            <span className="truncate">LPG TODAY</span>
           </button>
           <button
             onClick={() => setCurrTab("emergency")}
             className={`flex-1 min-w-[90px] py-3 text-center transition flex justify-center items-center gap-1 border-r cursor-pointer ${currTab === "emergency" ? "bg-red-50 text-red-700 border-b-2 border-red-600 font-extrabold" : "text-gray-500 hover:bg-gray-100"}`}
           >
             <AlertOctagon className="w-3.5 h-3.5 text-red-600 shrink-0" />
-            <span className="truncate">{lang !== "ml" ? "EMERGENCY" : "ഹെൽപ്‌ലൈനുകൾ"}</span>
+            <span className="truncate">EMERGENCY</span>
           </button>
           <button
             onClick={() => setCurrTab("commercial")}
             className={`flex-1 min-w-[90px] py-3 text-center transition flex justify-center items-center gap-1 border-r cursor-pointer ${currTab === "commercial" ? "bg-sky-50 text-sky-800 border-b-2 border-sky-600 font-extrabold" : "text-gray-500 hover:bg-gray-100"}`}
           >
             <Phone className="w-3.5 h-3.5 text-sky-700 shrink-0" />
-            <span className="truncate">{lang !== "ml" ? "DIRECTORY" : "ഡയറക്ടറി"}</span>
+            <span className="truncate">DIRECTORY</span>
           </button>
           <button
             onClick={() => setCurrTab("lostfound")}
             className={`flex-1 min-w-[90px] py-3 text-center transition flex justify-center items-center gap-1 cursor-pointer ${currTab === "lostfound" ? "bg-rose-50 text-rose-800 border-b-2 border-rose-600 font-extrabold" : "text-gray-500 hover:bg-gray-100"}`}
           >
             <HelpCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
-            <span className="truncate">{lang !== "ml" ? "LOST & FOUND" : "നഷ്ടപ്പെട്ടവ/ലഭിച്ചവ"}</span>
+            <span className="truncate">LOST & FOUND</span>
           </button>
         </div>
       )}
@@ -562,7 +559,7 @@ export default function DirectoryWidget({
             <p className="text-[11px] text-amber-800 bg-amber-50 p-2 rounded leading-tight border border-amber-100">
               {lang === "en" 
                 ? "Daily Gas delivering schedules, routes and agency hotline support across Attappadi hills."
-                : "അട്ടപ്പാടിയിലുടനീളമുള്ള ഇന്നത്തെ എൽ.പി.ജി ഗ്യാസ് വിതരണ വിവരങ്ങൾ, വാഹനങ്ങൾ എത്തുന്ന സ്ഥലങ്ങൾ."}
+                : lang === "ta" ? "அட்டப்பாடி முழுவதும் இன்றைய சமையல் எரிவாயு விநியோக நேரங்கள், வழித்தடங்கள் மற்றும் முகவர் தொடர்பு விவரங்கள்." : "അട്ടപ്പാടിയിലുടനീളമുള്ള ഇന്നത്തെ എൽ.പി.ജി ഗ്യാസ് വിതരണ വിവരങ്ങൾ, വാഹനങ്ങൾ എത്തുന്ന സ്ഥലങ്ങൾ."}
             </p>
 
             <div className="space-y-2 max-h-[340px] overflow-y-auto pr-0.5">
