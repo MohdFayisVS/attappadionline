@@ -4151,9 +4151,28 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         <label className="text-xs font-bold">Arrival / departure time<input type="time" value={transitInput.time} onChange={e=>setTransitInput(prev=>({...prev,time:e.target.value}))} className="mt-1 block w-full rounded-lg border p-2" /></label>
                         <label className="text-xs font-bold">Select registered stop
                           <select required value={registeredStops.find(stop => stop.nameEn === transitInput.typeEn && stop.nameMl === transitInput.typeMl)?.id || ""}
-                            onChange={e => {
+                            onChange={async e => {
                               const station = registeredStops.find(stop => stop.id === e.target.value);
-                              setTransitInput(prev => ({ ...prev, typeMl: station?.nameMl || "", typeEn: station?.nameEn || "", typeTa: station?.nameTa || "" }));
+                              const nameMl = station?.nameMl || "";
+                              const nameEn = station?.nameEn || "";
+                              const nameTa = station?.nameTa || "";
+                              setTransitInput(prev => ({ ...prev, typeMl: nameMl, typeEn: nameEn, typeTa: nameTa }));
+                              if (!station || nameTa.trim()) return;
+                              try {
+                                const sourceLang = nameMl.trim() ? "ml" : "en";
+                                const response = await adminFetch("/api/admin/translate", {
+                                  method: "POST", headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({ text: sourceLang === "ml" ? nameMl : nameEn, sourceLang, targetLang: "ta" })
+                                });
+                                if (!response.ok) throw new Error("Translation service unavailable");
+                                const result = await response.json();
+                                const tamil = typeof result.translatedText === "string" ? result.translatedText.trim() : "";
+                                if (!/[\\u0B80-\\u0BFF]/.test(tamil)) throw new Error("Tamil translation missing");
+                                setTransitInput(prev => prev.typeMl === nameMl && prev.typeEn === nameEn && !prev.typeTa.trim() ? { ...prev, typeTa: tamil } : prev);
+                                setRegisteredStopsError("");
+                              } catch {
+                                setRegisteredStopsError("Tamil name is missing for this station and automatic translation failed. Add Tamil in the Station Editor and save to database.");
+                              }
                             }}
                             className="mt-1 block w-full rounded-lg border bg-white p-2">
                             <option value="">-- Select a registered station --</option>
