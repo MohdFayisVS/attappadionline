@@ -2052,6 +2052,27 @@ Text:\n${text}`;
       console.log("MyMemory Backup Translator also failed:", backupErr.message);
     }
 
+    // Third fallback: unofficial free Google Translate web endpoint, no billing or key.
+    // This endpoint is unsupported and may change or reject automated requests.
+    try {
+      const detectedSource = sourceLang || (/[\u0B80-\u0BFF]/.test(text) ? "ta" : /[\u0D00-\u0D7F]/.test(text) ? "ml" : "en");
+      const url = new URL("https://translate.googleapis.com/translate_a/single");
+      url.searchParams.set("client", "gtx");
+      url.searchParams.set("sl", detectedSource);
+      url.searchParams.set("tl", targetLang);
+      url.searchParams.set("dt", "t");
+      url.searchParams.set("q", text.slice(0, 4500));
+      const response = await fetch(url.toString(), { signal: AbortSignal.timeout(8000) });
+      if (!response.ok) throw new Error(`Google Translate web HTTP ${response.status}`);
+      const payload: any = await response.json();
+      const translated = Array.isArray(payload?.[0]) ? payload[0].map((segment: any) => typeof segment?.[0] === "string" ? segment[0] : "").join("").trim() : "";
+      const valid = targetLang === "ta" ? /[\u0B80-\u0BFF]/.test(translated) : targetLang === "ml" ? /[\u0D00-\u0D7F]/.test(translated) : /[A-Za-z]/.test(translated);
+      if (!translated || !valid) throw new Error("No valid target-language translation returned");
+      return res.json({ translatedText: translated, provider: "google-translate-web", isBackup: true });
+    } catch (webError: any) {
+      console.warn("Free Google Translate web fallback unavailable:", webError.message);
+    }
+
     // Graceful fallback to original text if both Gemini and the backup fail
     res.status(503).json({
       error: "Translation services unavailable. Enter the translation manually or retry later.",
