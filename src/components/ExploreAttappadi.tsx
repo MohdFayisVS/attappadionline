@@ -1584,6 +1584,27 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                       </div>;
                                     })}
                                   </div>
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {(["ml", "en", "ta"] as const).map(source => (
+                                      <button key={source} type="button" disabled={stationTranslationBusy || !stationAutoTranslate}
+                                        onClick={async () => {
+                                          const current = mapNodes.find(n => n.id === activeNode.id);
+                                          if (!current) return;
+                                          const sourceField = source === "ml" ? "nameMl" : source === "en" ? "nameEn" : "nameTa";
+                                          if (!current[sourceField]?.trim()) { alert("Enter the source station name first."); return; }
+                                          const translated = await translateStationNames({ nameMl: current.nameMl || "", nameEn: current.nameEn || "", nameTa: current.nameTa || "" }, source);
+                                          setMapNodes(previous => previous.map(node => node.id === current.id ? {
+                                            ...node,
+                                            nameMl: node.nameMl?.trim() || translated.nameMl,
+                                            nameEn: node.nameEn?.trim() || translated.nameEn,
+                                            nameTa: node.nameTa?.trim() || translated.nameTa || ""
+                                          } : node));
+                                        }}
+                                        className="rounded bg-slate-700 px-2 py-1.5 text-[10px] font-bold text-white disabled:opacity-50">
+                                        Translate from {source === "ml" ? "Malayalam" : source === "en" ? "English" : "Tamil"}
+                                      </button>
+                                    ))}
+                                  </div>
                                   <button type="button" disabled={chartSaving || !chartLoaded} onClick={() => void saveStationChart()} className="rounded bg-emerald-600 px-3 py-2 text-xs font-bold text-white disabled:opacity-50">{chartSaving ? "Saving…" : "Save station translations to database"}</button>
                                   <p className="text-[10px] text-slate-400">Tamil can be entered manually. Saving updates the shared chart for website and Android admins.</p>
                                   {stationTranslationBusy && <p className="text-xs text-amber-400">Translating station names…</p>}
