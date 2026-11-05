@@ -1143,6 +1143,27 @@ app.delete("/api/shops/:id", async (req, res) => {
   res.json({ success: true });
 });
 
+// Shared station chart configuration. Reads are public; writes require Firebase admin auth.
+app.get("/api/station-chart", async (_req, res) => {
+  if (!firestoreDb) return res.status(503).json({ error: "Database unavailable" });
+  try {
+    const entries = await getCollectionData("stationChart");
+    const saved = entries.find((entry: any) => entry.id === "current");
+    res.json(saved ? { nodes: saved.nodes, lines: saved.lines, updatedAt: saved.updatedAt } : { nodes: null, lines: null });
+  } catch (error) { console.error(error); res.status(503).json({ error: "Unable to load station chart" }); }
+});
+app.put("/api/station-chart", async (req, res) => {
+  const { nodes, lines } = req.body || {};
+  if (!Array.isArray(nodes) || !Array.isArray(lines) || nodes.length > 200 || lines.length > 500 ||
+      nodes.some((n: any) => !n || typeof n.id !== "string" || !/^[A-Za-z0-9_-]{1,80}$/.test(n.id) || !["nameEn","nameMl","nameTa"].every(k => typeof n[k] === "string" && n[k].length <= 200) || !Number.isFinite(n.x) || !Number.isFinite(n.y) || n.x < 0 || n.x > 100 || n.y < 0 || n.y > 100) ||
+      lines.some((l: any) => !l || typeof l.from !== "string" || typeof l.to !== "string" || !nodes.some((n: any) => n.id === l.from) || !nodes.some((n: any) => n.id === l.to))) {
+    return res.status(400).json({ error: "Invalid station chart data" });
+  }
+  const updatedAt = new Date().toISOString();
+  try { await writeItemToFirestore("stationChart", "current", { nodes, lines, updatedAt }); res.json({ success: true, updatedAt }); }
+  catch (error) { console.error(error); res.status(503).json({ error: "Station chart was not saved" }); }
+});
+
 // 5. Local Services Directory
 app.get("/api/directory", async (req, res) => {
   const data = await getCollectionData("directory");

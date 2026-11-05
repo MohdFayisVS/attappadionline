@@ -1,3 +1,4 @@
+import { adminFetch } from "../services/adminAuth";
 import React, { useState, useEffect } from "react";
 import BusStopOSMMap from "./BusStopOSMMap";
 import { motion, AnimatePresence } from "motion/react";
@@ -472,18 +473,35 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
     }
   }, [isAdmin]);
 
-  // Unified automatic local storage sync managers to handle real-time modifications flawlessly
+  const [chartLoaded, setChartLoaded] = useState(false);
+  const [chartSaving, setChartSaving] = useState(false);
+  const [chartMessage, setChartMessage] = useState("");
+  // Database is authoritative. Do not overwrite shared data with browser-local edits.
   useEffect(() => {
-    if (mapNodes && mapNodes.length > 0) {
-      localStorage.setItem("attappadi_map_nodes2", JSON.stringify(mapNodes));
-    }
-  }, [mapNodes]);
-
-  useEffect(() => {
-    if (mapLines) {
-      localStorage.setItem("attappadi_map_lines2", JSON.stringify(mapLines));
-    }
-  }, [mapLines]);
+    let cancelled = false;
+    fetch("/api/station-chart").then(async response => {
+      if (!response.ok) throw new Error("Could not load shared station chart");
+      return response.json();
+    }).then(data => {
+      if (cancelled) return;
+      if (Array.isArray(data.nodes) && Array.isArray(data.lines)) {
+        setMapNodes(data.nodes);
+        setMapLines(data.lines);
+      }
+      setChartLoaded(true);
+    }).catch(error => { if (!cancelled) { setChartMessage(error.message); setChartLoaded(true); } });
+    return () => { cancelled = true; };
+  }, []);
+  const saveStationChart = async (nodes = mapNodes, lines = mapLines) => {
+    if (!isAdmin || !chartLoaded) return;
+    setChartSaving(true); setChartMessage("");
+    try {
+      const response = await adminFetch("/api/station-chart", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ nodes, lines }) });
+      if (!response.ok) throw new Error((await response.json()).error || "Unable to save station chart");
+      setChartMessage("Saved to database. Changes are available across devices.");
+    } catch (error: any) { setChartMessage(error.message || "Database save failed"); }
+    finally { setChartSaving(false); }
+  };
 
   const [destinationsList, setDestinationsList] = useState<DestinationItem[]>(defaultDestinations);
   const [culturesList, setCulturesList] = useState<CultureItem[]>(defaultCultures);
@@ -1456,6 +1474,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                     {/* Interactive Layout Editor Control Center */}
                     {isAdmin && isMapEditorOpen && (
                       <div className="bg-slate-900 text-slate-100 border border-slate-950 rounded-xl p-4 shadow-xl space-y-4 animate-fade-in mt-4 text-left">
+                        <div className="flex flex-wrap items-center gap-2"><button type="button" disabled={chartSaving || !chartLoaded} onClick={() => void saveStationChart()} className="rounded bg-emerald-600 px-3 py-2 text-xs font-bold text-white disabled:opacity-50">{chartSaving ? "Saving…" : "Save chart & branches to database"}</button>{chartMessage && <span role="status" className="text-xs text-amber-300">{chartMessage}</span>}</div>
                         <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                           <h6 className="text-[11px] font-black uppercase text-amber-500 tracking-wider flex items-center gap-1 font-mono">
                             <Sliders className="w-3.5 h-3.5" /> chart layout tuning
@@ -1561,10 +1580,12 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                     {(["ml", "en", "ta"] as const).map(language => {
                                       const field = language === "ml" ? "nameMl" : language === "en" ? "nameEn" : "nameTa";
                                       return <div key={language}><label className="block text-[10px] text-slate-400 font-bold mb-1">{language === "ml" ? "Malayalam" : language === "en" ? "English" : "Tamil"} Name</label>
-                                        <input lang={language} value={activeNode[field] || ""} onChange={e => { const value = e.target.value; setMapNodes(prev => prev.map(n => n.id === activeNode.id ? { ...n, [field]: value } : n)); }} onBlur={async () => { const latest = mapNodes.find(n => n.id === activeNode.id); if (!latest) return; const translated = await translateStationNames(latest, language); setMapNodes(prev => { const updated = prev.map(n => n.id === activeNode.id ? { ...n, ...translated } : n); localStorage.setItem("attappadi_map_nodes2", JSON.stringify(updated)); return updated; }); }} className={`w-full bg-slate-950 border border-slate-800 px-2 py-2 rounded text-slate-200 text-xs font-bold ${language === "ml" ? "font-anek-malayalam" : language === "ta" ? "font-anek-tamil" : "font-anek-latin"}`} />
+                                        <input lang={language} value={activeNode[field] || ""} onChange={e => { const value = e.target.value; setMapNodes(prev => prev.map(n => n.id === activeNode.id ? { ...n, [field]: value } : n)); }}  className={`w-full bg-slate-950 border border-slate-800 px-2 py-2 rounded text-slate-200 text-xs font-bold ${language === "ml" ? "font-anek-malayalam" : language === "ta" ? "font-anek-tamil" : "font-anek-latin"}`} />
                                       </div>;
                                     })}
                                   </div>
+                                  <button type="button" disabled={chartSaving || !chartLoaded} onClick={() => void saveStationChart()} className="rounded bg-emerald-600 px-3 py-2 text-xs font-bold text-white disabled:opacity-50">{chartSaving ? "Saving…" : "Save station translations to database"}</button>
+                                  <p className="text-[10px] text-slate-400">Tamil can be entered manually. Saving updates the shared chart for website and Android admins.</p>
                                   {stationTranslationBusy && <p className="text-xs text-amber-400">Translating station names…</p>}
 
                                   {/* Coordinate Slider Inputs */}
