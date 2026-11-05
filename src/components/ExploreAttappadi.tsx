@@ -440,13 +440,15 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
       const translated = { ...names };
       await Promise.all((["ml", "en", "ta"] as const).filter(lang => lang !== source).map(async lang => {
         if (translated[fields[lang]]?.trim()) return;
-        const response = await fetch("/api/admin/translate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text, sourceLang: source, targetLang: lang }) });
-        if (!response.ok) return;
+        const response = await adminFetch("/api/admin/translate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text, sourceLang: source, targetLang: lang }) });
+        if (!response.ok) throw new Error("Translation request failed");
         const result = await response.json();
-        if (result.translatedText?.trim()) translated[fields[lang]] = result.translatedText.trim();
+        const translatedText = typeof result.translatedText === "string" ? result.translatedText.trim() : "";
+        if (result.isFallback || !translatedText || (lang === "ta" && !/[\\u0B80-\\u0BFF]/.test(translatedText))) throw new Error("Valid Tamil translation unavailable");
+        translated[fields[lang]] = translatedText;
       }));
       return translated;
-    } catch (error) { console.error("Station translation failed", error); return names; }
+    } catch (error) { console.error("Station translation failed", error); setChartMessage("Translation unavailable. Enter Tamil manually and save to database."); return names; }
     finally { setStationTranslationBusy(false); }
   };
 
@@ -496,8 +498,11 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
     if (!isAdmin || !chartLoaded) return;
     setChartSaving(true); setChartMessage("");
     try {
-      const response = await adminFetch("/api/station-chart", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ nodes, lines }) });
+      const normalizedNodes = nodes.map(n => ({ ...n, nameTa: n.nameTa || "" }));
+      const response = await adminFetch("/api/station-chart", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ nodes: normalizedNodes, lines }) });
       if (!response.ok) throw new Error((await response.json()).error || "Unable to save station chart");
+      setMapNodes(normalizedNodes);
+      localStorage.setItem("attappadi_map_nodes2", JSON.stringify(normalizedNodes));
       setChartMessage("Saved to database. Changes are available across devices.");
     } catch (error: any) { setChartMessage(error.message || "Database save failed"); }
     finally { setChartSaving(false); }
@@ -1607,7 +1612,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                   </div>
                                   <button type="button" disabled={chartSaving || !chartLoaded} onClick={() => void saveStationChart()} className="rounded bg-emerald-600 px-3 py-2 text-xs font-bold text-white disabled:opacity-50">{chartSaving ? "Saving…" : "Save station translations to database"}</button>
                                   <p className="text-[10px] text-slate-400">Tamil can be entered manually. Saving updates the shared chart for website and Android admins.</p>
-                                  {stationTranslationBusy && <p className="text-xs text-amber-400">Translating station names…</p>}
+                                  {stationTranslationBusy && <p className="text-xs text-amber-400">Translating station names…</p>}{chartMessage && <p role="status" className="text-xs text-amber-400">{chartMessage}</p>}
 
                                   {/* Coordinate Slider Inputs */}
                                   <div className="space-y-2 text-left">
