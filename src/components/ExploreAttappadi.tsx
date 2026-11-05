@@ -444,7 +444,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
         if (!response.ok) throw new Error("Translation request failed");
         const result = await response.json();
         const translatedText = typeof result.translatedText === "string" ? result.translatedText.trim() : "";
-        if (result.isFallback || !translatedText || (lang === "ta" && !/[\\u0B80-\\u0BFF]/.test(translatedText))) throw new Error("Valid Tamil translation unavailable");
+        if (result.isFallback || !translatedText || (lang === "ta" && !/[\u0B80-\u0BFF]/.test(translatedText))) throw new Error("Valid Tamil translation unavailable");
         translated[fields[lang]] = translatedText;
       }));
       return translated;
