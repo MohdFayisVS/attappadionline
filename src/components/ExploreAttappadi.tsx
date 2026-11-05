@@ -1561,10 +1561,12 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                     {(["ml", "en", "ta"] as const).map(language => {
                                       const field = language === "ml" ? "nameMl" : language === "en" ? "nameEn" : "nameTa";
                                       return <div key={language}><label className="block text-[10px] text-slate-400 font-bold mb-1">{language === "ml" ? "Malayalam" : language === "en" ? "English" : "Tamil"} Name</label>
-                                        <input lang={language} value={activeNode[field] || ""} onChange={e => { const value = e.target.value; setMapNodes(prev => prev.map(n => n.id === activeNode.id ? { ...n, [field]: value } : n)); }} onBlur={async () => { const latest = mapNodes.find(n => n.id === activeNode.id); if (!latest) return; const translated = await translateStationNames(latest, language); setMapNodes(prev => { const updated = prev.map(n => n.id === activeNode.id ? { ...n, ...translated } : n); localStorage.setItem("attappadi_map_nodes2", JSON.stringify(updated)); return updated; }); }} className={`w-full bg-slate-950 border border-slate-800 px-2 py-2 rounded text-slate-200 text-xs font-bold ${language === "ml" ? "font-anek-malayalam" : language === "ta" ? "font-anek-tamil" : "font-anek-latin"}`} />
+                                        <input lang={language} value={activeNode[field] || ""} onChange={e => { const value = e.target.value; setMapNodes(prev => prev.map(n => n.id === activeNode.id ? { ...n, [field]: value } : n)); }} onBlur={() => { const updated = mapNodes.map(n => n.id === activeNode.id ? { ...n } : n); localStorage.setItem("attappadi_map_nodes2", JSON.stringify(updated)); }} className={`w-full bg-slate-950 border border-slate-800 px-2 py-2 rounded text-slate-200 text-xs font-bold ${language === "ml" ? "font-anek-malayalam" : language === "ta" ? "font-anek-tamil" : "font-anek-latin"}`} />
                                       </div>;
                                     })}
                                   </div>
+                                  <p className="text-[10px] text-slate-400">Manually enter or correct the Tamil name above. Manual edits are not replaced by automatic translation.</p>
+                                  <button type="button" onClick={() => { localStorage.setItem("attappadi_map_nodes2", JSON.stringify(mapNodes)); alert("Station names saved on this device."); }} className="rounded bg-emerald-600 px-3 py-2 text-xs font-bold text-white">Save station translations</button>
                                   {stationTranslationBusy && <p className="text-xs text-amber-400">Translating station names…</p>}
 
                                   {/* Coordinate Slider Inputs */}
