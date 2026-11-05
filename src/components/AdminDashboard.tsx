@@ -451,6 +451,33 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     return updatedForm;
   };
 
+  // Dropdowns set bus category programmatically, so input onChange translation never fires.
+  // Translate missing Tamil whenever a selected category changes, without overwriting edits.
+  useEffect(() => {
+    if (!autoTranslateOnSubmit || busForm.busTypeTa?.trim()) return;
+    const source = busForm.busTypeMl?.trim() ? "ml" : "en";
+    const text = (source === "ml" ? busForm.busTypeMl : busForm.busTypeEn)?.trim();
+    if (!text) return;
+    let cancelled = false;
+    const timer = setTimeout(async () => {
+      try {
+        const response = await adminFetch("/api/admin/translate", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text, sourceLang: source, targetLang: "ta" })
+        });
+        if (!response.ok) return;
+        const data = await response.json();
+        const tamil = typeof data.translatedText === "string" ? data.translatedText.trim() : "";
+        if (cancelled || !/[\\u0B80-\\u0BFF]/.test(tamil)) return;
+        setBusForm(previous => {
+          if (previous.busTypeTa?.trim() || (source === "ml" ? previous.busTypeMl : previous.busTypeEn)?.trim() !== text) return previous;
+          return { ...previous, busTypeTa: tamil };
+        });
+      } catch (error) { console.warn("Bus category Tamil translation failed", error); }
+    }, 250);
+    return () => { cancelled = true; clearTimeout(timer); };
+  }, [autoTranslateOnSubmit, busForm.busTypeEn, busForm.busTypeMl, busForm.busTypeTa]);
+
   // Firebase maintains session state; authorization is independently enforced by the API.
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(adminAuth, async user => {
@@ -3927,7 +3954,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </div>
 
                   <section className="space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
-                    <div><h4 className="text-sm font-extrabold text-[#0a3060]">Service details · 3 languages</h4><p className="text-xs text-slate-500">Language order: Malayalam → English → Tamil. Select the route above; its Malayalam and English names are filled automatically.</p></div>
+                    <div className="flex flex-wrap items-center justify-between gap-2"><div><h4 className="text-sm font-extrabold text-[#0a3060]">Service details · 3 languages</h4><p className="text-xs text-slate-500">Language order: Malayalam → English → Tamil. Missing Tamil values are translated automatically when enabled.</p></div><button type="button" disabled={isTranslatingForm} onClick={() => void performAutoTranslationForForm(busForm, setBusForm, [], true)} className="rounded-md border border-blue-300 bg-white px-3 py-1.5 text-xs font-bold text-[#052962] disabled:opacity-50">{isTranslatingForm ? "Translating…" : "Translate missing fields"}</button></div>
                     {([
                       {label:"Route name",ml:"routeMl",en:"routeEn",ta:"routeTa"},
                       {label:"Bus category",ml:"busTypeMl",en:"busTypeEn",ta:"busTypeTa"},
@@ -3957,6 +3984,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                             type: selectedType, 
                             busTypeEn: firstOption?.labelEn || "", 
                             busTypeMl: firstOption?.labelMl || "",
+                            busTypeTa: "",
                             privateBusName: selectedType === "PRIVATE" ? (busForm.privateBusName || "") : ""
                           });
                         }} 
@@ -3977,14 +4005,16 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                             setBusForm({
                               ...busForm,
                               busTypeEn: "",
-                              busTypeMl: ""
+                              busTypeMl: "",
+                              busTypeTa: ""
                             });
                           } else {
                             const optionEntity = standardTypes.find(opt => opt.value === selectedVal);
                             setBusForm({
                               ...busForm,
                               busTypeEn: optionEntity?.labelEn || "",
-                              busTypeMl: optionEntity?.labelMl || ""
+                              busTypeMl: optionEntity?.labelMl || "",
+                              busTypeTa: ""
                             });
                           }
                         }}
