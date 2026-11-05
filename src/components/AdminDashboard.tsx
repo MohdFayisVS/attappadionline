@@ -50,6 +50,27 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   const [busAdminSearch, setBusAdminSearch] = useState("");
   const [busMapRevision, setBusMapRevision] = useState(0);
   const [routesList, setRoutesList] = useState<{ id: string; routeEn: string; routeMl: string; routeTa?: string; }[]>([]);
+  const [registeredStops, setRegisteredStops] = useState<{ id: string; nameEn: string; nameMl: string; nameTa?: string }[]>([]);
+  const [registeredStopsError, setRegisteredStopsError] = useState("");
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    let cancelled = false;
+    const load = async () => {
+      try {
+        const response = await fetch("/api/station-chart");
+        if (!response.ok) throw new Error("Station chart unavailable");
+        const data = await response.json();
+        if (!cancelled) {
+          setRegisteredStops(Array.isArray(data.nodes) ? data.nodes.filter((n: any) => n.id && n.nameEn && n.nameMl) : []);
+          setRegisteredStopsError("");
+        }
+      } catch {
+        if (!cancelled) setRegisteredStopsError("Could not load registered stations. Please retry.");
+      }
+    };
+    void load();
+    return () => { cancelled = true; };
+  }, [isAuthenticated, busAdminView]);
   const [noticesList, setNoticesList] = useState<NoticeItem[]>([]);
   const [lpgList, setLpgList] = useState<LpgDelivery[]>([]);
 
@@ -4128,7 +4149,23 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                       <h5 className="mb-2 text-xs font-extrabold text-[#092b58]">{editingTransitStopIndex === null ? "Add a new stop" : `Edit stop ${editingTransitStopIndex + 1}`}</h5>
                       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                         <label className="text-xs font-bold">Arrival / departure time<input type="time" value={transitInput.time} onChange={e=>setTransitInput(prev=>({...prev,time:e.target.value}))} className="mt-1 block w-full rounded-lg border p-2" /></label>
-                        {([{key:"typeMl",label:"Stop · Malayalam",lang:"ml",font:"font-anek-malayalam"},{key:"typeEn",label:"Stop · English",lang:"en",font:"font-anek-latin"},{key:"typeTa",label:"Stop · Tamil",lang:"ta",font:"font-anek-tamil"}] as const).map(item=><label key={item.key} className="text-xs font-bold">{item.label}<input lang={item.lang} value={transitInput[item.key] || ""} onChange={e=>setTransitInput(prev=>({...prev,[item.key]:e.target.value}))} className={`mt-1 block w-full rounded-lg border p-2 ${item.font}`} /></label>)}
+                        <label className="text-xs font-bold">Select registered stop
+                          <select required value={registeredStops.find(stop => stop.nameEn === transitInput.typeEn && stop.nameMl === transitInput.typeMl)?.id || ""}
+                            onChange={e => {
+                              const station = registeredStops.find(stop => stop.id === e.target.value);
+                              setTransitInput(prev => ({ ...prev, typeMl: station?.nameMl || "", typeEn: station?.nameEn || "", typeTa: station?.nameTa || "" }));
+                            }}
+                            className="mt-1 block w-full rounded-lg border bg-white p-2">
+                            <option value="">-- Select a registered station --</option>
+                            {registeredStops.map(stop => <option key={stop.id} value={stop.id}>{stop.nameEn} | {stop.nameMl}</option>)}
+                          </select>
+                        </label>
+                        <div className="rounded-lg border bg-slate-50 p-2 text-xs">
+                          <p className="font-anek-malayalam">{transitInput.typeMl || "Malayalam name will appear here"}</p>
+                          <p className="font-anek-latin">{transitInput.typeEn || "English name will appear here"}</p>
+                          <p className="font-anek-tamil">{transitInput.typeTa || "Tamil name will appear here"}</p>
+                        </div>
+                        {registeredStopsError && <p className="text-xs text-red-700">{registeredStopsError}</p>}
                       </div>
                       <div className="mt-3 flex gap-2"><button type="button" onClick={handleAddTransitStop} className="rounded-lg bg-[#092b58] px-4 py-2 text-xs font-bold text-white">{editingTransitStopIndex === null ? "Add stop" : "Save stop changes"}</button>{editingTransitStopIndex !== null && <button type="button" onClick={()=>{setEditingTransitStopIndex(null);setTransitInput({time:"",typeEn:"",typeMl:"",typeTa:"",viaCodeEn:"",viaCodeMl:"",viaCodeTa:""});}} className="rounded-lg border px-3 py-2 text-xs font-bold">Cancel edit</button>}</div>
                     </div>
