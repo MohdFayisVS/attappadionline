@@ -2001,9 +2001,7 @@ app.post("/api/admin/translate", async (req, res) => {
 
   try {
     const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      return res.status(503).json({ error: "Gemini API key is not configured on the server. Please check Settings > Secrets." });
-    }
+    if (!apiKey) throw new Error("Gemini API key not configured");
 
     const { GoogleGenAI } = await import("@google/genai");
     const ai = new GoogleGenAI({ apiKey, httpOptions: { headers: { "User-Agent": "aistudio-build" } } });
@@ -2050,13 +2048,29 @@ Text:\n${text}`;
       console.log("MyMemory Backup Translator also failed:", backupErr.message);
     }
 
+    // Optional third fallback: unofficial public Google Translate web endpoint.
+    // No API key or billing. This endpoint is unsupported and may be blocked or changed.
+    try {
+      const detectedSource = sourceLang || (/[\u0B80-\u0BFF]/.test(text) ? "ta" : /[\u0D00-\u0D7F]/.test(text) ? "ml" : "en");
+      const url = new URL("https://translate.googleapis.com/translate_a/single");
+      url.searchParams.set("client", "gtx");
+      url.searchParams.set("sl", detectedSource);
+      url.searchParams.set("tl", targetLang);
+      url.searchParams.set("dt", "t");
+      url.searchParams.set("q", text.slice(0, 4500));
+      const response = await fetch(url.toString(), { signal: AbortSignal.timeout(8000) });
+      if (!response.ok) throw new Error(`Google Translate web HTTP ${response.status}`);
+      const payload: any = await response.json();
+      const translated = Array.isArray(payload?.[0]) ? payload[0].map((segment: any) => typeof segment?.[0] === "string" ? segment[0] : "").join("").trim() : "";
+      const scriptValid = targetLang === "ta" ? /[\u0B80-\u0BFF]/.test(translated) : targetLang === "ml" ? /[\u0D00-\u0D7F]/.test(translated) : /[A-Za-z]/.test(translated);
+      if (!translated || !scriptValid) throw new Error("No valid translation returned");
+      return res.json({ translatedText: translated, provider: "google-translate-web", isBackup: true });
+    } catch (webError: any) {
+      console.warn("Free Google Translate web fallback unavailable:", webError.message);
+    }
+
     // Graceful fallback to original text if both Gemini and the backup fail
-    res.json({ 
-      translatedText: text, 
-      isFallback: true, 
-      warning: "All translation engines temporarily unavailable. Visual placeholder returned.",
-      error: err.message || "Failed to communicate with translation assistant." 
-    });
+    return res.status(503).json({ error: "All translation services unavailable. You can still enter and save Tamil manually.", isFallback: true });
   }
 });
 
