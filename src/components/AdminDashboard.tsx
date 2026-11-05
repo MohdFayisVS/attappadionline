@@ -15,7 +15,7 @@ import SocialCardGenerator from "./SocialCardGenerator";
 import NewsQuickArtMaker from "./NewsQuickArtMaker";
 import AdMaker from "./AdMaker";
 import CitizenReportReview from "./CitizenReportReview";
-import ExploreAttappadi from "./ExploreAttappadi";
+import ExploreAttappadi, { DEFAULT_MAP_NODES } from "./ExploreAttappadi";
 import ShopManager from "./ShopManager";
 import { adminAuth, adminFetch, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "../services/adminAuth";
 
@@ -61,11 +61,14 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
         if (!response.ok) throw new Error("Station chart unavailable");
         const data = await response.json();
         if (!cancelled) {
-          setRegisteredStops(Array.isArray(data.nodes) ? data.nodes.filter((n: any) => n.id && n.nameEn && n.nameMl) : []);
-          setRegisteredStopsError("");
+          const savedNodes = Array.isArray(data.nodes) ? data.nodes : null;
+          const cachedNodes = (() => { try { const nodes = JSON.parse(localStorage.getItem("attappadi_map_nodes2") || "null"); return Array.isArray(nodes) ? nodes : DEFAULT_MAP_NODES; } catch { return DEFAULT_MAP_NODES; } })();
+          const nodes = savedNodes || cachedNodes;
+          setRegisteredStops(nodes.filter((n: any) => n && n.id && (n.nameEn || n.nameMl)));
+          setRegisteredStopsError(savedNodes ? "" : "Station chart is not yet saved in Firestore. Showing chart stations; save the chart to synchronize devices.");
         }
       } catch {
-        if (!cancelled) setRegisteredStopsError("Could not load registered stations. Please retry.");
+        if (!cancelled) { setRegisteredStops(DEFAULT_MAP_NODES.filter(n => n.id && (n.nameEn || n.nameMl))); setRegisteredStopsError("Station database unavailable. Showing default chart stops only."); }
       }
     };
     void load();
