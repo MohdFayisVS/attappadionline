@@ -357,7 +357,7 @@ const defaultBusRoutes: BusRouteItem[] = [
   }
 ];
 
-const DEFAULT_MAP_NODES = [
+export const DEFAULT_MAP_NODES = [
   { id: "KOZHIKODE", x: 7, y: 32, nameEn: "Kozhikode", nameMl: "കോഴിക്കോട്" },
   { id: "MANJERI", x: 18, y: 40, nameEn: "Manjeri", nameMl: "മഞ്ചേരി" },
   { id: "GURUVAYUR", x: 9, y: 52, nameEn: "Guruvayur", nameMl: "ഗുരുവായൂർ" },
