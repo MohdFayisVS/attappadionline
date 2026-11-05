@@ -1154,13 +1154,18 @@ app.get("/api/station-chart", async (_req, res) => {
 });
 app.put("/api/station-chart", async (req, res) => {
   const { nodes, lines } = req.body || {};
-  if (!Array.isArray(nodes) || !Array.isArray(lines) || nodes.length > 200 || lines.length > 500 ||
-      nodes.some((n: any) => !n || typeof n.id !== "string" || !/^[A-Za-z0-9_-]{1,80}$/.test(n.id) || !["nameEn","nameMl","nameTa"].every(k => typeof n[k] === "string" && n[k].length <= 200) || !Number.isFinite(n.x) || !Number.isFinite(n.y) || n.x < 0 || n.x > 100 || n.y < 0 || n.y > 100) ||
-      lines.some((l: any) => !l || typeof l.from !== "string" || typeof l.to !== "string" || !nodes.some((n: any) => n.id === l.from) || !nodes.some((n: any) => n.id === l.to))) {
+  // Legacy station records have Malayalam and English names but no Tamil property.
+  // Preserve them and normalize missing Tamil to an empty string for Firestore.
+  const normalizedNodes = Array.isArray(nodes) ? nodes.map((n: any) =>
+    n && typeof n === "object" ? { ...n, nameTa: n.nameTa == null ? "" : n.nameTa } : n
+  ) : nodes;
+  if (!Array.isArray(normalizedNodes) || !Array.isArray(lines) || normalizedNodes.length > 200 || lines.length > 500 ||
+      normalizedNodes.some((n: any) => !n || typeof n.id !== "string" || !/^[A-Za-z0-9_-]{1,80}$/.test(n.id) || !["nameEn","nameMl","nameTa"].every(k => typeof n[k] === "string" && n[k].length <= 200) || !Number.isFinite(n.x) || !Number.isFinite(n.y) || n.x < 0 || n.x > 100 || n.y < 0 || n.y > 100) ||
+      lines.some((l: any) => !l || typeof l.from !== "string" || typeof l.to !== "string" || !normalizedNodes.some((n: any) => n.id === l.from) || !normalizedNodes.some((n: any) => n.id === l.to))) {
     return res.status(400).json({ error: "Invalid station chart data" });
   }
   const updatedAt = new Date().toISOString();
-  try { await writeItemToFirestore("stationChart", "current", { nodes, lines, updatedAt }); res.json({ success: true, updatedAt }); }
+  try { await writeItemToFirestore("stationChart", "current", { nodes: normalizedNodes, lines, updatedAt }); res.json({ success: true, updatedAt }); }
   catch (error) { console.error(error); res.status(503).json({ error: "Station chart was not saved" }); }
 });
 
