@@ -2001,9 +2001,7 @@ app.post("/api/admin/translate", async (req, res) => {
 
   try {
     const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      return res.status(503).json({ error: "Gemini API key is not configured on the server. Please check Settings > Secrets." });
-    }
+    if (!apiKey) throw new Error("Gemini API key is not configured");
 
     const { GoogleGenAI } = await import("@google/genai");
     const ai = new GoogleGenAI({ apiKey, httpOptions: { headers: { "User-Agent": "aistudio-build" } } });
@@ -2016,11 +2014,13 @@ Return ONLY the translation without explanations, quotation marks, or markdown f
 Text:\n${text}`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       contents: prompt
     });
 
-    res.json({ translatedText: response.text?.trim() });
+    const translatedText = response.text?.trim();
+    if (!translatedText || (targetLang === "ta" && !/[\u0B80-\u0BFF]/.test(translatedText))) throw new Error("Gemini did not return valid target-language text");
+    res.json({ translatedText, provider: "gemini" });
   } catch (err: any) {
     console.log(`Translation Notice - Gemini API returned notice: ${err.message || "Rate limited/Quota Exceeded"}. Trying MyMemory free backup translator...`);
     
@@ -2037,7 +2037,9 @@ Text:\n${text}`;
       if (backupResponse.ok) {
         const data: any = await backupResponse.json();
         const translatedBackup = data?.responseData?.translatedText;
-        if (translatedBackup) {
+        if (typeof translatedBackup === "string" && translatedBackup.trim() &&
+            data?.responseStatus === 200 &&
+            (targetLang !== "ta" || /[\u0B80-\u0BFF]/.test(translatedBackup))) {
           console.log("MyMemory Backup Translator successfully fetched translation:", translatedBackup);
           return res.json({
             translatedText: translatedBackup.trim(),
@@ -2051,11 +2053,9 @@ Text:\n${text}`;
     }
 
     // Graceful fallback to original text if both Gemini and the backup fail
-    res.json({ 
-      translatedText: text, 
-      isFallback: true, 
-      warning: "All translation engines temporarily unavailable. Visual placeholder returned.",
-      error: err.message || "Failed to communicate with translation assistant." 
+    res.status(503).json({
+      error: "Translation services unavailable. Enter the translation manually or retry later.",
+      isFallback: true
     });
   }
 });
