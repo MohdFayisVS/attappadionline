@@ -2050,6 +2050,29 @@ Text:\n${text}`;
       console.log("MyMemory Backup Translator also failed:", backupErr.message);
     }
 
+    // Optional third provider: official Google Cloud Translation Basic (v2).
+    // Configure GOOGLE_CLOUD_TRANSLATE_API_KEY only in the Vercel server environment.
+    const googleTranslateKey = process.env.GOOGLE_CLOUD_TRANSLATE_API_KEY;
+    if (googleTranslateKey) {
+      try {
+        const source = sourceLang || (/[\u0B80-\u0BFF]/.test(text) ? "ta" : /[\u0D00-\u0D7F]/.test(text) ? "ml" : "en");
+        const googleResponse = await fetch("https://translation.googleapis.com/language/translate/v2", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-goog-api-key": googleTranslateKey },
+          body: JSON.stringify({ q: text, source, target: targetLang, format: "text" }),
+          signal: AbortSignal.timeout(10000)
+        });
+        if (!googleResponse.ok) throw new Error(`Google Cloud Translation HTTP ${googleResponse.status}`);
+        const payload: any = await googleResponse.json();
+        const escaped = payload?.data?.translations?.[0]?.translatedText;
+        const translated = typeof escaped === "string" ? escaped.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").trim() : "";
+        if (!translated || (targetLang === "ta" && !/[\u0B80-\u0BFF]/.test(translated))) throw new Error("Google returned no valid translation");
+        return res.json({ translatedText: translated, provider: "google-cloud-translate", isBackup: true });
+      } catch (googleError: any) {
+        console.warn("Google Cloud Translation fallback failed:", googleError.message);
+      }
+    }
+
     // Graceful fallback to original text if both Gemini and the backup fail
     res.json({ 
       translatedText: text, 
