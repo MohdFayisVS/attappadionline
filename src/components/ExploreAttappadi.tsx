@@ -1858,15 +1858,13 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                         <span className="text-[10px] bg-[#052962]/5 text-[#052962] font-black px-2 py-0.5 rounded tracking-wide uppercase">
                           HUB STATION SELECTOR
                         </span>
-                        <h4 className="font-black text-[#052962] text-xl leading-snug">
-                          സ്റ്റേഷൻ പ്രകാരമുള്ള സമയവിവരങ്ങൾ
-                        </h4>
+                        <h4 lang="en" className="font-anek-english font-black text-[#052962] text-xl leading-snug">Station-wise Bus Timetables</h4>
                       </div>
 
                       {/* Selector grid or list */}
                       <div className="space-y-3">
                         <label className="block text-xs font-bold text-slate-500 mb-1">
-                          താഴെ നൽകിയതിൽ നിന്നും സ്റ്റേഷൻ തിരഞ്ഞെടുക്കുക:
+                          {lang === "ta" ? "கீழே உள்ள பட்டியலில் இருந்து பேருந்து நிலையத்தைத் தேர்ந்தெடுக்கவும்:" : lang === "ml" ? "താഴെ നൽകിയതിൽ നിന്നും സ്റ്റേഷൻ തിരഞ്ഞെടുക്കുക:" : "Select a bus station from the list below:"}
                         </label>
                         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-1.5 select-none">
                           {stopChoices.map((st) => (
@@ -1889,13 +1887,13 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                       <div className="space-y-3">
                         <div className="flex items-center justify-between border-b pb-2 pt-2 border-slate-100">
                           <h5 className="font-bold text-[#052962] text-xs leading-none flex items-center gap-1">
-                            <span>🕒 Departures from:</span>
+                            <span>{lang === "ta" ? "🕒 புறப்படும் இடம்:" : lang === "ml" ? "🕒 പുറപ്പെടുന്ന സ്ഥലം:" : "🕒 Departures from:"}</span>
                             <span className="bg-amber-100 text-amber-950 px-2 py-0.5 rounded text-[11px] font-black">
-                              {currentMapStopEntity.ml} ( {currentMapStopEntity.en} )
+                              {lang === "ml" ? currentMapStopEntity.ml : currentMapStopEntity.en}
                             </span>
                           </h5>
                           <span className="text-[10.5px] font-black text-slate-400">
-                            {stopDepartures.length} ട്രിപ്പുകൾ കണ്ടെത്തി
+                            {lang === "ta" ? `${stopDepartures.length} பேருந்து சேவைகள் கண்டறியப்பட்டன` : lang === "ml" ? `${stopDepartures.length} ട്രിപ്പുകൾ കണ്ടെത്തി` : `${stopDepartures.length} trips found`}
                           </span>
                         </div>
 
@@ -1974,7 +1972,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                           <div className="py-12 text-center space-y-2 border border-dashed border-slate-200 rounded-lg">
                             <Bus className="w-8 h-8 text-slate-300 mx-auto animate-bounce" />
                             <p className="text-xs text-slate-400 font-medium">
-                              ഈ സ്റ്റേഷനിൽ പ്രധാന സമയ സർവീസുകളൊന്നും നിശ്ചയിച്ചിട്ടില്ല. മറ്റൊരു സ്റ്റേഷൻ നോക്കൂ.
+                              {lang === "ta" ? "இந்த நிலையத்திற்கான பேருந்து நேர அட்டவணை தற்போது இல்லை. வேறொரு நிலையத்தைத் தேர்ந்தெடுக்கவும்." : lang === "ml" ? "ഈ സ്റ്റേഷനിൽ പ്രധാന സമയ സർവീസുകളൊന്നും നിശ്ചയിച്ചിട്ടില്ല. മറ്റൊരു സ്റ്റേഷൻ നോക്കൂ." : "No scheduled bus services are available for this station. Please select another station."}
                             </p>
                           </div>
                         )}
