@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { 
   Lock, KeyRound, Globe, FileText, PlusCircle, Check, Trash2, Pencil, XCircle,
-  Sparkles, Languages, Eye, ArrowLeft, ArrowUpRight, Calendar, Phone, BookOpen, AlertCircle,
+  Sparkles, Languages, Eye, ArrowLeft, ArrowUpRight, Calendar, Phone, BookOpen, AlertCircle, Info,
   Upload, Bus, MapPin, Compass, UtensilsCrossed, Hotel, Image as ImageIcon, Clock, Activity, ListOrdered,
   Megaphone, Flame, Truck, Menu, Search, LayoutDashboard, ChevronRight, RefreshCw, LogOut, PanelLeftClose, PanelLeftOpen
 } from "lucide-react";
