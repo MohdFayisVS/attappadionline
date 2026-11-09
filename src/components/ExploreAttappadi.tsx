@@ -1121,19 +1121,6 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
           return (
             <div lang={lang} className={`space-y-6 animate-fade-in ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
               
-              {/* Disclaimer and Help Desk Box */}
-              <div className="bg-[#052962]/5 border-l-4 border-[#052962] p-4 rounded-r-md flex gap-3 text-xs text-[#052962]" style={{ contentVisibility: 'auto' }}>
-                <Info className="w-5 h-5 text-[#052962] shrink-0 mt-0.5" />
-                <div className="space-y-1">
-                  <p lang="en" className="font-anek-english font-extrabold text-[13px] text-[#052962]">
-                    ATTAPPADI TRANSIT HELP
-                  </p>
-                  <p className="text-[11px] text-slate-700 leading-relaxed font-semibold">
-                    {lang === "ta" ? "மலைப்பாதையில் பனிமூட்டம், கனமழை மற்றும் வனப்பகுதி நேரக் கட்டுப்பாடுகள் காரணமாக பேருந்து நேரங்களில் மாற்றம் ஏற்படலாம். உறுதியான தகவல்களுக்கு கே.எஸ்.ஆர்.டி.சி உதவி எண்ணைத் தொடர்புகொள்ளவும்." : lang === "ml" ? "ചുരം റോഡിലെ മൂടൽമഞ്ഞ്, കനത്ത മഴ, വനമേഖലയിലെ സമയനിയന്ത്രണങ്ങൾ എന്നിവ കാരണം ബസ് സമയങ്ങളിൽ മാറ്റമുണ്ടാകാം. കൃത്യമായ വിവരങ്ങൾക്ക് കെ.എസ്.ആർ.ടി.സി ഹെൽപ്പ് നമ്പറിൽ ബന്ധപ്പെടുക." : "Fog, heavy rain and forest-area restrictions may affect bus schedules. Contact KSRTC for confirmed timings."} ({lang === "ta" ? "அகளி பேருந்து நிலையம்" : lang === "ml" ? "അഗളി ബസ് സ്റ്റേഷൻ" : "Agali Bus Station"}: <span className="font-bold underline text-[#052962]">04924-254400</span>)
-                  </p>
-                </div>
-              </div>
-
               {/* Blue information ticker, managed separately in Bus Timings admin. */}
               {busInformation.length > 0 && (
                 <div className="flex items-stretch overflow-hidden rounded-xl border border-blue-200 bg-blue-50 shadow-sm" role="region" aria-label="Bus information updates">
@@ -2075,6 +2062,8 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                     </div>
                   )}
 
+                  {/* Both bus search methods share the available width on desktop. */}
+                  <div className={busTimingMode === "directions" ? "grid grid-cols-1 xl:grid-cols-2 gap-5 items-start" : "hidden"}>
                   {/* Mode 2: Search existing admin-managed buses and trips by name, route or number. */}
                   {busTimingMode === "directions" && (
                     <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4 shadow-sm">
@@ -2121,6 +2110,169 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                       })()}
                     </div>
                   )}
+
+
+                  {/* Mode 2: TRANSIT ROUTING DIRECTIONS FINDER */}
+                  {busTimingMode === "directions" && (
+                    <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4 shadow-sm animate-fade-in">
+                      
+                      <div className="space-y-1">
+                        <span className="text-[10px] bg-[#052962]/5 text-[#052962] font-black px-2 py-0.5 rounded tracking-wide uppercase">
+                          TRANSIT ROUTING
+                        </span>
+                        <h4 className="font-black text-[#052962] text-xl leading-snug">
+                          SEARCH BY DIRECTION
+                        </h4>
+                      </div>
+
+                      {/* Map Router Inputs */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+                        <div className="space-y-1">
+                          <label className="text-xs font-extrabold text-slate-500 block">
+                            {lang === "ta" ? "புறப்படும் நிலையம்" : lang === "ml" ? "പുറപ്പെടുന്ന സ്റ്റേഷൻ" : "Starting station"}
+                          </label>
+                          <select
+                            value={navSource}
+                            onChange={(e) => setNavSource(e.target.value)}
+                            className="w-full border rounded-lg p-2.5 bg-slate-50 text-xs font-black cursor-pointer"
+                          >
+                            {stopChoices.map(sc => (
+                              <option key={sc.id} value={sc.id}>
+                                {lang === "ta" ? sc.ta : lang === "ml" ? sc.ml : sc.en}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-xs font-extrabold text-slate-500 block">
+                            {lang === "ta" ? "செல்ல வேண்டிய இடம்" : lang === "ml" ? "എത്തിച്ചേരേണ്ട സ്റ്റേഷൻ" : "Destination"}
+                          </label>
+                          <select
+                            value={navDest}
+                            onChange={(e) => setNavDest(e.target.value)}
+                            className="w-full border rounded-lg p-2.5 bg-slate-50 text-xs font-black cursor-pointer"
+                          >
+                            {stopChoices.map(sc => (
+                              <option key={sc.id} value={sc.id}>
+                                {lang === "ta" ? sc.ta : lang === "ml" ? sc.ml : sc.en}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* Display Directions results */}
+                      <div className="space-y-3 pt-2">
+                        <div className="flex items-center justify-between border-b pb-2 border-slate-100">
+                          <h5 className="font-bold text-[#052962] text-xs leading-none">
+                            🧭 {lang === "ta" ? "கிடைக்கும் பேருந்துகள்" : lang === "ml" ? "ലഭ്യമായ ബസ് സർവീസുകൾ" : "Available Bus Trips"}
+                          </h5>
+                          <span className="text-[10.5px] font-black text-slate-400">
+                            {directionsResults.length} {lang === "ta" ? "சேவைகள்" : lang === "ml" ? "സർവീസുകൾ" : "services"}
+                          </span>
+                        </div>
+
+                        {directionsResults.length > 0 ? (
+                          <div className="space-y-3 max-h-[380px] overflow-y-auto pr-1">
+                            {directionsResults.map((item, idx) => {
+                              const isKsrtc = item.typeLabel === "KSRTC";
+                              const isTnstc = item.typeLabel === "TNSTC";
+                              const badgeClass = 
+                                isKsrtc 
+                                  ? "bg-blue-50 text-blue-800 border-blue-200" 
+                                  : isTnstc 
+                                    ? "bg-amber-50 text-amber-800 border-amber-200"
+                                    : "bg-emerald-50 text-emerald-800 border-emerald-250";
+
+                              return (
+                                <motion.div
+                                  initial={{ opacity: 0, y: 10 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  key={`${item.routeId}-${idx}`}
+                                  className="p-3.5 border border-slate-150 rounded-xl bg-slate-50/70 space-y-2.5"
+                                >
+                                  <div className="flex items-center justify-between flex-wrap gap-2">
+                                    <div>
+                                      <h6 className="font-extrabold text-slate-800 text-[13.5px]">
+                                        {lang === "ml" ? item.routeMl : lang === "ta" ? (((item as any).routeTa) || item.routeEn) : item.routeEn}
+                                      </h6>
+                                      <p className="text-[10.5px] text-slate-400 font-bold uppercase">
+                                        {lang === "ml" ? item.busTypeMl : lang === "ta" ? (((item as any).busTypeTa) || item.busTypeEn) : item.busTypeEn}
+                                      </p>
+                                    </div>
+                                    <span className={`text-[9.5px] font-extrabold px-2 py-0.5 rounded-md border ${badgeClass}`}>
+                                      {item.typeLabel === "PRIVATE" && item.privateBusName ? item.privateBusName : item.typeLabel}
+                                    </span>
+                                  </div>
+
+                                  <div className="grid grid-cols-2 gap-3 bg-white p-3 rounded-lg border border-slate-150 relative overflow-hidden">
+                                    <div className="border-r border-slate-100 pr-1 select-all">
+                                      <span className="text-[8.5px] font-bold text-slate-400 block uppercase">START TIME</span>
+                                      <span className="text-slate-800 text-xs font-black block">
+                                        {lang === "ta" ? stopChoices.find(sc => sc.id === navSource)?.ta : lang === "ml" ? stopChoices.find(sc => sc.id === navSource)?.ml : navSource}
+                                      </span>
+                                      <span className="text-[14px] font-black text-[#052962] mt-0.5 inline-block">
+                                        {item.depTime}
+                                      </span>
+                                    </div>
+                                    <div className="pl-1 select-all">
+                                      <span className="text-[8.5px] font-bold text-slate-400 block uppercase">ARRIVAL TIME</span>
+                                      <span className="text-slate-800 text-xs font-black block">
+                                        {lang === "ta" ? stopChoices.find(sc => sc.id === navDest)?.ta : lang === "ml" ? stopChoices.find(sc => sc.id === navDest)?.ml : navDest}
+                                      </span>
+                                      <span className="text-[14px] font-black text-red-700 mt-0.5 inline-block">
+                                        {item.arrTime}
+                                      </span>
+                                    </div>
+                                  </div>
+
+                                  {/* Stops Timeline path */}
+                                  <div className="flex items-center gap-1 overflow-x-auto text-[9px] font-bold text-slate-400 whitespace-nowrap pt-1">
+                                    {item.fullList.map((stopItem, sIdx) => {
+                                      const isSrc = normalizeStopName(stopItem.typeEn) === normalizeStopName(navSource);
+                                      const isDst = normalizeStopName(stopItem.typeEn) === normalizeStopName(navDest);
+                                      return (
+                                        <div key={sIdx} className="flex items-center gap-1 shrink-0">
+                                          <span className={`px-1.5 py-0.5 rounded ${
+                                            isSrc 
+                                              ? "bg-[#052962] text-white font-black" 
+                                              : isDst 
+                                                ? "bg-red-700 text-white font-black animate-pulse" 
+                                                : "bg-slate-150 text-slate-650"
+                                          }`}>
+                                            {stopItem.time} {lang === "ml" ? stopItem.typeMl : lang === "ta" ? (((stopItem as any).typeTa) || stopItem.typeEn) : stopItem.typeEn.toUpperCase()}
+                                          </span>
+                                          {sIdx < item.fullList.length - 1 && <span className="text-slate-300">→</span>}
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+
+                                </motion.div>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <div className="py-14 text-center space-y-2.5 border border-dashed border-slate-200 rounded-lg">
+                            <Bus className="w-8 h-8 text-slate-300 mx-auto" />
+                            <div className="space-y-1">
+                              <p className="text-xs text-slate-700 font-extrabold">
+                                നേരിട്ടുള്ള സർവീസുകളൊന്നും കണ്ടെത്തിയിട്ടില്ല
+                              </p>
+                              <p className="text-[11px] text-slate-400 font-medium max-w-sm mx-auto">
+                                ആരംഭവഴിയും ചേരേണ്ട ലക്ഷ്യസ്ഥാനവും മാറ്റി പരീക്ഷിക്കുക. ഉദാഹരണത്തിന് 'മണ്ണാർക്കാട്' മുതൽ 'ആനക്കട്ടി' അല്ലെങ്കിൽ 'പാലക്കാട് - അഗളി'.
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                    </div>
+                  )}
+
+
+                  </div>
 
                   {/* Mode 3: Only administrator-published destinations; no sample hotspots. */}
                   {busTimingMode === "assist" && (
