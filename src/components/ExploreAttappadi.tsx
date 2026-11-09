@@ -1,5 +1,5 @@
 import { adminFetch } from "../services/adminAuth";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import BusStopOSMMap from "./BusStopOSMMap";
 import { motion, AnimatePresence } from "motion/react";
 import { MapPin, Compass, UtensilsCrossed, Hotel, BookOpen, Image as ImageIcon, X, ChevronLeft, ChevronRight, Share2, Volume2, Bus, Clock, Search, Info, Sliders, Plus, Trash, Link, RotateCcw, Copy, Check, Move } from "lucide-react";
@@ -515,6 +515,21 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
   const [photosList, setPhotosList] = useState<PhotoItem[]>(defaultPhotos);
   const [busRoutesList, setBusRoutesList] = useState<BusRouteItem[]>([]);
   const [busInformation, setBusInformation] = useState<Array<{id:string;contentMl:string;contentEn:string;contentTa:string}>>([]);
+  const busInfoViewportRef = useRef<HTMLDivElement>(null);
+  const busInfoMeasureRef = useRef<HTMLDivElement>(null);
+  const [busInfoNeedsScroll, setBusInfoNeedsScroll] = useState(false);
+  useEffect(() => {
+    const viewport = busInfoViewportRef.current;
+    const measure = busInfoMeasureRef.current;
+    if (!viewport || !measure || typeof ResizeObserver === "undefined") return;
+    const update = () => setBusInfoNeedsScroll(measure.scrollWidth > viewport.clientWidth - 8);
+    const observer = new ResizeObserver(update);
+    observer.observe(viewport);
+    observer.observe(measure);
+    update();
+    return () => observer.disconnect();
+  }, [busInformation, lang]);
+
 
   useEffect(() => {
     setActiveTab(initialTab);
@@ -1128,9 +1143,12 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                     <Info className="h-5 w-5" />
                     <span lang="en" className="font-anek-english text-xs font-black tracking-wide">BUS INFORMATION</span>
                   </div>
-                  <div className="relative flex min-w-0 flex-1 items-center overflow-hidden py-3">
-                    <div className="bus-info-scroll flex w-max items-center gap-12 whitespace-nowrap px-4 text-sm font-bold text-[#073b76] motion-reduce:animate-none">
-                      {[...busInformation, ...busInformation].map((item, idx) => (
+                  <div ref={busInfoViewportRef} className="relative flex min-w-0 flex-1 items-center overflow-hidden py-3">
+                    <div ref={busInfoMeasureRef} className="pointer-events-none invisible absolute left-0 top-0 flex w-max items-center gap-12 whitespace-nowrap px-4 text-sm font-bold" aria-hidden="true">
+                      {busInformation.map(item => <span key={item.id} lang={lang} className={lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-latin"}>{lang === "ta" ? item.contentTa : lang === "ml" ? item.contentMl : item.contentEn}</span>)}
+                    </div>
+                    <div className={busInfoNeedsScroll ? "bus-info-scroll flex w-max items-center gap-12 whitespace-nowrap px-4 text-sm font-bold text-[#073b76] motion-reduce:animate-none" : "flex w-full items-center justify-center gap-4 px-4 text-center text-sm font-bold text-[#073b76]"}>
+                      {(busInfoNeedsScroll ? [...busInformation, ...busInformation] : busInformation).map((item, idx) => (
                         <span key={item.id + "-" + idx} lang={lang} className={lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-latin"}>
                           {lang === "ta" ? item.contentTa : lang === "ml" ? item.contentMl : item.contentEn}
                         </span>
