@@ -523,6 +523,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
   
   // Bus timings search & filter state
   const [busSearch, setBusSearch] = useState("");
+  const [busNameQuery, setBusNameQuery] = useState("");
   const [busTypeFilter, setBusTypeFilter] = useState("ALL");
   const [selectedMapStop, setSelectedMapStop] = useState<string>("AGALI");
   const [navSource, setNavSource] = useState<string>("MANNARKKAD");
@@ -1134,9 +1135,9 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
               {/* Navigation Style Sub Menu */}
               <div className="flex border-b border-slate-200">
                 {[
-                  { key: "stop", label: "Station Board", icon: <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" /> },
-                  { key: "directions", label: "Directions Finder", icon: <Compass className="w-3.5 h-3.5 text-sky-600 shrink-0" /> },
-                  { key: "assist", label: "Nearest Stops", icon: <Info className="w-3.5 h-3.5 text-teal-500 shrink-0" /> }
+                  { key: "stop", label: "SELECT STATION", icon: <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" /> },
+                  { key: "directions", label: "SEARCH BY BUS OR TRIP", icon: <Compass className="w-3.5 h-3.5 text-sky-600 shrink-0" /> },
+                  { key: "assist", label: "TOURIST DESTINATIONS", icon: <Info className="w-3.5 h-3.5 text-teal-500 shrink-0" /> }
                 ].map((m) => (
                   <button
                     key={m.key}
@@ -1154,16 +1155,16 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
               </div>
 
               {/* On desktop, show the OSM map beside the timetable station selector. Stack on mobile. */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-                <div className="lg:col-span-7 min-w-0 lg:sticky lg:top-4">
+              <div className={busTimingMode === "stop" ? "grid grid-cols-1 lg:grid-cols-12 gap-5 items-start" : "block"}>
+                {busTimingMode === "stop" && <div className="lg:col-span-7 min-w-0 lg:sticky lg:top-4">
                   <BusStopOSMMap isAdmin={isAdmin} stops={stopChoices} selectedStop={selectedMapStop} onSelectStop={(id) => { setSelectedMapStop(id); setBusTimingMode("stop"); window.setTimeout(() => document.getElementById("attappadi-station-board")?.scrollIntoView({ behavior: "smooth", block: "start" }), 120); }} lang={lang} />
-                </div>
+                </div>}
 
               {/* Master Responsive Layout split into sidebar panel & Vector Map */}
-              <div className="lg:col-span-5 min-w-0 grid grid-cols-1 xl:grid-cols-12 gap-4 items-start">
+              <div className={busTimingMode === "stop" ? "lg:col-span-5 min-w-0 grid grid-cols-1 xl:grid-cols-12 gap-4 items-start" : "w-full min-w-0 grid grid-cols-1 xl:grid-cols-12 gap-4 items-start"}>
                 
                 {/* Visual Map widget - Highlight of modern responsive interface */}
-                <div className={isAdmin ? "xl:col-span-5 order-first xl:order-last space-y-4" : "hidden"}>
+                <div className={isAdmin && busTimingMode === "stop" ? "xl:col-span-5 order-first xl:order-last space-y-4" : "hidden"}>
                   <div className="bg-[#eef2ef] border border-slate-300 rounded-xl p-4 shadow-sm relative overflow-hidden select-none">
                     
                     {/* Header Map indicators */}
@@ -2051,261 +2052,75 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                     </div>
                   )}
 
-                  {/* Mode 2: TRANSIT ROUTING DIRECTIONS FINDER */}
+                  {/* Mode 2: Search existing admin-managed buses and trips by name, route or number. */}
                   {busTimingMode === "directions" && (
-                    <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4 shadow-sm animate-fade-in">
-                      
-                      <div className="space-y-1">
-                        <span className="text-[10px] bg-[#052962]/5 text-[#052962] font-black px-2 py-0.5 rounded tracking-wide uppercase">
-                          TRANSIT ROUTING
-                        </span>
-                        <h4 className="font-black text-[#052962] text-xl leading-snug">
-                          കണക്റ്റിങ് സർവീസ് റൂട്ട് കണ്ടെത്തുക
-                        </h4>
-                      </div>
-
-                      {/* Map Router Inputs */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
-                        <div className="space-y-1">
-                          <label className="text-xs font-extrabold text-slate-500 block">
-                            ആരംഭിക്കുന്ന സ്റ്റേഷൻ (Starting Hub):
-                          </label>
-                          <select
-                            value={navSource}
-                            onChange={(e) => setNavSource(e.target.value)}
-                            className="w-full border rounded-lg p-2.5 bg-slate-50 text-xs font-black cursor-pointer"
-                          >
-                            {stopChoices.map(sc => (
-                              <option key={sc.id} value={sc.id}>
-                                {lang === "ml" ? sc.ml : sc.en.toUpperCase()}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-
-                        <div className="space-y-1">
-                          <label className="text-xs font-extrabold text-slate-500 block">
-                            ചേരേണ്ട ലക്ഷ്യസ്ഥാനം (Destination):
-                          </label>
-                          <select
-                            value={navDest}
-                            onChange={(e) => setNavDest(e.target.value)}
-                            className="w-full border rounded-lg p-2.5 bg-slate-50 text-xs font-black cursor-pointer"
-                          >
-                            {stopChoices.map(sc => (
-                              <option key={sc.id} value={sc.id}>
-                                {lang === "ml" ? sc.ml : sc.en.toUpperCase()}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      </div>
-
-                      {/* Display Directions results */}
-                      <div className="space-y-3 pt-2">
-                        <div className="flex items-center justify-between border-b pb-2 border-slate-100">
-                          <h5 className="font-bold text-[#052962] text-xs leading-none">
-                            🧭 Available Bus Trips:
-                          </h5>
-                          <span className="text-[10.5px] font-black text-slate-400">
-                            {directionsResults.length} കൺഫേം സർവീസുകൾ
-                          </span>
-                        </div>
-
-                        {directionsResults.length > 0 ? (
-                          <div className="space-y-3 max-h-[380px] overflow-y-auto pr-1">
-                            {directionsResults.map((item, idx) => {
-                              const isKsrtc = item.typeLabel === "KSRTC";
-                              const isTnstc = item.typeLabel === "TNSTC";
-                              const badgeClass = 
-                                isKsrtc 
-                                  ? "bg-blue-50 text-blue-800 border-blue-200" 
-                                  : isTnstc 
-                                    ? "bg-amber-50 text-amber-800 border-amber-200"
-                                    : "bg-emerald-50 text-emerald-800 border-emerald-250";
-
-                              return (
-                                <motion.div
-                                  initial={{ opacity: 0, y: 10 }}
-                                  animate={{ opacity: 1, y: 0 }}
-                                  key={`${item.routeId}-${idx}`}
-                                  className="p-3.5 border border-slate-150 rounded-xl bg-slate-50/70 space-y-2.5"
-                                >
-                                  <div className="flex items-center justify-between flex-wrap gap-2">
-                                    <div>
-                                      <h6 className="font-extrabold text-slate-800 text-[13.5px]">
-                                        {lang === "ml" ? item.routeMl : lang === "ta" ? (((item as any).routeTa) || item.routeEn) : item.routeEn}
-                                      </h6>
-                                      <p className="text-[10.5px] text-slate-400 font-bold uppercase">
-                                        {lang === "ml" ? item.busTypeMl : lang === "ta" ? (((item as any).busTypeTa) || item.busTypeEn) : item.busTypeEn}
-                                      </p>
-                                    </div>
-                                    <span className={`text-[9.5px] font-extrabold px-2 py-0.5 rounded-md border ${badgeClass}`}>
-                                      {item.typeLabel === "PRIVATE" && item.privateBusName ? item.privateBusName : item.typeLabel}
-                                    </span>
-                                  </div>
-
-                                  <div className="grid grid-cols-2 gap-3 bg-white p-3 rounded-lg border border-slate-150 relative overflow-hidden">
-                                    <div className="border-r border-slate-100 pr-1 select-all">
-                                      <span className="text-[8.5px] font-bold text-slate-400 block uppercase">START TIME</span>
-                                      <span className="text-slate-800 text-xs font-black block">
-                                        {lang === "ml" ? stopChoices.find(sc => sc.id === navSource)?.ml : navSource}
-                                      </span>
-                                      <span className="text-[14px] font-black text-[#052962] mt-0.5 inline-block">
-                                        {item.depTime}
-                                      </span>
-                                    </div>
-                                    <div className="pl-1 select-all">
-                                      <span className="text-[8.5px] font-bold text-slate-400 block uppercase">ARRIVAL TIME</span>
-                                      <span className="text-slate-800 text-xs font-black block">
-                                        {lang === "ml" ? stopChoices.find(sc => sc.id === navDest)?.ml : navDest}
-                                      </span>
-                                      <span className="text-[14px] font-black text-red-700 mt-0.5 inline-block">
-                                        {item.arrTime}
-                                      </span>
-                                    </div>
-                                  </div>
-
-                                  {/* Stops Timeline path */}
-                                  <div className="flex items-center gap-1 overflow-x-auto text-[9px] font-bold text-slate-400 whitespace-nowrap pt-1">
-                                    {item.fullList.map((stopItem, sIdx) => {
-                                      const isSrc = normalizeStopName(stopItem.typeEn) === normalizeStopName(navSource);
-                                      const isDst = normalizeStopName(stopItem.typeEn) === normalizeStopName(navDest);
-                                      return (
-                                        <div key={sIdx} className="flex items-center gap-1 shrink-0">
-                                          <span className={`px-1.5 py-0.5 rounded ${
-                                            isSrc 
-                                              ? "bg-[#052962] text-white font-black" 
-                                              : isDst 
-                                                ? "bg-red-700 text-white font-black animate-pulse" 
-                                                : "bg-slate-150 text-slate-650"
-                                          }`}>
-                                            {stopItem.time} {lang === "ml" ? stopItem.typeMl : lang === "ta" ? (((stopItem as any).typeTa) || stopItem.typeEn) : stopItem.typeEn.toUpperCase()}
-                                          </span>
-                                          {sIdx < item.fullList.length - 1 && <span className="text-slate-300">→</span>}
-                                        </div>
-                                      );
-                                    })}
-                                  </div>
-
-                                </motion.div>
-                              );
-                            })}
-                          </div>
+                    <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4 shadow-sm">
+                      <h4 lang="en" className="font-anek-english font-black text-[#052962] text-xl">SEARCH BY BUS OR TRIP</h4>
+                      <label className="block text-xs font-bold text-slate-600">
+                        {lang === "ta" ? "பேருந்தின் பெயர், எண் அல்லது வழித்தடத்தைத் தேடுங்கள்" : lang === "ml" ? "ബസിന്റെ പേര്, നമ്പർ അല്ലെങ്കിൽ റൂട്ട് തിരയുക" : "Search by bus name, number or route"}
+                      </label>
+                      <input type="search" value={busNameQuery} onChange={e => setBusNameQuery(e.target.value)}
+                        placeholder={lang === "ta" ? "பேருந்து பெயர் / எண் / வழித்தடம்" : lang === "ml" ? "ബസ് പേര് / നമ്പർ / റൂട്ട്" : "Bus name / number / route"}
+                        className="w-full rounded-lg border border-slate-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#052962]" />
+                      {(() => {
+                        const q = busNameQuery.trim().toLocaleLowerCase();
+                        const matches = q ? busRoutesList.filter(route => [
+                          route.id, route.routeEn, route.routeMl, route.routeTa, route.privateBusName,
+                          route.busTypeEn, route.busTypeMl, route.busTypeTa, route.type,
+                          ...(route.list || []).flatMap(stop => [stop.typeEn, stop.typeMl, stop.typeTa])
+                        ].some(value => String(value || "").toLocaleLowerCase().includes(q))) : [];
+                        return !q ? (
+                          <p className="text-sm text-slate-500">{lang === "ta" ? "பேருந்து அல்லது வழித்தடத்தைத் தேட மேலே உள்ள பெட்டியில் உள்ளிடவும்." : lang === "ml" ? "ബസോ റൂട്ടോ കണ്ടെത്താൻ മുകളിൽ തിരയുക." : "Enter a bus name, number or route to find schedules."}</p>
+                        ) : matches.length === 0 ? (
+                          <p className="text-sm text-slate-500">{lang === "ta" ? "பொருத்தமான பேருந்து சேவைகள் இல்லை." : lang === "ml" ? "പൊരുത്തപ്പെടുന്ന ബസ് സർവീസുകളില്ല." : "No matching bus services found."}</p>
                         ) : (
-                          <div className="py-14 text-center space-y-2.5 border border-dashed border-slate-200 rounded-lg">
-                            <Bus className="w-8 h-8 text-slate-300 mx-auto" />
-                            <div className="space-y-1">
-                              <p className="text-xs text-slate-700 font-extrabold">
-                                നേരിട്ടുള്ള സർവീസുകളൊന്നും കണ്ടെത്തിയിട്ടില്ല
-                              </p>
-                              <p className="text-[11px] text-slate-400 font-medium max-w-sm mx-auto">
-                                ആരംഭവഴിയും ചേരേണ്ട ലക്ഷ്യസ്ഥാനവും മാറ്റി പരീക്ഷിക്കുക. ഉദാഹരണത്തിന് 'മണ്ണാർക്കാട്' മുതൽ 'ആനക്കട്ടി' അല്ലെങ്കിൽ 'പാലക്കാട് - അഗളി'.
-                              </p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                    </div>
-                  )}
-
-                  {/* Mode 3: SIGHTSEEING SIGHTS BUS ASSISTANT */}
-                  {busTimingMode === "assist" && (
-                    <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4 shadow-sm animate-fade-in">
-                      
-                      <div className="space-y-1">
-                        <span className="text-[10px] bg-[#052962]/5 text-[#052962] font-black px-2 py-0.5 rounded tracking-wide uppercase">
-                          SIGHTSEEING DEPARTURES
-                        </span>
-                        <h4 lang="en" className="font-black font-anek-english text-[#052962] text-xl leading-snug">
-                          TOURIST DESTINATIONS & NEAREST BUS STOPS
-                        </h4>
-                      </div>
-
-                      <div className="space-y-2">
-                        <label className="block text-xs font-bold text-slate-500 mb-1">
-                          {lang === "ta" ? "செல்ல வேண்டிய சுற்றுலாத் தலத்தைத் தேர்ந்தெடுக்கவும்:" : lang === "ml" ? "സന്ദർശിക്കേണ്ട ടൂറിസ്റ്റ് കേന്ദ്രം തിരഞ്ഞെടുക്കുക:" : "Choose a sightseeing destination:"}
-                        </label>
-                        <div className="flex flex-col gap-2">
-                          {assistHotspots.map((ah) => (
-                            <button
-                              key={ah.id}
-                              onClick={() => {
-                                setSelectedAssistPlace(ah.id);
-                                setSelectedMapStop(ah.nearestStop);
-                              }}
-                              className={`p-3 rounded-lg text-left text-xs transition border flex items-center justify-between cursor-pointer ${
-                                selectedAssistPlace === ah.id
-                                  ? "bg-[#052962]/5 text-[#052962] border-[#052962] font-extrabold"
-                                  : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
-                              }`}
-                            >
-                              <span className="font-inherit flex items-center gap-1.5">
-                                🌲 {lang === "ml" ? ah.nameMl : lang === "ta" ? (((ah as any).nameTa) || ah.nameEn) : ah.nameEn}
-                              </span>
-                              <span className="bg-white px-2 py-0.5 text-[10px] rounded border border-slate-200 text-slate-400 font-bold">
-                                {lang === "ta" ? "அருகிலுள்ள நிறுத்தம்: " : lang === "ml" ? "അടുത്ത സ്റ്റോപ്പ്: " : "Stop: "} {ah.nearestStop}
-                              </span>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Info and timing board for selected hotspot */}
-                      <div className="bg-[#ffe500]/5 border border-[#ffe500]/40 p-4 rounded-xl space-y-3 mt-4">
-                        <div className="flex items-center gap-2 border-b border-[#ffe500]/30 pb-2">
-                          <MapPin className="w-5 h-5 text-red-700" />
-                          <div>
-                            <h5 className="font-extrabold text-[#052962] text-[14px]">
-                              {lang === "ml" ? activeSpot.nameMl : lang === "ta" ? (((activeSpot as any).nameTa) || activeSpot.nameEn) : activeSpot.nameEn}
-                            </h5>
-                            <p className="text-[11px] font-bold text-slate-500 flex items-center gap-1">
-                              <MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> {lang === "ta" ? `அருகிலுள்ள பேருந்து நிறுத்தம்: ${activeSpot.nearestStop} (${activeSpot.distanceEn})` : lang === "ml" ? `അടുത്തുള്ള സ്റ്റോപ്പ്: ${stopChoices.find(sc => sc.id === activeSpot.nearestStop)?.ml} (${activeSpot.distanceMl})` : `Nearest Bus Stop: ${activeSpot.nearestStop} (${activeSpot.distanceEn})`}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="text-[11.5px] text-slate-700 font-semibold leading-relaxed">
-                          <span className="font-extrabold text-red-800 flex items-center gap-1 text-xs mb-0.5">
-                            <Info className="w-3.5 h-3.5 text-red-700 shrink-0" />
-                            {lang === "ta" ? "பயண வழிகாட்டி:" : lang === "ml" ? "യാത്രാ നിർദേശം:" : "Transit Tip:"}
-                          </span>
-                          {lang === "ml" ? activeSpot.guideMl : lang === "ta" ? (((activeSpot as any).guideTa) || activeSpot.guideEn) : activeSpot.guideEn}
-                        </div>
-                      </div>
-
-                      {/* Display schedules arriving at this nearest point */}
-                      <div className="space-y-3 pt-2">
-                        <h6 className="font-extrabold text-xs text-[#052962] border-b pb-2">
-                          🚌 {lang === "ta" ? `${activeSpot.nearestStop} வழியாகச் செல்லும் பேருந்துகள்:` : lang === "ml" ? `${stopChoices.find(sc => sc.id === activeSpot.nearestStop)?.ml} വഴിയുള്ള ബസുകൾ:` : `Buses serving ${activeSpot.nearestStop}:`}
-                        </h6>
-                        
-                        {spotDepartures.length > 0 ? (
-                          <div className="space-y-2.5 max-h-[300px] overflow-y-auto pr-1">
-                            {spotDepartures.map((item, idx) => (
-                              <div key={`${item.routeId}-${idx}`} className="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-xs">
-                                <div className="space-y-0.5 truncate flex-1">
-                                  <span className="text-[8px] bg-slate-900 text-white px-1.5 py-0.2 rounded font-extrabold">
-                                    {item.typeLabel === "PRIVATE" && item.privateBusName ? item.privateBusName : item.typeLabel}
-                                  </span>
-                                  <h6 className="font-extrabold text-slate-800 pt-0.5">{lang === "ml" ? item.routeMl : lang === "ta" ? (((item as any).routeTa) || item.routeEn) : item.routeEn}</h6>
-                                  <p className="text-[9.5px] text-slate-400 font-bold">{lang === "ml" ? item.busTypeMl : lang === "ta" ? (((item as any).busTypeTa) || item.busTypeEn) : item.busTypeEn}</p>
+                          <div className="space-y-3">
+                            <p className="text-xs text-slate-500">{matches.length} {lang === "ta" ? "சேவைகள்" : lang === "ml" ? "സർവീസുകൾ" : "services found"}</p>
+                            {matches.map(route => (
+                              <div key={route.id} className="rounded-xl border border-slate-200 p-4 space-y-2">
+                                <div className="flex flex-wrap justify-between gap-2">
+                                  <h5 className="font-bold text-[#052962]">{lang === "ta" ? route.routeTa || route.routeEn : lang === "ml" ? route.routeMl : route.routeEn}</h5>
+                                  <span className="text-xs font-bold">{route.privateBusName || route.type}</span>
                                 </div>
-                                <div className="text-right">
-                                  <span className="text-[10px] font-bold text-slate-400 block uppercase font-sans">ARRIVING TIME</span>
-                                  <span className="font-black text-[#052962] bg-[#052962]/5 px-2 py-0.5 rounded select-all font-sans">
-                                    {item.time}
-                                  </span>
+                                <p className="text-xs text-slate-500">{lang === "ta" ? route.busTypeTa || route.busTypeEn : lang === "ml" ? route.busTypeMl : route.busTypeEn}</p>
+                                <div className="flex flex-wrap gap-2">
+                                  {(route.list || []).map((stop, idx) => (
+                                    <div key={idx} className="rounded-lg bg-slate-50 border border-slate-100 px-3 py-2 text-xs">
+                                      <strong className="block text-[#052962]">{stop.time}</strong>
+                                      {lang === "ta" ? stop.typeTa || tamilStopName(stop.typeEn) : lang === "ml" ? stop.typeMl : stop.typeEn}
+                                    </div>
+                                  ))}
                                 </div>
                               </div>
                             ))}
                           </div>
-                        ) : (
-                          <p className="text-xs text-slate-400 text-center font-medium">{lang === "ta" ? "இந்த இடத்திற்கான பேருந்து நேரங்கள் கிடைக்கவில்லை." : lang === "ml" ? "ഈ സ്ഥലത്തേക്കുള്ള ബസ് സമയക്രമം ലഭ്യമല്ല." : "No schedules match this location."}</p>
-                        )}
-                      </div>
+                        );
+                      })()}
+                    </div>
+                  )}
 
+                  {/* Mode 3: Only administrator-published destinations; no sample hotspots. */}
+                  {busTimingMode === "assist" && (
+                    <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4 shadow-sm">
+                      <h4 lang="en" className="font-anek-english font-black text-[#052962] text-xl">TOURIST DESTINATIONS</h4>
+                      {destinationsList.length === 0 ? (
+                        <div className="min-h-44 rounded-xl border border-dashed border-slate-200 flex items-center justify-center text-sm text-slate-500 text-center p-5">
+                          {lang === "ta" ? "சுற்றுலாத் தலங்கள் இன்னும் சேர்க்கப்படவில்லை." : lang === "ml" ? "വിനോദസഞ്ചാര കേന്ദ്രങ്ങൾ ഇതുവരെ ചേർത്തിട്ടില്ല." : "No tourist destinations have been added yet."}
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                          {destinationsList.map(destination => (
+                            <article key={destination.id} className="rounded-xl border border-slate-200 overflow-hidden">
+                              {destination.image && <img src={destination.image} alt={destination.nameEn} className="w-full h-40 object-cover" loading="lazy" />}
+                              <div className="p-4 space-y-2">
+                                <h5 className="font-bold text-[#052962]">{lang === "ta" ? destination.nameTa || destination.nameEn : lang === "ml" ? destination.nameMl : destination.nameEn}</h5>
+                                <p className="text-xs text-slate-500">{lang === "ta" ? destination.locationTa || destination.locationEn : lang === "ml" ? destination.locationMl : destination.locationEn}</p>
+                                <p className="text-sm text-slate-700">{lang === "ta" ? destination.descriptionTa || destination.descriptionEn : lang === "ml" ? destination.descriptionMl : destination.descriptionEn}</p>
+                              </div>
+                            </article>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
 
