@@ -4303,7 +4303,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </p>
                 </div>
                 <div className="p-1 border border-slate-200 rounded-xl overflow-hidden shadow-xs bg-slate-50">
-                  <ExploreAttappadi key={busMapRevision} lang="ml" initialTab="busTimings" isAdmin={true} onEditBusRoute={(id) => {const route=busRoutesList.find(item=>item.id===id);if(route)handleStartEditBusRoute(route);}} onDeleteBusRoute={(id) => handleDeleteBusRoute(id)} />
+                  <ExploreAttappadi key={busMapRevision} lang="ml" initialTab="busTimings" isAdmin={true} adminMapOnly={true} onEditBusRoute={(id) => {const route=busRoutesList.find(item=>item.id===id);if(route)handleStartEditBusRoute(route);}} onDeleteBusRoute={(id) => handleDeleteBusRoute(id)} />
                 </div>
               </div>
 
