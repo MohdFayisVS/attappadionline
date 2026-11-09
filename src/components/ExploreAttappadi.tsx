@@ -1132,26 +1132,27 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                 </div>
               </div>
 
-              {/* Navigation Style Sub Menu */}
-              <div className="flex border-b border-slate-200">
+              {/* Colour-coded responsive navigation cards; titles remain English in every language. */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {[
-                  { key: "stop", label: "SELECT STATION", icon: <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" /> },
-                  { key: "directions", label: "SEARCH BY BUS OR TRIP", icon: <Compass className="w-3.5 h-3.5 text-sky-600 shrink-0" /> },
-                  { key: "assist", label: "TOURIST DESTINATIONS", icon: <Info className="w-3.5 h-3.5 text-teal-500 shrink-0" /> }
-                ].map((m) => (
-                  <button
-                    key={m.key}
-                    onClick={() => setBusTimingMode(m.key as any)}
-                    className={`flex-1 py-3 text-center text-xs font-black transition duration-200 cursor-pointer border-b-2 font-anek-english flex items-center justify-center gap-1.5 ${
-                      busTimingMode === m.key
-                        ? "border-[#052962] text-[#052962] bg-[#052962]/5"
-                        : "border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50"
-                    }`}
-                  >
-                    {m.icon}
-                    {m.label}
-                  </button>
-                ))}
+                  { key: "stop", label: "SELECT STATION", subtitle: "Station timetables", icon: <MapPin className="w-5 h-5" />, active: "border-blue-600 bg-blue-600 text-white shadow-blue-200", idle: "border-blue-100 bg-blue-50 text-blue-900 hover:bg-blue-100", iconActive: "bg-white/20", iconIdle: "bg-blue-100 text-blue-700" },
+                  { key: "directions", label: "SEARCH BY BUS OR TRIP", subtitle: "Find routes & timings", icon: <Search className="w-5 h-5" />, active: "border-violet-600 bg-violet-600 text-white shadow-violet-200", idle: "border-violet-100 bg-violet-50 text-violet-900 hover:bg-violet-100", iconActive: "bg-white/20", iconIdle: "bg-violet-100 text-violet-700" },
+                  { key: "assist", label: "TOURIST DESTINATIONS", subtitle: "Explore Attappadi", icon: <Compass className="w-5 h-5" />, active: "border-emerald-600 bg-emerald-600 text-white shadow-emerald-200", idle: "border-emerald-100 bg-emerald-50 text-emerald-900 hover:bg-emerald-100", iconActive: "bg-white/20", iconIdle: "bg-emerald-100 text-emerald-700" }
+                ].map((m) => {
+                  const selected = busTimingMode === m.key;
+                  return (
+                    <button key={m.key} type="button" onClick={() => setBusTimingMode(m.key as any)}
+                      aria-pressed={selected}
+                      className={`min-w-0 rounded-2xl border-2 px-4 py-3.5 text-left transition-all duration-200 cursor-pointer flex items-center gap-3 ${selected ? `${m.active} shadow-lg -translate-y-0.5` : m.idle}`}>
+                      <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${selected ? m.iconActive : m.iconIdle}`}>{m.icon}</span>
+                      <span className="min-w-0 flex-1">
+                        <span lang="en" className="block font-anek-english font-black text-sm leading-tight tracking-wide">{m.label}</span>
+                        <span lang="en" className={`block font-anek-english text-[11px] mt-1 ${selected ? "text-white/85" : "opacity-70"}`}>{m.subtitle}</span>
+                      </span>
+                      {selected && <Check className="w-4 h-4 shrink-0" />}
+                    </button>
+                  );
+                })}
               </div>
 
               {/* On desktop, show the OSM map beside the timetable station selector. Stack on mobile. */}
