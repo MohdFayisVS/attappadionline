@@ -1280,7 +1280,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                 <line x1={(i + 1) * 10} y1="0" x2={(i + 1) * 10} y2="100" stroke="#3b82f6" />
                                 <line x1="0" y1={(i + 1) * 10} x2="100" y2={(i + 1) * 10} stroke="#3b82f6" />
                               </React.Fragment>
-                            ); })}
+                            ))}
                           </g>
                         )}
 
@@ -2317,7 +2317,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                 {direct.length>0 && <div className="rounded-lg border border-blue-100 p-2"><p className="mb-1 text-xs font-black text-blue-900">{lang==="ml"?"നേരിട്ടുള്ള ബസ് സമയങ്ങൾ":lang==="ta"?"நேரடி பேருந்து நேரங்கள்":"Direct bus timings"}</p>{direct.slice(0,8).map((trip,i)=><p key={trip.id+i} className="text-xs">{trip.origin} {trip.departure} → {trip.arrival} · {trip.bus}</p>)}</div>}
                               </div>
                             </article>
-                          ))}
+                          ); })}
                         </div>
                       )}
                     </div>
