@@ -514,6 +514,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
   const [traveloguesList, setTraveloguesList] = useState<TravelogueItem[]>(defaultTravelogues);
   const [photosList, setPhotosList] = useState<PhotoItem[]>(defaultPhotos);
   const [busRoutesList, setBusRoutesList] = useState<BusRouteItem[]>([]);
+  const [busInformation, setBusInformation] = useState<Array<{id:string;contentMl:string;contentEn:string;contentTa:string}>>([]);
 
   useEffect(() => {
     setActiveTab(initialTab);
@@ -557,6 +558,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
       .then(data => { if (Array.isArray(data)) setPhotosList(data); })
       .catch(err => console.error("Error loading photos:", err));
 
+    fetch("/api/bus-information").then(res => res.ok ? res.json() : []).then(data => { if (Array.isArray(data)) setBusInformation(data); }).catch(console.error);
     fetch("/api/busroutes")
       .then(res => res.json())
       .then(data => { if (Array.isArray(data)) setBusRoutesList(data); })
@@ -1131,6 +1133,26 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                   </p>
                 </div>
               </div>
+
+              {/* Blue information ticker, managed separately in Bus Timings admin. */}
+              {busInformation.length > 0 && (
+                <div className="flex items-stretch overflow-hidden rounded-xl border border-blue-200 bg-blue-50 shadow-sm" role="region" aria-label="Bus information updates">
+                  <div className="flex shrink-0 items-center gap-2 bg-[#0757a6] px-4 py-3 text-white">
+                    <Info className="h-5 w-5" />
+                    <span lang="en" className="font-anek-english text-xs font-black tracking-wide">BUS INFORMATION</span>
+                  </div>
+                  <div className="relative flex min-w-0 flex-1 items-center overflow-hidden py-3">
+                    <div className="bus-info-scroll flex w-max items-center gap-12 whitespace-nowrap px-4 text-sm font-bold text-[#073b76] motion-reduce:animate-none">
+                      {[...busInformation, ...busInformation].map((item, idx) => (
+                        <span key={item.id + "-" + idx} lang={lang} className={lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-latin"}>
+                          {lang === "ta" ? item.contentTa : lang === "ml" ? item.contentMl : item.contentEn}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <style>{`@keyframes busInfoMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } } .bus-info-scroll { animation: busInfoMarquee 28s linear infinite; } .bus-info-scroll:hover { animation-play-state: paused; } @media (prefers-reduced-motion: reduce) { .bus-info-scroll { animation: none; white-space: normal; flex-wrap: wrap; } }`}</style>
+                </div>
+              )}
 
               {/* Colour-coded responsive navigation cards; titles remain English in every language. */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
