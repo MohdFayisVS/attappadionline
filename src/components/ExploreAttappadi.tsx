@@ -594,8 +594,8 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
       : "bg-white border-t-4 border-[#052962] rounded-lg shadow-sm p-5 md:p-8 space-y-8 animate-fade-in"
     }>
       
-      {/* Editorial Header */}
-      {!hideTabsSelection && (
+      {/* Editorial Header — only on Explore pages, never Bus Timings */}
+      {!hideTabsSelection && activeTab !== "busTimings" && (
         <div className="border-b border-gray-200 pb-5">
           <div className="flex items-center gap-2 mb-1.5">
             <Compass className="w-5 h-5 text-[#c70000] animate-spin" style={{ animationDuration: '6s' }} />
@@ -615,8 +615,8 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
         </div>
       )}
 
-      {/* Modern Filter Strip */}
-      {!hideTabsSelection && (
+      {/* Modern Filter Strip — only on Explore pages */}
+      {!hideTabsSelection && activeTab !== "busTimings" && (
         <div className="flex flex-wrap gap-2 border-b border-gray-100 pb-4">
           {[
             { key: "destinations", labelEn: "Destinations", icon: <Compass className="w-3.5 h-3.5" /> },
