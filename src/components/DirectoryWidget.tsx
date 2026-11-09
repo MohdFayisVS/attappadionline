@@ -9,16 +9,16 @@ import { ShoppingBag, Store, Send } from "lucide-react";
 
 
 const TOWN_LOCATIONS = [
-  { en: "Agali", ml: "അഗളി" },
-  { en: "Goolikkadavu", ml: "ഗൂളിക്കടവ്" },
-  { en: "Sholayur", ml: "ഷോളയൂർ" },
-  { en: "Pudur", ml: "പുതൂർ" },
-  { en: "Anakatti", ml: "ആനക്കട്ടി" },
-  { en: "Thavalam", ml: "താവളം" },
-  { en: "Jelipara", ml: "ജല്ലിപ്പാറ" },
-  { en: "Mukkali", ml: "മുക്കാലി" },
-  { en: "Kalkandiyur", ml: "കൽക്കണ്ടി" },
-  { en: "Mulli", ml: "മുള്ളി" }
+  { en: "Agali", ml: "അഗളി", ta: "அகளி" },
+  { en: "Goolikkadavu", ml: "ഗൂളിക്കടവ്", ta: "கூலிக்கடவு" },
+  { en: "Sholayur", ml: "ഷോളയൂർ", ta: "சோலையூர்" },
+  { en: "Pudur", ml: "പുതൂർ", ta: "புதூர்" },
+  { en: "Anakatti", ml: "ആനക്കട്ടി", ta: "ஆனைக்கட்டி" },
+  { en: "Thavalam", ml: "താവളം", ta: "தாவளம்" },
+  { en: "Jelipara", ml: "ജല്ലിപ്പാറ", ta: "ஜெல்லிப்பாறை" },
+  { en: "Mukkali", ml: "മുക്കാലി", ta: "முக்காலி" },
+  { en: "Kalkandiyur", ml: "കൽക്കണ്ടി", ta: "கல்கண்டியூர்" },
+  { en: "Mulli", ml: "മുള്ളി", ta: "முள்ளி" }
 ];
 
 export default function DirectoryWidget({ 
@@ -872,7 +872,7 @@ export default function DirectoryWidget({
                     <option value="all">{lang === "ta" ? "அனைத்து இடங்களும்" : lang !== "ml" ? "All Locations" : "എല്ലാ സ്ഥലങ്ങളും"}</option>
                     {TOWN_LOCATIONS.map((town) => (
                       <option key={town.en} value={town.en}>
-                        📍 {lang !== "ml" ? town.en : town.ml}
+                        📍 {lang === "ta" ? town.ta : lang === "ml" ? town.ml : town.en}
                       </option>
                     ))}
                   </select>
@@ -982,12 +982,12 @@ export default function DirectoryWidget({
               <div className="space-y-1">
                 <h4 className="text-sm font-black flex items-center gap-1.5 text-fuchsia-800">
                   <span className="p-1.5 bg-fuchsia-100 rounded text-base">🛍️</span>
-                  {lang === "ta" ? "அட்டப்பாடி உள்ளூர் கடைகள் மற்றும் ஆர்டர்கள்" : lang !== "ml" ? "Attappadi Local Shopping & Orders" : "അട്ടപ്പാടി ലോക്കൽ ഷോപ്പിംഗ് പോർട്ടൽ"}
+                  <span lang="en" className="font-anek-english">LOCAL SHOPPING</span>
                 </h4>
-                <p className="text-xs text-fuchsia-900 leading-relaxed font-sans">
+                <p className="text-xs text-fuchsia-900 leading-relaxed">
                   {lang === "en" 
                     ? "Find local shops across Agali, Goolikkadavu, Pudur, Sholayur & Mukkali. Type your items list and send order instantly over WhatsApp!"
-                    : "അഗളി, ഗൂളിക്കടവ്, പുതൂർ, ഷോളയൂർ, മുക്കാലി തുടങ്ങിയ സ്ഥലങ്ങളിലെ കടകൾ കണ്ടെത്താം. നിങ്ങൾക്ക് ആവശ്യമുള്ള സാധനങ്ങൾ ടൈപ്പ് ചെയ്ത് നേരിട്ട് വാട്സാപ്പ് വഴി ഓർഡർ ചെയ്യാം!"}
+                    : lang === "ta" ? "அகளி, கூலிக்கடவு, புதூர், சோலையூர், முக்காலி உள்ளிட்ட பகுதிகளில் உள்ள கடைகளைக் கண்டறியுங்கள். தேவையான பொருட்களைப் பட்டியலிட்டு வாட்ஸ்அப் மூலம் நேரடியாக ஆர்டர் செய்யலாம்!" : "അഗളി, ഗൂളിക്കടവ്, പുതൂർ, ഷോളയൂർ, മുക്കാലി തുടങ്ങിയ സ്ഥലങ്ങളിലെ കടകൾ കണ്ടെത്താം. നിങ്ങൾക്ക് ആവശ്യമുള്ള സാധനങ്ങൾ ടൈപ്പ് ചെയ്ത് നേരിട്ട് വാട്സാപ്പ് വഴി ഓർഡർ ചെയ്യാം!"}
                 </p>
               </div>
             </div>
@@ -1029,13 +1029,13 @@ export default function DirectoryWidget({
               {/* Categorical filters */}
               <div className="flex gap-1 overflow-x-auto pb-1 max-w-full text-[10px] select-none scrollbar-none">
                 {[
-                  { key: "all", en: "All Categories", ml: "എല്ലാം" },
-                  { key: "grocery", en: "Groceries", ml: "പലചരക്ക്" },
-                  { key: "bakery", en: "Bakery", ml: "ബേക്കറി" },
-                  { key: "medical", en: "Medicals", ml: "മരുന്ന് കട" },
-                  { key: "vegetables", en: "Vegetables", ml: "പച്ചക്കറികൾ" },
-                  { key: "clothing", en: "Clothing", ml: "വസ്ത്രങ്ങൾ" },
-                  { key: "electronics", en: "Electronics", ml: "മൊബൈൽസ്" }
+                  { key: "all", en: "All Categories", ml: "എല്ലാം", ta: "அனைத்து வகைகளும்" },
+                  { key: "grocery", en: "Groceries", ml: "പലചരക്ക്", ta: "மளிகைப் பொருட்கள்" },
+                  { key: "bakery", en: "Bakery", ml: "ബേക്കറി", ta: "பேக்கரி" },
+                  { key: "medical", en: "Medicals", ml: "മരുന്ന് കട", ta: "மருந்தகங்கள்" },
+                  { key: "vegetables", en: "Vegetables", ml: "പച്ചക്കറികൾ", ta: "காய்கறிகள்" },
+                  { key: "clothing", en: "Clothing", ml: "വസ്ത്രങ്ങൾ", ta: "ஆடைகள்" },
+                  { key: "electronics", en: "Electronics", ml: "മൊബൈൽസ്", ta: "மின்னணுப் பொருட்கள்" }
                 ].map((cat) => (
                   <button
                     key={cat.key}
@@ -1046,7 +1046,7 @@ export default function DirectoryWidget({
                         : "bg-white text-gray-600 border-gray-200 hover:bg-gray-100"
                     }`}
                   >
-                    {lang !== "ml" ? cat.en : cat.ml}
+                    {lang === "ta" ? cat.ta : lang === "ml" ? cat.ml : cat.en}
                   </button>
                 ))}
               </div>
@@ -1182,7 +1182,7 @@ export default function DirectoryWidget({
             <p className="text-[10px] text-slate-400 text-center italic mt-1 bg-slate-50 p-1.5 rounded border border-gray-150/40">
               {lang === "en" 
                 ? "💡 Support: All deliveries, payments & communications are handled independently using direct WhatsApp chat with the corresponding merchants."
-                : "💡 നിർദ്ദേശം: പണമിടപാടുകളും സാധനങ്ങളുടെ ലഭ്യതയും വിലവിവരങ്ങളും അതതു കടക്കാരുമായി നേരിട്ട് ചാറ്റിൽ സംസാരിച്ചു തീരുമാനിക്കുക."}
+                : lang === "ta" ? "💡 குறிப்பு: பொருட்களின் இருப்பு, விலை மற்றும் கட்டணம் தொடர்பான விவரங்களை அந்தந்த கடைக்காரர்களுடன் வாட்ஸ்அப் மூலம் நேரடியாக உறுதிப்படுத்திக் கொள்ளுங்கள்." : "💡 നിർദ്ദേശം: പണമിടപാടുകളും സാധനങ്ങളുടെ ലഭ്യതയും വിലവിവരങ്ങളും അതതു കടക്കാരുമായി നേരിട്ട് ചാറ്റിൽ സംസാരിച്ചു തീരുമാനിക്കുക."}
             </p>
           </div>
         ) : currTab === "lostfound" ? (
