@@ -919,9 +919,27 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
             return n;
           };
 
+          // Tamil names for legacy stops that predate the nameTa database field.
+          // Firestore/admin-provided Tamil always takes precedence over these defaults.
+          const tamilStopDefaults: Record<string, string> = {
+            KOZHIKODE: "கோழிக்கோடு", MANJERI: "மஞ்சேரி", GURUVAYUR: "குருவாயூர்",
+            THRISSUR: "திருச்சூர்", KOTTAYAM: "கோட்டயம்", KATTAPPANA: "கட்டப்பனை",
+            SHORNUR: "ஷோரனூர்", CHERPULASSERY: "செர்ப்புளச்சேரி",
+            PERINTHALMANNA: "பெரிந்தல்மண்ணா", PALAKKAD: "பாலக்காடு",
+            MANNARKKAD: "மண்ணார்க்காடு", MUKKALI: "முக்காலி",
+            THAVALAM: "தாவளம்", GOOLIKKADAVU: "கூலிக்கடவு",
+            AGALI: "அகளி", JELLIPPARA: "ஜெல்லிப்பாறை", PALOOR: "பாலூர்",
+            PUDUR: "புதூர்", CHITTUR: "சித்தூர்", MULLI: "முள்ளி",
+            SHOLAYUR: "சோலையூர்", ANAIKKATTY: "ஆனைக்கட்டி",
+            METTUPALAYAM: "மேட்டுப்பாளையம்", COIMBATORE: "கோயம்புத்தூர்",
+            KOTTATHARA: "கோட்டத்தறை", PATTAMBI: "பட்டாம்பி", PALA: "பாலா"
+          };
+          const tamilStopName = (id: string, saved?: string) =>
+            saved?.trim() || tamilStopDefaults[normalizeStopName(id)] || id;
+
           // Define all unique stops for dropdown choices mapped dynamically from state
           const stopChoices = [
-            ...mapNodes.map(node => ({ id: node.id, en: node.nameEn, ml: node.nameMl })),
+            ...mapNodes.map(node => ({ id: node.id, en: node.nameEn, ml: node.nameMl, ta: tamilStopName(node.id, node.nameTa) })),
             ...busRoutesList.flatMap(route => route.list).filter(stop =>
               !mapNodes.some(node => normalizeStopName(node.id) === normalizeStopName(stop.typeEn))
             ).filter((stop, index, all) =>
@@ -929,7 +947,8 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
             ).map(stop => ({
               id: normalizeStopName(stop.typeEn),
               en: stop.typeEn,
-              ml: stop.typeMl
+              ml: stop.typeMl,
+              ta: tamilStopName(stop.typeEn, (stop as any).typeTa)
             }))
           ];
 
@@ -1924,7 +1943,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                                   : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
                               }`}
                             >
-                              {lang === "ml" ? st.ml : st.en}
+                              {lang === "ml" ? st.ml : lang === "ta" ? st.ta : st.en}
                             </button>
                           ))}
                         </div>
@@ -1936,7 +1955,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                           <h5 className="font-bold text-[#052962] text-xs leading-none flex items-center gap-1">
                             <span>{lang === "ta" ? "🕒 புறப்படும் இடம்:" : lang === "ml" ? "🕒 പുറപ്പെടുന്ന സ്ഥലം:" : "🕒 Departures from:"}</span>
                             <span className="bg-amber-100 text-amber-950 px-2 py-0.5 rounded text-[11px] font-black">
-                              {lang === "ml" ? currentMapStopEntity.ml : currentMapStopEntity.en}
+                              {lang === "ml" ? currentMapStopEntity.ml : lang === "ta" ? currentMapStopEntity.ta : currentMapStopEntity.en}
                             </span>
                           </h5>
                           <span className="text-[10.5px] font-black text-slate-400">
