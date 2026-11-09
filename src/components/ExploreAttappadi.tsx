@@ -1160,7 +1160,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                 </div>
 
               {/* Master Responsive Layout split into sidebar panel & Vector Map */}
-              <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+              <div className="lg:col-span-5 min-w-0 grid grid-cols-1 xl:grid-cols-12 gap-4 items-start">
                 
                 {/* Visual Map widget - Highlight of modern responsive interface */}
                 <div className={isAdmin ? "xl:col-span-5 order-first xl:order-last space-y-4" : "hidden"}>
@@ -1936,12 +1936,12 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                         <label className="block text-xs font-bold text-slate-500 mb-1">
                           {lang === "ta" ? "கீழே உள்ள பட்டியலில் இருந்து பேருந்து நிலையத்தைத் தேர்ந்தெடுக்கவும்:" : lang === "ml" ? "താഴെ നൽകിയതിൽ നിന്നും സ്റ്റേഷൻ തിരഞ്ഞെടുക്കുക:" : "Select a bus station from the list below:"}
                         </label>
-                        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-1.5 select-none">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-2 select-none">
                           {stopChoices.map((st) => (
                             <button
                               key={st.id}
                               onClick={() => setSelectedMapStop(st.id)}
-                              className={`p-2 rounded-lg text-xs font-black transition text-center cursor-pointer border ${
+                              className={`min-w-0 w-full min-h-10 px-2 py-2 rounded-lg text-[11px] leading-snug font-black whitespace-normal wrap-break-word transition text-center cursor-pointer border ${
                                 selectedMapStop === st.id
                                   ? "bg-[#052962] text-white border-[#052962] shadow-xs"
                                   : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
