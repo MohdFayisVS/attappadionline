@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
-type Stop = { id: string; en: string; ml: string };
+type Stop = { id: string; en: string; ml: string; ta?: string };
 type Props = { stops: Stop[]; selectedStop: string; onSelectStop: (id: string) => void; lang: "en" | "ml" | "ta"; isAdmin?: boolean };
 type Position = { lat: number; lon: number; kind: "station" | "stop" | "place"; name: string };
 type Layer = { clearLayers: () => void; addTo: (map: MapInstance) => Layer };
@@ -220,7 +220,7 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang,
       const override = manual[stop.id];
       const point = override || positions[stop.id];
       const selected = stop.id === selectedStop;
-      const title = override ? (lang === "ml" ? override.nameMl : lang === "ta" ? override.nameTa || override.nameEn : override.nameEn) : stop.en;
+      const title = lang === "ta" ? (override?.nameTa?.trim() || stop.ta || stop.en) : lang === "ml" ? (override?.nameMl?.trim() || stop.ml || stop.en) : (override?.nameEn?.trim() || stop.en);
       const draggable = isAdmin && editMode;
       const marker = draggable ? window.L!.marker([point.lat, point.lon], { draggable: true }) : window.L!.circleMarker([point.lat, point.lon], {
         radius: selected ? 10 : 7, weight: 3,
@@ -243,9 +243,9 @@ export default function BusStopOSMMap({ stops, selectedStop, onSelectStop, lang,
       <button type="button" onClick={() => { setEditMode(!editMode); setPlacing(false); }} className="rounded bg-[#052962] px-3 py-2 text-white text-sm font-bold">{editMode ? "Close Map Editor" : "Manage Map Locations"}</button>
       {editMode && <div className="space-y-2 text-sm">
         <p>Select a station, then click Place on Map or drag its marker. Changes are saved in this browser.</p>
-        <select value={editStop} onChange={e => setEditStop(e.target.value)} className="w-full border rounded p-2"><option value="">Select station</option>{stops.map(stop => <option key={stop.id} value={stop.id}>{stop.en} ({stop.ml})</option>)}</select>
+        <select value={editStop} onChange={e => setEditStop(e.target.value)} className="w-full border rounded p-2"><option value="">Select station</option>{stops.map(stop => <option key={stop.id} value={stop.id}>{lang === "ta" ? (manual[stop.id]?.nameTa || stop.ta || stop.en) : lang === "ml" ? (manual[stop.id]?.nameMl || stop.ml) : stop.en}</option>)}</select>
         {editStop && (() => { const stop = stops.find(item => item.id === editStop); if (!stop) return null; const current = manual[editStop]; const update = (field: "nameEn" | "nameMl" | "nameTa", value: string) => { const point = current || positions[editStop]; if (!point) return; saveManual({ ...manual, [editStop]: { lat: point.lat, lon: point.lon, nameEn: current?.nameEn || stop.en, nameMl: current?.nameMl || stop.ml, nameTa: current?.nameTa || "", [field]: value } }); }; return <div className="space-y-2">
-          {(["nameMl", "nameEn", "nameTa"] as const).map((field, index) => <label key={field} className="block">{["Malayalam", "English", "Tamil"][index]} name<input lang={["ml", "en", "ta"][index]} className="block w-full border rounded p-2" value={current?.[field] ?? (field === "nameMl" ? stop.ml : field === "nameEn" ? stop.en : "")} onChange={e => update(field, e.target.value)} /></label>)}
+          {(["nameMl", "nameEn", "nameTa"] as const).map((field, index) => <label key={field} className="block">{["Malayalam", "English", "Tamil"][index]} name<input lang={["ml", "en", "ta"][index]} className="block w-full border rounded p-2" value={current?.[field] ?? (field === "nameMl" ? stop.ml : field === "nameEn" ? stop.en : stop.ta || "")} onChange={e => update(field, e.target.value)} /></label>)}
           <div className="flex gap-2 flex-wrap"><button type="button" onClick={() => setPlacing(true)} className="bg-amber-500 text-black rounded px-3 py-2 font-bold">{placing ? "Click the map to place station…" : "Place on Map"}</button><button type="button" onClick={() => { const updated = { ...manual }; delete updated[editStop]; saveManual(updated); }} className="border rounded px-3 py-2">Reset station override</button></div>
           {current && <p className="text-xs">Latitude: {current.lat.toFixed(6)} · Longitude: {current.lon.toFixed(6)}</p>}
         </div>; })()}
