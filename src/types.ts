@@ -86,6 +86,10 @@ export interface WeatherData {
 
 export interface DestinationItem {
   id: string;
+  nearestStop?: string;
+  instructionsEn?: string;
+  instructionsMl?: string;
+  instructionsTa?: string;
   nameEn: string;
   nameTa?: string;
   nameMl: string;

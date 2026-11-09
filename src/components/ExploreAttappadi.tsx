@@ -1183,7 +1183,9 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                 })}
               </div>
 
-              }\n\n              {/* On desktop, show the OSM map beside the timetable station selector. Stack on mobile. */}
+              }
+
+              {/* On desktop, show the OSM map beside the timetable station selector. Stack on mobile. */}
               <div className={busTimingMode === "stop" ? "grid grid-cols-1 lg:grid-cols-12 gap-5 items-start" : "block"}>
                 {busTimingMode === "stop" && <div className="lg:col-span-7 min-w-0 lg:sticky lg:top-4">
                   <BusStopOSMMap isAdmin={isAdmin} stops={stopChoices} selectedStop={selectedMapStop} onSelectStop={(id) => { setSelectedMapStop(id); setBusTimingMode("stop"); window.setTimeout(() => document.getElementById("attappadi-station-board")?.scrollIntoView({ behavior: "smooth", block: "start" }), 120); }} lang={lang} />
@@ -2303,16 +2305,19 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                         </div>
                       ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                          {destinationsList.map(destination => (
+                          {destinationsList.map(destination => { const stop = destination.nearestStop?.trim().toUpperCase(); const direct = stop ? busRoutesList.flatMap(route => route.list.flatMap((entry,idx) => entry.typeEn?.trim().toUpperCase() === stop ? route.list.slice(0,idx).filter((origin,i)=>i===0 || ["MANNARKKAD","AGALI","ANAIKKATTY","COIMBATORE","PALAKKAD","MUKKALI"].includes(origin.typeEn?.trim().toUpperCase())).map(origin=>({origin:origin.typeEn,departure:origin.time,arrival:entry.time,bus:route.routeEn,id:route.id})) : [])) : []; return (
                             <article key={destination.id} className="rounded-xl border border-slate-200 overflow-hidden">
                               {destination.image && <img src={destination.image} alt={destination.nameEn} className="w-full h-40 object-cover" loading="lazy" />}
                               <div className="p-4 space-y-2">
                                 <h5 className="font-bold text-[#052962]">{lang === "ta" ? destination.nameTa || destination.nameEn : lang === "ml" ? destination.nameMl : destination.nameEn}</h5>
                                 <p className="text-xs text-slate-500">{lang === "ta" ? destination.locationTa || destination.locationEn : lang === "ml" ? destination.locationMl : destination.locationEn}</p>
                                 <p className="text-sm text-slate-700">{lang === "ta" ? destination.descriptionTa || destination.descriptionEn : lang === "ml" ? destination.descriptionMl : destination.descriptionEn}</p>
+                                {destination.nearestStop && <p className="rounded-lg bg-blue-50 p-2 text-xs font-bold text-blue-900">{lang==="ml"?"അടുത്ത ബസ് സ്റ്റോപ്പ്":lang==="ta"?"அருகிலுள்ள பேருந்து நிறுத்தம்":"Nearest bus stop"}: {destination.nearestStop}</p>}
+                                {(destination.instructionsEn||destination.instructionsMl||destination.instructionsTa) && <p className="text-xs text-slate-600">{lang==="ml"?destination.instructionsMl||destination.instructionsEn:lang==="ta"?destination.instructionsTa||destination.instructionsEn:destination.instructionsEn}</p>}
+                                {direct.length>0 && <div className="rounded-lg border border-blue-100 p-2"><p className="mb-1 text-xs font-black text-blue-900">{lang==="ml"?"നേരിട്ടുള്ള ബസ് സമയങ്ങൾ":lang==="ta"?"நேரடி பேருந்து நேரங்கள்":"Direct bus timings"}</p>{direct.slice(0,8).map((trip,i)=><p key={trip.id+i} className="text-xs">{trip.origin} {trip.departure} → {trip.arrival} · {trip.bus}</p>)}</div>}
                               </div>
                             </article>
-                          ))}
+                          ); })}
                         </div>
                       )}
                     </div>
