@@ -1153,7 +1153,11 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                 ))}
               </div>
 
-              <BusStopOSMMap isAdmin={isAdmin} stops={stopChoices} selectedStop={selectedMapStop} onSelectStop={(id) => { setSelectedMapStop(id); setBusTimingMode("stop"); window.setTimeout(() => document.getElementById("attappadi-station-board")?.scrollIntoView({ behavior: "smooth", block: "start" }), 120); }} lang={lang} />
+              {/* On desktop, show the OSM map beside the timetable station selector. Stack on mobile. */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+                <div className="lg:col-span-7 min-w-0 lg:sticky lg:top-4">
+                  <BusStopOSMMap isAdmin={isAdmin} stops={stopChoices} selectedStop={selectedMapStop} onSelectStop={(id) => { setSelectedMapStop(id); setBusTimingMode("stop"); window.setTimeout(() => document.getElementById("attappadi-station-board")?.scrollIntoView({ behavior: "smooth", block: "start" }), 120); }} lang={lang} />
+                </div>
 
               {/* Master Responsive Layout split into sidebar panel & Vector Map */}
               <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
@@ -1914,7 +1918,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                 </div>
 
                 {/* Left Controls & dynamic schedulers lists */}
-                <div className={isAdmin ? "xl:col-span-7 space-y-5" : "xl:col-span-12 space-y-5"}>
+                <div className={isAdmin ? "xl:col-span-7 space-y-5 min-w-0" : "xl:col-span-12 space-y-5 min-w-0"}>
                   
                   {/* Mode 1: HUB STATION DEPARTURE SCHEDULES */}
                   {busTimingMode === "stop" && (
@@ -2307,6 +2311,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
 
                 </div>
 
+              </div>
               </div>
 
             </div>
