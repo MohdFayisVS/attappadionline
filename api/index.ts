@@ -602,6 +602,35 @@ app.post("/api/citizen-reports/:id/reject", async (req, res) => {
   res.json({ rejected: true });
 });
 
+// Dedicated bus information ticker. Stored independently from news and breaking alerts.
+app.get("/api/bus-information", async (_req, res) => {
+  const items = await getCollectionData("busInformation");
+  res.json(items.filter((item: any) => item.active !== false).sort((a: any, b: any) => String(b.updatedAt || b.publishedAt || "").localeCompare(String(a.updatedAt || a.publishedAt || ""))));
+});
+app.get("/api/admin/bus-information", async (_req, res) => {
+  res.json(await getCollectionData("busInformation"));
+});
+const validBusInformation = (data: any) =>
+  ["contentMl", "contentEn", "contentTa"].every(key => typeof data?.[key] === "string" && data[key].trim().length > 0 && data[key].length <= 1200);
+app.post("/api/admin/bus-information", async (req, res) => {
+  if (!validBusInformation(req.body)) return res.status(400).json({ error: "Information text is required in Malayalam, English and Tamil (max 1200 characters each)." });
+  const item = { id: "businfo_" + Date.now(), contentMl: req.body.contentMl.trim(), contentEn: req.body.contentEn.trim(), contentTa: req.body.contentTa.trim(), active: req.body.active !== false, publishedAt: new Date().toISOString() };
+  try { await writeItemToFirestore("busInformation", item.id, item); res.status(201).json(item); }
+  catch { res.status(503).json({ error: "Unable to save bus information." }); }
+});
+app.put("/api/admin/bus-information/:id", async (req, res) => {
+  const existing = (await getCollectionData("busInformation")).find((item: any) => item.id === req.params.id);
+  if (!existing) return res.status(404).json({ error: "Bus information not found." });
+  if (!validBusInformation(req.body)) return res.status(400).json({ error: "All three languages are required." });
+  const item = { ...existing, contentMl: req.body.contentMl.trim(), contentEn: req.body.contentEn.trim(), contentTa: req.body.contentTa.trim(), active: req.body.active !== false, updatedAt: new Date().toISOString() };
+  try { await writeItemToFirestore("busInformation", item.id, item); res.json(item); }
+  catch { res.status(503).json({ error: "Unable to update bus information." }); }
+});
+app.delete("/api/admin/bus-information/:id", async (req, res) => {
+  try { await deleteItemFromFirestore("busInformation", req.params.id); res.json({ success: true }); }
+  catch { res.status(503).json({ error: "Unable to delete bus information." }); }
+});
+
 // Standalone ticker-only alerts. These are NOT news articles and never enter /api/news.
 app.get("/api/quick-breaking", async (_req, res) => {
   const items = await getCollectionData("quickBreaking");
