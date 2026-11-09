@@ -9,6 +9,7 @@ interface ExploreAttappadiProps {
   lang: "en" | "ml" | "ta";
   initialTab?: "destinations" | "food" | "stays" | "travelogues" | "photos" | "culture" | "busTimings";
   isAdmin?: boolean;
+  adminMapOnly?: boolean;
   hideTabsSelection?: boolean;
   onEditBusRoute?: (id: string) => void;
   onDeleteBusRoute?: (id: string) => void;
@@ -410,7 +411,7 @@ const DEFAULT_MAP_LINES = [
   { from: "COIMBATORE", to: "METTUPALAYAM" }
 ];
 
-export default function ExploreAttappadi({ lang, initialTab = "destinations", isAdmin = false, hideTabsSelection = false, onEditBusRoute, onDeleteBusRoute }: ExploreAttappadiProps) {
+export default function ExploreAttappadi({ lang, initialTab = "destinations", isAdmin = false, adminMapOnly = false, hideTabsSelection = false, onEditBusRoute, onDeleteBusRoute }: ExploreAttappadiProps) {
   const safeParseArray = (val: any): string[] => {
     if (Array.isArray(val)) return val;
     if (typeof val === "string") return val.split(",").map(x => x.trim()).filter(Boolean);
@@ -1137,7 +1138,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
             <div lang={lang} className={`space-y-6 animate-fade-in ${lang === "ta" ? "font-anek-tamil" : lang === "ml" ? "font-anek-malayalam" : "font-anek-english"}`}>
               
               {/* Blue information ticker, managed separately in Bus Timings admin. */}
-              {busInformation.length > 0 && (
+              {!adminMapOnly && busInformation.length > 0 && (
                 <div className="flex items-stretch overflow-hidden rounded-xl border border-blue-200 bg-blue-50 shadow-sm" role="region" aria-label="Bus information updates">
                   <div className="flex shrink-0 items-center gap-2 bg-[#0757a6] px-4 py-3 text-white">
                     <Info className="h-5 w-5" />
@@ -1160,7 +1161,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
               )}
 
               {/* Colour-coded responsive navigation cards; titles remain English in every language. */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {!adminMapOnly && <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {[
                   { key: "stop", label: "SELECT STATION", subtitle: "Station timetables", icon: <MapPin className="w-5 h-5" />, active: "border-blue-600 bg-blue-600 text-white shadow-blue-200", idle: "border-blue-100 bg-blue-50 text-blue-900 hover:bg-blue-100", iconActive: "bg-white/20", iconIdle: "bg-blue-100 text-blue-700" },
                   { key: "directions", label: "SEARCH BY BUS OR TRIP", subtitle: "Find routes & timings", icon: <Search className="w-5 h-5" />, active: "border-violet-600 bg-violet-600 text-white shadow-violet-200", idle: "border-violet-100 bg-violet-50 text-violet-900 hover:bg-violet-100", iconActive: "bg-white/20", iconIdle: "bg-violet-100 text-violet-700" },
@@ -1182,17 +1183,17 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                 })}
               </div>
 
-              {/* On desktop, show the OSM map beside the timetable station selector. Stack on mobile. */}
+              }\n\n              {/* On desktop, show the OSM map beside the timetable station selector. Stack on mobile. */}
               <div className={busTimingMode === "stop" ? "grid grid-cols-1 lg:grid-cols-12 gap-5 items-start" : "block"}>
                 {busTimingMode === "stop" && <div className="lg:col-span-7 min-w-0 lg:sticky lg:top-4">
                   <BusStopOSMMap isAdmin={isAdmin} stops={stopChoices} selectedStop={selectedMapStop} onSelectStop={(id) => { setSelectedMapStop(id); setBusTimingMode("stop"); window.setTimeout(() => document.getElementById("attappadi-station-board")?.scrollIntoView({ behavior: "smooth", block: "start" }), 120); }} lang={lang} />
                 </div>}
 
               {/* Master Responsive Layout split into sidebar panel & Vector Map */}
-              <div className={busTimingMode === "stop" ? "lg:col-span-5 min-w-0 grid grid-cols-1 xl:grid-cols-12 gap-4 items-start" : "w-full min-w-0 grid grid-cols-1 xl:grid-cols-12 gap-4 items-start"}>
+              <div className={busTimingMode === "stop" ? (adminMapOnly ? "lg:col-span-5 min-w-0 grid grid-cols-1 gap-4 items-start" : "lg:col-span-5 min-w-0 grid grid-cols-1 xl:grid-cols-12 gap-4 items-start") : "w-full min-w-0 grid grid-cols-1 xl:grid-cols-12 gap-4 items-start"}>
                 
                 {/* Visual Map widget - Highlight of modern responsive interface */}
-                <div className={isAdmin && busTimingMode === "stop" ? "xl:col-span-5 order-first xl:order-last space-y-4" : "hidden"}>
+                <div className={isAdmin && busTimingMode === "stop" ? (adminMapOnly ? "xl:col-span-12 space-y-4 min-w-0" : "xl:col-span-5 order-first xl:order-last space-y-4") : "hidden"}>
                   <div className="bg-[#eef2ef] border border-slate-300 rounded-xl p-4 shadow-sm relative overflow-hidden select-none">
                     
                     {/* Header Map indicators */}
@@ -1947,7 +1948,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                 </div>
 
                 {/* Left Controls & dynamic schedulers lists */}
-                <div className={isAdmin ? "xl:col-span-7 space-y-5 min-w-0" : "xl:col-span-12 space-y-5 min-w-0"}>
+                <div className={adminMapOnly ? "hidden" : isAdmin ? "xl:col-span-7 space-y-5 min-w-0" : "xl:col-span-12 space-y-5 min-w-0"}>
                   
                   {/* Mode 1: HUB STATION DEPARTURE SCHEDULES */}
                   {busTimingMode === "stop" && (
