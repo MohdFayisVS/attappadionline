@@ -28,7 +28,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [navSearch, setNavSearch] = useState("");
-  const [exploreSubTab, setExploreSubTab] = useState<"destinations" | "cultures" | "stays" | "travelogues" | "photos">("destinations");
+  const [exploreSubTab, setExploreSubTab] = useState<"cultures" | "stays" | "travelogues" | "photos">("cultures");
   const [lostFoundList, setLostFoundList] = useState<LostAndFoundItem[]>([]);
 
   // Success message toaster helper
@@ -46,7 +46,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   const [traveloguesList, setTraveloguesList] = useState<TravelogueItem[]>([]);
   const [photosList, setPhotosList] = useState<PhotoItem[]>([]);
   const [busRoutesList, setBusRoutesList] = useState<BusRouteItem[]>([]);
-  const [busAdminView, setBusAdminView] = useState<"routes" | "timetables" | "map">("timetables");
+  const [busAdminView, setBusAdminView] = useState<"routes" | "timetables" | "map" | "tourism">("timetables");
   const [busAdminSearch, setBusAdminSearch] = useState("");
   const [busMapRevision, setBusMapRevision] = useState(0);
   const [routesList, setRoutesList] = useState<{ id: string; routeEn: string; routeMl: string; routeTa?: string; }[]>([]);
@@ -157,7 +157,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
   // 4. Explore sub-forms
   const [destForm, setDestForm] = useState({
-    nameEn: "", nameMl: "", nameTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
+    nameEn: "", nameMl: "", nameTa: "", nearestStop: "", instructionsEn: "", instructionsMl: "", instructionsTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
     descriptionEn: "", descriptionMl: "", descriptionTa: "", highlightsEn: "", highlightsMl: "", highlightsTa: ""
   });
   const [cultureForm, setCultureForm] = useState({
@@ -355,7 +355,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       titleEn: "", titleMl: "", titleTa: "", date: "", time: "", locationEn: "", locationMl: "", locationTa: "", descriptionEn: "", descriptionMl: "", descriptionTa: ""
     });
     setDestForm({
-      nameEn: "", nameMl: "", nameTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
+      nameEn: "", nameMl: "", nameTa: "", nearestStop: "", instructionsEn: "", instructionsMl: "", instructionsTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
       descriptionEn: "", descriptionMl: "", highlightsEn: "", highlightsMl: ""
     });
     setCultureForm({
@@ -1192,7 +1192,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       nameEn: item.nameEn,
       nameMl: item.nameMl,
       nameTa: item.nameTa || "",
-      nameTa: item.nameTa || "",
+      nearestStop: item.nearestStop || "",
+      instructionsEn: item.instructionsEn || "", instructionsMl: item.instructionsMl || "", instructionsTa: item.instructionsTa || "",
       locationEn: item.locationEn,
       locationMl: item.locationMl,
       locationTa: item.locationTa || "",
@@ -1216,7 +1217,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       { en: "nameEn", ml: "nameMl" },
       { en: "locationEn", ml: "locationMl" },
       { en: "descriptionEn", ml: "descriptionMl" },
-      { en: "highlightsEn", ml: "highlightsMl" }
+      { en: "highlightsEn", ml: "highlightsMl" },
+      { en: "instructionsEn", ml: "instructionsMl" }
     ]);
 
     const highlightsEnArr = translatedDestForm.highlightsEn.split(",").map(x => x.trim()).filter(Boolean);
@@ -1243,7 +1245,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Tourist destination updated!" : "New Tourist destination added!");
-      setDestForm({ nameEn: "", nameMl: "", nameTa: "", locationEn: "", locationMl: "", locationTa: "", image: "", descriptionEn: "", descriptionMl: "", descriptionTa: "", highlightsEn: "", highlightsMl: "", highlightsTa: "" });
+      setDestForm({ nameEn: "", nameMl: "", nameTa: "", nearestStop: "", instructionsEn: "", instructionsMl: "", instructionsTa: "", locationEn: "", locationMl: "", locationTa: "", image: "", descriptionEn: "", descriptionMl: "", descriptionTa: "", highlightsEn: "", highlightsMl: "", highlightsTa: "" });
       setEditingId(null);
       setEditingType(null);
       fetchExploreDestinations();
@@ -3303,7 +3305,6 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
             {/* Explore sub tabs navigator */}
             <div className="flex border-b border-gray-200">
               {[
-                { id: "destinations", label: "🗺️ Destinations" },
                 { id: "cultures", label: "🍲 Culture & Food" },
                 { id: "stays", label: "🏡 Nature Stays" },
                 { id: "travelogues", label: "✍️ Stories" },
@@ -3325,128 +3326,6 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
             {/* Explore tab modules */}
             
-            {/* Sub-tab 1: DESTINATIONS */}
-            {exploreSubTab === "destinations" && (
-              <div className="grid grid-cols-1 lg:grid-cols-1 md:grid-cols-3 gap-8">
-                <form onSubmit={handleCreateDestination} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5"><div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-blue-100 bg-blue-50/60 p-3"><label className="flex items-center gap-2 text-xs font-bold text-[#052962]"><input type="checkbox" checked={autoTranslateOnSubmit} onChange={e=>setAutoTranslateOnSubmit(e.target.checked)} /> Auto Translate · Malayalam / English / Tamil</label><button type="button" disabled={isTranslatingForm} onClick={()=>void performAutoTranslationForForm(destForm, setDestForm, [], true)} className="rounded-md border border-blue-300 bg-white px-3 py-1.5 text-xs font-bold text-[#052962] hover:bg-blue-100 disabled:opacity-50">{isTranslatingForm ? "Translating…" : "↻ Translate Now"}</button><span className="text-xs text-slate-500">{isTranslatingForm ? "Translating…" : "Fill missing translations automatically"}</span></div>
-                  
-
-
-
-                  <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
-                    <PlusCircle className="w-4 h-4 text-[#005689]" /> {editingType === "destinations" ? "Edit Tourist Destination" : "Add Tourist Destination"}
-                  </h3>
-                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Destination Name</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={destForm.nameMl} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,nameMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"nameMl","nameMl",setDestForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={destForm.nameEn} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,nameEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"nameEn","nameEn",setDestForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={destForm.nameTa} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,nameTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"nameTa","nameTa",setDestForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
-                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Location</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={destForm.locationMl} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,locationMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"locationMl","locationMl",setDestForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={destForm.locationEn} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,locationEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"locationEn","locationEn",setDestForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={destForm.locationTa} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,locationTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"locationTa","locationTa",setDestForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
-                  {/* Photo selection targeting local files or links */}
-                  <div className="bg-slate-50 rounded-lg p-3 border border-slate-200/50 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <label className="block text-xs font-bold text-[#0a3060] uppercase tracking-wider flex items-center gap-1.5">
-                        <ImageIcon className="w-3.5 h-3.5 text-[#005689]" /> Cover Photo Selection
-                      </label>
-                      <div className="flex gap-1.5">
-                        <button
-                          type="button"
-                          onClick={() => setDestImgSourceMode("upload")}
-                          className={`px-2 py-0.5 text-[9px] font-black rounded transition ${
-                            destImgSourceMode === "upload" 
-                              ? "bg-[#0a3060] text-white" 
-                              : "bg-white text-slate-600 border hover:bg-slate-100"
-                          }`}
-                        >
-                          Upload File
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setDestImgSourceMode("url")}
-                          className={`px-2 py-0.5 text-[9px] font-black rounded transition ${
-                            destImgSourceMode === "url" 
-                              ? "bg-[#0a3060] text-white" 
-                              : "bg-white text-slate-600 border hover:bg-slate-100"
-                          }`}
-                        >
-                          Web URL
-                        </button>
-                      </div>
-                    </div>
-
-                    {destImgSourceMode === "upload" ? (
-                      <div 
-                        className={`border-2 border-dashed rounded-lg p-3.5 flex flex-col items-center justify-center transition ${
-                          destDragging ? "border-amber-400 bg-amber-50" : "border-slate-300 bg-white hover:bg-slate-50"
-                        }`}
-                        onDragOver={(e) => { e.preventDefault(); setDestDragging(true); }}
-                        onDragLeave={() => setDestDragging(false)}
-                        onDrop={(e) => { e.preventDefault(); setDestDragging(false); const f = e.dataTransfer.files[0]; if (f) handleDestFileProcess(f); }}
-                      >
-                        <Upload className="w-6 h-6 text-[#005689] shrink-0 mb-1 animate-bounce" />
-                        <p className="text-[10px] font-bold text-slate-700">Drag & Drop photo, or click to upload</p>
-                        <input 
-                          type="file" 
-                          accept="image/*"
-                          onChange={(e) => { if (e.target.files?.[0]) handleDestFileProcess(e.target.files[0]); }}
-                          className="mt-2 text-[10px] w-full max-w-xs block text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-[9px] file:font-semibold file:bg-[#0a3060]/10 file:text-[#0a3060] hover:file:bg-[#0a3060]/20 cursor-pointer"
-                        />
-                      </div>
-                    ) : (
-                      <div>
-                        <input 
-                          type="text" 
-                          value={destForm.image}
-                          onChange={(e) => setDestForm({...destForm, image: e.target.value})}
-                          placeholder="https://images.unsplash.com/photo-... absolute link" 
-                          className="w-full border rounded p-1.5 focus:ring-1 focus:ring-[#005689] bg-white text-xs"
-                        />
-                      </div>
-                    )}
-
-                    {destForm.image && (
-                      <div className="flex items-center gap-2 bg-white p-1.5 rounded border">
-                        <img 
-                          src={destForm.image} 
-                          alt="Destination thumbnail" 
-                          className="w-12 h-9 object-cover rounded border"
-                          referrerPolicy="no-referrer"
-                        />
-                        <div className="space-y-0.5 truncate flex-1 leading-tight">
-                          <p className="text-[9px] font-bold text-emerald-800">✓ Destination photo loaded</p>
-                          <p className="text-[8px] text-slate-400 truncate">{destForm.image.substring(0, 80)}...</p>
-                        </div>
-                        <button 
-                          type="button" 
-                          onClick={() => setDestForm(prev => ({ ...prev, image: "" }))}
-                          className="p-1 text-red-500 hover:bg-red-50 rounded"
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                  <section className="space-y-2"><h4 className="text-sm font-bold text-[#052962]">Description</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<textarea lang="ml" rows={4} value={destForm.descriptionMl} onChange={e=>{const value=e.target.value;setDestForm(prev=>({...prev,descriptionMl:value}));if(autoTranslateOnSubmit)autoTranslateField(value,"descriptionMl","descriptionMl",setDestForm,"ml");}} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 p-2 text-sm font-anek-malayalam" /></label><label className="block min-w-0 text-xs font-bold text-slate-600">English<textarea lang="en" rows={4} value={destForm.descriptionEn} onChange={e=>{const value=e.target.value;setDestForm(prev=>({...prev,descriptionEn:value}));if(autoTranslateOnSubmit)autoTranslateField(value,"descriptionEn","descriptionEn",setDestForm,"en");}} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 p-2 text-sm font-anek-latin" /></label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<textarea lang="ta" rows={4} value={destForm.descriptionTa} onChange={e=>{const value=e.target.value;setDestForm(prev=>({...prev,descriptionTa:value}));if(autoTranslateOnSubmit)autoTranslateField(value,"descriptionTa","descriptionTa",setDestForm,"ta");}} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 p-2 text-sm font-anek-tamil" /></label></div></section>
-                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Highlights</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<textarea lang="ml" rows={4} value={destForm.highlightsMl} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,highlightsMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"highlightsMl","highlightsMl",setDestForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" ></textarea> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<textarea lang="en" rows={4} value={destForm.highlightsEn} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,highlightsEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"highlightsEn","highlightsEn",setDestForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" ></textarea> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<textarea lang="ta" rows={4} value={destForm.highlightsTa} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,highlightsTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"highlightsTa","highlightsTa",setDestForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" ></textarea> </label></div></section>
-                  <button type="submit" className="w-full py-2 bg-slate-900 hover:bg-[#0a3060] text-[#ffe500] font-bold rounded cursor-pointer">Register Destination</button>
-                </form>
-
-                <div className="bg-white p-6 border rounded-lg shadow-xs space-y-4">
-                  <h3 className="font-serif font-bold text-[#0a3060] text-sm flex items-center gap-1.5">
-                    <Compass className="w-5 h-5 text-[#005689]" /> Registered places ({destinationsList.length})
-                  </h3>
-                  <div className="space-y-2 max-h-[500px] overflow-y-auto pr-2">
-                    {destinationsList.map((dest) => (
-                      <div key={dest.id} className="p-3 border rounded bg-slate-50 flex items-center gap-3">
-                        <img src={dest.image} alt={dest.nameEn} className="w-12 h-10 object-cover rounded border bg-slate-200 shrink-0" referrerPolicy="no-referrer" />
-                        <div className="flex-1 truncate">
-                          <h4 className="font-bold text-slate-800">{dest.nameEn}</h4>
-                          <p className="text-[10px] text-slate-400 font-anek-malayalam font-semibold">{dest.nameMl}</p>
-                        </div>
-                        <button onClick={() => handleDeleteDestination(dest.id)} className="p-1.5 bg-red-800 text-white rounded hover:bg-red-650 cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
             {/* Sub-tab 2: CULTURE & HERITAGE */}
             {exploreSubTab === "cultures" && (
               <div className="grid grid-cols-1 lg:grid-cols-1 md:grid-cols-3 gap-8">
@@ -3864,7 +3743,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
               <h2 className="mt-1 text-2xl font-black tracking-tight">Bus Timings & Route Management</h2>
               <p className="mt-1 text-sm text-blue-100">Manage route paths, bus schedules and the public transit map in one organized workspace.</p>
               <div className="mt-3 flex flex-wrap gap-2">
-                <button type="button" onClick={() => { setActiveTab("explore"); setExploreSubTab("destinations"); }} className="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white px-3 py-2 text-xs font-bold text-[#092b58] hover:bg-blue-50"><Compass className="h-4 w-4" /> Manage Tourist Destinations (ML / EN / TA)</button>
+                <button type="button" onClick={() => { setBusAdminView("tourism"); fetchExploreDestinations(); }} className="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white px-3 py-2 text-xs font-bold text-[#092b58] hover:bg-blue-50"><Compass className="h-4 w-4" /> Manage Tourist Destinations (ML / EN / TA)</button>
               </div>
               <div className="mt-4 flex flex-wrap gap-2"><span className="rounded-lg bg-white/15 px-3 py-2 font-semibold">{routesList.length} Routes</span><span className="rounded-lg bg-white/15 px-3 py-2 font-semibold">{busRoutesList.length} Bus schedules</span></div>
             </div>
@@ -3892,7 +3771,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
               </div>)}
             </section>
             <div className="grid grid-cols-1 gap-2 rounded-xl border border-slate-200 bg-white p-2 sm:grid-cols-3">
-              {([{id:"timetables",label:"Bus Timetables",icon:Bus},{id:"routes",label:"Route Registry",icon:Compass},{id:"map",label:"Transit Map",icon:MapPin}] as const).map(tab => <button key={tab.id} type="button" onClick={() => setBusAdminView(tab.id)} className={`flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-extrabold transition ${busAdminView === tab.id ? "bg-[#092b58] text-white shadow-sm" : "text-slate-600 hover:bg-slate-100"}`}><tab.icon className="h-4 w-4"/>{tab.label}</button>)}
+              {([{id:"timetables",label:"Bus Timetables",icon:Bus},{id:"routes",label:"Route Registry",icon:Compass},{id:"map",label:"Transit Map",icon:MapPin},{id:"tourism",label:"Tourist Destinations",icon:Compass}] as const).map(tab => <button key={tab.id} type="button" onClick={() => setBusAdminView(tab.id)} className={`flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-extrabold transition ${busAdminView === tab.id ? "bg-[#092b58] text-white shadow-sm" : "text-slate-600 hover:bg-slate-100"}`}><tab.icon className="h-4 w-4"/>{tab.label}</button>)}
             </div>
             
             {busAdminView === "routes" && (<>
@@ -4293,6 +4172,137 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
               </div>
 
               </>)}
+              {busAdminView === "tourism" && (<div className="space-y-4"><h3 className="text-xl font-black text-[#052962]">TOURIST DESTINATIONS · BUS TIMETABLE</h3>            {/* Sub-tab 1: DESTINATIONS */}
+            {exploreSubTab === "destinations" && (
+              <div className="grid grid-cols-1 lg:grid-cols-1 md:grid-cols-3 gap-8">
+                <form onSubmit={handleCreateDestination} className="bg-white p-6 border rounded-lg shadow-xs space-y-3.5"><div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-blue-100 bg-blue-50/60 p-3"><label className="flex items-center gap-2 text-xs font-bold text-[#052962]"><input type="checkbox" checked={autoTranslateOnSubmit} onChange={e=>setAutoTranslateOnSubmit(e.target.checked)} /> Auto Translate · Malayalam / English / Tamil</label><button type="button" disabled={isTranslatingForm} onClick={()=>void performAutoTranslationForForm(destForm, setDestForm, [], true)} className="rounded-md border border-blue-300 bg-white px-3 py-1.5 text-xs font-bold text-[#052962] hover:bg-blue-100 disabled:opacity-50">{isTranslatingForm ? "Translating…" : "↻ Translate Now"}</button><span className="text-xs text-slate-500">{isTranslatingForm ? "Translating…" : "Fill missing translations automatically"}</span></div>
+                  
+
+
+
+                  <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
+                    <PlusCircle className="w-4 h-4 text-[#005689]" /> {editingType === "destinations" ? "Edit Tourist Destination" : "Add Tourist Destination"}
+                  </h3>
+                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Destination Name</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={destForm.nameMl} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,nameMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"nameMl","nameMl",setDestForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={destForm.nameEn} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,nameEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"nameEn","nameEn",setDestForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={destForm.nameTa} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,nameTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"nameTa","nameTa",setDestForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
+                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Location</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={destForm.locationMl} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,locationMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"locationMl","locationMl",setDestForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={destForm.locationEn} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,locationEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"locationEn","locationEn",setDestForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={destForm.locationTa} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,locationTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"locationTa","locationTa",setDestForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
+                  {/* Photo selection targeting local files or links */}
+                  <div className="bg-slate-50 rounded-lg p-3 border border-slate-200/50 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="block text-xs font-bold text-[#0a3060] uppercase tracking-wider flex items-center gap-1.5">
+                        <ImageIcon className="w-3.5 h-3.5 text-[#005689]" /> Cover Photo Selection
+                      </label>
+                      <div className="flex gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => setDestImgSourceMode("upload")}
+                          className={`px-2 py-0.5 text-[9px] font-black rounded transition ${
+                            destImgSourceMode === "upload" 
+                              ? "bg-[#0a3060] text-white" 
+                              : "bg-white text-slate-600 border hover:bg-slate-100"
+                          }`}
+                        >
+                          Upload File
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setDestImgSourceMode("url")}
+                          className={`px-2 py-0.5 text-[9px] font-black rounded transition ${
+                            destImgSourceMode === "url" 
+                              ? "bg-[#0a3060] text-white" 
+                              : "bg-white text-slate-600 border hover:bg-slate-100"
+                          }`}
+                        >
+                          Web URL
+                        </button>
+                      </div>
+                    </div>
+
+                    {destImgSourceMode === "upload" ? (
+                      <div 
+                        className={`border-2 border-dashed rounded-lg p-3.5 flex flex-col items-center justify-center transition ${
+                          destDragging ? "border-amber-400 bg-amber-50" : "border-slate-300 bg-white hover:bg-slate-50"
+                        }`}
+                        onDragOver={(e) => { e.preventDefault(); setDestDragging(true); }}
+                        onDragLeave={() => setDestDragging(false)}
+                        onDrop={(e) => { e.preventDefault(); setDestDragging(false); const f = e.dataTransfer.files[0]; if (f) handleDestFileProcess(f); }}
+                      >
+                        <Upload className="w-6 h-6 text-[#005689] shrink-0 mb-1 animate-bounce" />
+                        <p className="text-[10px] font-bold text-slate-700">Drag & Drop photo, or click to upload</p>
+                        <input 
+                          type="file" 
+                          accept="image/*"
+                          onChange={(e) => { if (e.target.files?.[0]) handleDestFileProcess(e.target.files[0]); }}
+                          className="mt-2 text-[10px] w-full max-w-xs block text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-[9px] file:font-semibold file:bg-[#0a3060]/10 file:text-[#0a3060] hover:file:bg-[#0a3060]/20 cursor-pointer"
+                        />
+                      </div>
+                    ) : (
+                      <div>
+                        <input 
+                          type="text" 
+                          value={destForm.image}
+                          onChange={(e) => setDestForm({...destForm, image: e.target.value})}
+                          placeholder="https://images.unsplash.com/photo-... absolute link" 
+                          className="w-full border rounded p-1.5 focus:ring-1 focus:ring-[#005689] bg-white text-xs"
+                        />
+                      </div>
+                    )}
+
+                    {destForm.image && (
+                      <div className="flex items-center gap-2 bg-white p-1.5 rounded border">
+                        <img 
+                          src={destForm.image} 
+                          alt="Destination thumbnail" 
+                          className="w-12 h-9 object-cover rounded border"
+                          referrerPolicy="no-referrer"
+                        />
+                        <div className="space-y-0.5 truncate flex-1 leading-tight">
+                          <p className="text-[9px] font-bold text-emerald-800">✓ Destination photo loaded</p>
+                          <p className="text-[8px] text-slate-400 truncate">{destForm.image.substring(0, 80)}...</p>
+                        </div>
+                        <button 
+                          type="button" 
+                          onClick={() => setDestForm(prev => ({ ...prev, image: "" }))}
+                          className="p-1 text-red-500 hover:bg-red-50 rounded"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  <section className="space-y-3 rounded-xl border border-blue-200 bg-blue-50 p-4">
+                    <h4 className="font-bold text-sm text-[#052962]">Nearest Bus Stop</h4>
+                    <select value={destForm.nearestStop} onChange={ev=>setDestForm(prev=>({...prev,nearestStop:ev.target.value}))} className="w-full rounded-lg border p-2 text-sm"><option value="">Select stop</option>{Array.from(new Set(busRoutesList.flatMap(route=>route.list.map(stop=>stop.typeEn)).filter(Boolean))).sort().map(stop=><option key={stop} value={stop}>{stop}</option>)}</select>
+                    <p className="text-xs text-slate-600">Direct buses are shown only when a published timetable includes this stop.</p>
+                    <h4 className="font-bold text-sm text-[#052962]">Special Instructions (Malayalam / English / Tamil)</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">{(["ml","en","ta"] as const).map(code=>{const field=(`instructions${code[0].toUpperCase()}${code.slice(1)}`) as "instructionsMl"|"instructionsEn"|"instructionsTa";return <label key={code} className="text-xs font-bold">{code==="ml"?"Malayalam":code==="en"?"English":"Tamil"}<textarea lang={code} rows={3} value={destForm[field]} onChange={ev=>setDestForm(prev=>({...prev,[field]:ev.target.value}))} className="mt-1 w-full rounded-lg border p-2 text-sm"/></label>})}</div>
+                    <button type="button" disabled={isTranslatingForm} onClick={()=>void performAutoTranslationForForm(destForm,setDestForm,[],true)} className="rounded-lg bg-blue-700 px-3 py-2 text-xs font-bold text-white">Translate missing text</button>
+                  </section>
+                  <section className="space-y-2"><h4 className="text-sm font-bold text-[#052962]">Description</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<textarea lang="ml" rows={4} value={destForm.descriptionMl} onChange={e=>{const value=e.target.value;setDestForm(prev=>({...prev,descriptionMl:value}));if(autoTranslateOnSubmit)autoTranslateField(value,"descriptionMl","descriptionMl",setDestForm,"ml");}} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 p-2 text-sm font-anek-malayalam" /></label><label className="block min-w-0 text-xs font-bold text-slate-600">English<textarea lang="en" rows={4} value={destForm.descriptionEn} onChange={e=>{const value=e.target.value;setDestForm(prev=>({...prev,descriptionEn:value}));if(autoTranslateOnSubmit)autoTranslateField(value,"descriptionEn","descriptionEn",setDestForm,"en");}} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 p-2 text-sm font-anek-latin" /></label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<textarea lang="ta" rows={4} value={destForm.descriptionTa} onChange={e=>{const value=e.target.value;setDestForm(prev=>({...prev,descriptionTa:value}));if(autoTranslateOnSubmit)autoTranslateField(value,"descriptionTa","descriptionTa",setDestForm,"ta");}} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 p-2 text-sm font-anek-tamil" /></label></div></section>
+                  <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Highlights</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<textarea lang="ml" rows={4} value={destForm.highlightsMl} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,highlightsMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"highlightsMl","highlightsMl",setDestForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" ></textarea> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<textarea lang="en" rows={4} value={destForm.highlightsEn} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,highlightsEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"highlightsEn","highlightsEn",setDestForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" ></textarea> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<textarea lang="ta" rows={4} value={destForm.highlightsTa} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,highlightsTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"highlightsTa","highlightsTa",setDestForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" ></textarea> </label></div></section>
+                  <button type="submit" className="w-full py-2 bg-slate-900 hover:bg-[#0a3060] text-[#ffe500] font-bold rounded cursor-pointer">Register Destination</button>
+                </form>
+
+                <div className="bg-white p-6 border rounded-lg shadow-xs space-y-4">
+                  <h3 className="font-serif font-bold text-[#0a3060] text-sm flex items-center gap-1.5">
+                    <Compass className="w-5 h-5 text-[#005689]" /> Registered places ({destinationsList.length})
+                  </h3>
+                  <div className="space-y-2 max-h-[500px] overflow-y-auto pr-2">
+                    {destinationsList.map((dest) => (
+                      <div key={dest.id} className="p-3 border rounded bg-slate-50 flex items-center gap-3">
+                        <img src={dest.image} alt={dest.nameEn} className="w-12 h-10 object-cover rounded border bg-slate-200 shrink-0" referrerPolicy="no-referrer" />
+                        <div className="flex-1 truncate">
+                          <h4 className="font-bold text-slate-800">{dest.nameEn}</h4>
+                          <p className="text-[10px] text-slate-400 font-anek-malayalam font-semibold">{dest.nameMl}</p>
+                        </div>
+                        <button type="button" onClick={() => handleStartEditDestination(dest)} className="rounded bg-blue-700 px-2 py-1.5 text-xs font-bold text-white">Edit</button><button onClick={() => handleDeleteDestination(dest.id)} className="p-1.5 bg-red-800 text-white rounded hover:bg-red-650 cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+</div>)}
               {busAdminView === "map" && (<>
               {/* Interactive Transport Map & Transit Layout Editor Module */}
               <div className="bg-white rounded-xl p-6 border shadow-xs space-y-4 col-span-1 lg:col-span-12">
