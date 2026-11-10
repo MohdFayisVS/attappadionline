@@ -29,7 +29,6 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [navSearch, setNavSearch] = useState("");
   const [exploreSubTab, setExploreSubTab] = useState<"destinations" | "cultures" | "stays" | "travelogues" | "photos">("destinations");
-  useEffect(() => { setBusTourismNearestStop(destinationsList.find(item=>item.id===busTourismDestinationId)?.nearestStop || ""); }, [busTourismDestinationId, destinationsList]);
   const [lostFoundList, setLostFoundList] = useState<LostAndFoundItem[]>([]);
 
   // Success message toaster helper
@@ -51,6 +50,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   const [busTourismDestinationId, setBusTourismDestinationId] = useState("");
   const [busTourismNearestStop, setBusTourismNearestStop] = useState("");
   const [busTourismSaving, setBusTourismSaving] = useState(false);
+  useEffect(() => { setBusTourismNearestStop(destinationsList.find(item=>item.id===busTourismDestinationId)?.nearestStop || ""); }, [busTourismDestinationId, destinationsList]);
   const [busAdminSearch, setBusAdminSearch] = useState("");
   const [busMapRevision, setBusMapRevision] = useState(0);
   const [routesList, setRoutesList] = useState<{ id: string; routeEn: string; routeMl: string; routeTa?: string; }[]>([]);
