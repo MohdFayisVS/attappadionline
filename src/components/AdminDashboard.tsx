@@ -416,7 +416,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   // Translate each non-empty line separately so free translation providers cannot
   // silently truncate multiline lists or collapse their line breaks.
   const translatePreservingLines = async (text: string, sourceLang: "en" | "ml" | "ta", targetLang: "en" | "ml" | "ta"): Promise<string> => {
-    const lines = text.replace(/\\r\\n?/g, "\\n").split("\\n");
+    const lines = text.replace(/\r\n?/g, "\n").split("\n");
     const translated = await Promise.all(lines.map(async line => {
       if (!line.trim()) return line;
       const response = await adminFetch("/api/admin/translate", {
@@ -428,7 +428,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       if (typeof data.translatedText !== "string" || !data.translatedText.trim()) throw new Error("Translation returned an empty line");
       return data.translatedText.trim();
     }));
-    return translated.join("\\n");
+    return translated.join("\n");
   };
 
   const autoTranslateField = (
