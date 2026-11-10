@@ -2117,7 +2117,7 @@ export default function App() {
             <h5 className="text-sm font-bold text-[#fcfcfb] uppercase tracking-wider">Quick Geographical Desks</h5>
             <div className="grid grid-cols-2 gap-x-2 gap-y-1.5 text-xs text-slate-300 font-semibold uppercase">
               <button onClick={() => handleRegionClick("agali")} className="hover:text-[#a3f000] text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> Agali</button>
-              <button onClick={() => handleRegionClick("mukkali")} className="hover:text-[#a3f000] text-[#a3f000]/90 text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-[#a3f000] shrink-0" /> Mukkali</button>
+              <button onClick={() => handleRegionClick("mukkali")} className="hover:text-[#a3f000] text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> Mukkali</button>
               <button onClick={() => handleRegionClick("thavalam")} className="hover:text-[#a3f000] text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> Thavalam</button>
               <button onClick={() => handleRegionClick("kottathara")} className="hover:text-[#a3f000] text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> Kottathara</button>
               <button onClick={() => handleRegionClick("sholayur")} className="hover:text-[#a3f000] text-left transition cursor-pointer font-bold flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" /> Sholayur</button>
