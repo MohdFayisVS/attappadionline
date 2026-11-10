@@ -413,6 +413,24 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   const [activeLiveTranslationsCount, setActiveLiveTranslationsCount] = useState(0);
 
   // Debounced three-way translation. Never overwrite a populated destination field.
+  // Translate each non-empty line separately so free translation providers cannot
+  // silently truncate multiline lists or collapse their line breaks.
+  const translatePreservingLines = async (text: string, sourceLang: "en" | "ml" | "ta", targetLang: "en" | "ml" | "ta"): Promise<string> => {
+    const lines = text.replace(/\\r\\n?/g, "\\n").split("\\n");
+    const translated = await Promise.all(lines.map(async line => {
+      if (!line.trim()) return line;
+      const response = await adminFetch("/api/admin/translate", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: line.trim(), sourceLang, targetLang })
+      });
+      if (!response.ok) throw new Error(`Translation failed for ${targetLang} (HTTP ${response.status})`);
+      const data = await response.json();
+      if (typeof data.translatedText !== "string" || !data.translatedText.trim()) throw new Error("Translation returned an empty line");
+      return data.translatedText.trim();
+    }));
+    return translated.join("\\n");
+  };
+
   const autoTranslateField = (
     text: string, sourceFieldPath: string, targetFieldPath: string,
     setFormState: React.Dispatch<React.SetStateAction<any>>,
@@ -431,13 +449,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       setActiveLiveTranslationsCount(prev => prev + 1);
       try {
         await Promise.all(targetFields.map(async ({ lang, path }) => {
-          const response = await adminFetch("/api/admin/translate", {
-            method: "POST", headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: text.trim(), sourceLang, targetLang: lang })
-          });
-          if (!response.ok) { console.warn("Live translation unavailable:", lang, response.status); return; }
-          const data = await response.json();
-          if (!data.translatedText?.trim()) return;
+          const translatedText = await translatePreservingLines(text.trim(), sourceLang, lang);
           setFormState((previous: any) => {
             const sourceParts = sourceFieldPath.split(".");
             const targetParts = path.split(".");
@@ -445,10 +457,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
               const [section, sourceKey] = sourceParts;
               const targetKey = targetParts[1];
               if (previous[section]?.[sourceKey] !== text || previous[section]?.[targetKey]?.trim()) return previous;
-              return { ...previous, [section]: { ...previous[section], [targetKey]: data.translatedText.trim() } };
+              return { ...previous, [section]: { ...previous[section], [targetKey]: translatedText } };
             }
             if (previous[sourceFieldPath] !== text || previous[path]?.trim()) return previous;
-            return { ...previous, [path]: data.translatedText.trim() };
+            return { ...previous, [path]: translatedText };
           });
         }));
       } catch (error) { console.error("Live translation failed:", error); }
@@ -492,14 +504,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     try {
       const results = await Promise.all(jobs.map(async job => {
         try {
-          const response = await adminFetch("/api/admin/translate", {
-            method: "POST", headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: String(formState[job.source]), sourceLang: job.sourceLang, targetLang: job.targetLang })
-          });
-          if (!response.ok) return null;
-          const data = await response.json();
-          return typeof data.translatedText === "string" && data.translatedText.trim()
-            ? { target: job.target, text: data.translatedText.trim() } : null;
+          const translatedText = await translatePreservingLines(String(formState[job.source]), job.sourceLang, job.targetLang);
+          return translatedText.trim() ? { target: job.target, text: translatedText } : null;
         } catch (error) { console.error("Translation failed", job.target, error); return null; }
       }));
       results.forEach(result => {
