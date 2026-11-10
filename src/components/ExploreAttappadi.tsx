@@ -2279,10 +2279,10 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                             <Bus className="w-8 h-8 text-slate-300 mx-auto" />
                             <div className="space-y-1">
                               <p className="text-xs text-slate-700 font-extrabold">
-                                നേരിട്ടുള്ള സർവീസുകളൊന്നും കണ്ടെത്തിയിട്ടില്ല
+                                {lang === "ml" ? "നേരിട്ടുള്ള ബസ് സർവീസുകളൊന്നും കണ്ടെത്തിയില്ല" : lang === "ta" ? "நேரடி பேருந்து சேவைகள் எதுவும் கிடைக்கவில்லை" : "No direct bus services found"}
                               </p>
                               <p className="text-[11px] text-slate-400 font-medium max-w-sm mx-auto">
-                                ആരംഭവഴിയും ചേരേണ്ട ലക്ഷ്യസ്ഥാനവും മാറ്റി പരീക്ഷിക്കുക. ഉദാഹരണത്തിന് 'മണ്ണാർക്കാട്' മുതൽ 'ആനക്കട്ടി' അല്ലെങ്കിൽ 'പാലക്കാട് - അഗളി'.
+                                {lang === "ml" ? "പുറപ്പെടുന്ന സ്റ്റേഷനോ ലക്ഷ്യസ്ഥാനമോ മാറ്റി വീണ്ടും പരിശോധിക്കുക. ഉദാഹരണത്തിന് മണ്ണാർക്കാട് മുതൽ ആനക്കട്ടി വരെ." : lang === "ta" ? "புறப்படும் நிலையம் அல்லது சேருமிடத்தை மாற்றி மீண்டும் முயற்சிக்கவும். உதாரணம்: மன்னார்க்காடு முதல் ஆனைகட்டி வரை." : "Try changing your starting station or destination. For example, Mannarkkad to Anaikatty."}
                               </p>
                             </div>
                           </div>
