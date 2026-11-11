@@ -747,6 +747,13 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                       className="w-full h-full object-cover"
                       referrerPolicy="no-referrer"
                     />
+                    {(() => {
+                      const bookingUrl = stay.bookingUrl?.trim();
+                      if (!bookingUrl) return null;
+                      try { const parsed = new URL(bookingUrl); if (!["http:", "https:"].includes(parsed.protocol)) return null; }
+                      catch { return null; }
+                      return <a href={bookingUrl} target="_blank" rel="noopener noreferrer" aria-label={`Book ${stay.nameEn}`} className="absolute bottom-3 right-3 z-10 rounded-md bg-[#052962] px-3 py-2 text-xs font-black text-white shadow-lg hover:bg-[#005689] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">BOOK NOW ↗</a>;
+                    })()}
                     <div className="absolute top-2 right-2 bg-green-700 text-white font-extrabold text-[9px] px-2 py-0.5 rounded tracking-wide uppercase shadow">
                       {lang === "ml" ? stay.typeMl : lang === "ta" ? (((stay as any).typeTa) || stay.typeEn) : stay.typeEn}
                     </div>
