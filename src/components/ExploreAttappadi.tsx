@@ -669,7 +669,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                         try { const parsed = new URL(bookingUrl); if (["http:", "https:"].includes(parsed.protocol)) safeBookingUrl = bookingUrl; } catch {}
                       }
                       const dialNumber = contactPhone?.replace(/[ ()-]/g, "") || "";
-                      const safePhone = /^\\+?[0-9]{6,18}$/.test(dialNumber) ? dialNumber : "";
+                      const safePhone = /^\+?[0-9]{6,18}$/.test(dialNumber) ? dialNumber : "";
                       if (!safeBookingUrl && !safePhone) return null;
                       return <div className="absolute bottom-3 right-3 z-10 flex flex-col items-end gap-2">
                         {safePhone && <a href={`tel:${safePhone}`} aria-label={`Call ${dest.nameEn}`} className="rounded-md bg-emerald-700 px-3 py-2 text-xs font-black text-white shadow-lg hover:bg-emerald-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">CONTACT ☎</a>}
@@ -770,7 +770,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                         try { const parsed = new URL(bookingUrl); if (["http:", "https:"].includes(parsed.protocol)) safeBookingUrl = bookingUrl; } catch {}
                       }
                       const dialNumber = contactPhone?.replace(/[ ()-]/g, "") || "";
-                      const safePhone = /^\\+?[0-9]{6,18}$/.test(dialNumber) ? dialNumber : "";
+                      const safePhone = /^\+?[0-9]{6,18}$/.test(dialNumber) ? dialNumber : "";
                       if (!safeBookingUrl && !safePhone) return null;
                       return <div className="absolute bottom-3 right-3 z-10 flex flex-col items-end gap-2">
                         {safePhone && <a href={`tel:${safePhone}`} aria-label={`Call ${stay.nameEn}`} className="rounded-md bg-emerald-700 px-3 py-2 text-xs font-black text-white shadow-lg hover:bg-emerald-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">CONTACT ☎</a>}
