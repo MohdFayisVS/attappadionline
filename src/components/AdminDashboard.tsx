@@ -1238,7 +1238,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
         try { const url = new URL(value.trim()); if (!["http:", "https:"].includes(url.protocol)) throw new Error("Invalid protocol"); }
         catch { alert("Enter a valid http:// or https:// booking URL."); return; }
       }
-      if (label === "Contact number" && value?.trim() && !/^\\+?[0-9 ()-]{6,24}$/.test(value.trim())) {
+      if (label === "Contact number" && value?.trim() && !/^\+?[0-9 ()-]{6,24}$/.test(value.trim())) {
         alert("Enter a valid phone number including country code, for example +919876543210."); return;
       }
     }
@@ -1402,7 +1402,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       try { const url = new URL(translatedStay.bookingUrl.trim()); if (!["https:", "http:"].includes(url.protocol)) throw new Error("Invalid protocol"); }
       catch { alert("Enter a valid http:// or https:// booking URL, or leave the field empty."); return; }
     }
-    if (translatedStay.contactPhone?.trim() && !/^\\+?[0-9 ()-]{6,24}$/.test(translatedStay.contactPhone.trim())) {
+    if (translatedStay.contactPhone?.trim() && !/^\+?[0-9 ()-]{6,24}$/.test(translatedStay.contactPhone.trim())) {
       alert("Enter a valid contact number including country code, for example +919876543210."); return;
     }
     const featsEn = translatedStay.featuresEn.split(",").map(x => x.trim()).filter(Boolean);
