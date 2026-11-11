@@ -161,7 +161,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
   // 4. Explore sub-forms
   const [destForm, setDestForm] = useState({
-    nameEn: "", nameMl: "", nameTa: "", nearestStop: "", instructionsEn: "", instructionsMl: "", instructionsTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
+    nameEn: "", nameMl: "", nameTa: "", bookingUrl: "", contactPhone: "", nearestStop: "", instructionsEn: "", instructionsMl: "", instructionsTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
     descriptionEn: "", descriptionMl: "", descriptionTa: "", highlightsEn: "", highlightsMl: "", highlightsTa: ""
   });
   const [cultureForm, setCultureForm] = useState({
@@ -170,7 +170,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   });
   const [stayForm, setStayForm] = useState({
     nameEn: "", nameMl: "", nameTa: "", typeEn: "", typeMl: "", typeTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
-    priceEn: "", priceMl: "", priceTa: "", bookingUrl: "", featuresEn: "", featuresMl: "", featuresTa: ""
+    priceEn: "", priceMl: "", priceTa: "", bookingUrl: "", contactPhone: "", featuresEn: "", featuresMl: "", featuresTa: ""
   });
   const [travelogueForm, setTravelogueForm] = useState({
     titleEn: "", titleMl: "", titleTa: "", authorEn: "", authorMl: "", authorTa: "", date: "", snippetEn: "", snippetMl: "", snippetTa: "",
@@ -1202,6 +1202,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       nameEn: item.nameEn,
       nameMl: item.nameMl,
       nameTa: item.nameTa || "",
+      bookingUrl: item.bookingUrl || "",
+      contactPhone: item.contactPhone || "",
       nearestStop: item.nearestStop || "",
       instructionsEn: item.instructionsEn || "", instructionsMl: item.instructionsMl || "", instructionsTa: item.instructionsTa || "",
       locationEn: item.locationEn,
@@ -1231,6 +1233,15 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       { en: "instructionsEn", ml: "instructionsMl" }
     ]);
 
+    for (const [label, value] of [["Booking URL", translatedDestForm.bookingUrl], ["Contact number", translatedDestForm.contactPhone]] as const) {
+      if (label === "Booking URL" && value?.trim()) {
+        try { const url = new URL(value.trim()); if (!["http:", "https:"].includes(url.protocol)) throw new Error("Invalid protocol"); }
+        catch { alert("Enter a valid http:// or https:// booking URL."); return; }
+      }
+      if (label === "Contact number" && value?.trim() && !/^\\+?[0-9 ()-]{6,24}$/.test(value.trim())) {
+        alert("Enter a valid phone number including country code, for example +919876543210."); return;
+      }
+    }
     const highlightsEnArr = translatedDestForm.highlightsEn.split(",").map(x => x.trim()).filter(Boolean);
     const highlightsMlArr = translatedDestForm.highlightsMl.split(",").map(x => x.trim()).filter(Boolean);
     const highlightsTaArr = translatedDestForm.highlightsTa.split(",").map(x => x.trim()).filter(Boolean);
@@ -1364,6 +1375,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       locationTa: item.locationTa || "",
       image: item.image || "",
       bookingUrl: item.bookingUrl || "",
+      contactPhone: item.contactPhone || "",
       priceEn: item.priceEn || "",
       priceMl: item.priceMl || "",
       priceTa: item.priceTa || "",
@@ -1389,6 +1401,9 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     if (translatedStay.bookingUrl?.trim()) {
       try { const url = new URL(translatedStay.bookingUrl.trim()); if (!["https:", "http:"].includes(url.protocol)) throw new Error("Invalid protocol"); }
       catch { alert("Enter a valid http:// or https:// booking URL, or leave the field empty."); return; }
+    }
+    if (translatedStay.contactPhone?.trim() && !/^\\+?[0-9 ()-]{6,24}$/.test(translatedStay.contactPhone.trim())) {
+      alert("Enter a valid contact number including country code, for example +919876543210."); return;
     }
     const featsEn = translatedStay.featuresEn.split(",").map(x => x.trim()).filter(Boolean);
     const featsMl = translatedStay.featuresMl.split(",").map(x => x.trim()).filter(Boolean);
@@ -3355,6 +3370,15 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </h3>
                   <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Destination Name</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={destForm.nameMl} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,nameMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"nameMl","nameMl",setDestForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={destForm.nameEn} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,nameEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"nameEn","nameEn",setDestForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={destForm.nameTa} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,nameTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"nameTa","nameTa",setDestForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
                   <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Location</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={destForm.locationMl} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,locationMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"locationMl","locationMl",setDestForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={destForm.locationEn} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,locationEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"locationEn","locationEn",setDestForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={destForm.locationTa} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,locationTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"locationTa","locationTa",setDestForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
+                  <section className="space-y-3 rounded-lg border border-blue-100 bg-blue-50/40 p-3">
+                    <label className="block text-sm font-bold text-[#052962]">Booking URL (optional)
+                      <input type="url" placeholder="https://property-website.com/book" value={destForm.bookingUrl} onChange={e=>setDestForm(prev=>({...prev,bookingUrl:e.target.value}))} className="mt-1 w-full rounded-md border border-slate-300 bg-white p-2 text-sm" />
+                    </label>
+                    <label className="block text-sm font-bold text-[#052962]">Contact mobile number (optional)
+                      <input type="tel" placeholder="+919876543210" value={destForm.contactPhone} onChange={e=>setDestForm(prev=>({...prev,contactPhone:e.target.value}))} className="mt-1 w-full rounded-md border border-slate-300 bg-white p-2 text-sm" />
+                    </label>
+                    <p className="text-xs text-slate-500">The contact button calls this number. Booking opens the external URL in a new tab. Each button appears only when its field is filled.</p>
+                  </section>
                   {/* Photo selection targeting local files or links */}
                   <div className="bg-slate-50 rounded-lg p-3 border border-slate-200/50 space-y-2">
                     <div className="flex items-center justify-between">
@@ -3616,10 +3640,14 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Stay Type</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={stayForm.typeMl} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,typeMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"typeMl","typeMl",setStayForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={stayForm.typeEn} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,typeEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"typeEn","typeEn",setStayForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={stayForm.typeTa} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,typeTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"typeTa","typeTa",setStayForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
                   <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Location</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={stayForm.locationMl} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,locationMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"locationMl","locationMl",setStayForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={stayForm.locationEn} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,locationEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"locationEn","locationEn",setStayForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={stayForm.locationTa} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,locationTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"locationTa","locationTa",setStayForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
                   <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Price Details</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={stayForm.priceMl} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,priceMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"priceMl","priceMl",setStayForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={stayForm.priceEn} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,priceEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"priceEn","priceEn",setStayForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={stayForm.priceTa} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,priceTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"priceTa","priceTa",setStayForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
-                  <section className="space-y-2 rounded-lg border border-blue-100 bg-blue-50/40 p-3">
-                    <label htmlFor="stay-booking-url" className="block text-sm font-bold text-[#052962]">Booking URL (optional)</label>
-                    <input id="stay-booking-url" type="url" inputMode="url" placeholder="https://property-website.com/book" value={stayForm.bookingUrl} onChange={e=>setStayForm(prev=>({...prev,bookingUrl:e.target.value}))} className="w-full rounded-md border border-slate-300 bg-white p-2 text-sm" />
-                    <p className="text-xs text-slate-500">Property website or third-party booking page. When provided, a BOOK NOW button appears on the bottom-right of the stay image. Leave empty to hide it.</p>
+                  <section className="space-y-3 rounded-lg border border-blue-100 bg-blue-50/40 p-3">
+                    <label className="block text-sm font-bold text-[#052962]">Booking URL (optional)
+                      <input type="url" placeholder="https://property-website.com/book" value={stayForm.bookingUrl} onChange={e=>setStayForm(prev=>({...prev,bookingUrl:e.target.value}))} className="mt-1 w-full rounded-md border border-slate-300 bg-white p-2 text-sm" />
+                    </label>
+                    <label className="block text-sm font-bold text-[#052962]">Contact mobile number (optional)
+                      <input type="tel" placeholder="+919876543210" value={stayForm.contactPhone} onChange={e=>setStayForm(prev=>({...prev,contactPhone:e.target.value}))} className="mt-1 w-full rounded-md border border-slate-300 bg-white p-2 text-sm" />
+                    </label>
+                    <p className="text-xs text-slate-500">The contact button calls this number. Booking opens the external URL in a new tab. Each button appears only when its field is filled.</p>
                   </section>
                   {/* Photo selection targeting local files or links */}
                   <div className="bg-slate-50 rounded-lg p-3 border border-slate-200/50 space-y-2">
