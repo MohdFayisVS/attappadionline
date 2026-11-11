@@ -3300,8 +3300,8 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         <h4 className="font-bold text-slate-800 pt-0.5">{ev.titleEn}</h4>
                         <p className="text-[10px] text-gray-500 font-semibold font-anek-malayalam">{ev.titleMl}</p>
                       </div>
-                      <button 
-                <button type="button" onClick={() => handleStartEditEvent(ev)} title="Edit event" aria-label="Edit event" className="rounded bg-blue-700 px-2 py-1.5 text-xs font-bold text-white hover:bg-blue-800">Edit</button>         onClick={() => handleDeleteEvent(ev.id)}
+                      <button type="button" onClick={() => handleStartEditEvent(ev)} title="Edit event" aria-label="Edit event" className="rounded bg-blue-700 px-2 py-1.5 text-xs font-bold text-white hover:bg-blue-800">Edit</button>
+                      <button onClick={() => handleDeleteEvent(ev.id)}
                         className="p-1.5 bg-red-800 text-white rounded hover:bg-red-650 cursor-pointer"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -3876,7 +3876,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     {photosList.map((ph) => (
                       <div key={ph.id} className="relative aspect-square rounded border overflow-hidden group bg-slate-100">
                         <img src={ph.url} alt={ph.titleEn} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                        <button type="button" onClick={() => handleStartEditPhoto(ph)} title="Edit photo" aria-label="Edit photo" className="rounded bg-blue-700 px-2 py-1.5 text-xs font-bold text-white hover:bg-blue-800">Edit</button> <button onClick={() => handleDeletePhoto(ph.id)} className="absolute bottom-1 right-1 p-1 bg-red-800 text-white hover:bg-red-650 rounded shadow cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
+                        <button type="button" onClick={() => handleStartEditPhoto(ph)} title="Edit photo" aria-label="Edit photo" className="absolute bottom-1 left-1 rounded bg-blue-700 px-2 py-1.5 text-xs font-bold text-white hover:bg-blue-800">Edit</button> <button onClick={() => handleDeletePhoto(ph.id)} className="absolute bottom-1 right-1 p-1 bg-red-800 text-white hover:bg-red-650 rounded shadow cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
                       </div>
                     ))}
                   </div>
