@@ -125,6 +125,7 @@ export interface CultureItem {
 
 export interface StayItem {
   id: string;
+  bookingUrl?: string;
   nameEn: string;
   nameTa?: string;
   nameMl: string;
