@@ -170,7 +170,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   });
   const [stayForm, setStayForm] = useState({
     nameEn: "", nameMl: "", nameTa: "", typeEn: "", typeMl: "", typeTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
-    priceEn: "", priceMl: "", priceTa: "", bookingUrl: "", featuresEn: "", featuresMl: ""
+    priceEn: "", priceMl: "", priceTa: "", bookingUrl: "", featuresEn: "", featuresMl: "", featuresTa: ""
   });
   const [travelogueForm, setTravelogueForm] = useState({
     titleEn: "", titleMl: "", titleTa: "", authorEn: "", authorMl: "", authorTa: "", date: "", snippetEn: "", snippetMl: "", snippetTa: "",
@@ -1355,11 +1355,13 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     setStayForm({
       nameEn: item.nameEn,
       nameMl: item.nameMl,
+      nameTa: item.nameTa || "",
       typeEn: item.typeEn || "",
       typeMl: item.typeMl || "",
       typeTa: item.typeTa || "",
       locationEn: item.locationEn,
       locationMl: item.locationMl,
+      locationTa: item.locationTa || "",
       image: item.image || "",
       bookingUrl: item.bookingUrl || "",
       priceEn: item.priceEn || "",
@@ -3299,7 +3301,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         <p className="text-[10px] text-gray-500 font-semibold font-anek-malayalam">{ev.titleMl}</p>
                       </div>
                       <button 
-                        onClick={() => handleDeleteEvent(ev.id)}
+                <button type="button" onClick={() => handleStartEditEvent(ev)} title="Edit event" aria-label="Edit event" className="rounded bg-blue-700 px-2 py-1.5 text-xs font-bold text-white hover:bg-blue-800">Edit</button>         onClick={() => handleDeleteEvent(ev.id)}
                         className="p-1.5 bg-red-800 text-white rounded hover:bg-red-650 cursor-pointer"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -3595,7 +3597,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                           <span className="text-[8px] bg-red-100 text-red-800 font-bold px-1 py-0.2 rounded inline-block mb-1 capitalize">{cult.type}</span>
                           <h4 className="font-bold text-slate-800">{cult.titleEn}</h4>
                         </div>
-                        <button onClick={() => handleDeleteCulture(cult.id)} className="p-1.5 bg-red-800 text-white rounded hover:bg-red-650 cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
+                        <button type="button" onClick={() => handleStartEditCulture(cult)} title="Edit culture" aria-label="Edit culture" className="rounded bg-blue-700 px-2 py-1.5 text-xs font-bold text-white hover:bg-blue-800">Edit</button> <button onClick={() => handleDeleteCulture(cult.id)} className="p-1.5 bg-red-800 text-white rounded hover:bg-red-650 cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
                       </div>
                     ))}
                   </div>
@@ -3613,7 +3615,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
 
 
                   <h3 className="font-serif font-bold text-[#0a3060] text-sm border-b pb-1.5 flex items-center gap-1.1">
-                    <PlusCircle className="w-4 h-4 text-[#005689]" /> Add Eco Lodging stay option
+                    <PlusCircle className="w-4 h-4 text-[#005689]" /> {editingType === "stays" ? "Edit Eco Lodging stay option" : "Add Eco Lodging stay option"}
                   </h3>
                   <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Stay Name</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={stayForm.nameMl} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,nameMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"nameMl","nameMl",setStayForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={stayForm.nameEn} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,nameEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"nameEn","nameEn",setStayForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={stayForm.nameTa} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,nameTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"nameTa","nameTa",setStayForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
                   <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Stay Type</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={stayForm.typeMl} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,typeMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"typeMl","typeMl",setStayForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={stayForm.typeEn} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,typeEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"typeEn","typeEn",setStayForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={stayForm.typeTa} onChange={e => { const value=e.target.value; setStayForm(prev=>({...prev,typeTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"typeTa","typeTa",setStayForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
@@ -3718,7 +3720,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                           <h4 className="font-bold text-slate-800">{stay.nameEn}</h4>
                           <span className="text-[9px] text-[#c70000] font-black">{stay.priceEn}</span>
                         </div>
-                        <button onClick={() => handleDeleteStay(stay.id)} className="p-1.5 bg-red-800 text-white rounded hover:bg-red-650 cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
+                        <button type="button" onClick={() => handleStartEditStay(stay)} title="Edit stay" aria-label="Edit stay" className="rounded bg-blue-700 px-2 py-1.5 text-xs font-bold text-white hover:bg-blue-800">Edit</button> <button onClick={() => handleDeleteStay(stay.id)} className="p-1.5 bg-red-800 text-white rounded hover:bg-red-650 cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
                       </div>
                     ))}
                   </div>
@@ -3759,7 +3761,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                           <h4 className="font-bold text-slate-800">{tr.titleEn}</h4>
                           <span className="text-[9px] text-gray-400">By {tr.authorEn}</span>
                         </div>
-                        <button onClick={() => handleDeleteTravelogue(tr.id)} className="p-1.5 bg-red-800 text-white rounded hover:bg-red-650 cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
+                        <button type="button" onClick={() => handleStartEditTravelogue(tr)} title="Edit travelogue" aria-label="Edit travelogue" className="rounded bg-blue-700 px-2 py-1.5 text-xs font-bold text-white hover:bg-blue-800">Edit</button> <button onClick={() => handleDeleteTravelogue(tr.id)} className="p-1.5 bg-red-800 text-white rounded hover:bg-red-650 cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
                       </div>
                     ))}
                   </div>
@@ -3874,7 +3876,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                     {photosList.map((ph) => (
                       <div key={ph.id} className="relative aspect-square rounded border overflow-hidden group bg-slate-100">
                         <img src={ph.url} alt={ph.titleEn} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                        <button onClick={() => handleDeletePhoto(ph.id)} className="absolute bottom-1 right-1 p-1 bg-red-800 text-white hover:bg-red-650 rounded shadow cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
+                        <button type="button" onClick={() => handleStartEditPhoto(ph)} title="Edit photo" aria-label="Edit photo" className="rounded bg-blue-700 px-2 py-1.5 text-xs font-bold text-white hover:bg-blue-800">Edit</button> <button onClick={() => handleDeletePhoto(ph.id)} className="absolute bottom-1 right-1 p-1 bg-red-800 text-white hover:bg-red-650 rounded shadow cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
                       </div>
                     ))}
                   </div>
@@ -4423,7 +4425,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         <h4 className="font-bold text-slate-800">{dir.nameEn}</h4>
                         <p className="text-[10px] text-emerald-800 font-bold font-mono">📞{dir.contact}</p>
                       </div>
-                      <button onClick={() => handleDeleteDirectory(dir.id)} className="p-1.5 bg-red-800 text-white rounded hover:bg-red-650 cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
+                      <button type="button" onClick={() => handleStartEditDirectory(dir)} title="Edit directory" aria-label="Edit directory" className="rounded bg-blue-700 px-2 py-1.5 text-xs font-bold text-white hover:bg-blue-800">Edit</button> <button onClick={() => handleDeleteDirectory(dir.id)} className="p-1.5 bg-red-800 text-white rounded hover:bg-red-650 cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
                     </div>
                   ))}
                 </div>
@@ -4468,7 +4470,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                         <h4 className="font-bold text-slate-800">{em.nameEn}</h4>
                         <p className="text-[10px] text-red-650 font-black">{em.number}</p>
                       </div>
-                      <button onClick={() => handleDeleteEmergency(em.id)} className="p-1.5 bg-red-800 text-white rounded hover:bg-red-650 cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
+                      <button type="button" onClick={() => handleStartEditEmergency(em)} title="Edit emergency" aria-label="Edit emergency" className="rounded bg-blue-700 px-2 py-1.5 text-xs font-bold text-white hover:bg-blue-800">Edit</button> <button onClick={() => handleDeleteEmergency(em.id)} className="p-1.5 bg-red-800 text-white rounded hover:bg-red-650 cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
                     </div>
                   ))}
                 </div>
