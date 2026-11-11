@@ -86,6 +86,8 @@ export interface WeatherData {
 
 export interface DestinationItem {
   id: string;
+  bookingUrl?: string;
+  contactPhone?: string;
   nearestStop?: string;
   instructionsEn?: string;
   instructionsMl?: string;
@@ -125,6 +127,7 @@ export interface CultureItem {
 
 export interface StayItem {
   id: string;
+  contactPhone?: string;
   bookingUrl?: string;
   nameEn: string;
   nameTa?: string;
