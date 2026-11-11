@@ -1429,7 +1429,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Lodging option updated!" : "Nature lodging option saved!");
-      setStayForm({ nameEn: "", nameMl: "", nameTa: "", typeEn: "", typeMl: "", typeTa: "", locationEn: "", locationMl: "", locationTa: "", image: "", priceEn: "", priceMl: "", priceTa: "", bookingUrl: "", featuresEn: "", featuresMl: "" });
+      setStayForm({ nameEn: "", nameMl: "", nameTa: "", typeEn: "", typeMl: "", typeTa: "", locationEn: "", locationMl: "", locationTa: "", image: "", priceEn: "", priceMl: "", priceTa: "", bookingUrl: "", contactPhone: "", featuresEn: "", featuresMl: "", featuresTa: "" });
       setEditingId(null);
       setEditingType(null);
       fetchExploreStays();
