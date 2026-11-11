@@ -170,7 +170,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
   });
   const [stayForm, setStayForm] = useState({
     nameEn: "", nameMl: "", nameTa: "", typeEn: "", typeMl: "", typeTa: "", locationEn: "", locationMl: "", locationTa: "", image: "",
-    priceEn: "", priceMl: "", priceTa: "", featuresEn: "", featuresMl: ""
+    priceEn: "", priceMl: "", priceTa: "", bookingUrl: "", featuresEn: "", featuresMl: ""
   });
   const [travelogueForm, setTravelogueForm] = useState({
     titleEn: "", titleMl: "", titleTa: "", authorEn: "", authorMl: "", authorTa: "", date: "", snippetEn: "", snippetMl: "", snippetTa: "",
@@ -1361,6 +1361,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       locationEn: item.locationEn,
       locationMl: item.locationMl,
       image: item.image || "",
+      bookingUrl: item.bookingUrl || "",
       priceEn: item.priceEn || "",
       priceMl: item.priceMl || "",
       priceTa: item.priceTa || "",
@@ -1383,6 +1384,10 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
       { en: "priceEn", ml: "priceMl" },
       { en: "featuresEn", ml: "featuresMl" }
     ]);
+    if (translatedStay.bookingUrl?.trim()) {
+      try { const url = new URL(translatedStay.bookingUrl.trim()); if (!["https:", "http:"].includes(url.protocol)) throw new Error("Invalid protocol"); }
+      catch { alert("Enter a valid http:// or https:// booking URL, or leave the field empty."); return; }
+    }
     const featsEn = translatedStay.featuresEn.split(",").map(x => x.trim()).filter(Boolean);
     const featsMl = translatedStay.featuresMl.split(",").map(x => x.trim()).filter(Boolean);
     const featsTa = translatedStay.featuresTa.split(",").map(x => x.trim()).filter(Boolean);
@@ -1407,7 +1412,7 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
     });
     if (response.ok) {
       triggerToast(isEdit ? "Lodging option updated!" : "Nature lodging option saved!");
-      setStayForm({ nameEn: "", nameMl: "", nameTa: "", typeEn: "", typeMl: "", typeTa: "", locationEn: "", locationMl: "", locationTa: "", image: "", priceEn: "", priceMl: "", priceTa: "", featuresEn: "", featuresMl: "" });
+      setStayForm({ nameEn: "", nameMl: "", nameTa: "", typeEn: "", typeMl: "", typeTa: "", locationEn: "", locationMl: "", locationTa: "", image: "", priceEn: "", priceMl: "", priceTa: "", bookingUrl: "", featuresEn: "", featuresMl: "" });
       setEditingId(null);
       setEditingType(null);
       fetchExploreStays();
@@ -3348,6 +3353,11 @@ export default function AdminDashboard({ onBack }: { onBack: () => void }) {
                   </h3>
                   <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Destination Name</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={destForm.nameMl} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,nameMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"nameMl","nameMl",setDestForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={destForm.nameEn} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,nameEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"nameEn","nameEn",setDestForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={destForm.nameTa} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,nameTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"nameTa","nameTa",setDestForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
                   <section className="space-y-2"><h4 className="font-bold text-sm text-[#052962]">Location</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-3"><label className="block min-w-0 text-xs font-bold text-slate-600">Malayalam<input lang="ml" type="text" value={destForm.locationMl} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,locationMl:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"locationMl","locationMl",setDestForm,"ml"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-malayalam" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">English<input lang="en" type="text" value={destForm.locationEn} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,locationEn:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"locationEn","locationEn",setDestForm,"en"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-latin" /> </label><label className="block min-w-0 text-xs font-bold text-slate-600">Tamil<input lang="ta" type="text" value={destForm.locationTa} onChange={e => { const value=e.target.value; setDestForm(prev=>({...prev,locationTa:value})); if(autoTranslateOnSubmit) autoTranslateField(value,"locationTa","locationTa",setDestForm,"ta"); }} className="mt-1 block w-full min-w-0 rounded-md border border-slate-300 bg-white p-2 text-sm font-anek-tamil" /> </label></div></section>
+                  <section className="space-y-2 rounded-lg border border-blue-100 bg-blue-50/40 p-3">
+                    <label htmlFor="stay-booking-url" className="block text-sm font-bold text-[#052962]">Booking URL (optional)</label>
+                    <input id="stay-booking-url" type="url" inputMode="url" placeholder="https://property-website.com/book" value={stayForm.bookingUrl} onChange={e=>setStayForm(prev=>({...prev,bookingUrl:e.target.value}))} className="w-full rounded-md border border-slate-300 bg-white p-2 text-sm" />
+                    <p className="text-xs text-slate-500">Property website or third-party booking page. When provided, a BOOK NOW button appears on the bottom-right of the stay image. Leave empty to hide it.</p>
+                  </section>
                   {/* Photo selection targeting local files or links */}
                   <div className="bg-slate-50 rounded-lg p-3 border border-slate-200/50 space-y-2">
                     <div className="flex items-center justify-between">
