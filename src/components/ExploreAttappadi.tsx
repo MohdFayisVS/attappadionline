@@ -661,6 +661,21 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                       className="w-full h-full object-cover"
                       referrerPolicy="no-referrer"
                     />
+                    {(() => {
+                      const bookingUrl = dest.bookingUrl?.trim();
+                      const contactPhone = dest.contactPhone?.trim();
+                      let safeBookingUrl = "";
+                      if (bookingUrl) {
+                        try { const parsed = new URL(bookingUrl); if (["http:", "https:"].includes(parsed.protocol)) safeBookingUrl = bookingUrl; } catch {}
+                      }
+                      const dialNumber = contactPhone?.replace(/[ ()-]/g, "") || "";
+                      const safePhone = /^\+?[0-9]{6,18}$/.test(dialNumber) ? dialNumber : "";
+                      if (!safeBookingUrl && !safePhone) return null;
+                      return <div className="absolute bottom-3 right-3 z-10 flex flex-col items-end gap-2">
+                        {safePhone && <a href={`tel:${safePhone}`} aria-label={`Call ${dest.nameEn}`} className="rounded-md bg-emerald-700 px-3 py-2 text-xs font-black text-white shadow-lg hover:bg-emerald-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">CONTACT ☎</a>}
+                        {safeBookingUrl && <a href={safeBookingUrl} target="_blank" rel="noopener noreferrer" aria-label={`Book ${dest.nameEn}`} className="rounded-md bg-[#052962] px-3 py-2 text-xs font-black text-white shadow-lg hover:bg-[#005689] focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">BOOK NOW ↗</a>}
+                      </div>;
+                    })()}
                     <span className="absolute bottom-3 left-3 bg-slate-900/80 text-white font-bold text-[10px] px-2 py-0.5 rounded tracking-wide uppercase flex items-center gap-1">
                       <MapPin className="w-3 h-3 text-[#ffe500]" />
                       {lang === "ml" ? dest.locationMl : lang === "ta" ? (((dest as any).locationTa) || dest.locationEn) : dest.locationEn}
@@ -749,10 +764,18 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                     />
                     {(() => {
                       const bookingUrl = stay.bookingUrl?.trim();
-                      if (!bookingUrl) return null;
-                      try { const parsed = new URL(bookingUrl); if (!["http:", "https:"].includes(parsed.protocol)) return null; }
-                      catch { return null; }
-                      return <a href={bookingUrl} target="_blank" rel="noopener noreferrer" aria-label={`Book ${stay.nameEn}`} className="absolute bottom-3 right-3 z-10 rounded-md bg-[#052962] px-3 py-2 text-xs font-black text-white shadow-lg hover:bg-[#005689] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">BOOK NOW ↗</a>;
+                      const contactPhone = stay.contactPhone?.trim();
+                      let safeBookingUrl = "";
+                      if (bookingUrl) {
+                        try { const parsed = new URL(bookingUrl); if (["http:", "https:"].includes(parsed.protocol)) safeBookingUrl = bookingUrl; } catch {}
+                      }
+                      const dialNumber = contactPhone?.replace(/[ ()-]/g, "") || "";
+                      const safePhone = /^\+?[0-9]{6,18}$/.test(dialNumber) ? dialNumber : "";
+                      if (!safeBookingUrl && !safePhone) return null;
+                      return <div className="absolute bottom-3 right-3 z-10 flex flex-col items-end gap-2">
+                        {safePhone && <a href={`tel:${safePhone}`} aria-label={`Call ${stay.nameEn}`} className="rounded-md bg-emerald-700 px-3 py-2 text-xs font-black text-white shadow-lg hover:bg-emerald-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">CONTACT ☎</a>}
+                        {safeBookingUrl && <a href={safeBookingUrl} target="_blank" rel="noopener noreferrer" aria-label={`Book ${stay.nameEn}`} className="rounded-md bg-[#052962] px-3 py-2 text-xs font-black text-white shadow-lg hover:bg-[#005689] focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">BOOK NOW ↗</a>}
+                      </div>;
                     })()}
                     <div className="absolute top-2 right-2 bg-green-700 text-white font-extrabold text-[9px] px-2 py-0.5 rounded tracking-wide uppercase shadow">
                       {lang === "ml" ? stay.typeMl : lang === "ta" ? (((stay as any).typeTa) || stay.typeEn) : stay.typeEn}
