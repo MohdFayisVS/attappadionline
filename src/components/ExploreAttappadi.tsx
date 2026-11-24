@@ -509,7 +509,7 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
     const title = lang === "ml" ? photo.titleMl : lang === "ta" ? (photo.titleTa || photo.titleEn) : photo.titleEn;
     const caption = lang === "ml" ? photo.descMl : lang === "ta" ? (photo.descTa || photo.descEn) : photo.descEn;
     const wrap = (text: string, maxWidth: number, maxLines: number, lineHeight: number, startY: number) => {
-      const words = text.trim().split(/\\s+/).filter(Boolean);
+      const words = text.trim().split(/\s+/).filter(Boolean);
       let line = "";
       let lines = 0;
       for (const word of words) {
