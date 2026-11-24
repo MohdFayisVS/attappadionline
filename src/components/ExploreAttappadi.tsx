@@ -479,6 +479,99 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
   const [chartLoaded, setChartLoaded] = useState(false);
   const [chartSaving, setChartSaving] = useState(false);
   const [chartMessage, setChartMessage] = useState("");
+
+  const [photoCardBusy, setPhotoCardBusy] = useState(false);
+  const [photoCardError, setPhotoCardError] = useState("");
+
+  const createPhotoSharingCard = async (photo: PhotoItem): Promise<Blob> => {
+    const image = new Image();
+    image.crossOrigin = "anonymous";
+    image.referrerPolicy = "no-referrer";
+    image.src = photo.url;
+    await new Promise<void>((resolve, reject) => {
+      image.onload = () => resolve();
+      image.onerror = () => reject(new Error("This image host does not allow card downloads. Please upload the photo to the website instead."));
+    });
+    const canvas = document.createElement("canvas");
+    canvas.width = 1080;
+    canvas.height = 1350;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("Image rendering is unavailable on this device.");
+    ctx.fillStyle = "#f8fafc";
+    ctx.fillRect(0, 0, 1080, 1350);
+    const photoHeight = 890;
+    const scale = Math.max(1080 / image.naturalWidth, photoHeight / image.naturalHeight);
+    const width = image.naturalWidth * scale;
+    const height = image.naturalHeight * scale;
+    ctx.drawImage(image, (1080 - width) / 2, (photoHeight - height) / 2, width, height);
+    ctx.fillStyle = "#052962";
+    ctx.fillRect(0, 890, 1080, 460);
+    const title = lang === "ml" ? photo.titleMl : lang === "ta" ? (photo.titleTa || photo.titleEn) : photo.titleEn;
+    const caption = lang === "ml" ? photo.descMl : lang === "ta" ? (photo.descTa || photo.descEn) : photo.descEn;
+    const wrap = (text: string, maxWidth: number, maxLines: number, lineHeight: number, startY: number) => {
+      const words = text.trim().split(/\\s+/).filter(Boolean);
+      let line = "";
+      let lines = 0;
+      for (const word of words) {
+        const candidate = line ? line + " " + word : word;
+        if (ctx.measureText(candidate).width > maxWidth && line) {
+          ctx.fillText(line, 62, startY + lines * lineHeight);
+          lines++;
+          if (lines >= maxLines) return;
+          line = word;
+        } else line = candidate;
+      }
+      if (line && lines < maxLines) ctx.fillText(line, 62, startY + lines * lineHeight);
+    };
+    await document.fonts.ready;
+    const family = lang === "ml" ? '"Anek Malayalam", sans-serif' : lang === "ta" ? '"Anek Tamil", sans-serif' : '"Anek Latin", sans-serif';
+    ctx.fillStyle = "#ffffff";
+    ctx.font = `bold 46px ${family}`;
+    wrap(title, 950, 2, 56, 974);
+    ctx.fillStyle = "#dbeafe";
+    ctx.font = `28px ${family}`;
+    wrap(caption, 950, 3, 38, 1090);
+    ctx.strokeStyle = "#ffffff55";
+    ctx.beginPath();
+    ctx.moveTo(62, 1234);
+    ctx.lineTo(1018, 1234);
+    ctx.stroke();
+    ctx.fillStyle = "#ffffff";
+    ctx.font = 'bold 31px "Syne", sans-serif';
+    ctx.fillText("attappadi online", 62, 1292);
+    ctx.font = '22px sans-serif';
+    ctx.textAlign = "right";
+    ctx.fillText("attappadionline.in", 1018, 1290);
+    ctx.textAlign = "left";
+    return await new Promise<Blob>((resolve, reject) => {
+      try { canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("Unable to generate image card.")), "image/png"); }
+      catch { reject(new Error("The photo host blocks image exports. Please upload the photo directly to the website.")); }
+    });
+  };
+
+  const handlePhotoCardAction = async (photo: PhotoItem, action: "download" | "share") => {
+    setPhotoCardBusy(true);
+    setPhotoCardError("");
+    try {
+      const blob = await createPhotoSharingCard(photo);
+      const file = new File([blob], "attappadi-online-photo.png", { type: "image/png" });
+      if (action === "share" && navigator.canShare?.({ files: [file] }) && navigator.share) {
+        try { await navigator.share({ files: [file], title: photo.titleEn }); }
+        catch (error) { if ((error as Error).name !== "AbortError") throw error; }
+      } else {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = file.name;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 30000);
+      }
+    } catch (error) { setPhotoCardError(error instanceof Error ? error.message : "Could not create photo card."); }
+    finally { setPhotoCardBusy(false); }
+  };
+
   // Database is authoritative. Do not overwrite shared data with browser-local edits.
   useEffect(() => {
     let cancelled = false;
@@ -916,6 +1009,11 @@ export default function ExploreAttappadi({ lang, initialTab = "destinations", is
                       </button>
                     </div>
 
+                    <div className="mt-4 flex flex-wrap justify-center gap-3">
+                      <button type="button" disabled={photoCardBusy} onClick={() => handlePhotoCardAction(photosList[selectedPhotoIndex], "download")} className="rounded-md bg-white px-4 py-2 text-sm font-bold text-[#052962] disabled:opacity-50">Download branded card</button>
+                      <button type="button" disabled={photoCardBusy} onClick={() => handlePhotoCardAction(photosList[selectedPhotoIndex], "share")} className="rounded-md bg-[#ffe500] px-4 py-2 text-sm font-bold text-[#052962] disabled:opacity-50"><Share2 className="mr-1 inline h-4 w-4" />Share card</button>
+                    </div>
+                    {photoCardError && <p role="alert" className="mt-2 text-center text-sm text-red-300">{photoCardError}</p>}
                     {/* Bottom overlay text detail */}
                     <div className="w-full text-center text-white mt-4 space-y-1 px-4">
                       <span className="text-[9px] bg-amber-500 text-slate-950 font-black px-2 py-0.5 rounded uppercase tracking-wider inline-block">
